@@ -14,30 +14,21 @@ jobs:
     - name: Set up Python 3.
       uses: actions/setup-python@v3
       with:
-        python-version: 3.9
+        python-version: 3.11
 
     - name: Install Poetry.
       uses: snok/install-poetry@v1.3.1
 
     - name: Install dependencies.
       run: |
-        poetry install --with docs
+        poetry install
 
-    - name: Build documentation.
+    #----------------------------------------------
+    #  Create documentation and deploy.
+    #----------------------------------------------
+    - name: Create local docs
       run: |
-        echo ${{ secrets.GH_TOKEN }} >> src/typedlogic/token.txt
-        mkdir gh-pages
-        touch gh-pages/.nojekyll
-        cd docs/
-        poetry run sphinx-apidoc -o . ../src/typedlogic/ --ext-autodoc -f
-        poetry run sphinx-build -b html . _build
-        cp -r _build/* ../gh-pages/
-
-    - name: Deploy documentation.
-      if: ${{ github.event_name == 'push' }}
-      uses: JamesIves/github-pages-deploy-action@v4.4.1
-      with:
-        branch: gh-pages
-        force: true
-        folder: gh-pages
-        token: ${{ secrets.GH_TOKEN }}
+        mkdir docs
+        touch docs/.nojekyll
+        cp -r src/docs/* docs/
+        make deploy-gh-doc
