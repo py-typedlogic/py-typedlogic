@@ -1,0 +1,84 @@
+(Theory 
+  (name "tests.theorems.types_example") 
+  (constants 
+    (dict 
+      ((AGE_THRESHOLD 18)))) 
+  (type_definitions 
+    (dict 
+      ((Thing "str")))) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "PersonWithAge") 
+        (arguments 
+          (dict 
+            ((name "str") 
+              (age "int")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Adult") 
+        (arguments 
+          (dict 
+            ((name "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "StageAge") 
+        (arguments 
+          (dict 
+            ((stage "str") 
+              (age "int")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)))) 
+  (sentence_groups 
+    ((SentenceGroup 
+        (name "facts") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((StageAge "Adult" 
+              (Variable "AGE_THRESHOLD")))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "classifications") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "name" "Thing") 
+                (Variable "age" "int")) 
+              (Implies 
+                (ge 
+                  (Variable "age") 
+                  (Variable "AGE_THRESHOLD")) 
+                (Adult 
+                  (Variable "name")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "goals") 
+        (group_type "goal") 
+        (docstring null) 
+        (sentences 
+          ((Implies 
+              (PersonWithAge "Alice" 25) 
+              (Adult "Alice")) 
+            (Implies 
+              (Adult "Bob") 
+              (Exists 
+                ((Variable "age" "int")) 
+                (PersonWithAge "Alice" 
+                  (Variable "age")))))) 
+        (_annotations null)))) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))

@@ -1,0 +1,81 @@
+(Theory 
+  (name "tests.theorems.paths_with_distance") 
+  (constants 
+    (dict 
+      ())) 
+  (type_definitions 
+    (dict 
+      ((ID "str")))) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "Link") 
+        (arguments 
+          (dict 
+            ((source "str") 
+              (target "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Path") 
+        (arguments 
+          (dict 
+            ((source "str") 
+              (target "str") 
+              (hops "int")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)))) 
+  (sentence_groups 
+    ((SentenceGroup 
+        (name "path_from_link") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "x" "ID") 
+                (Variable "y" "ID")) 
+              (Implies 
+                (Link 
+                  (Variable "x") 
+                  (Variable "y")) 
+                (Path 
+                  (Variable "x") 
+                  (Variable "y") 1))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "transitivity") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "x" "ID") 
+                (Variable "y" "ID") 
+                (Variable "z" "ID") 
+                (Variable "d1" "int") 
+                (Variable "d2" "int")) 
+              (Implies 
+                (And 
+                  (Path 
+                    (Variable "x") 
+                    (Variable "y") 
+                    (Variable "d1")) 
+                  (Path 
+                    (Variable "y") 
+                    (Variable "z") 
+                    (Variable "d2"))) 
+                (Path 
+                  (Variable "x") 
+                  (Variable "z") 
+                  (add 
+                    (Variable "d1") 
+                    (Variable "d2"))))))) 
+        (_annotations null)))) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))

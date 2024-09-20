@@ -1,0 +1,10 @@
+% Problem: tests.theorems.numbers
+formulas(assumptions).
+    PersonAge(s_Alice, 25).
+    PersonAge(s_Bob, 30).
+    PersonAge(s_Ciara, 30).
+    all name1 name2 ((exists age ((PersonAge(name1, age) & PersonAge(name2, age))) -> SameAge(name1, name2))).
+end_of_list.
+
+formulas(goals).
+end_of_list.

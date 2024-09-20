@@ -1,0 +1,128 @@
+type: Theory
+name: tests.theorems.paths_with_distance
+constants: {}
+type_definitions:
+  ID: str
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: Link
+  arguments:
+    source: str
+    target: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Path
+  arguments:
+    source: str
+    target: str
+    hops: int
+  parents: []
+sentence_groups:
+- type: SentenceGroup
+  name: path_from_link
+  group_type: axiom
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - x
+        - ID
+      - type: Variable
+        arguments:
+        - y
+        - ID
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - Link
+        - type: Variable
+          arguments:
+          - x
+        - type: Variable
+          arguments:
+          - y
+      - type: Term
+        arguments:
+        - Path
+        - type: Variable
+          arguments:
+          - x
+        - type: Variable
+          arguments:
+          - y
+        - 1
+- type: SentenceGroup
+  name: transitivity
+  group_type: axiom
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - x
+        - ID
+      - type: Variable
+        arguments:
+        - y
+        - ID
+      - type: Variable
+        arguments:
+        - z
+        - ID
+      - type: Variable
+        arguments:
+        - d1
+        - int
+      - type: Variable
+        arguments:
+        - d2
+        - int
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Path
+          - type: Variable
+            arguments:
+            - x
+          - type: Variable
+            arguments:
+            - y
+          - type: Variable
+            arguments:
+            - d1
+        - type: Term
+          arguments:
+          - Path
+          - type: Variable
+            arguments:
+            - y
+          - type: Variable
+            arguments:
+            - z
+          - type: Variable
+            arguments:
+            - d2
+      - type: Term
+        arguments:
+        - Path
+        - type: Variable
+          arguments:
+          - x
+        - type: Variable
+          arguments:
+          - z
+        - type: Term
+          arguments:
+          - add
+          - type: Variable
+            arguments:
+            - d1
+          - type: Variable
+            arguments:
+            - d2
+ground_terms: []

@@ -1,0 +1,13 @@
+% Problem: tests.theorems.animals
+formulas(assumptions).
+    Person(s_Fred).
+    Person(s_Jie).
+    Animal(s_corky, s_cat).
+    Animal(s_fido, s_dog).
+    all x species ((Animal(x, species) -> Likes(x, s_Fred))).
+    all x species ((Animal(x, s_cat) -> Likes(x, s_Jie))).
+    all x species ((Animal(x, s_dog) -> - ( Likes(s_Fred, x) ))).
+end_of_list.
+
+formulas(goals).
+end_of_list.

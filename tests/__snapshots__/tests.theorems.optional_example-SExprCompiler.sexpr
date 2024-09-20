@@ -1,0 +1,74 @@
+(Theory 
+  (name "tests.theorems.optional_example") 
+  (constants 
+    (dict 
+      ((Optional "typing.Optional")))) 
+  (type_definitions 
+    (dict 
+      ((Person "str")))) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "FriendOf") 
+        (arguments 
+          (dict 
+            ((subject "str") 
+              (object "str") 
+              (start_year "Optional") 
+              (end_year "Optional")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "FriendPath") 
+        (arguments 
+          (dict 
+            ((subject "str") 
+              (object "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)))) 
+  (sentence_groups 
+    ((SentenceGroup 
+        (name "tr") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "s" "Person") 
+                (Variable "o" "Person") 
+                (Variable "y" "int")) 
+              (Implies 
+                (FriendOf 
+                  (Variable "s") 
+                  (Variable "o") null null) 
+                (FriendPath 
+                  (Variable "s") 
+                  (Variable "o")))) 
+            (Forall 
+              ((Variable "s" "Person") 
+                (Variable "o" "Person") 
+                (Variable "y" "int")) 
+              (Implies 
+                (FriendOf 
+                  (Variable "s") 
+                  (Variable "o") null null) 
+                (FriendPath 
+                  (Variable "s") 
+                  (Variable "o")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "facts") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((FriendOf "Fred" "Jie" 2000 2005) 
+            (FriendOf "Jie" "Li" null null))) 
+        (_annotations null)))) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))

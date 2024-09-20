@@ -1,0 +1,90 @@
+type: Theory
+name: tests.theorems.numbers
+constants: {}
+type_definitions:
+  NameType: str
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: PersonAge
+  arguments:
+    name: str
+    age: int
+  parents: []
+- type: PredicateDefinition
+  predicate: SameAge
+  arguments:
+    name1: str
+    name2: str
+  parents: []
+sentence_groups:
+- type: SentenceGroup
+  name: facts
+  group_type: axiom
+  sentences:
+  - type: Term
+    arguments:
+    - PersonAge
+    - Alice
+    - 25
+  - type: Term
+    arguments:
+    - PersonAge
+    - Bob
+    - 30
+  - type: Term
+    arguments:
+    - PersonAge
+    - Ciara
+    - 30
+- type: SentenceGroup
+  name: axioms
+  group_type: axiom
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - name1
+        - NameType
+      - type: Variable
+        arguments:
+        - name2
+        - NameType
+    - type: Implies
+      arguments:
+      - type: Exists
+        arguments:
+        - - type: Variable
+            arguments:
+            - age
+            - int
+        - type: And
+          arguments:
+          - type: Term
+            arguments:
+            - PersonAge
+            - type: Variable
+              arguments:
+              - name1
+            - type: Variable
+              arguments:
+              - age
+          - type: Term
+            arguments:
+            - PersonAge
+            - type: Variable
+              arguments:
+              - name2
+            - type: Variable
+              arguments:
+              - age
+      - type: Term
+        arguments:
+        - SameAge
+        - type: Variable
+          arguments:
+          - name1
+        - type: Variable
+          arguments:
+          - name2
+ground_terms: []

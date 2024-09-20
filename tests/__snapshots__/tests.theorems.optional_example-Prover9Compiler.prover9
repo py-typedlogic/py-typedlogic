@@ -1,0 +1,10 @@
+% Problem: tests.theorems.optional_example
+formulas(assumptions).
+    all s o y ((FriendOf(s, o, null, null) -> FriendPath(s, o))).
+    all s o y ((FriendOf(s, o, null, null) -> FriendPath(s, o))).
+    FriendOf(s_Fred, s_Jie, 2000, 2005).
+    FriendOf(s_Jie, s_Li, null, null).
+end_of_list.
+
+formulas(goals).
+end_of_list.

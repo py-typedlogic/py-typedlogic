@@ -1,0 +1,10 @@
+% Problem: tests.theorems.mortals
+formulas(assumptions).
+    all x ((Person(x) -> Mortal(x))).
+    all x y z (((AncestorOf(x, z) & AncestorOf(z, y)) -> AncestorOf(x, y))).
+    all x y (- ( (AncestorOf(x, y) & AncestorOf(y, x)) )).
+end_of_list.
+
+formulas(goals).
+    ((AncestorOf(s_p1, s_p2) & AncestorOf(s_p2, s_p3)) -> AncestorOf(s_p1, s_p3)).
+end_of_list.

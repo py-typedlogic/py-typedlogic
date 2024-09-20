@@ -1,0 +1,3 @@
+% Problem: tests.theorems.simple_contradiction
+fof(axiom1, axiom, foo('bar')).
+fof(axiom2, axiom, ~foo('bar')).

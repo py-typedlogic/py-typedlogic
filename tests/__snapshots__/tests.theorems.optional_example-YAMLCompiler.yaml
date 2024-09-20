@@ -1,0 +1,116 @@
+type: Theory
+name: tests.theorems.optional_example
+constants: {}
+type_definitions:
+  Person: str
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: FriendOf
+  arguments:
+    subject: str
+    object: str
+    start_year: Optional
+    end_year: Optional
+  parents: []
+- type: PredicateDefinition
+  predicate: FriendPath
+  arguments:
+    subject: str
+    object: str
+  parents: []
+sentence_groups:
+- type: SentenceGroup
+  name: tr
+  group_type: axiom
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - s
+        - Person
+      - type: Variable
+        arguments:
+        - o
+        - Person
+      - type: Variable
+        arguments:
+        - y
+        - int
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - FriendOf
+        - type: Variable
+          arguments:
+          - s
+        - type: Variable
+          arguments:
+          - o
+        - null
+        - null
+      - type: Term
+        arguments:
+        - FriendPath
+        - type: Variable
+          arguments:
+          - s
+        - type: Variable
+          arguments:
+          - o
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - s
+        - Person
+      - type: Variable
+        arguments:
+        - o
+        - Person
+      - type: Variable
+        arguments:
+        - y
+        - int
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - FriendOf
+        - type: Variable
+          arguments:
+          - s
+        - type: Variable
+          arguments:
+          - o
+        - null
+        - null
+      - type: Term
+        arguments:
+        - FriendPath
+        - type: Variable
+          arguments:
+          - s
+        - type: Variable
+          arguments:
+          - o
+- type: SentenceGroup
+  name: facts
+  group_type: axiom
+  sentences:
+  - type: Term
+    arguments:
+    - FriendOf
+    - Fred
+    - Jie
+    - 2000
+    - 2005
+  - type: Term
+    arguments:
+    - FriendOf
+    - Jie
+    - Li
+    - null
+    - null
+ground_terms: []

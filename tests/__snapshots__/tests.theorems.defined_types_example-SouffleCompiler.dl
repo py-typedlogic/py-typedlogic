@@ -1,0 +1,11 @@
+.type Posint = number
+.type Thing = symbol | number
+.type Age = number | symbol
+.type Intordecimal = number | symbol
+.type Zipcode = symbol
+.decl PersonWithAge(name: symbol, age: symbol)
+.decl Adult(name: symbol)
+.decl StageAge(stage: symbol, age: symbol)
+.decl PersonWithAge2(name: symbol, age_in_years: number)
+.decl PersonWithAddress(name: symbol, zip_code: symbol)
+Adult("Alice") :- PersonWithAge("Alice", 25).

@@ -1,0 +1,30 @@
+type: Theory
+name: tests.theorems.simple_contradiction
+constants: {}
+type_definitions: {}
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: Foo
+  arguments:
+    v: str
+  parents: []
+sentence_groups:
+- type: SentenceGroup
+  name: pos
+  group_type: axiom
+  sentences:
+  - type: Term
+    arguments:
+    - Foo
+    - bar
+- type: SentenceGroup
+  name: neg
+  group_type: axiom
+  sentences:
+  - type: Not
+    arguments:
+    - type: Term
+      arguments:
+      - Foo
+      - bar
+ground_terms: []

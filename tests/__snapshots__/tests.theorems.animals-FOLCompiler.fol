@@ -1,0 +1,7 @@
+Person('Fred')
+Person('Jie')
+Animal('corky', 'cat')
+Animal('fido', 'dog')
+∀[x:Thing species:Thing]. Animal(x, species) → Likes(x, 'Fred')
+∀[x:Thing species:Thing]. Animal(x, 'cat') → Likes(x, 'Jie')
+∀[x:Thing species:Thing]. Animal(x, 'dog') → ¬Likes('Fred', x)

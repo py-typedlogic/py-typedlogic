@@ -1,0 +1,3 @@
+% Problem: tests.theorems.paths
+fof(axiom1, axiom, ! [X, Y, Z] : ((path(X, Y) & path(Y, Z)) => path(X, Z))).
+fof(axiom2, axiom, ! [Source, Target] : (link(Source, Target) => path(Source, Target))).

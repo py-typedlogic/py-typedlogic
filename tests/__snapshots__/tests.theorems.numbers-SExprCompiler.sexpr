@@ -1,0 +1,67 @@
+(Theory 
+  (name "tests.theorems.numbers") 
+  (constants 
+    (dict 
+      ())) 
+  (type_definitions 
+    (dict 
+      ((NameType "str")))) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "PersonAge") 
+        (arguments 
+          (dict 
+            ((name "str") 
+              (age "int")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "SameAge") 
+        (arguments 
+          (dict 
+            ((name1 "str") 
+              (name2 "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)))) 
+  (sentence_groups 
+    ((SentenceGroup 
+        (name "facts") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((PersonAge "Alice" 25) 
+            (PersonAge "Bob" 30) 
+            (PersonAge "Ciara" 30))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "axioms") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "name1" "NameType") 
+                (Variable "name2" "NameType")) 
+              (Implies 
+                (Exists 
+                  ((Variable "age" "int")) 
+                  (And 
+                    (PersonAge 
+                      (Variable "name1") 
+                      (Variable "age")) 
+                    (PersonAge 
+                      (Variable "name2") 
+                      (Variable "age")))) 
+                (SameAge 
+                  (Variable "name1") 
+                  (Variable "name2")))))) 
+        (_annotations null)))) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))

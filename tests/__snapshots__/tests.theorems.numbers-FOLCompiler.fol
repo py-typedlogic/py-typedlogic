@@ -1,0 +1,4 @@
+PersonAge('Alice', 25)
+PersonAge('Bob', 30)
+PersonAge('Ciara', 30)
+∀[name1:NameType name2:NameType]. ∃[age:int]. PersonAge(name1, age) ∧ PersonAge(name2, age) → SameAge(name1, name2)

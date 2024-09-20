@@ -1,0 +1,10 @@
+.type Thing = symbol
+.decl Likes(subject: symbol, object: symbol)
+.decl Person(name: symbol)
+.decl Animal(name: symbol, species: symbol)
+Person("Fred").
+Person("Jie").
+Animal("corky", "cat").
+Animal("fido", "dog").
+Likes(x, "Fred") :- Animal(x, species).
+Likes(x, "Jie") :- Animal(x, "cat").

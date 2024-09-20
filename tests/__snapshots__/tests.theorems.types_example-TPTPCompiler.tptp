@@ -1,0 +1,5 @@
+% Problem: tests.theorems.types_example
+fof(axiom1, axiom, stageage('Adult', Age_threshold)).
+fof(axiom2, axiom, ! [Name, Age] : (ge(Age, Age_threshold) => adult(Name))).
+fof(axiom1, axiom, (personwithage('Alice', 25) => adult('Alice'))).
+fof(axiom2, axiom, (adult('Bob') => ? [Age] : personwithage('Alice', Age))).

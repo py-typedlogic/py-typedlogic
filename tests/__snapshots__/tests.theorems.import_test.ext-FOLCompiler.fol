@@ -1,0 +1,2 @@
+∀[name:str age:int]. NamedThing(name, age) → Person(name, age)
+∀[subject:str predicate:str object:str reciprocated:boolean]. Relationship(subject, predicate, object, reciprocated) → Likes(subject, predicate, object, reciprocated)

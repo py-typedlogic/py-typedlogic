@@ -1,0 +1,7 @@
+.type Person = symbol
+.decl FriendOf(subject: symbol, object: symbol, start_year: symbol, end_year: symbol)
+.decl FriendPath(subject: symbol, object: symbol)
+FriendPath(s, o) :- FriendOf(s, o, _, _).
+FriendPath(s, o) :- FriendOf(s, o, _, _).
+FriendOf("Fred", "Jie", 2000, 2005).
+FriendOf("Jie", "Li", _, _).

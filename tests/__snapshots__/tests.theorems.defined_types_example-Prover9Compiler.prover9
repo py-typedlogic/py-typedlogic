@@ -1,0 +1,9 @@
+% Problem: tests.theorems.defined_types_example
+formulas(assumptions).
+    all name age ((ge(age, 18) -> Adult(name))).
+end_of_list.
+
+formulas(goals).
+    (PersonWithAge(s_Alice, 25) -> Adult(s_Alice)).
+    (Adult(s_Bob) -> exists age (PersonWithAge(s_Alice, age))).
+end_of_list.

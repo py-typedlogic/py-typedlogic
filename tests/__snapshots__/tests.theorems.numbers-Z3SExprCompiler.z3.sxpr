@@ -1,0 +1,8 @@
+(declare-fun PersonAge (String Int) Bool)
+(declare-fun SameAge (String String) Bool)
+(assert (PersonAge "Alice" 25))
+(assert (PersonAge "Bob" 30))
+(assert (PersonAge "Ciara" 30))
+(assert (forall ((name1 String) (name2 String))
+  (=> (exists ((age Int)) (and (PersonAge name1 age) (PersonAge name2 age)))
+      (SameAge name1 name2))))

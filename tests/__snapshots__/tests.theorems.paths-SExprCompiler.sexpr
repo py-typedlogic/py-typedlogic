@@ -1,0 +1,73 @@
+(Theory 
+  (name "tests.theorems.paths") 
+  (constants 
+    (dict 
+      ())) 
+  (type_definitions 
+    (dict 
+      ((ID "str")))) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "Link") 
+        (arguments 
+          (dict 
+            ((source "str") 
+              (target "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Path") 
+        (arguments 
+          (dict 
+            ((source "str") 
+              (target "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          (Link)) 
+        (python_class null)))) 
+  (sentence_groups 
+    ((SentenceGroup 
+        (name "transitivity") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "x" "ID") 
+                (Variable "y" "ID") 
+                (Variable "z" "ID")) 
+              (Implies 
+                (And 
+                  (Path 
+                    (Variable "x") 
+                    (Variable "y")) 
+                  (Path 
+                    (Variable "y") 
+                    (Variable "z"))) 
+                (Path 
+                  (Variable "x") 
+                  (Variable "z")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "Sentences") 
+        (group_type null) 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "source" "str") 
+                (Variable "target" "str")) 
+              (Implies 
+                (Link 
+                  (Variable "source") 
+                  (Variable "target")) 
+                (Path 
+                  (Variable "source") 
+                  (Variable "target")))))) 
+        (_annotations null)))) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))

@@ -1,0 +1,2 @@
+.decl Foo(v: symbol)
+Foo("bar").

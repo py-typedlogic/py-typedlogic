@@ -1,0 +1,4 @@
+% Problem: tests.theorems.defined_types_example
+fof(axiom1, axiom, ! [Name, Age] : (ge(Age, 18) => adult(Name))).
+fof(axiom1, axiom, (personwithage('Alice', 25) => adult('Alice'))).
+fof(axiom2, axiom, (adult('Bob') => ? [Age] : personwithage('Alice', Age))).

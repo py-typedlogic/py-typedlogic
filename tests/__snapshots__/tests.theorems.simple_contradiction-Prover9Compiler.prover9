@@ -1,0 +1,8 @@
+% Problem: tests.theorems.simple_contradiction
+formulas(assumptions).
+    Foo(s_bar).
+    - ( Foo(s_bar) ).
+end_of_list.
+
+formulas(goals).
+end_of_list.

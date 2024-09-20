@@ -1,0 +1,121 @@
+type: Theory
+name: tests.theorems.import_test.ext
+constants: {}
+type_definitions: {}
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: NamedThing
+  arguments:
+    name: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Relationship
+  arguments:
+    subject: str
+    predicate: str
+    object: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Person
+  arguments:
+    name: str
+    age: int
+  parents:
+  - NamedThing
+- type: PredicateDefinition
+  predicate: Likes
+  arguments:
+    subject: str
+    predicate: str
+    object: str
+    reciprocated: boolean
+  parents:
+  - Relationship
+sentence_groups:
+- type: SentenceGroup
+  name: Sentences
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - name
+        - str
+      - type: Variable
+        arguments:
+        - age
+        - int
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - NamedThing
+        - type: Variable
+          arguments:
+          - name
+        - type: Variable
+          arguments:
+          - age
+      - type: Term
+        arguments:
+        - Person
+        - type: Variable
+          arguments:
+          - name
+        - type: Variable
+          arguments:
+          - age
+- type: SentenceGroup
+  name: Sentences
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - subject
+        - str
+      - type: Variable
+        arguments:
+        - predicate
+        - str
+      - type: Variable
+        arguments:
+        - object
+        - str
+      - type: Variable
+        arguments:
+        - reciprocated
+        - boolean
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - Relationship
+        - type: Variable
+          arguments:
+          - subject
+        - type: Variable
+          arguments:
+          - predicate
+        - type: Variable
+          arguments:
+          - object
+        - type: Variable
+          arguments:
+          - reciprocated
+      - type: Term
+        arguments:
+        - Likes
+        - type: Variable
+          arguments:
+          - subject
+        - type: Variable
+          arguments:
+          - predicate
+        - type: Variable
+          arguments:
+          - object
+        - type: Variable
+          arguments:
+          - reciprocated
+ground_terms: []

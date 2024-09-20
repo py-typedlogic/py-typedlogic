@@ -1,0 +1,8 @@
+.type Nametype = symbol
+.type Treenodetype = symbol
+.decl Person(name: symbol)
+.decl Mortal(name: symbol)
+.decl AncestorOf(ancestor: symbol, descendant: symbol)
+Mortal(x) :- Person(x).
+AncestorOf(x, y) :- AncestorOf(x, z), AncestorOf(z, y).
+AncestorOf("p1", "p3") :- AncestorOf("p1", "p2"), AncestorOf("p2", "p3").

@@ -1,0 +1,8 @@
+% Problem: tests.theorems.import_test.ext
+formulas(assumptions).
+    all name age ((NamedThing(name, age) -> Person(name, age))).
+    all subject predicate object reciprocated ((Relationship(subject, predicate, object, reciprocated) -> Likes(subject, predicate, object, reciprocated))).
+end_of_list.
+
+formulas(goals).
+end_of_list.

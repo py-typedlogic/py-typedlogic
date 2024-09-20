@@ -1,0 +1,4 @@
+∀[s:Person o:Person y:int]. FriendOf(s, o, None, None) → FriendPath(s, o)
+∀[s:Person o:Person y:int]. FriendOf(s, o, None, None) → FriendPath(s, o)
+FriendOf('Fred', 'Jie', 2000, 2005)
+FriendOf('Jie', 'Li', None, None)

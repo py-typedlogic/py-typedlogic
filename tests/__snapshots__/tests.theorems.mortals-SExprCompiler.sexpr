@@ -1,0 +1,108 @@
+(Theory 
+  (name "tests.theorems.mortals") 
+  (constants 
+    (dict 
+      ((List "typing.List")))) 
+  (type_definitions 
+    (dict 
+      ((NameType "str") 
+        (TreeNodeType "str")))) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "Person") 
+        (arguments 
+          (dict 
+            ((name "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Mortal") 
+        (arguments 
+          (dict 
+            ((name "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "AncestorOf") 
+        (arguments 
+          (dict 
+            ((ancestor "str") 
+              (descendant "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)))) 
+  (sentence_groups 
+    ((SentenceGroup 
+        (name "all_persons_are_mortal_axiom") 
+        (group_type "axiom") 
+        (docstring "All persons are mortal") 
+        (sentences 
+          ((Forall 
+              ((Variable "x" "NameType")) 
+              (Implies 
+                (Person 
+                  (Variable "x")) 
+                (Mortal 
+                  (Variable "x")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "ancestor_transitivity_axiom") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "x" "TreeNodeType") 
+                (Variable "y" "TreeNodeType") 
+                (Variable "z" "TreeNodeType")) 
+              (Implies 
+                (And 
+                  (AncestorOf 
+                    (Variable "x") 
+                    (Variable "z")) 
+                  (AncestorOf 
+                    (Variable "z") 
+                    (Variable "y"))) 
+                (AncestorOf 
+                  (Variable "x") 
+                  (Variable "y")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "acyclicity_axiom") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "x" "TreeNodeType") 
+                (Variable "y" "TreeNodeType")) 
+              (Not 
+                (And 
+                  (AncestorOf 
+                    (Variable "x") 
+                    (Variable "y")) 
+                  (AncestorOf 
+                    (Variable "y") 
+                    (Variable "x"))))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "check_transitivity") 
+        (group_type "goal") 
+        (docstring null) 
+        (sentences 
+          ((Implies 
+              (And 
+                (AncestorOf "p1" "p2") 
+                (AncestorOf "p2" "p3")) 
+              (AncestorOf "p1" "p3")))) 
+        (_annotations null)))) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))

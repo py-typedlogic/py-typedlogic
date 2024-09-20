@@ -1,0 +1,6 @@
+.type Thing = symbol
+.decl PersonWithAge(name: symbol, age: number)
+.decl Adult(name: symbol)
+.decl StageAge(stage: symbol, age: number)
+StageAge("Adult", 18).
+Adult("Alice") :- PersonWithAge("Alice", 25).

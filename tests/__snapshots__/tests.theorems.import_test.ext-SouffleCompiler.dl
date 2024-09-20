@@ -1,0 +1,6 @@
+.decl NamedThing(name: symbol)
+.decl Relationship(subject: symbol, predicate: symbol, object: symbol)
+.decl Person(name: symbol, age: number)
+.decl Likes(subject: symbol, predicate: symbol, object: symbol, reciprocated: symbol)
+Person(name, age) :- NamedThing(name, age).
+Likes(subject, predicate, object, reciprocated) :- Relationship(subject, predicate, object, reciprocated).

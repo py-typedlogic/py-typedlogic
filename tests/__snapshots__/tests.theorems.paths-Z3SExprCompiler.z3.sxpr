@@ -1,0 +1,6 @@
+(declare-fun Path (String String) Bool)
+(declare-fun Link (String String) Bool)
+(assert (forall ((x String) (y String) (z String))
+  (=> (and (Path x y) (Path y z)) (Path x z))))
+(assert (forall ((source String) (target String))
+  (=> (Link source target) (Path source target))))

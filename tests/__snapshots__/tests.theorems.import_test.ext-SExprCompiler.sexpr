@@ -1,0 +1,98 @@
+(Theory 
+  (name "tests.theorems.import_test.ext") 
+  (constants 
+    (dict 
+      ())) 
+  (type_definitions 
+    (dict 
+      ())) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "NamedThing") 
+        (arguments 
+          (dict 
+            ((name "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Relationship") 
+        (arguments 
+          (dict 
+            ((subject "str") 
+              (predicate "str") 
+              (object "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Person") 
+        (arguments 
+          (dict 
+            ((name "str") 
+              (age "int")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          (NamedThing)) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Likes") 
+        (arguments 
+          (dict 
+            ((subject "str") 
+              (predicate "str") 
+              (object "str") 
+              (reciprocated "boolean")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          (Relationship)) 
+        (python_class null)))) 
+  (sentence_groups 
+    ((SentenceGroup 
+        (name "Sentences") 
+        (group_type null) 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "name" "str") 
+                (Variable "age" "int")) 
+              (Implies 
+                (NamedThing 
+                  (Variable "name") 
+                  (Variable "age")) 
+                (Person 
+                  (Variable "name") 
+                  (Variable "age")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "Sentences") 
+        (group_type null) 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "subject" "str") 
+                (Variable "predicate" "str") 
+                (Variable "object" "str") 
+                (Variable "reciprocated" "boolean")) 
+              (Implies 
+                (Relationship 
+                  (Variable "subject") 
+                  (Variable "predicate") 
+                  (Variable "object") 
+                  (Variable "reciprocated")) 
+                (Likes 
+                  (Variable "subject") 
+                  (Variable "predicate") 
+                  (Variable "object") 
+                  (Variable "reciprocated")))))) 
+        (_annotations null)))) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))

@@ -1,0 +1,38 @@
+@prefix schema: <http://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex: <http://example.org/ex/> .
+
+
+ex:hasPet a ex:Property ;
+    rdfs:domain ex:Human ;
+    rdfs:range ex:Human .
+
+ex:Human rdfs:label "Human"@en ;
+   rdfs:subClassOf ex:Mammal .
+
+ex:Cat rdfs:label "cat"@en ;
+   rdfs:subClassOf ex:Mammal .
+
+ex:Dog rdfs:label "dog"@en ;
+   rdfs:subClassOf ex:Mammal .
+
+ex:Mammal rdfs:label "mammal"@en ;
+    rdfs:subClassOf ex:Animal .
+
+ex:Animal rdfs:label "animal"@en ;
+    rdfs:subClassOf schema:Thing .
+
+ex:Fido a ex:Dog ;
+    rdfs:label "Fido"@en .
+
+
+ex:Fred a schema:Thing ;
+    rdfs:label "Fred"@en ;
+    ex:hasPet ex:Fido .
+
+
+
+    

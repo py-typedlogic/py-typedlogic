@@ -1,0 +1,110 @@
+type: Theory
+name: tests.theorems.defined_types_example
+constants: {}
+type_definitions:
+  PosInt: int
+  Thing:
+  - str
+  - int
+  Age:
+  - int
+  - Decimal
+  IntOrDecimal:
+  - int
+  - Decimal
+  ZipCode: str
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: PersonWithAge
+  arguments:
+    name: str
+    age: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Adult
+  arguments:
+    name: str
+  parents: []
+- type: PredicateDefinition
+  predicate: StageAge
+  arguments:
+    stage: str
+    age: str
+  parents: []
+- type: PredicateDefinition
+  predicate: PersonWithAge2
+  arguments:
+    name: str
+    age_in_years: int
+  parents: []
+- type: PredicateDefinition
+  predicate: PersonWithAddress
+  arguments:
+    name: str
+    zip_code: str
+  parents: []
+sentence_groups:
+- type: SentenceGroup
+  name: classifications
+  group_type: axiom
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - name
+        - Thing
+      - type: Variable
+        arguments:
+        - age
+        - Age
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - ge
+        - type: Variable
+          arguments:
+          - age
+        - 18
+      - type: Term
+        arguments:
+        - Adult
+        - type: Variable
+          arguments:
+          - name
+- type: SentenceGroup
+  name: goals
+  group_type: goal
+  sentences:
+  - type: Implies
+    arguments:
+    - type: Term
+      arguments:
+      - PersonWithAge
+      - Alice
+      - 25
+    - type: Term
+      arguments:
+      - Adult
+      - Alice
+  - type: Implies
+    arguments:
+    - type: Term
+      arguments:
+      - Adult
+      - Bob
+    - type: Exists
+      arguments:
+      - - type: Variable
+          arguments:
+          - age
+          - int
+      - type: Term
+        arguments:
+        - PersonWithAge
+        - Alice
+        - type: Variable
+          arguments:
+          - age
+ground_terms: []

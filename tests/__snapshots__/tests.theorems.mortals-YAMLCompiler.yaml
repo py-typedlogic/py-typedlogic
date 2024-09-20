@@ -1,0 +1,158 @@
+type: Theory
+name: tests.theorems.mortals
+constants: {}
+type_definitions:
+  NameType: str
+  TreeNodeType: str
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: Person
+  arguments:
+    name: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Mortal
+  arguments:
+    name: str
+  parents: []
+- type: PredicateDefinition
+  predicate: AncestorOf
+  arguments:
+    ancestor: str
+    descendant: str
+  parents: []
+sentence_groups:
+- type: SentenceGroup
+  name: all_persons_are_mortal_axiom
+  group_type: axiom
+  docstring: All persons are mortal
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - x
+        - NameType
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - Person
+        - type: Variable
+          arguments:
+          - x
+      - type: Term
+        arguments:
+        - Mortal
+        - type: Variable
+          arguments:
+          - x
+- type: SentenceGroup
+  name: ancestor_transitivity_axiom
+  group_type: axiom
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - x
+        - TreeNodeType
+      - type: Variable
+        arguments:
+        - y
+        - TreeNodeType
+      - type: Variable
+        arguments:
+        - z
+        - TreeNodeType
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - AncestorOf
+          - type: Variable
+            arguments:
+            - x
+          - type: Variable
+            arguments:
+            - z
+        - type: Term
+          arguments:
+          - AncestorOf
+          - type: Variable
+            arguments:
+            - z
+          - type: Variable
+            arguments:
+            - y
+      - type: Term
+        arguments:
+        - AncestorOf
+        - type: Variable
+          arguments:
+          - x
+        - type: Variable
+          arguments:
+          - y
+- type: SentenceGroup
+  name: acyclicity_axiom
+  group_type: axiom
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - x
+        - TreeNodeType
+      - type: Variable
+        arguments:
+        - y
+        - TreeNodeType
+    - type: Not
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - AncestorOf
+          - type: Variable
+            arguments:
+            - x
+          - type: Variable
+            arguments:
+            - y
+        - type: Term
+          arguments:
+          - AncestorOf
+          - type: Variable
+            arguments:
+            - y
+          - type: Variable
+            arguments:
+            - x
+- type: SentenceGroup
+  name: check_transitivity
+  group_type: goal
+  sentences:
+  - type: Implies
+    arguments:
+    - type: And
+      arguments:
+      - type: Term
+        arguments:
+        - AncestorOf
+        - p1
+        - p2
+      - type: Term
+        arguments:
+        - AncestorOf
+        - p2
+        - p3
+    - type: Term
+      arguments:
+      - AncestorOf
+      - p1
+      - p3
+ground_terms: []

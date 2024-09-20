@@ -1,0 +1,5 @@
+% Problem: tests.theorems.numbers
+fof(axiom1, axiom, personage('Alice', 25)).
+fof(axiom2, axiom, personage('Bob', 30)).
+fof(axiom3, axiom, personage('Ciara', 30)).
+fof(axiom4, axiom, ! [Name1, Name2] : (? [Age] : (personage(Name1, Age) & personage(Name2, Age)) => sameage(Name1, Name2))).

@@ -1,0 +1,5 @@
+.type Id = symbol
+.decl Link(source: symbol, target: symbol)
+.decl Path(source: symbol, target: symbol, hops: number)
+Path(x, y, 1) :- Link(x, y).
+Path(x, z, d1 + d2) :- Path(x, y, d1), Path(y, z, d2).

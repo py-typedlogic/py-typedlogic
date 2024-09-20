@@ -1,0 +1,8 @@
+% Problem: tests.theorems.animals
+fof(axiom1, axiom, person('Fred')).
+fof(axiom2, axiom, person('Jie')).
+fof(axiom3, axiom, animal('corky', 'cat')).
+fof(axiom4, axiom, animal('fido', 'dog')).
+fof(axiom5, axiom, ! [X, Species] : (animal(X, Species) => likes(X, 'Fred'))).
+fof(axiom6, axiom, ! [X, Species] : (animal(X, 'cat') => likes(X, 'Jie'))).
+fof(axiom7, axiom, ! [X, Species] : (animal(X, 'dog') => ~likes('Fred', X))).

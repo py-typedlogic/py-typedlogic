@@ -1,0 +1,8 @@
+% Problem: tests.theorems.paths_with_distance
+formulas(assumptions).
+    all x y ((Link(x, y) -> Path(x, y, 1))).
+    all x y z d1 d2 (((Path(x, y, d1) & Path(y, z, d2)) -> Path(x, z, add(?d1, ?d2)))).
+end_of_list.
+
+formulas(goals).
+end_of_list.

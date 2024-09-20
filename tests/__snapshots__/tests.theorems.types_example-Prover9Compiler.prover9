@@ -1,0 +1,10 @@
+% Problem: tests.theorems.types_example
+formulas(assumptions).
+    StageAge(s_Adult, age_threshold).
+    all name age ((ge(age, age_threshold) -> Adult(name))).
+end_of_list.
+
+formulas(goals).
+    (PersonWithAge(s_Alice, 25) -> Adult(s_Alice)).
+    (Adult(s_Bob) -> exists age (PersonWithAge(s_Alice, age))).
+end_of_list.

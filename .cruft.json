@@ -1,0 +1,24 @@
+{
+  "template": "https://github.com/monarch-initiative/monarch-project-template",
+  "commit": "8d5c84f22159bf7181ba86dabc2eea7e93551413",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "project_name": "typedlogic",
+      "github_org_name": "cmungall",
+      "__project_slug": "typedlogic",
+      "project_description": "Python typed logic",
+      "min_python_version": "3.9",
+      "file_name": "main",
+      "greeting_recipient": "World",
+      "full_name": "Author 1",
+      "email": "author@org.org",
+      "__author": "Author 1 <author@org.org>",
+      "license": "MIT",
+      "github_token_for_doc_deployment": "GH_TOKEN",
+      "github_token_for_pypi_deployment": "PYPI_TOKEN",
+      "_template": "https://github.com/monarch-initiative/monarch-project-template"
+    }
+  },
+  "directory": null
+}

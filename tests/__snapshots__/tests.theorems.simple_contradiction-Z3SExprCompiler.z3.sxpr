@@ -1,0 +1,3 @@
+(declare-fun Foo (String) Bool)
+(assert (Foo "bar"))
+(assert (not (Foo "bar")))

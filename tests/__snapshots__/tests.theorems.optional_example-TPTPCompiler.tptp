@@ -1,0 +1,5 @@
+% Problem: tests.theorems.optional_example
+fof(axiom1, axiom, ! [S, O, Y] : (friendof(S, O, None, None) => friendpath(S, O))).
+fof(axiom2, axiom, ! [S, O, Y] : (friendof(S, O, None, None) => friendpath(S, O))).
+fof(axiom3, axiom, friendof('Fred', 'Jie', 2000, 2005)).
+fof(axiom4, axiom, friendof('Jie', 'Li', None, None)).

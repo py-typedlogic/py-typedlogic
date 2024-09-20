@@ -1,0 +1,8 @@
+(declare-fun Mortal (String) Bool)
+(declare-fun Person (String) Bool)
+(declare-fun AncestorOf (String String) Bool)
+(assert (forall ((x String)) (=> (Person x) (Mortal x))))
+(assert (forall ((x String) (y String) (z String))
+  (=> (and (AncestorOf x z) (AncestorOf z y)) (AncestorOf x y))))
+(assert (forall ((x String) (y String)) (not (and (AncestorOf x y) (AncestorOf y x)))))
+(assert (=> (and (AncestorOf "p1" "p2") (AncestorOf "p2" "p3")) (AncestorOf "p1" "p3")))

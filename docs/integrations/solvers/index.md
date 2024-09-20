@@ -1,0 +1,5 @@
+# Solvers
+
+::: typedlogic.solver.Solver
+
+

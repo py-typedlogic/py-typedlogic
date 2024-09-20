@@ -1,0 +1,145 @@
+type: Theory
+name: tests.theorems.animals
+constants: {}
+type_definitions:
+  Thing: str
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: Likes
+  arguments:
+    subject: str
+    object: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Person
+  arguments:
+    name: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Animal
+  arguments:
+    name: str
+    species: str
+  parents: []
+sentence_groups:
+- type: SentenceGroup
+  name: persons
+  group_type: axiom
+  sentences:
+  - type: Term
+    arguments:
+    - Person
+    - Fred
+  - type: Term
+    arguments:
+    - Person
+    - Jie
+- type: SentenceGroup
+  name: animals
+  group_type: axiom
+  sentences:
+  - type: Term
+    arguments:
+    - Animal
+    - corky
+    - cat
+  - type: Term
+    arguments:
+    - Animal
+    - fido
+    - dog
+- type: SentenceGroup
+  name: animal_preferences
+  group_type: axiom
+  docstring: 'Record animal preferences.
+
+
+    :param x:
+
+    :param species:
+
+    :return:'
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - x
+        - Thing
+      - type: Variable
+        arguments:
+        - species
+        - Thing
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - Animal
+        - type: Variable
+          arguments:
+          - x
+        - type: Variable
+          arguments:
+          - species
+      - type: Term
+        arguments:
+        - Likes
+        - type: Variable
+          arguments:
+          - x
+        - Fred
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - x
+        - Thing
+      - type: Variable
+        arguments:
+        - species
+        - Thing
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - Animal
+        - type: Variable
+          arguments:
+          - x
+        - cat
+      - type: Term
+        arguments:
+        - Likes
+        - type: Variable
+          arguments:
+          - x
+        - Jie
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - x
+        - Thing
+      - type: Variable
+        arguments:
+        - species
+        - Thing
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - Animal
+        - type: Variable
+          arguments:
+          - x
+        - dog
+      - type: Not
+        arguments:
+        - type: Term
+          arguments:
+          - Likes
+          - Fred
+          - type: Variable
+            arguments:
+            - x
+ground_terms: []

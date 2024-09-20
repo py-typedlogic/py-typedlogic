@@ -1,0 +1,6 @@
+(declare-fun FriendPath (String String) Bool)
+(declare-fun FriendOf (String String String String) Bool)
+(assert (forall ((s String) (o String) (y Int))
+  (=> (FriendOf s o "None" "None") (FriendPath s o))))
+(assert (forall ((s String) (o String) (y Int))
+  (=> (FriendOf s o "None" "None") (FriendPath s o))))

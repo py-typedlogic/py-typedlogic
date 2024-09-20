@@ -1,0 +1,103 @@
+type: Theory
+name: tests.theorems.paths
+constants: {}
+type_definitions:
+  ID: str
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: Link
+  arguments:
+    source: str
+    target: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Path
+  arguments:
+    source: str
+    target: str
+  parents:
+  - Link
+sentence_groups:
+- type: SentenceGroup
+  name: transitivity
+  group_type: axiom
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - x
+        - ID
+      - type: Variable
+        arguments:
+        - y
+        - ID
+      - type: Variable
+        arguments:
+        - z
+        - ID
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Path
+          - type: Variable
+            arguments:
+            - x
+          - type: Variable
+            arguments:
+            - y
+        - type: Term
+          arguments:
+          - Path
+          - type: Variable
+            arguments:
+            - y
+          - type: Variable
+            arguments:
+            - z
+      - type: Term
+        arguments:
+        - Path
+        - type: Variable
+          arguments:
+          - x
+        - type: Variable
+          arguments:
+          - z
+- type: SentenceGroup
+  name: Sentences
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - source
+        - str
+      - type: Variable
+        arguments:
+        - target
+        - str
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - Link
+        - type: Variable
+          arguments:
+          - source
+        - type: Variable
+          arguments:
+          - target
+      - type: Term
+        arguments:
+        - Path
+        - type: Variable
+          arguments:
+          - source
+        - type: Variable
+          arguments:
+          - target
+ground_terms: []

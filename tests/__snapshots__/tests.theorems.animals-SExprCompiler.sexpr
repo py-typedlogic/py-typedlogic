@@ -1,0 +1,94 @@
+(Theory 
+  (name "tests.theorems.animals") 
+  (constants 
+    (dict 
+      ())) 
+  (type_definitions 
+    (dict 
+      ((Thing "str")))) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "Likes") 
+        (arguments 
+          (dict 
+            ((subject "str") 
+              (object "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Person") 
+        (arguments 
+          (dict 
+            ((name "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Animal") 
+        (arguments 
+          (dict 
+            ((name "str") 
+              (species "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)))) 
+  (sentence_groups 
+    ((SentenceGroup 
+        (name "persons") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Person "Fred") 
+            (Person "Jie"))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "animals") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Animal "corky" "cat") 
+            (Animal "fido" "dog"))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "animal_preferences") 
+        (group_type "axiom") 
+        (docstring "Record animal preferences.\n\n:param x:\n:param species:\n:return:") 
+        (sentences 
+          ((Forall 
+              ((Variable "x" "Thing") 
+                (Variable "species" "Thing")) 
+              (Implies 
+                (Animal 
+                  (Variable "x") 
+                  (Variable "species")) 
+                (Likes 
+                  (Variable "x") "Fred"))) 
+            (Forall 
+              ((Variable "x" "Thing") 
+                (Variable "species" "Thing")) 
+              (Implies 
+                (Animal 
+                  (Variable "x") "cat") 
+                (Likes 
+                  (Variable "x") "Jie"))) 
+            (Forall 
+              ((Variable "x" "Thing") 
+                (Variable "species" "Thing")) 
+              (Implies 
+                (Animal 
+                  (Variable "x") "dog") 
+                (Not 
+                  (Likes "Fred" 
+                    (Variable "x"))))))) 
+        (_annotations null)))) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))

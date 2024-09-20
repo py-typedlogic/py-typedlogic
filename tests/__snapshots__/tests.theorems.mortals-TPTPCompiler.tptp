@@ -1,0 +1,5 @@
+% Problem: tests.theorems.mortals
+fof(axiom1, axiom, ! [X] : (person(X) => mortal(X))).
+fof(axiom2, axiom, ! [X, Y, Z] : ((ancestorof(X, Z) & ancestorof(Z, Y)) => ancestorof(X, Y))).
+fof(axiom3, axiom, ! [X, Y] : ~(ancestorof(X, Y) & ancestorof(Y, X))).
+fof(axiom1, axiom, ((ancestorof('p1', 'p2') & ancestorof('p2', 'p3')) => ancestorof('p1', 'p3'))).

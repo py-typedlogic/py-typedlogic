@@ -1,0 +1,104 @@
+(Theory 
+  (name "tests.theorems.defined_types_example") 
+  (constants 
+    (dict 
+      ((AGE_THRESHOLD 18)))) 
+  (type_definitions 
+    (dict 
+      ((PosInt "int") 
+        (Thing 
+          (str "int")) 
+        (Age 
+          (int "Decimal")) 
+        (IntOrDecimal 
+          (int "Decimal")) 
+        (ZipCode "str")))) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "PersonWithAge") 
+        (arguments 
+          (dict 
+            ((name "str") 
+              (age "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Adult") 
+        (arguments 
+          (dict 
+            ((name "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "StageAge") 
+        (arguments 
+          (dict 
+            ((stage "str") 
+              (age "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "PersonWithAge2") 
+        (arguments 
+          (dict 
+            ((name "str") 
+              (age_in_years "int")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "PersonWithAddress") 
+        (arguments 
+          (dict 
+            ((name "str") 
+              (zip_code "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)))) 
+  (sentence_groups 
+    ((SentenceGroup 
+        (name "classifications") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "name" "Thing") 
+                (Variable "age" "Age")) 
+              (Implies 
+                (ge 
+                  (Variable "age") 18) 
+                (Adult 
+                  (Variable "name")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "goals") 
+        (group_type "goal") 
+        (docstring null) 
+        (sentences 
+          ((Implies 
+              (PersonWithAge "Alice" 25) 
+              (Adult "Alice")) 
+            (Implies 
+              (Adult "Bob") 
+              (Exists 
+                ((Variable "age" "int")) 
+                (PersonWithAge "Alice" 
+                  (Variable "age")))))) 
+        (_annotations null)))) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))

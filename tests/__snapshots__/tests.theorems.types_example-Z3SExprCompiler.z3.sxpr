@@ -1,0 +1,7 @@
+(declare-fun StageAge (String Int) Bool)
+(declare-fun Adult (String) Bool)
+(declare-fun PersonWithAge (String Int) Bool)
+(assert (StageAge "Adult" 18))
+(assert (forall ((name String) (age Int)) (=> (>= age 18) (Adult name))))
+(assert (=> (PersonWithAge "Alice" 25) (Adult "Alice")))
+(assert (=> (Adult "Bob") (exists ((age Int)) (PersonWithAge "Alice" age))))

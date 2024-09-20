@@ -1,0 +1,2 @@
+∀[x:ID y:ID z:ID]. Path(x, y) ∧ Path(y, z) → Path(x, z)
+∀[source:str target:str]. Link(source, target) → Path(source, target)

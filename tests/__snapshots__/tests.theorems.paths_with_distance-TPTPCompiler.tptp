@@ -1,0 +1,3 @@
+% Problem: tests.theorems.paths_with_distance
+fof(axiom1, axiom, ! [X, Y] : (link(X, Y) => path(X, Y, 1))).
+fof(axiom2, axiom, ! [X, Y, Z, D1, D2] : ((path(X, Y, D1) & path(Y, Z, D2)) => path(X, Z, add(?d1, ?d2)))).

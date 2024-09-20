@@ -1,0 +1,39 @@
+(Theory 
+  (name "tests.theorems.simple_contradiction") 
+  (constants 
+    (dict 
+      ())) 
+  (type_definitions 
+    (dict 
+      ())) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "Foo") 
+        (arguments 
+          (dict 
+            ((v "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)))) 
+  (sentence_groups 
+    ((SentenceGroup 
+        (name "pos") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Foo "bar"))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "neg") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Not 
+              (Foo "bar")))) 
+        (_annotations null)))) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))
