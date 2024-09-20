@@ -1,139 +1,139 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://cmungall.github.io/typedlogic/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/advanced/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/advanced/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/api/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/api/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/examples/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/examples/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/quickstart/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/quickstart/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/roadmap/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/roadmap/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/troubleshooting/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/troubleshooting/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/api/solver/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/api/solver/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/api/transformations/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/api/transformations/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/concepts/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/concepts/compilers/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/compilers/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/concepts/datamodel/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/datamodel/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/concepts/decorators/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/decorators/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/concepts/generators/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/generators/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/concepts/models/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/models/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/concepts/parsers/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/parsers/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/concepts/profiles/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/profiles/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/concepts/solvers/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/solvers/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/concepts/transformations/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/transformations/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/integrations/frameworks/pydantic/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/frameworks/pydantic/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/integrations/frameworks/owldl/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/frameworks/owldl/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/integrations/frameworks/owldl/owldl-tutorial/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/frameworks/owldl/owldl-tutorial/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/integrations/frameworks/owldl/owltop/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/frameworks/owldl/owltop/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/integrations/frameworks/owldl/reasoner/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/frameworks/owldl/reasoner/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/integrations/solvers/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/integrations/solvers/clingo/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/clingo/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/integrations/solvers/llm/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/llm/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/integrations/solvers/prover9/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/prover9/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/integrations/solvers/snakelog/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/snakelog/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/integrations/solvers/souffle/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/souffle/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/integrations/solvers/z3/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/z3/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/learning/multiple-models/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/learning/multiple-models/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/tutorial/01-first-program/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/tutorial/01-first-program/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
     <url>
-         <loc>https://cmungall.github.io/typedlogic/tutorial/02-using-python-data-model/</loc>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/tutorial/02-using-python-data-model/</loc>
          <lastmod>2024-09-20</lastmod>
     </url>
 </urlset>
