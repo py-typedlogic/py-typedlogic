@@ -1,0 +1,2136 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://cmungall.github.io/typedlogic/integrations/frameworks/owldl/owldl-tutorial/">
+      
+      
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.34">
+    
+    
+      
+        <title>Owldl tutorial - py-typedlogic</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.35f28582.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../../../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../../../../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../../../../css/pandas-dataframe.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#owl-dl-integration-tutorial" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="py-typedlogic" class="md-header__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            py-typedlogic
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Owldl tutorial
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/cmungall/typedlogic/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="py-typedlogic" class="md-nav__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    py-typedlogic
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/cmungall/typedlogic/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Tutorial
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tutorial/01-first-program" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1. First program
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tutorial/02-using-python-data-model" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2. Using the Python Data Model
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Concepts
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Concepts
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../concepts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Core concepts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../concepts/datamodel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Data Model
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../concepts/decorators/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decorators
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../concepts/generators/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Generators
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../concepts/solvers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Solvers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../concepts/models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Models
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../concepts/parsers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parsers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../concepts/compilers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compilers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../concepts/benchmarks.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Benchmarks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Solvers
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Solvers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../solvers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Solver overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../solvers/clingo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Clingo
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../solvers/z3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Z3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../solvers/souffle/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Souffle
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../solvers/prover9/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prover9
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../solvers/snakelog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SnakeLog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../solvers/llm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    LLM Solver
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Frameworks
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Frameworks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    OWL-DL
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            OWL-DL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OWL-DL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../owltop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Classes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reasoner/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reasoner
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pydantic" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pydantic
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sqlmodel.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQLModel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../troubleshooting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../roadmap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Roadmap
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../contributing.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#initial-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      Initial imports
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-simple-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      A simple class
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defining-object-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defining Object Properties
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entailments-defining-inverses" class="md-nav__link">
+    <span class="md-ellipsis">
+      Entailments: Defining inverses
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finding-entailments-using-a-reasoner" class="md-nav__link">
+    <span class="md-ellipsis">
+      Finding entailments using a reasoner
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consistency-checking" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consistency Checking
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-a-cycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adding a cycle
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiple-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Models
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next Steps
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+(function() {
+  function addWidgetsRenderer() {
+    var requireJsScript = document.createElement('script');
+    requireJsScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js';
+
+    var mimeElement = document.querySelector('script[type="application/vnd.jupyter.widget-view+json"]');
+    var jupyterWidgetsScript = document.createElement('script');
+    var widgetRendererSrc = 'https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js';
+    var widgetState;
+
+    // Fallback for older version:
+    try {
+      widgetState = mimeElement && JSON.parse(mimeElement.innerHTML);
+
+      if (widgetState && (widgetState.version_major < 2 || !widgetState.version_major)) {
+        widgetRendererSrc = 'jupyter-js-widgets@*/dist/embed.js';
+      }
+    } catch(e) {}
+
+    jupyterWidgetsScript.src = widgetRendererSrc;
+
+    document.body.appendChild(requireJsScript);
+    document.body.appendChild(jupyterWidgetsScript);
+  }
+
+  document.addEventListener('DOMContentLoaded', addWidgetsRenderer);
+}());
+</script>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="owl-dl-integration-tutorial">OWL-DL Integration Tutorial</h1>
+<p>This tutorial is a brief introduction to the OWL-DL integration in typed-logic. Some basic familiarity with OWL-DL is assumed,
+see the <a href="https://www.w3.org/TR/owl2-primer/">OWL2 Primer</a> for a good introduction.</p>
+<p>This tutorial shows how to represent OWL TBoxes (Ontologies) as <em>Python programs</em>, together with
+representing ABoxes (Individuals and Individual-level facts) as <em>Python objects</em>.</p>
+<p>The tutorial is a Jupyter notebook - you can run it interactively in a Jupyter environment, or simply read it as a document.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="initial-imports">Initial imports</h2>
+<p>We will import the necessary classes from the <code>integrations</code> package:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typedlogic.integrations.frameworks.owldl</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Thing</span><span class="p">,</span>
+                                                      <span class="n">TopDataProperty</span><span class="p">,</span>
+                                                      <span class="n">TopObjectProperty</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="a-simple-class">A simple class</h2>
+<p>Next we'll define a simple class <code>Person</code>.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A person, living or dead.&quot;&quot;&quot;</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This works just as a normal Python class -- but note that this class is somewhat unusual
+in that it only has a single attribute, <code>iri</code>, which is the IRI of the individual in the OWL ontology. Actual attributes
+of a Person, such as their age or list of friends would be represented as instances of <em>properties</em>.</p>
+<p>Let's instantiate a person:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">AKIRA</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="s2">&quot;Akira&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The only direct property is the IRI. We can examine it:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">AKIRA</span><span class="o">.</span><span class="n">iri</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea output_execute_result">
+<pre>
+<code>'Akira'</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For conversion to OWL serializations this will need to be an actual IRI - for now we treat it as having an implicit base prefix.
+The OWL-DL integration is not concerned with serializations, only with logical aspects.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="defining-object-properties">Defining Object Properties</h2>
+<p>We define object properties by subclassing <code>TopObjectProperty</code>. For example, we can define a property <code>HasParent</code> that relates a person to their parent:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">HasParent</span><span class="p">(</span><span class="n">TopObjectProperty</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A property that relates a person to their parent.&quot;&quot;&quot;</span>
+    <span class="n">domain</span> <span class="o">=</span> <span class="n">Person</span>
+    <span class="nb">range</span> <span class="o">=</span> <span class="n">Person</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Note that we are setting two <em>class variables</em> here. These are class variables and fixed for all instances of <code>HasParent</code>.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next we'll start collecting some ObjectPropertyAssertions</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">BIANCA</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="s2">&quot;Bianca&quot;</span><span class="p">)</span>
+<span class="n">a2b</span> <span class="o">=</span> <span class="n">HasParent</span><span class="p">(</span><span class="n">AKIRA</span><span class="o">.</span><span class="n">iri</span><span class="p">,</span> <span class="n">BIANCA</span><span class="o">.</span><span class="n">iri</span><span class="p">)</span>
+<span class="n">a2b</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea output_execute_result">
+<pre>
+<code>HasParent(subject='Akira', object='Bianca')</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>All TopObjectProperty classes are treated as typed-logic Predicate Definitions for binary predicates, where the domain and range are individuals.</p>
+<p>We can examine these:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">a2b</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span> <span class="n">a2b</span><span class="o">.</span><span class="n">object</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea output_execute_result">
+<pre>
+<code>('Akira', 'Bianca')</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Each such object has a FOL representation. We can examine this using<code>to_sentences</code>:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">HasParent</span><span class="o">.</span><span class="n">to_sentences</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>∀P: None, I: None, J: None : (HasParent(?I, ?J) -&gt; TopObjectProperty(?I, ?J))
+∀I: None, J: None : (HasParent(?I, ?J) -&gt; Person(?I))
+∀I: None, J: None : (HasParent(?I, ?J) -&gt; Person(?J))
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Normally there is no need to examine these assertions, they will be accessed for us by a reasoning mechanism, but
+for now they can be a useful way of examining the semantics (at the ABox level) of the ontology. </p>
+<p>Here we can see that in addition to the trivial inference that all <code>HasParent</code> assertions are of type <code>HasParent</code>, we also see that the subject and object are of type <code>Person</code> (from the domain and range constraints).</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="entailments-defining-inverses">Entailments: Defining inverses</h2>
+<p>Next we will introduce the concept of entailing inverses.</p>
+<p>We will make the <code>HasChild</code> property the inverse of <code>HasParent</code>:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">HasChild</span><span class="p">(</span><span class="n">TopObjectProperty</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A property that relates a person to their child.&quot;&quot;&quot;</span>
+    <span class="n">inverse_of</span> <span class="o">=</span> <span class="n">HasParent</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="finding-entailments-using-a-reasoner">Finding entailments using a reasoner</h2>
+<p>We have declared some axioms, now it's time to find some entailments. For this we will use a Reasoner object:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typedlogic.integrations.frameworks.owldl.reasoner</span> <span class="kn">import</span> <span class="n">OWLReasoner</span>
+<span class="n">reasoner</span> <span class="o">=</span> <span class="n">OWLReasoner</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here the reasoner is just a wrapper onto an existing Solver (by default, Clingo).</p>
+<p>Next we will load an ontology declared as python. For convenience, we have aggregated the declarations into a single file <a href="../examples/family_v1.py">examples/family_v1.py</a>.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">examples.utils</span> <span class="kn">import</span> <span class="n">show</span>
+<span class="n">show</span><span class="p">(</span><span class="s2">&quot;examples/family_v1.py&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result">
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.output_html .hll { background-color: #ffffcc }
+.output_html { background: #f8f8f8; }
+.output_html .c { color: #3D7B7B; font-style: italic } /* Comment */
+.output_html .err { border: 1px solid #FF0000 } /* Error */
+.output_html .k { color: #008000; font-weight: bold } /* Keyword */
+.output_html .o { color: #666666 } /* Operator */
+.output_html .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.output_html .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.output_html .cp { color: #9C6500 } /* Comment.Preproc */
+.output_html .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.output_html .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.output_html .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.output_html .gd { color: #A00000 } /* Generic.Deleted */
+.output_html .ge { font-style: italic } /* Generic.Emph */
+.output_html .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.output_html .gr { color: #E40000 } /* Generic.Error */
+.output_html .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.output_html .gi { color: #008400 } /* Generic.Inserted */
+.output_html .go { color: #717171 } /* Generic.Output */
+.output_html .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.output_html .gs { font-weight: bold } /* Generic.Strong */
+.output_html .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.output_html .gt { color: #0044DD } /* Generic.Traceback */
+.output_html .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.output_html .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.output_html .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.output_html .kp { color: #008000 } /* Keyword.Pseudo */
+.output_html .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.output_html .kt { color: #B00040 } /* Keyword.Type */
+.output_html .m { color: #666666 } /* Literal.Number */
+.output_html .s { color: #BA2121 } /* Literal.String */
+.output_html .na { color: #687822 } /* Name.Attribute */
+.output_html .nb { color: #008000 } /* Name.Builtin */
+.output_html .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.output_html .no { color: #880000 } /* Name.Constant */
+.output_html .nd { color: #AA22FF } /* Name.Decorator */
+.output_html .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.output_html .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.output_html .nf { color: #0000FF } /* Name.Function */
+.output_html .nl { color: #767600 } /* Name.Label */
+.output_html .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.output_html .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.output_html .nv { color: #19177C } /* Name.Variable */
+.output_html .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.output_html .w { color: #bbbbbb } /* Text.Whitespace */
+.output_html .mb { color: #666666 } /* Literal.Number.Bin */
+.output_html .mf { color: #666666 } /* Literal.Number.Float */
+.output_html .mh { color: #666666 } /* Literal.Number.Hex */
+.output_html .mi { color: #666666 } /* Literal.Number.Integer */
+.output_html .mo { color: #666666 } /* Literal.Number.Oct */
+.output_html .sa { color: #BA2121 } /* Literal.String.Affix */
+.output_html .sb { color: #BA2121 } /* Literal.String.Backtick */
+.output_html .sc { color: #BA2121 } /* Literal.String.Char */
+.output_html .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.output_html .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.output_html .s2 { color: #BA2121 } /* Literal.String.Double */
+.output_html .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.output_html .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.output_html .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.output_html .sx { color: #008000 } /* Literal.String.Other */
+.output_html .sr { color: #A45A77 } /* Literal.String.Regex */
+.output_html .s1 { color: #BA2121 } /* Literal.String.Single */
+.output_html .ss { color: #19177C } /* Literal.String.Symbol */
+.output_html .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.output_html .fm { color: #0000FF } /* Name.Function.Magic */
+.output_html .vc { color: #19177C } /* Name.Variable.Class */
+.output_html .vg { color: #19177C } /* Name.Variable.Global */
+.output_html .vi { color: #19177C } /* Name.Variable.Instance */
+.output_html .vm { color: #19177C } /* Name.Variable.Magic */
+.output_html .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typedlogic.integrations.frameworks.owldl</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Thing</span><span class="p">,</span>
+    <span class="n">TopObjectProperty</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A person, living or dead."""</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">HasParent</span><span class="p">(</span><span class="n">TopObjectProperty</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A property that relates a person to their parent."""</span>
+    <span class="n">domain</span> <span class="o">=</span> <span class="n">Person</span>
+    <span class="nb">range</span> <span class="o">=</span> <span class="n">Person</span>
+
+<span class="k">class</span> <span class="nc">HasChild</span><span class="p">(</span><span class="n">TopObjectProperty</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A property that relates a person to their child."""</span>
+    <span class="n">inverse_of</span> <span class="o">=</span> <span class="n">HasParent</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can now load this ontology (TBox) into the reasoner:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">reasoner</span><span class="o">.</span><span class="n">init_from_file</span><span class="p">(</span><span class="s2">&quot;examples/family_v1.py&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next we will add facts. We will add the single fact we declared earlier.</p>
+<p>Note that we could feed in the instance declarations from earlier, but we don't need to here as these will be entailed by the domain and range constraints.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">reasoner</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a2b</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now we'll find a model and all entailments for the predicate <code>HasChild</code>:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">reasoner</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;HasChild&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>HasChild(Bianca, Akira)
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can examine all axioms the reasoner had to work with:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">reasoner</span><span class="o">.</span><span class="n">theory</span><span class="o">.</span><span class="n">sentences</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>∀I: None : (Person(?I) -&gt; Thing(?I))
+∀P: None, I: None, J: None : (HasChild(?I, ?J) -&gt; TopObjectProperty(?I, ?J))
+∀I: None, J: None : (HasChild(?I, ?J) &lt;-&gt; HasParent(?J, ?I))
+∀P: None, I: None, J: None : (HasParent(?I, ?J) -&gt; TopObjectProperty(?I, ?J))
+∀I: None, J: None : (HasParent(?I, ?J) -&gt; Person(?I))
+∀I: None, J: None : (HasParent(?I, ?J) -&gt; Person(?J))
+HasParent(Akira, Bianca)
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="consistency-checking">Consistency Checking</h2>
+<p>Next we will extend our ontology. We will:</p>
+<ul>
+<li>add transitive predicates for <code>HasAncestor</code> and <code>HasDescendant</code></li>
+<li>add an <code>Asymmetric</code> constraint that prevents loops in the graph.</li>
+</ul>
+<p>We will use this program:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">show</span><span class="p">(</span><span class="s2">&quot;examples/family_v2.py&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result">
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.output_html .hll { background-color: #ffffcc }
+.output_html { background: #f8f8f8; }
+.output_html .c { color: #3D7B7B; font-style: italic } /* Comment */
+.output_html .err { border: 1px solid #FF0000 } /* Error */
+.output_html .k { color: #008000; font-weight: bold } /* Keyword */
+.output_html .o { color: #666666 } /* Operator */
+.output_html .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.output_html .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.output_html .cp { color: #9C6500 } /* Comment.Preproc */
+.output_html .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.output_html .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.output_html .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.output_html .gd { color: #A00000 } /* Generic.Deleted */
+.output_html .ge { font-style: italic } /* Generic.Emph */
+.output_html .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.output_html .gr { color: #E40000 } /* Generic.Error */
+.output_html .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.output_html .gi { color: #008400 } /* Generic.Inserted */
+.output_html .go { color: #717171 } /* Generic.Output */
+.output_html .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.output_html .gs { font-weight: bold } /* Generic.Strong */
+.output_html .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.output_html .gt { color: #0044DD } /* Generic.Traceback */
+.output_html .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.output_html .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.output_html .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.output_html .kp { color: #008000 } /* Keyword.Pseudo */
+.output_html .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.output_html .kt { color: #B00040 } /* Keyword.Type */
+.output_html .m { color: #666666 } /* Literal.Number */
+.output_html .s { color: #BA2121 } /* Literal.String */
+.output_html .na { color: #687822 } /* Name.Attribute */
+.output_html .nb { color: #008000 } /* Name.Builtin */
+.output_html .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.output_html .no { color: #880000 } /* Name.Constant */
+.output_html .nd { color: #AA22FF } /* Name.Decorator */
+.output_html .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.output_html .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.output_html .nf { color: #0000FF } /* Name.Function */
+.output_html .nl { color: #767600 } /* Name.Label */
+.output_html .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.output_html .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.output_html .nv { color: #19177C } /* Name.Variable */
+.output_html .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.output_html .w { color: #bbbbbb } /* Text.Whitespace */
+.output_html .mb { color: #666666 } /* Literal.Number.Bin */
+.output_html .mf { color: #666666 } /* Literal.Number.Float */
+.output_html .mh { color: #666666 } /* Literal.Number.Hex */
+.output_html .mi { color: #666666 } /* Literal.Number.Integer */
+.output_html .mo { color: #666666 } /* Literal.Number.Oct */
+.output_html .sa { color: #BA2121 } /* Literal.String.Affix */
+.output_html .sb { color: #BA2121 } /* Literal.String.Backtick */
+.output_html .sc { color: #BA2121 } /* Literal.String.Char */
+.output_html .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.output_html .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.output_html .s2 { color: #BA2121 } /* Literal.String.Double */
+.output_html .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.output_html .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.output_html .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.output_html .sx { color: #008000 } /* Literal.String.Other */
+.output_html .sr { color: #A45A77 } /* Literal.String.Regex */
+.output_html .s1 { color: #BA2121 } /* Literal.String.Single */
+.output_html .ss { color: #19177C } /* Literal.String.Symbol */
+.output_html .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.output_html .fm { color: #0000FF } /* Name.Function.Magic */
+.output_html .vc { color: #19177C } /* Name.Variable.Class */
+.output_html .vg { color: #19177C } /* Name.Variable.Global */
+.output_html .vi { color: #19177C } /* Name.Variable.Instance */
+.output_html .vm { color: #19177C } /* Name.Variable.Magic */
+.output_html .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typedlogic.integrations.frameworks.owldl</span> <span class="kn">import</span> <span class="n">Thing</span><span class="p">,</span> <span class="n">TopObjectProperty</span><span class="p">,</span> <span class="n">SubObjectPropertyOf</span>
+
+
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A person, living or dead."""</span>
+    <span class="k">pass</span>
+
+
+
+<span class="k">class</span> <span class="nc">HasAncestor</span><span class="p">(</span><span class="n">TopObjectProperty</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A property that relates a person to their parent."""</span>
+
+<span class="k">class</span> <span class="nc">HasDescendant</span><span class="p">(</span><span class="n">TopObjectProperty</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A property that relates a person to their child."""</span>
+    <span class="n">transitive</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">asymmetric</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="k">class</span> <span class="nc">HasParent</span><span class="p">(</span><span class="n">HasAncestor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A property that relates a person to their parent."""</span>
+    <span class="n">domain</span> <span class="o">=</span> <span class="n">Person</span>
+    <span class="nb">range</span> <span class="o">=</span> <span class="n">Person</span>
+
+<span class="k">class</span> <span class="nc">HasChild</span><span class="p">(</span><span class="n">HasDescendant</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A property that relates a person to their child."""</span>
+    <span class="n">inverse_of</span> <span class="o">=</span> <span class="n">HasParent</span>
+
+<span class="n">__axioms__</span> <span class="o">=</span> <span class="p">[</span> <span class="n">SubObjectPropertyOf</span><span class="p">(</span><span class="n">HasParent</span><span class="p">,</span> <span class="n">HasAncestor</span><span class="p">),</span> <span class="n">SubObjectPropertyOf</span><span class="p">(</span><span class="n">HasChild</span><span class="p">,</span> <span class="n">HasDescendant</span><span class="p">)</span> <span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here we opted to declare the <code>SubObjectPropertyOf</code> axioms directly at the ontology level, rather than "Frame-style" in the predicate definitions.
+This illustrates how "Manchester-style" and "Functional-style" can be mixed. The Functional-style can be useful for avoiding forward declarations.</p>
+<p>We'll now load this ontology into the reasoner:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">reasoner</span><span class="o">.</span><span class="n">init_from_file</span><span class="p">(</span><span class="s2">&quot;examples/family_v2.py&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now we can add some facts. First we will add two direct parent-child relationships, that can be chained together to form a grandparent-grandchild relationship:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">CARRIE</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="s2">&quot;Carrie&quot;</span><span class="p">)</span>
+<span class="n">reasoner</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">HasParent</span><span class="p">(</span><span class="n">AKIRA</span><span class="o">.</span><span class="n">iri</span><span class="p">,</span> <span class="n">BIANCA</span><span class="o">.</span><span class="n">iri</span><span class="p">),</span> <span class="n">HasParent</span><span class="p">(</span><span class="n">BIANCA</span><span class="o">.</span><span class="n">iri</span><span class="p">,</span> <span class="n">CARRIE</span><span class="o">.</span><span class="n">iri</span><span class="p">)])</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">reasoner</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;HasDescendant&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>HasDescendant(Carrie, Bianca)
+HasDescendant(Bianca, Akira)
+HasDescendant(Carrie, Akira)
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;HasDescendant&quot;</span><span class="p">)))</span> <span class="o">==</span> <span class="mi">3</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As expected we have 3 descendant relationships - two direct and one indirect.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="adding-a-cycle">Adding a cycle</h2>
+<p>Now we will see what happens when a cycle is introduced, for example: <code>Alice -&gt; Jie -&gt; Bob -&gt; Alice</code></p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">reasoner</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">HasParent</span><span class="p">(</span><span class="n">CARRIE</span><span class="o">.</span><span class="n">iri</span><span class="p">,</span> <span class="n">AKIRA</span><span class="o">.</span><span class="n">iri</span><span class="p">))</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">assert</span> <span class="n">reasoner</span><span class="o">.</span><span class="n">coherent</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">False</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The ontology is correctly inferred to be incoherent.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="multiple-models">Multiple Models</h2>
+<p>Next, we will introduce uncertainty into the knowledge base. We will add an assertion that one of the following is true:</p>
+<ul>
+<li><code>HasParent(Carrie, Deepa)</code></li>
+<li><code>HasParent(Carrie, Dmitri)</code></li>
+</ul>
+<p>Formally, this introduces multiple alternate <em>models</em>. The term "model" here is used in the sense of model-theoretic semantics,
+you can think of this as being "possible worlds" where the axioms are true.</p>
+<p>Depending on the underlying Solver, we may be able to enumerate all models. Here we will use the default solver, Clingo, which is based
+in Answer Set Programming (ASP), which supports this.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">reasoner</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">HasParent</span><span class="p">(</span><span class="n">CARRIE</span><span class="o">.</span><span class="n">iri</span><span class="p">,</span> <span class="n">AKIRA</span><span class="o">.</span><span class="n">iri</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">reasoner</span><span class="o">.</span><span class="n">coherent</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typedlogic</span> <span class="kn">import</span> <span class="n">ExactlyOne</span>
+<span class="n">DEEPA</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="s2">&quot;Deepa&quot;</span><span class="p">)</span>
+<span class="n">DMITRI</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="s2">&quot;Dmitri&quot;</span><span class="p">)</span>
+<span class="n">reasoner</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ExactlyOne</span><span class="p">(</span><span class="n">HasParent</span><span class="p">(</span><span class="n">CARRIE</span><span class="o">.</span><span class="n">iri</span><span class="p">,</span> <span class="n">DEEPA</span><span class="o">.</span><span class="n">iri</span><span class="p">),</span> <span class="n">HasParent</span><span class="p">(</span><span class="n">CARRIE</span><span class="o">.</span><span class="n">iri</span><span class="p">,</span> <span class="n">DMITRI</span><span class="o">.</span><span class="n">iri</span><span class="p">)))</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">reasoner</span><span class="o">.</span><span class="n">model_iter</span><span class="p">()):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model&quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;HasAncestor&quot;</span><span class="p">,</span> <span class="n">AKIRA</span><span class="o">.</span><span class="n">iri</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; .. &quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Model 0
+ ..  HasAncestor(Akira, Bianca)
+ ..  HasAncestor(Akira, Carrie)
+ ..  HasAncestor(Akira, Dmitri)
+Model 1
+ ..  HasAncestor(Akira, Bianca)
+ ..  HasAncestor(Akira, Carrie)
+ ..  HasAncestor(Akira, Deepa)
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="c1">## Classification Example</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typedlogic.integrations.frameworks.owldl</span> <span class="kn">import</span> <span class="n">ObjectIntersectionOf</span>
+
+<span class="k">class</span> <span class="nc">Parent</span><span class="p">(</span><span class="n">Thing</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A parent of a person.&quot;&quot;&quot;</span>
+    <span class="n">equivalent_to</span> <span class="o">=</span> <span class="n">ObjectIntersectionOf</span><span class="p">(</span><span class="n">Person</span><span class="p">,</span> <span class="n">HasParent</span><span class="o">.</span><span class="n">some</span><span class="p">(</span><span class="n">Person</span><span class="p">))</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">Parent</span><span class="o">.</span><span class="n">to_sentences</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>∀I: None : (Parent(?I) -&gt; Thing(?I))
+∀I: None : (Parent(?I) &lt;-&gt; (Person(?I)) &amp; (∃(HasParent(?I, ?J)) &amp; (Person(?J))))
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">reasoner</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Parent</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">reasoner</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;Parent&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Parent(Carrie)
+Parent(Bianca)
+Parent(Akira)
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html"></div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;Parent&quot;</span><span class="p">)))</span> <span class="o">==</span> <span class="mi">3</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="next-steps">Next Steps</h2>
+<p>Consult the documentation for the various OWL constructs. These all follow the OWL2 Functional Syntax, and for attribute
+names we follow py-horned-owl as far as possible.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["content.tabs.link"], "search": "../../../../assets/javascripts/workers/search.07f07601.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.56dfad97.min.js"></script>
+      
+    
+  </body>
+</html>

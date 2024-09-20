@@ -1,0 +1,2077 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://cmungall.github.io/typedlogic/tutorial/01-first-program/">
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.34">
+    
+    
+      
+        <title>01 first program - py-typedlogic</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.35f28582.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../../css/pandas-dataframe.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#py-typedlogic-tutorial" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="py-typedlogic" class="md-header__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            py-typedlogic
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              01 first program
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/cmungall/typedlogic/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="py-typedlogic" class="md-nav__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    py-typedlogic
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/cmungall/typedlogic/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Tutorial
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1. First program
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-using-python-data-model" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2. Using the Python Data Model
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Concepts
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Concepts
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Core concepts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/datamodel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Data Model
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/decorators/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decorators
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/generators/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Generators
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/solvers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Solvers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Models
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/parsers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parsers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/compilers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compilers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/benchmarks.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Benchmarks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Solvers
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Solvers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Solver overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/clingo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Clingo
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/z3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Z3
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/souffle/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Souffle
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/prover9/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prover9
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/snakelog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SnakeLog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/llm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    LLM Solver
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Frameworks
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Frameworks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    OWL-DL
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            OWL-DL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/owldl/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OWL-DL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/owldl/owldl-tutorial" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/owldl/owltop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Classes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/owldl/reasoner/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reasoner
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/pydantic" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pydantic
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/sqlmodel.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQLModel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../troubleshooting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roadmap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Roadmap
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defining-our-core-data-structures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Defining our core data structures
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-axioms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adding axioms
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solvers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Solvers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#satisfiability-checking" class="md-nav__link">
+    <span class="md-ellipsis">
+      Satisfiability Checking
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiple-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Models
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+(function() {
+  function addWidgetsRenderer() {
+    var requireJsScript = document.createElement('script');
+    requireJsScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js';
+
+    var mimeElement = document.querySelector('script[type="application/vnd.jupyter.widget-view+json"]');
+    var jupyterWidgetsScript = document.createElement('script');
+    var widgetRendererSrc = 'https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js';
+    var widgetState;
+
+    // Fallback for older version:
+    try {
+      widgetState = mimeElement && JSON.parse(mimeElement.innerHTML);
+
+      if (widgetState && (widgetState.version_major < 2 || !widgetState.version_major)) {
+        widgetRendererSrc = 'jupyter-js-widgets@*/dist/embed.js';
+      }
+    } catch(e) {}
+
+    jupyterWidgetsScript.src = widgetRendererSrc;
+
+    document.body.appendChild(requireJsScript);
+    document.body.appendChild(jupyterWidgetsScript);
+  }
+
+  document.addEventListener('DOMContentLoaded', addWidgetsRenderer);
+}());
+</script>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="py-typedlogic-tutorial">py-typedlogic tutorial</h1>
+<p>This tutorial walks you through some of the basic features of the <code>typedlogic</code> library, and how to define logical formulae for Python data structures and programs.</p>
+<p>The tutorial makes use of a simple database of <code>Link</code> structures, which represent direct steps in a path through different US states. We will define a predicate <code>Path</code> that represents the transitive closure of the Link predicate.</p>
+<p>For example, if we have <code>Link</code>s:</p>
+<ul>
+<li><code>CA -&gt; NV</code></li>
+<li><code>NV -&gt; AZ</code></li>
+<li><code>AZ -&gt; UT</code></li>
+</ul>
+<p>Then have 3 paths of length 1 (corresponding to the links), as well as paths of length 2 from <code>CA</code> to <code>AZ</code> and <code>NV</code> to <code>UT</code>, and a path of length 3 from <code>CA</code> to <code>UT</code>.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="installation">Installation</h2>
+<p>To install:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>typedlogic
+</code></pre></div>
+<p>This tutorial makes use of the Snakelog and Z3 integrations, so you would need the Z3 extra:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;typedlogic[snakelog,z3]&#39;</span>
+</code></pre></div>
+<p>This tutorial is also a Jupyter notebook, which can be executed interactively.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="defining-our-core-data-structures">Defining our core data structures</h2>
+<p>You can define your data model through a different mechanisms. Currently the recommended ways are</p>
+<ul>
+<li><a href="https://pydantic.dev/">Pydantic</a> classes</li>
+<li>Python <a href="https://docs.python.org/3/library/dataclasses.html">dataclasses</a></li>
+</ul>
+<p>Support for other mechanisms (e.g SQLModels, Pandera) is planned.</p>
+<p>For this tutorial, we will use a ready-made pydantic file containing the definition of our data model, which will consist of two classes:</p>
+<ul>
+<li><code>Link</code>, representing a direct edge between two entities</li>
+<li><code>Path</code>, representing a path of one or more edges</li>
+</ul>
+<p>(For the purposes of this tutorial, we will use a <code>show</code> function to display the contents of our program,
+but this step is not necessary for everyday use).</p>
+<p>We will use this to show the contents of the <a href="../paths/model.py">paths/model.py</a> file.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="c1"># convenience function for running in a notebook</span>
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">show</span>
+<span class="n">show</span><span class="p">(</span><span class="s2">&quot;paths/model.py&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result">
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.output_html .hll { background-color: #ffffcc }
+.output_html { background: #f8f8f8; }
+.output_html .c { color: #3D7B7B; font-style: italic } /* Comment */
+.output_html .err { border: 1px solid #FF0000 } /* Error */
+.output_html .k { color: #008000; font-weight: bold } /* Keyword */
+.output_html .o { color: #666666 } /* Operator */
+.output_html .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.output_html .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.output_html .cp { color: #9C6500 } /* Comment.Preproc */
+.output_html .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.output_html .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.output_html .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.output_html .gd { color: #A00000 } /* Generic.Deleted */
+.output_html .ge { font-style: italic } /* Generic.Emph */
+.output_html .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.output_html .gr { color: #E40000 } /* Generic.Error */
+.output_html .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.output_html .gi { color: #008400 } /* Generic.Inserted */
+.output_html .go { color: #717171 } /* Generic.Output */
+.output_html .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.output_html .gs { font-weight: bold } /* Generic.Strong */
+.output_html .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.output_html .gt { color: #0044DD } /* Generic.Traceback */
+.output_html .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.output_html .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.output_html .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.output_html .kp { color: #008000 } /* Keyword.Pseudo */
+.output_html .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.output_html .kt { color: #B00040 } /* Keyword.Type */
+.output_html .m { color: #666666 } /* Literal.Number */
+.output_html .s { color: #BA2121 } /* Literal.String */
+.output_html .na { color: #687822 } /* Name.Attribute */
+.output_html .nb { color: #008000 } /* Name.Builtin */
+.output_html .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.output_html .no { color: #880000 } /* Name.Constant */
+.output_html .nd { color: #AA22FF } /* Name.Decorator */
+.output_html .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.output_html .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.output_html .nf { color: #0000FF } /* Name.Function */
+.output_html .nl { color: #767600 } /* Name.Label */
+.output_html .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.output_html .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.output_html .nv { color: #19177C } /* Name.Variable */
+.output_html .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.output_html .w { color: #bbbbbb } /* Text.Whitespace */
+.output_html .mb { color: #666666 } /* Literal.Number.Bin */
+.output_html .mf { color: #666666 } /* Literal.Number.Float */
+.output_html .mh { color: #666666 } /* Literal.Number.Hex */
+.output_html .mi { color: #666666 } /* Literal.Number.Integer */
+.output_html .mo { color: #666666 } /* Literal.Number.Oct */
+.output_html .sa { color: #BA2121 } /* Literal.String.Affix */
+.output_html .sb { color: #BA2121 } /* Literal.String.Backtick */
+.output_html .sc { color: #BA2121 } /* Literal.String.Char */
+.output_html .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.output_html .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.output_html .s2 { color: #BA2121 } /* Literal.String.Double */
+.output_html .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.output_html .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.output_html .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.output_html .sx { color: #008000 } /* Literal.String.Other */
+.output_html .sr { color: #A45A77 } /* Literal.String.Regex */
+.output_html .s1 { color: #BA2121 } /* Literal.String.Single */
+.output_html .ss { color: #19177C } /* Literal.String.Symbol */
+.output_html .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.output_html .fm { color: #0000FF } /* Name.Function.Magic */
+.output_html .vc { color: #19177C } /* Name.Variable.Class */
+.output_html .vg { color: #19177C } /* Name.Variable.Global */
+.output_html .vi { color: #19177C } /* Name.Variable.Instance */
+.output_html .vm { color: #19177C } /* Name.Variable.Magic */
+.output_html .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typedlogic.integrations.frameworks.pydantic</span> <span class="kn">import</span> <span class="n">FactBaseModel</span>
+
+<span class="n">ID</span> <span class="o">=</span> <span class="nb">str</span>
+
+<span class="k">class</span> <span class="nc">Link</span><span class="p">(</span><span class="n">FactBaseModel</span><span class="p">):</span>
+    <span class="n">source</span><span class="p">:</span> <span class="n">ID</span>
+    <span class="n">target</span><span class="p">:</span> <span class="n">ID</span>
+
+<span class="k">class</span> <span class="nc">Path</span><span class="p">(</span><span class="n">FactBaseModel</span><span class="p">):</span>
+    <span class="n">source</span><span class="p">:</span> <span class="n">ID</span>
+    <span class="n">target</span><span class="p">:</span> <span class="n">ID</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can use this just as we would any other Pydantic schema. Here we will import it, and create instances of the <code>Link</code> class,
+representing direct connections between US states. For our purposes here, we will consider these directed.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">paths.model</span> <span class="kn">import</span> <span class="n">Link</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">data</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;CA&quot;</span><span class="p">,</span> <span class="s2">&quot;NV&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;NV&quot;</span><span class="p">,</span> <span class="s2">&quot;AZ&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;AZ&quot;</span><span class="p">,</span> <span class="s2">&quot;UT&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;CA&quot;</span><span class="p">,</span> <span class="s2">&quot;OR&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;OR&quot;</span><span class="p">,</span> <span class="s2">&quot;WA&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;WA&quot;</span><span class="p">,</span> <span class="s2">&quot;ID&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">,</span> <span class="s2">&quot;MT&quot;</span><span class="p">)]</span>
+<span class="n">links</span> <span class="o">=</span> <span class="p">[</span><span class="n">Link</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">)</span> <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+<span class="n">links</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea output_execute_result">
+<pre>
+<code>[Link(source='CA', target='NV'), Link(source='NV', target='AZ')]</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Because we chose to use Pydantic, we get excellent runtime validation on object creation. Our schema so far has minimal constraints, but we have declared that the types of the two fields are <code>strings</code>. This means that we will get a validation error if we try to create a <code>Link</code> with non-string values.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">ValidationError</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">new_link</span> <span class="o">=</span> <span class="n">Link</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;We got a validation error!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;** Don&#39;t worry, this is expected **&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>We got a validation error!
+** Don't worry, this is expected **
+2 validation errors for Link
+source
+  Input should be a valid string [type=string_type, input_value=1, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.9/v/string_type
+target
+  Input should be a valid string [type=string_type, input_value=2, input_type=int]
+    For further information visit https://errors.pydantic.dev/2.9/v/string_type
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So far everything we have done in standard Pydantic! Now, onto so unique typedlogic features:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="adding-axioms">Adding axioms</h2>
+<p>Next we want to define <em>logical axioms</em> that determine what inferences to expect from our data model. In particular, we want to define
+axioms (in this case, simple rules) that</p>
+<ol>
+<li>Derives one-hop <code>Path</code>s from the <code>Link</code> predicate.</li>
+<li>Derives multi-hop <code>Path</code>s from the transitive closure of the one-hop <code>Path</code> predicate.</li>
+</ol>
+<p>We have a ready made program for doing this:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">show</span><span class="p">(</span><span class="s2">&quot;paths/axioms.py&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result">
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.output_html .hll { background-color: #ffffcc }
+.output_html { background: #f8f8f8; }
+.output_html .c { color: #3D7B7B; font-style: italic } /* Comment */
+.output_html .err { border: 1px solid #FF0000 } /* Error */
+.output_html .k { color: #008000; font-weight: bold } /* Keyword */
+.output_html .o { color: #666666 } /* Operator */
+.output_html .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.output_html .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.output_html .cp { color: #9C6500 } /* Comment.Preproc */
+.output_html .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.output_html .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.output_html .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.output_html .gd { color: #A00000 } /* Generic.Deleted */
+.output_html .ge { font-style: italic } /* Generic.Emph */
+.output_html .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.output_html .gr { color: #E40000 } /* Generic.Error */
+.output_html .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.output_html .gi { color: #008400 } /* Generic.Inserted */
+.output_html .go { color: #717171 } /* Generic.Output */
+.output_html .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.output_html .gs { font-weight: bold } /* Generic.Strong */
+.output_html .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.output_html .gt { color: #0044DD } /* Generic.Traceback */
+.output_html .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.output_html .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.output_html .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.output_html .kp { color: #008000 } /* Keyword.Pseudo */
+.output_html .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.output_html .kt { color: #B00040 } /* Keyword.Type */
+.output_html .m { color: #666666 } /* Literal.Number */
+.output_html .s { color: #BA2121 } /* Literal.String */
+.output_html .na { color: #687822 } /* Name.Attribute */
+.output_html .nb { color: #008000 } /* Name.Builtin */
+.output_html .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.output_html .no { color: #880000 } /* Name.Constant */
+.output_html .nd { color: #AA22FF } /* Name.Decorator */
+.output_html .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.output_html .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.output_html .nf { color: #0000FF } /* Name.Function */
+.output_html .nl { color: #767600 } /* Name.Label */
+.output_html .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.output_html .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.output_html .nv { color: #19177C } /* Name.Variable */
+.output_html .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.output_html .w { color: #bbbbbb } /* Text.Whitespace */
+.output_html .mb { color: #666666 } /* Literal.Number.Bin */
+.output_html .mf { color: #666666 } /* Literal.Number.Float */
+.output_html .mh { color: #666666 } /* Literal.Number.Hex */
+.output_html .mi { color: #666666 } /* Literal.Number.Integer */
+.output_html .mo { color: #666666 } /* Literal.Number.Oct */
+.output_html .sa { color: #BA2121 } /* Literal.String.Affix */
+.output_html .sb { color: #BA2121 } /* Literal.String.Backtick */
+.output_html .sc { color: #BA2121 } /* Literal.String.Char */
+.output_html .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.output_html .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.output_html .s2 { color: #BA2121 } /* Literal.String.Double */
+.output_html .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.output_html .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.output_html .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.output_html .sx { color: #008000 } /* Literal.String.Other */
+.output_html .sr { color: #A45A77 } /* Literal.String.Regex */
+.output_html .s1 { color: #BA2121 } /* Literal.String.Single */
+.output_html .ss { color: #19177C } /* Literal.String.Symbol */
+.output_html .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.output_html .fm { color: #0000FF } /* Name.Function.Magic */
+.output_html .vc { color: #19177C } /* Name.Variable.Class */
+.output_html .vg { color: #19177C } /* Name.Variable.Global */
+.output_html .vi { color: #19177C } /* Name.Variable.Instance */
+.output_html .vm { color: #19177C } /* Name.Variable.Magic */
+.output_html .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">paths.model</span> <span class="kn">import</span> <span class="n">Link</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">ID</span>
+<span class="kn">from</span> <span class="nn">typedlogic.decorators</span> <span class="kn">import</span> <span class="n">axiom</span>
+
+<span class="nd">@axiom</span>
+<span class="k">def</span> <span class="nf">link_implies_path</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ID</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">ID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The presence of a link implies the existence of a (one-hop) path.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">Link</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+
+<span class="nd">@axiom</span>
+<span class="k">def</span> <span class="nf">transitivity</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ID</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">ID</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">ID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    If there is a path from x to y and a path from y to z,</span>
+<span class="sd">    then there is a path from x to z.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y</span><span class="p">)</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">z</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Note that typedlogic is based in Python, we can take advantage of python constructs like <code>import</code> to modularize our theory.</p>
+<p>This uses the <code>@axiom</code> decorator to define the rules. These may look a little unusual at first - they are not intended to be executed directly,
+instead they provide a <em>declarative specification</em> of the rules of our system.</p>
+<p>If you are familiar with first-order logic, you can read each decorated function as a "forall" (universal quantifier) statement,
+where the arguments are the (typed) variables in the quantifier. If you are not, don't worry for now. You can just read each of the axioms as a simple rule.</p>
+<h2 id="solvers">Solvers</h2>
+<p>The rules are not executed directly - instead they are used as inputs for <a href="/typedlogic/concepts/solvers/">solvers</a>. Different solvers will operate differently, but broadly they can be thought of as fulfilling two roles:</p>
+<ol>
+<li><em>Finding new facts</em>: Given a set of rules and a set of facts, the solver can derive new facts that are logically entailed by the rules and the facts.</li>
+<li><em>Checking</em> whether a set of facts is consistent with the rules, or whether the rules themselves are consistent.</li>
+</ol>
+<p>Not all solvers are capable of fulfilling both roles, and solvers may vary in what expressions they understand and how fast they run. py-typedlogic provides as easy bridge onto a number of different solvers, through its <em>integrations</em> mechanism.</p>
+<p>We will start with a simple pure python builtin solver called <a href="/typedlogic/integrations/solvers/snakelog/">SnakeLog</a>. This implements only a subset of logic (formally, it is a small subset of datalog), but it has the advantage of requiring no additional installation steps, and being fast for large datasets.</p>
+<p>First we'll create the solver object, and load the axioms into it.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">paths.axioms</span> <span class="k">as</span> <span class="nn">paths_axioms</span>
+<span class="kn">from</span> <span class="nn">typedlogic.integrations.solvers.snakelog</span> <span class="kn">import</span> <span class="n">SnakeLogSolver</span>
+<span class="n">solver</span> <span class="o">=</span> <span class="n">SnakeLogSolver</span><span class="p">()</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">paths_axioms</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next we'll add our data to the solver. In this case, we'll add the <code>Link</code> objects we created earlier.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now we will ask the solver for a <a href="/typedlogic/concepts/models/">model</a>.</p>
+<p>Note the term "model" is a bit ambiguous. If you are coming from a data modeling and Pydantic background, "model" means schema or data model. The use in formal systems and "model theory" is a bit different. For now you can think of it as representing a universe of things that might possibly be true.</p>
+<p>We'll get onto what it would mean for there to be multiple models later, but our simple snakelog solver (like many datalog systems) will just yield a single model, so we'll get that.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can ask the model to retrieve all <em>ground terms</em> (or <em>facts</em>) that can be proved and are consistent in that model.</p>
+<p>Here we use <code>iter_retrieve</code> to get all the <code>Path</code> objects that can be derived from the axioms</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;Path&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Path(AZ, UT)
+Path(CA, AZ)
+Path(CA, ID)
+Path(CA, MT)
+Path(CA, NV)
+Path(CA, OR)
+Path(CA, UT)
+Path(CA, WA)
+Path(ID, MT)
+Path(NV, AZ)
+Path(NV, UT)
+Path(OR, ID)
+Path(OR, MT)
+Path(OR, WA)
+Path(WA, ID)
+Path(WA, MT)
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can see it has given us all transitive / multi-hop paths that can be derived from the starting facts.</p>
+<p>We can also derive the one-hop links, but this is not very interesting, corresponding to the initial database (because we provided no
+axioms to entail new links).</p>
+<p>Let's check this:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">original_links</span> <span class="o">=</span> <span class="p">{(</span><span class="n">link</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">link</span><span class="o">.</span><span class="n">target</span><span class="p">)</span> <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">links</span><span class="p">}</span>
+<span class="n">entailed_links</span> <span class="o">=</span> <span class="p">{</span><span class="n">term</span><span class="o">.</span><span class="n">values</span> <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;Link&quot;</span><span class="p">)}</span>
+<span class="k">assert</span> <span class="n">original_links</span> <span class="o">==</span> <span class="n">entailed_links</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can encode more complex inference rules, using predicates with more arguments, encoding the complexity of our domain. We will return to some examples later.</p>
+<p>For now, let's switch to a different use case, <em>checking</em> our data and our data models.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="satisfiability-checking">Satisfiability Checking</h2>
+<p>For this we're going to switch to a more expressive solver, the <a href="https://github.com/Z3Prover/z3">Z3 Prover</a>. You will need to install this as an extra, either:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;typedlogic[z3]&#39;</span>
+</code></pre></div>
+<p>We will set up the solver in the same way.</p>
+<p>This time we won't ask for a model, we will instead run <code>check</code> which checks for satisfiability.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typedlogic.integrations.solvers.z3</span> <span class="kn">import</span> <span class="n">Z3Solver</span>
+
+<span class="n">solver</span> <span class="o">=</span> <span class="n">Z3Solver</span><span class="p">()</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">paths_axioms</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea output_execute_result">
+<pre>
+<code>Solution(satisfiable=True)</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So far so good! Our data and theory is consistent and satisfiable. But this is not surprising as we have not specified any axioms involving <em>negation</em>.</p>
+<p>Let's add an axiom that says that there are no cycles, i.e there is no path that leads back to itself. We can write this in FOL as:</p>
+<p>$$
+\forall x. \neg Path(x, x)
+$$</p>
+<p>But here we will write this in Python syntax using the <code>@axiom</code> decorator:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@axiom</span>
+<span class="k">def</span> <span class="nf">acyclicity</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ID</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">ID</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">x</span><span class="p">)</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y</span><span class="p">))</span>
+</code></pre></div>
+<p>Here is what our <a href="../paths/axioms_strict.py">modified program</a> looks like:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">show</span><span class="p">(</span><span class="s2">&quot;paths/axioms_strict.py&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result">
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.output_html .hll { background-color: #ffffcc }
+.output_html { background: #f8f8f8; }
+.output_html .c { color: #3D7B7B; font-style: italic } /* Comment */
+.output_html .err { border: 1px solid #FF0000 } /* Error */
+.output_html .k { color: #008000; font-weight: bold } /* Keyword */
+.output_html .o { color: #666666 } /* Operator */
+.output_html .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.output_html .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.output_html .cp { color: #9C6500 } /* Comment.Preproc */
+.output_html .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.output_html .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.output_html .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.output_html .gd { color: #A00000 } /* Generic.Deleted */
+.output_html .ge { font-style: italic } /* Generic.Emph */
+.output_html .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.output_html .gr { color: #E40000 } /* Generic.Error */
+.output_html .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.output_html .gi { color: #008400 } /* Generic.Inserted */
+.output_html .go { color: #717171 } /* Generic.Output */
+.output_html .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.output_html .gs { font-weight: bold } /* Generic.Strong */
+.output_html .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.output_html .gt { color: #0044DD } /* Generic.Traceback */
+.output_html .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.output_html .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.output_html .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.output_html .kp { color: #008000 } /* Keyword.Pseudo */
+.output_html .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.output_html .kt { color: #B00040 } /* Keyword.Type */
+.output_html .m { color: #666666 } /* Literal.Number */
+.output_html .s { color: #BA2121 } /* Literal.String */
+.output_html .na { color: #687822 } /* Name.Attribute */
+.output_html .nb { color: #008000 } /* Name.Builtin */
+.output_html .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.output_html .no { color: #880000 } /* Name.Constant */
+.output_html .nd { color: #AA22FF } /* Name.Decorator */
+.output_html .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.output_html .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.output_html .nf { color: #0000FF } /* Name.Function */
+.output_html .nl { color: #767600 } /* Name.Label */
+.output_html .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.output_html .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.output_html .nv { color: #19177C } /* Name.Variable */
+.output_html .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.output_html .w { color: #bbbbbb } /* Text.Whitespace */
+.output_html .mb { color: #666666 } /* Literal.Number.Bin */
+.output_html .mf { color: #666666 } /* Literal.Number.Float */
+.output_html .mh { color: #666666 } /* Literal.Number.Hex */
+.output_html .mi { color: #666666 } /* Literal.Number.Integer */
+.output_html .mo { color: #666666 } /* Literal.Number.Oct */
+.output_html .sa { color: #BA2121 } /* Literal.String.Affix */
+.output_html .sb { color: #BA2121 } /* Literal.String.Backtick */
+.output_html .sc { color: #BA2121 } /* Literal.String.Char */
+.output_html .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.output_html .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.output_html .s2 { color: #BA2121 } /* Literal.String.Double */
+.output_html .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.output_html .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.output_html .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.output_html .sx { color: #008000 } /* Literal.String.Other */
+.output_html .sr { color: #A45A77 } /* Literal.String.Regex */
+.output_html .s1 { color: #BA2121 } /* Literal.String.Single */
+.output_html .ss { color: #19177C } /* Literal.String.Symbol */
+.output_html .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.output_html .fm { color: #0000FF } /* Name.Function.Magic */
+.output_html .vc { color: #19177C } /* Name.Variable.Class */
+.output_html .vg { color: #19177C } /* Name.Variable.Global */
+.output_html .vi { color: #19177C } /* Name.Variable.Instance */
+.output_html .vm { color: #19177C } /* Name.Variable.Magic */
+.output_html .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">paths.model</span> <span class="kn">import</span> <span class="n">Link</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">ID</span>
+<span class="kn">from</span> <span class="nn">typedlogic.decorators</span> <span class="kn">import</span> <span class="n">axiom</span>
+
+<span class="nd">@axiom</span>
+<span class="k">def</span> <span class="nf">link_implies_path</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ID</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">ID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Same as before"""</span>
+    <span class="k">if</span> <span class="n">Link</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+
+<span class="nd">@axiom</span>
+<span class="k">def</span> <span class="nf">transitivity</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ID</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">ID</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">ID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Same as before"""</span>
+    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y</span><span class="p">)</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">z</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">z</span><span class="p">)</span>
+
+<span class="nd">@axiom</span>
+<span class="k">def</span> <span class="nf">acyclicity</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ID</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">ID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""No path should lead from a node back to itself"""</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">x</span><span class="p">)</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now let's set up the solver with the new axioms and check for satisfiability again. We will also add a link that creates a cycle.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">solver</span> <span class="o">=</span> <span class="n">Z3Solver</span><span class="p">()</span>
+<span class="kn">import</span> <span class="nn">paths.axioms_strict</span> <span class="k">as</span> <span class="nn">paths_axioms_strict</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">paths_axioms_strict</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Link</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s2">&quot;MT&quot;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s2">&quot;CA&quot;</span><span class="p">))</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">check</span><span class="p">()</span><span class="o">.</span><span class="n">satisfiable</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea output_execute_result">
+<pre>
+<code>False</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Hurrah! As expected, the solver has found that the data is not satisfiable, because we have added a cycle.</p>
+<p>Currently there is no single easy way to see an explanation, but this will be provided in the future.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="multiple-models">Multiple Models</h2>
+<p>Next we will explore what happens when we add sentences that lead to multiple possible worlds in which all sentences are true.
+These separate "worlds" are typically called "models" in formal logic.</p>
+<p>We will use the Clingo solver, which is based on Answer Set Programming (ASP) which allows for enumeration of these models.</p>
+<p>We will set up our base knowledge base as before:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typedlogic.integrations.solvers.clingo</span> <span class="kn">import</span> <span class="n">ClingoSolver</span>
+<span class="n">solver</span> <span class="o">=</span> <span class="n">ClingoSolver</span><span class="p">()</span>
+<span class="kn">import</span> <span class="nn">paths.axioms_strict</span> <span class="k">as</span> <span class="nn">paths_axioms_strict</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">paths_axioms_strict</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next we'll add uncertainly using the <code>ExactlyOne</code> boolean sentence type:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typedlogic</span> <span class="kn">import</span> <span class="n">ExactlyOne</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ExactlyOne</span><span class="p">(</span><span class="n">Link</span><span class="p">(</span><span class="s2">&quot;MT&quot;</span><span class="p">,</span> <span class="s2">&quot;ND&quot;</span><span class="p">),</span> <span class="n">Link</span><span class="p">(</span><span class="s2">&quot;MT&quot;</span><span class="p">,</span> <span class="s2">&quot;SD&quot;</span><span class="p">)))</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We'll check this gives two worlds:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">models</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">solver</span><span class="o">.</span><span class="n">models</span><span class="p">())</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">models</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next we will explore which paths are present in each world:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">models</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model: </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;Path&quot;</span><span class="p">,</span> <span class="s2">&quot;CA&quot;</span><span class="p">,</span> <span class="s2">&quot;ND&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; has path CA to ND: </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;Path&quot;</span><span class="p">,</span> <span class="s2">&quot;CA&quot;</span><span class="p">,</span> <span class="s2">&quot;SD&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot; has path CA to SD: </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Model: 0
+ has path CA to SD: Path(CA, SD)
+Model: 1
+ has path CA to ND: Path(CA, ND)
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As expected there is one world with a path from CA to SD, and another with a path from CA to ND.</p>
+<p>We can collapse the number of universes by ruling out a path. So far we have only asserted the base one-hop links, but there is nothing to
+stop us making assertions about multi-hop paths. We can do this by adding a negation of a path to the solver, here stating there is no path from CA to ND:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">paths.model</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">~</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;CA&quot;</span><span class="p">,</span> <span class="s2">&quot;ND&quot;</span><span class="p">))</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This will collapse the number of models to one:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">models</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">solver</span><span class="o">.</span><span class="n">models</span><span class="p">())</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">models</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link"], "search": "../../assets/javascripts/workers/search.07f07601.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56dfad97.min.js"></script>
+      
+    
+  </body>
+</html>
