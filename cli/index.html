@@ -8,28 +8,28 @@
       
       
       
-        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/concepts/compilers/">
+        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/cli/">
       
       
-        <link rel="prev" href="../parsers/">
+        <link rel="prev" href="../integrations/frameworks/owldl/reasoner/">
       
       
-        <link rel="next" href="../../integrations/solvers/">
+        <link rel="next" href="../troubleshooting/">
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.34">
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.35">
     
     
       
-        <title>Compilers - py-typedlogic</title>
+        <title>Command Line - py-typedlogic</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.35f28582.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.35f28582.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -48,15 +48,15 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../css/ansi-colours.css">
+      <link rel="stylesheet" href="../css/ansi-colours.css">
     
-      <link rel="stylesheet" href="../../css/jupyter-cells.css">
+      <link rel="stylesheet" href="../css/jupyter-cells.css">
     
-      <link rel="stylesheet" href="../../css/pandas-dataframe.css">
+      <link rel="stylesheet" href="../css/pandas-dataframe.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#compilers" class="md-skip">
+        <a href="#cli-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -98,7 +98,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="py-typedlogic" class="md-header__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+    <a href=".." title="py-typedlogic" class="md-header__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Compilers
+              Command Line
             
           </span>
         </div>
@@ -231,7 +231,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="py-typedlogic" class="md-nav__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+    <a href=".." title="py-typedlogic" class="md-nav__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -261,7 +261,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -316,7 +316,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/01-first-program" class="md-nav__link">
+      <a href="../tutorial/01-first-program" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -337,7 +337,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/02-using-python-data-model" class="md-nav__link">
+      <a href="../tutorial/02-using-python-data-model" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -362,19 +362,17 @@
       
   
   
-    
   
   
-  
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -388,7 +386,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Concepts
@@ -402,7 +400,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../concepts/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -423,7 +421,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../datamodel/" class="md-nav__link">
+      <a href="../concepts/datamodel/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -444,7 +442,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decorators/" class="md-nav__link">
+      <a href="../concepts/decorators/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -465,7 +463,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../generators/" class="md-nav__link">
+      <a href="../concepts/generators/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -486,7 +484,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../solvers/" class="md-nav__link">
+      <a href="../concepts/solvers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -507,7 +505,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../models/" class="md-nav__link">
+      <a href="../concepts/models/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -528,59 +526,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../parsers/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Parsers
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  <span class="md-ellipsis">
-    Compilers
-  </span>
-  
-
-      </a>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../benchmarks.md" class="md-nav__link">
+      <a href="../concepts/benchmarks.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -643,7 +589,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../integrations/solvers/" class="md-nav__link">
+      <a href="../integrations/solvers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -664,7 +610,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../integrations/solvers/clingo/" class="md-nav__link">
+      <a href="../integrations/solvers/clingo/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -685,7 +631,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../integrations/solvers/z3/" class="md-nav__link">
+      <a href="../integrations/solvers/z3/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -706,7 +652,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../integrations/solvers/souffle/" class="md-nav__link">
+      <a href="../integrations/solvers/souffle/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -727,7 +673,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../integrations/solvers/prover9/" class="md-nav__link">
+      <a href="../integrations/solvers/prover9/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -748,7 +694,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../integrations/solvers/snakelog/" class="md-nav__link">
+      <a href="../integrations/solvers/snakelog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -769,7 +715,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../integrations/solvers/llm/" class="md-nav__link">
+      <a href="../integrations/solvers/llm/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -811,7 +757,7 @@
             
   
   <span class="md-ellipsis">
-    Frameworks
+    Compilers
   </span>
   
 
@@ -820,6 +766,279 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Compilers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conversion/compilers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compiler overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conversion/compilers/yaml/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAML
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conversion/compilers/prolog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prolog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conversion/compilers/tptp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TPTP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conversion/compilers/fol/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FOL
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conversion/compilers/sexpr/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    S-Expression
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Parsers
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Parsers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conversion/parsers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parser overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conversion/parsers/python/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Python
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conversion/parsers/yaml/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAML
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Frameworks
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             Frameworks
           </label>
@@ -839,10 +1058,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" >
         
           
-          <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -853,8 +1072,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_1">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1">
             <span class="md-nav__icon md-icon"></span>
             OWL-DL
           </label>
@@ -867,7 +1086,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../integrations/frameworks/owldl/" class="md-nav__link">
+      <a href="../integrations/frameworks/owldl/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -888,7 +1107,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../integrations/frameworks/owldl/owldl-tutorial" class="md-nav__link">
+      <a href="../integrations/frameworks/owldl/owldl-tutorial" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -909,7 +1128,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../integrations/frameworks/owldl/owltop/" class="md-nav__link">
+      <a href="../integrations/frameworks/owldl/owltop/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -930,7 +1149,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../integrations/frameworks/owldl/reasoner/" class="md-nav__link">
+      <a href="../integrations/frameworks/owldl/reasoner/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -959,7 +1178,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../integrations/frameworks/pydantic" class="md-nav__link">
+      <a href="../integrations/frameworks/pydantic" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -980,7 +1199,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../integrations/frameworks/sqlmodel.md" class="md-nav__link">
+      <a href="../integrations/frameworks/sqlmodel.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1005,10 +1224,40 @@
       
   
   
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Command Line
+  </span>
+  
+
+      </a>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
   
   
     <li class="md-nav__item">
-      <a href="../../troubleshooting/" class="md-nav__link">
+      <a href="../troubleshooting/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1028,7 +1277,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../roadmap/" class="md-nav__link">
+      <a href="../roadmap/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1048,7 +1297,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../contributing.md" class="md-nav__link">
+      <a href="../contributing.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1097,35 +1346,56 @@
   
 
 
-<h1 id="compilers">Compilers</h1>
-
-
-<div class="doc doc-object doc-module">
-
-
-
-
-    <div class="doc doc-contents first">
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
+<h1 id="cli-reference">CLI Reference</h1>
+<h1 id="typedlogic">typedlogic</h1>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>typedlogic [OPTIONS] COMMAND [ARGS]...
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<div class="highlight"><pre><span></span><code>  --install-completion  Install completion for the current shell.
+  --show-completion     Show completion for the current shell, to copy it or
+                        customize the installation.
+  --help                Show this message and exit.
+</code></pre></div>
+<h2 id="convert">convert</h2>
+<p>Convert from one logic form to another.</p>
+<p>For a list of supported parsers and compilers,
+see https://py-typedlogic.github.io/py-typedlogic/</p>
+<p>Note that some conversions may be lossy. Currently no warnings are issued for such cases.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>convert<span class="w">  </span>my_theory.py<span class="w"> </span>-t<span class="w"> </span>fol
+</code></pre></div>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>typedlogic convert [OPTIONS] THEORY_FILES...
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<div class="highlight"><pre><span></span><code>  THEORY_FILES...           [required]
+  -f, --input-format TEXT   Input format. Currently supported: python, yaml
+                            [default: python]
+  -t, --output-format TEXT  Output format
+  -o, --output-file PATH    Output file path
+  --help                    Show this message and exit.
+</code></pre></div>
+<h2 id="solve">solve</h2>
+<p>Solve using the specified solver.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>solve<span class="w"> </span>--solver<span class="w"> </span>clingo<span class="w"> </span>my_theory.py<span class="w"> </span>my_data.yaml
+</code></pre></div>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>typedlogic solve [OPTIONS] THEORY_FILE [DATA_FILES]...
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<div class="highlight"><pre><span></span><code>  THEORY_FILE                   [required]
+  --solver TEXT                 Solver to use
+  -c, --check-only              Check only, do not solve
+  -f, --input-format TEXT       Input format. Currently supported: python,
+                                yaml  [default: python]
+  -d, --data-input-format TEXT  Format for ground terms
+  -t, --output-format TEXT      Output format
+  -o, --output-file PATH        Output file path
+  [DATA_FILES]...
+  --help                        Show this message and exit.
+</code></pre></div>
 
 
 
@@ -1174,10 +1444,10 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link"], "search": "../../assets/javascripts/workers/search.07f07601.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.56dfad97.min.js"></script>
+      <script src="../assets/javascripts/bundle.56dfad97.min.js"></script>
       
     
   </body>
