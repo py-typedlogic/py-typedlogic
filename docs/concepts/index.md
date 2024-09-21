@@ -11,7 +11,7 @@ Currently the solvers supported are:
 - [Souffle](../integrations/solvers/souffle.md)
 - [Clingo](../integrations/solvers/clingo)
 - [Prover9](../integrations/solvers/prover9)
-- [Snakelog](../integrations/solvers/snakelog))
+- [Snakelog](../integrations/solvers/snakelog)
 
 With support for more solvers (Vampire, OWL reasoners, etc.) planned.
 
@@ -74,9 +74,13 @@ class OwnsPet(BaseModel, FactMixin):
     pet: PetID
 ```
 
+Note in many logic frameworks these definitions don't have a direct translation, but in sorted logics, these
+may correspond to [predicate definitions](../datamodel).
+
 ## Axioms
 
-Axioms are logical rules or statements that define relationships between facts. In TypedLogic, axioms are defined using Python functions decorated with `@axiom`.
+Axioms are logical rules or statements that define relationships between facts. In TypedLogic, axioms are defined using Python 
+functions [decorated](decorators) with `@axiom`.
 
 Example:
 
@@ -108,6 +112,18 @@ def entail_same_owner(person: PersonID, pet1: PetID, pet2: PetID):
 
 Generators like `gen1`, `gen2`, etc., are used within axioms to create typed placeholders for variables. They help maintain type safety while defining logical rules.
 
+You can use generators in combination with Python `all` and `any` functions to express quantified sentences:
+
+```python
+@axiom
+def entail_same_owner():
+    assert all(SameOwner(pet1=pet1, pet2=pet2)
+               for person, pet1, pet2 in gen3(PersonID, PetID, PetID)
+               if OwnsPet(person=person, pet=pet1) and OwnsPet(person=person, pet=pet2))
+```
+
+See [Generators](generators) for more information.
+
 ## Solvers
 
 TypedLogic supports multiple solvers, including Z3 and Souffle. Solvers are responsible for reasoning over the facts and axioms to derive new information or check for consistency.
@@ -138,4 +154,3 @@ theory = Theory(
 )
 ```
 
-Understanding these core concepts will provide a solid foundation for working with TypedLogic and leveraging its power in your projects.

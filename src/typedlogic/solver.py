@@ -2,9 +2,8 @@ from abc import ABC, abstractmethod
 from collections import abc
 from dataclasses import dataclass, field
 from pathlib import Path
+from types import ModuleType
 from typing import Union, Optional, Iterable, Iterator, Any, ClassVar, List, Type, Dict, Tuple, TextIO
-
-from mypy.moduleinspect import ModuleType
 
 from typedlogic import FactMixin, Variable, Implies
 from typedlogic.datamodel import Theory, SentenceGroup, PredicateDefinition, Sentence, SentenceGroupType, Term, Exists
@@ -72,7 +71,10 @@ class Solver(ABC):
         >>> from typedlogic.registry import get_solver
         >>> solver = get_solver("clingo")
 
-    Once you has a solver, you can can add theories, or individual sentences to it:
+    Note that all solvers are provided via *integrations*, and may not be installed by default.
+    Some may require additional command line setup.
+
+    Once you have a solver, you can can add theories, or individual sentences to it:
 
         >>> from typedlogic.integrations.frameworks.pydantic import FactBaseModel
         >>> class AncestorOf(FactBaseModel):

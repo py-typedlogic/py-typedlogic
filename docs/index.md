@@ -2,12 +2,12 @@
 
 TypedLogic is a powerful Python package that bridges the gap between formal logic and strongly typed Python code. It allows you to leverage fast logic programming engines like Souffle while specifying your logic in mypy-validated Python code.
 
-=== "Python Logic"
+=== "links.py"
 
     ```python
     # links.py
     from pydantic import BaseModel
-    from typedlogic import FactMixin, Term
+    from typedlogic import FactMixin, gen2
     from typedlogic.decorators import axiom
     
     ID = str
@@ -33,9 +33,14 @@ TypedLogic is a powerful Python package that bridges the gap between formal logi
         """Transitivity of paths, plus hop counting"""
         assert ((Path(source=x, target=y, hops=d1) & Path(source=y, target=z, hops=d2)) >>
                 Path(source=x, target=z, hops=d1+d2))
+
+    @axiom
+    def reflexivity():
+        """No paths back to self"""
+        assert not any(Path(source=x, target=x, hops=d) for x, d in gen2(ID, int))
     ```
 
-=== "Execution"
+=== "run.py"
 
     ```python
     from typedlogic.integrations.souffle_solver import SouffleSolver
@@ -53,12 +58,28 @@ TypedLogic is a powerful Python package that bridges the gap between formal logi
         print(fact)
     ```
 
-=== "Output"
+=== "stdout"
 
-    ```plaintext
+    Output:
+
+    ```python
     Path(source='CA', target='OR', hops=1)
     Path(source='OR', target='WA', hops=1)
     Path(source='CA', target='WA', hops=2)
+    ```
+
+=== "Semantics"
+
+    To convert the Python code to first-order logic, use the CLI:
+
+    `typedlogic convert links.py -t fol`
+
+    Output:
+
+    ```
+    ∀[x:ID y:ID]. Link(x, y) → Path(x, y, 1)
+    ∀[x:ID y:ID z:ID d1:int d2:int]. Path(x, y, d1) ∧ Path(y, z, d2) → Path(x, z, d1+d2)
+    ¬∃[x:ID d:int]. Path(x, x, d)
     ```
 
 
@@ -95,6 +116,12 @@ With all extras pre-installed:
 pip install typedlogic[all]
 ```
 
+You can also use pipx to run the [CLI](cli.md) without installing the package globally:
+
+```bash
+pipx run "typedlogic[all]" --help
+````
+
 ## Define predicates using Pythonic idioms
 
 ```python
@@ -102,11 +129,9 @@ from typedlogic.integrations.frameworks.pydantic import FactBaseModel
 
 ID = str
 
-
 class Link(FactBaseModel):
     source: ID
     target: ID
-
 
 class Path(FactBaseModel):
     source: ID
@@ -159,8 +184,3 @@ Path(source='OR', target='WA')
 Path(source='CA', target='WA')
 ```
 
-## Next Steps
-
-- Explore the [Core Concepts](concepts/index) to understand the fundamental ideas behind TypedLogic
-- Check out the [API Reference](api_reference.md) for detailed information on available classes and functions
-- See [Advanced Usage](advanced_usage.md) for more complex examples and techniques

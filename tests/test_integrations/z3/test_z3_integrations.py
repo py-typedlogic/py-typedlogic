@@ -1,4 +1,5 @@
 import pytest
+
 from typedlogic.compiler import ModelSyntax
 from typedlogic.datamodel import Forall, PredicateDefinition, Term, Theory, Variable
 from typedlogic.integrations.solvers.z3 import Z3Solver

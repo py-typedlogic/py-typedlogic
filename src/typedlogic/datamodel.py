@@ -262,7 +262,7 @@ class Term(Sentence):
         >>> t.is_ground
         True
 
-    Keyword argument based initializaton is also supported:
+    Keyword argument based initialization is also supported:
 
         >>> t = Term('FriendOf', dict(about='Alice', friend='Bob'))
         >>> t.values

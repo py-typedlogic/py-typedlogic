@@ -103,7 +103,7 @@ B1y = Term("B1", Y)
     (PRED_LOGIC_THEORY, [A1], [], 1, [Exists([X], A1x)], None),
     (PRED_LOGIC_THEORY, [~Exists([X], A1x)], [], 1, [~Exists([X], A1x)], OpenWorld),
     (PRED_LOGIC_THEORY, [~Exists([X], A1x)], [A1], 0, None, OpenWorld),
-    (PRED_LOGIC_THEORY, [(A1 & Exists([X], B1x)) >> C1], [A1, B1], 1, [A1, B1, C1], AllowsComparisonTerms), # TODO: better way to exlude snakelog
+    (PRED_LOGIC_THEORY, [(A1 & Exists([X], B1x)) >> C1], [A1, B1], 1, [A1, B1, C1], AllowsComparisonTerms), # TODO: better way to exclude snakelog
     (PRED_LOGIC_THEORY, [Forall([X], Iff(A1x | B1x, C1x)),
                          Forall([X], Iff(C1x & D1x, E1x))],
                         [A1, D1], 1,

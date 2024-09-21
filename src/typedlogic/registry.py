@@ -2,10 +2,9 @@ import importlib
 import inspect
 import logging
 import os
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, Type, Union, Tuple
-
-from attr import dataclass
 
 import typedlogic
 from typedlogic.compiler import Compiler
@@ -25,7 +24,7 @@ Extendable = Union[Compiler, Parser, Solver]
 
 @dataclass
 class Registry:
-    implementation_classes: Dict[Type, Dict[str, Type]] = {}
+    implementation_classes: Dict[Type, Dict[str, Type]] = field(default_factory=dict)
 
     def register(self, name: str, category: Type, impl_class: Type[Extendable]):
         if category not in self.implementation_classes:

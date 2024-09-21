@@ -1,9 +1,8 @@
 """
-Function for performing transformation and manipulation of Sentences and Theories
+Function for performing transformation and manipulation of Sentences and Theories.
 """
 import json
 from collections import defaultdict
-from copy import copy
 from dataclasses import dataclass, field
 from typing import List, Iterator, Iterable, Mapping, Callable, Optional, Dict, Any, Union, Type, Tuple
 
@@ -1179,7 +1178,7 @@ def to_horn_rules(sentence: Sentence, allow_disjunctions_in_head=False, allow_go
             head = positive[0]
             rules.append(Implies(body, head))
         if len(positive) > 1:
-            # we must be in disjunctive datalog at this pont
+            # we must be in disjunctive datalog at this point
             head = Or(*positive)
             rules.append(Implies(body, head))
     return rules

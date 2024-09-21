@@ -47,6 +47,28 @@ class LLMSolver(Solver):
     This is for research purposes only. LLM output can be reliable, slow, and expensive,
     and should not be used as a replacement for a deterministic logic-based solver.
 
+    Example:
+
+    ```python
+        from typedlogic import Term
+        from typedlogic.integrations.frameworks.pydantic import FactBaseModel
+        class AncestorOf(FactBaseModel):
+        ...     ancestor: str
+        ...     descendant: str
+         from typedlogic import SentenceGroup, PredicateDefinition
+        solver = LLMSolver(model_name="gpt-4o")
+        solver.add_predicate_definition(PredicateDefinition(predicate="AncestorOf", arguments={'ancestor': str, 'descendant': str}))
+        solver.add_fact(AncestorOf(ancestor='p1', descendant='p1a'))
+        solver.add_fact(AncestorOf(ancestor='p1a', descendant='p1aa'))
+
+        aa = SentenceGroup(name="transitivity-of-ancestor-of")
+        solver.add_sentence_group(aa)
+        soln = solver.prove(Term("AncestorOf", "p1", "p1aa"))
+    ```
+
+    This makes use of the [datasette LLM](https://llm.datasette.io/) package. Consult the documentation
+    here for details on how to set up keys, use alternative models, etc.
+
     """
 
     model_name: str = field(default="gpt-4o")
@@ -73,7 +95,7 @@ class LLMSolver(Solver):
         #print(f"SYSTEM={SYSTEM}")
         #print(f"PROMPT={prompt}")
         response = model.prompt(prompt, system=SYSTEM)
-        print(f"RESPONSE={response.text()}")
+        #print(f"RESPONSE={response.text()}")
         obj = self.parse_response(response.text())
         for i in obj["provable"]:
             yield enumerated_goals[int(i)], True

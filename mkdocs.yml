@@ -44,6 +44,7 @@ plugins:
 markdown_extensions:
   - admonition
   - codehilite
+  - mkdocs-click
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
@@ -63,8 +64,6 @@ nav:
       - Generators: concepts/generators.md
       - Solvers: concepts/solvers.md
       - Models: concepts/models.md
-      - Parsers: concepts/parsers.md
-      - Compilers: concepts/compilers.md
       - Benchmarks: concepts/benchmarks.md
   - Solvers:
       Solver overview: integrations/solvers/index.md
@@ -74,6 +73,17 @@ nav:
       Prover9: integrations/solvers/prover9.md
       SnakeLog: integrations/solvers/snakelog.md
       LLM Solver: integrations/solvers/llm.md
+  - Compilers:
+      - Compiler overview: conversion/compilers/index.md
+      - YAML: conversion/compilers/yaml.md
+      - Prolog: conversion/compilers/prolog.md
+      - TPTP: conversion/compilers/tptp.md
+      - FOL: conversion/compilers/fol.md
+      - S-Expression: conversion/compilers/sexpr.md
+  - Parsers:
+      - Parser overview: conversion/parsers/index.md
+      - Python: conversion/parsers/python.md
+      - YAML: conversion/parsers/yaml.md
   - Frameworks:
       - OWL-DL:
           - OWL-DL: integrations/frameworks/owldl/index.md
@@ -82,6 +92,7 @@ nav:
           - Reasoner: integrations/frameworks/owldl/reasoner.md
       - Pydantic: integrations/frameworks/pydantic
       - SQLModel: integrations/frameworks/sqlmodel.md
+  - Command Line: cli.md
   - FAQ: troubleshooting.md
   - Roadmap: roadmap.md
   - Contributing: contributing.md

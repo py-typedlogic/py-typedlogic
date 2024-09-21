@@ -407,14 +407,8 @@ class DatatypeLiteral:
 
 # classes and properties are declared as python classes (types)
 
-
-
 # support str for forward references
 Class = Union[Type[Thing], str]
-
-
-
-
 
 DataProperty = Type[TopDataProperty]
 

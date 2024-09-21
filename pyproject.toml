@@ -7,20 +7,18 @@ license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
-click = "*"
+python = "^3.10"
 importlib-metadata = ">=8.2.0"
-pydantic = { version="*" }
-clingo = { version="*" }
-z3-solver = { version="*" }
-pyprover = { version="*" }
-snakelog = { version="*" }
-clorm = { version="*" }
-rdflib = { version="*" }
-sympy = { version="*" }
-#py-horned-owldl = { version="*" }
-llm = { version="*" }
-pytest = "^8.3.2"
+pydantic = { version="*" , optional = true }
+clingo = { version="*" , optional = true }
+z3-solver = { version="*" , optional = true }
+pyprover = { version="*" , optional = true }
+snakelog = { version="*" , optional = true }
+clorm = { version="*" , optional = true }
+rdflib = { version="*" , optional = true }
+sympy = { version="*" , optional = true }
+#py-horned-owldl = { version="*" , optional = true }
+llm = { version="*" , optional = true }
 typer = "^0.12.5"
 
 [tool.poetry.group.dev.dependencies]
@@ -39,6 +37,7 @@ mkdocstrings = {extras = ["crystal", "python"], version = "*"}
 mknotebooks = "^0.8.0"
 mkdocs-windmill = "*"
 mkdocs-material = "*"
+mkdocs-click = "*"
 
 
 [tool.poetry.extras]
@@ -100,7 +99,7 @@ max-complexity = 10
 skip = "*.po,*.ts,.git,pyproject.toml"
 count = ""
 quiet-level = 3
-# ignore-words-list = ""
+ignore-words-list = "fof,te"
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]

@@ -11,6 +11,7 @@ from typedlogic.transformations import replace_constants, simple_prolog_transfor
 
 EX = rdflib.Namespace("http://example.org/ex/")
 
+
 INPUT_DIR = Path(__file__).parent / "input"
 TEST_TTL = str(INPUT_DIR / "test.ttl")
 

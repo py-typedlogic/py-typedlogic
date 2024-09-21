@@ -1,8 +1,6 @@
 from abc import ABC
 from typing import Tuple, Mapping, Any, Dict, Type
 
-import pydantic
-from pydantic import BaseModel
 
 from typedlogic import Sentence, Term
 from typedlogic.datamodel import Extension

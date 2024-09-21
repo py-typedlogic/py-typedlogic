@@ -23,7 +23,8 @@ class ClingoSolver(Solver):
     """
     A solver that uses clingo.
 
-    [clingo](https://potassco.org/clingo/) is an ASP system to ground and solve logic programs, it is
+    [clingo](https://potassco.org/clingo/) is an [ASP](https://en.wikipedia.org/wiki/Answer_set_programming)
+    system to ground and solve logic programs, it is
     part of the Potsdam Answer Set Solving Collection (Potassco; [potassco.org/](https://potassco.org/)).
 
 
@@ -46,6 +47,15 @@ class ClingoSolver(Solver):
         >>> from typedlogic.profiles import OpenWorld
         >>> solver.profile.impl(OpenWorld)
         False
+
+    This solver supports MultipleModelSemantics:
+
+        >>> from typedlogic.profiles import MultipleModelSemantics
+        >>> solver.profile.impl(MultipleModelSemantics)
+        True
+
+    This means that when you call `solver.models()`, you will get all models that satisfy the program.
+    See the tutorial for examples of this.
 
     """
 

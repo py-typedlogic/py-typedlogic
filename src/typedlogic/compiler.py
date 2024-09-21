@@ -1,3 +1,6 @@
+"""
+Framework for compiling a theory to an external format (e.g., FOL, CL, TPTP, Prolog, etc.)
+"""
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
@@ -8,6 +11,11 @@ from typedlogic.parser import Parser
 
 
 class ModelSyntax(str, Enum):
+    """
+    Enum for model syntax types.
+
+    TODO: consider deprecated
+    """
     UNKNOWN = "unknown"
     SEXPR = "sexpr"
     FUNCTIONAL = "functional"
@@ -117,6 +125,11 @@ class Compiler(ABC):
 
     @property
     def suffix(self) -> str:
+        """
+        Get the suffix for the compiled output.
+
+        :return:
+        """
         return self.default_suffix
 
     def _add_untranslatable(self, sentence: Sentence):

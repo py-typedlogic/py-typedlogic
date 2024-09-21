@@ -7,7 +7,7 @@ from typing import Optional, List, Any, Type, Callable, Dict, Union, Iterator
 
 from typedlogic import Theory, Sentence, Term, NegationAsFailure, Variable
 from typedlogic.datamodel import Extension
-from typedlogic.integrations.solvers.clingo import ClingoSolver
+from typedlogic.registry import get_solver
 from typedlogic.solver import Solver
 from typedlogic.transformations import transform_sentence
 
@@ -37,7 +37,7 @@ class BenchmarkResult:
 
 
 
-def benchmark_from_seed(seed: BenchmarkSeed, benchmark_solver_class: Type[Solver] = ClingoSolver, num_positive=10, num_negative=10) -> Benchmark:
+def benchmark_from_seed(seed: BenchmarkSeed, benchmark_solver_class: Optional[Type[Solver]] = None, num_positive=10, num_negative=10) -> Benchmark:
     benchmark = Benchmark(
         theory=seed.theory,
         ground_terms=seed.ground_terms,
@@ -48,7 +48,10 @@ def benchmark_from_seed(seed: BenchmarkSeed, benchmark_solver_class: Type[Solver
     predicates = {t.predicate for t in candidate_goals if isinstance(t, Term)}
     if not predicates:
         raise ValueError(f"No predicates from {candidate_goals}")
-    solver = benchmark_solver_class()
+    if benchmark_solver_class:
+        solver = benchmark_solver_class()
+    else:
+        solver = get_solver("clingo")
     solver.add(seed.theory)
     if not seed.ground_terms:
         raise ValueError("No ground terms provided")

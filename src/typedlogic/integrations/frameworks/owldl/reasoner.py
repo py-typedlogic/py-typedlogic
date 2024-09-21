@@ -20,7 +20,7 @@ def get_all_subclasses(cls: Type) -> Set[Type]:
 @dataclass
 class OWLReasoner:
     """
-    A reasoner for OWL-DL ontologies
+    A reasoner for OWL-DL ontologies.
 
     The reasoner is initialized with a theory, which can be loaded from a file or built up programmatically.
 

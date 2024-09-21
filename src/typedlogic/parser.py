@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import TextIO, Union, Any, ClassVar
+from typing import TextIO, Union, Any, ClassVar, List
 
-from typedlogic import Theory
+from typedlogic import Theory, Sentence, Term
 
 
 class Parser(ABC):
@@ -34,6 +34,28 @@ class Parser(ABC):
         :return:
         """
         pass
+
+    def parse_sentences(self, source: Union[Path, str, TextIO], **kwargs) -> List[Sentence]:
+        """
+        Parse a source and return a list of sentences.
+
+        :param source:
+        :param kwargs:
+        :return:
+        """
+        theory = self.parse(source, **kwargs)
+        return theory.sentences
+
+    def parse_ground_terms(self, source: Union[Path, str, TextIO], **kwargs) -> List[Term]:
+        """
+        Parse a source and return a list of sentences.
+
+        :param source:
+        :param kwargs:
+        :return:
+        """
+        theory = self.parse(source, **kwargs)
+        return theory.ground_terms
 
     def translate(self, source: Any, **kwargs) -> Theory:
         """

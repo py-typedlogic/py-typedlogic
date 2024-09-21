@@ -1,3 +1,6 @@
+"""
+This module provides a way to generate typedlogic sentences from RDFLib graphs.
+"""
 from dataclasses import dataclass
 from typing import Iterator
 
