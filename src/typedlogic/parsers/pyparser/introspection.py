@@ -113,6 +113,8 @@ def introspect_attributes(cls: Type) -> dict[str, Any]:
 
         import pydantic
         if issubclass(cls, pydantic.BaseModel):
+            # TODO: conversion to JSON schema in Pydantic erases type information,
+            # and will incorrectly assign strs to some Unions.
             schema = cls.model_json_schema()
             r = {}
             for p, p_schema in schema['properties'].items():

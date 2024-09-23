@@ -21,6 +21,7 @@ from typedlogic.integrations.frameworks.owldl.owltop import (
     Thing,
     TopDataProperty,
     TopObjectProperty,
+    Ontology,
 )
 
 __all__ = [
@@ -46,6 +47,7 @@ __all__ = [
     "ObjectPropertyRange",
     "InverseObjectProperties",
     "PropertyExpressionChain",
+    "Ontology",
 
 
 

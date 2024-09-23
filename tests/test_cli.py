@@ -40,6 +40,13 @@ def test_convert_command(sample_input_file):
     assert "Person" in result.stdout
 
 
+def test_convert_command_from_owlpy(sample_input_file):
+    import tests.test_frameworks.owldl.family as family
+    result = runner.invoke(app, ['convert', '--input-format', "owlpy",  family.__file__, '--output-format', 'fol'])
+    assert result.exit_code == 0
+    assert "∀[I J]. HasParent(I, J) ↔ HasChild(J, I)" in result.stdout
+
+
 @pytest.mark.parametrize("module", [
     "tests.theorems.animals",
     "tests.theorems.defined_types_example",

@@ -5,8 +5,10 @@ from typing import Iterator, List, Optional, Set, Type, Union
 
 from typedlogic import PredicateDefinition, Sentence, Theory
 from typedlogic.integrations.frameworks.owldl import Thing, TopDataProperty, TopObjectProperty
+from typedlogic.integrations.frameworks.owldl.owlpy_parser import OWLPyParser
 from typedlogic.integrations.frameworks.owldl.owltop import Ontology
 from typedlogic.integrations.solvers.clingo import ClingoSolver
+from typedlogic.parsers.pyparser.introspection import introspect_attributes
 from typedlogic.parsers.pyparser.python_parser import PythonParser, compile_python
 from typedlogic.solver import Model, Solver
 from typedlogic.utils.import_closure import compute_import_closure
@@ -41,7 +43,7 @@ class OWLReasoner:
 
         >>> from typedlogic.integrations.frameworks.owldl.reasoner import OWLReasoner
         >>> r = OWLReasoner()
-        >>> r.init_axioms()
+        >>> r.init_axioms([Person, Knows])
 
     And add some facts. These are standard python objects:
 
@@ -51,14 +53,25 @@ class OWLReasoner:
 
         >>> assert r.coherent()
         >>> model = r.model()
-        >>> for fact in model.iter_retrieve("knows"):
+        >>> for fact in model.iter_retrieve("Knows"):
         ...     print(fact)
-        knows(p1, p2)
-        knows(p2, p1)
+        Knows(p1, p2)
+        Knows(p2, p1)
 
     Note that because we declared the relationship as symmetric, the reasoner inferred the reverse relationship.
     
     By default, the reasoner uses the Clingo solver. This can be changed by setting the `solver_class` attribute.
+
+        >>> from typedlogic.integrations.solvers.souffle import SouffleSolver
+        >>> r = OWLReasoner(solver_class=SouffleSolver)
+        >>> r.init_axioms([Person, Knows])
+        >>> r.add(Knows("p1", "p2"))
+        >>> assert r.coherent()
+        >>> model = r.model()
+        >>> for fact in model.iter_retrieve("Knows"):
+        ...     print(fact)
+        Knows(p1, p2)
+        Knows(p2, p1)
 
     """
 
@@ -71,59 +84,30 @@ class OWLReasoner:
         self.solver = None
 
     def init_from_file(self, source: Union[str, Path]):
-        p = PythonParser()
-        f = open(source)
-        self.theory = p.parse(f)
-        python_txt = open(source).read()
-        module = compile_python(python_txt, name=None, package_path=str(source))
-        # module = importlib.import_module(str(source))
-        self.theory.source_module_name = module.__name__
-        # TODO: ensure loaded
-        self._axioms_from_classes()
+        p = OWLPyParser()
+        self.theory = p.parse(source)
 
-    def init_axioms(self):
-        self.theory = Theory()
-        pp = PythonParser()
+    def init_axioms(self, classes: Optional[List[Type]] = None):
+        """
+        Initializes axioms from what is currently loaded.
+        :return:
+        """
         import typedlogic.integrations.frameworks.owldl.owltop as owltop
-        self.theory = pp.parse(Path(owltop.__file__))
-        # Do not restrict to imports closure
-        self.theory.source_module_name = None
-        self._axioms_from_classes()
+        p = OWLPyParser()
+        modules = None
+        if classes:
+            modules = []
+            for cls in classes:
+                module = inspect.getmodule(cls)
+                if module:
+                    modules.append(module)
+            modules = list(set(modules))
 
-
-    def _axioms_from_classes(self):
-
-        # find all subclasses of Thing
-        class_classes = get_all_subclasses(Thing)
-        op_classes = get_all_subclasses(TopObjectProperty)
-        dp_classes = get_all_subclasses(TopDataProperty)
-        ont_classes = get_all_subclasses(Ontology)
-        all_classes = class_classes.union(op_classes).union(dp_classes).union(ont_classes)
-        source_module_name = self.theory.source_module_name
-        if source_module_name:
-            import_closure = compute_import_closure(source_module_name)
-            all_classes = [c for c in all_classes if c.__module__ in import_closure]
-        for cls in all_classes:
-            sentences = cls.to_sentences()
-            for s in sentences:
-                self.theory.add(s)
-
-        for cls in all_classes:
-            # Get the module where the class is defined
-            module = inspect.getmodule(cls)
-
-            if module:
-                module_name = module.__name__
-
-                # Check if __axioms__ is defined in the module
-                if hasattr(module, '__axioms__'):
-                    axioms = module.__axioms__
-                    if not isinstance(axioms, list):
-                        axioms = [axioms]
-                    for axiom in axioms:
-                        fol = axiom.as_fol()
-                        if fol:
-                            self.theory.add(fol)
+        self.theory = p.parse(owltop.__file__, include_all=True, modules=modules)
+        if classes:
+            for cls in classes:
+                pd = PredicateDefinition(cls.__name__, introspect_attributes(cls))
+                self.theory.predicate_definitions.append(pd)
 
     def add(self, sentence: Union[Sentence, List[Sentence]]):
         """

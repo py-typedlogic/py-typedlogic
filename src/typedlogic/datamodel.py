@@ -35,7 +35,7 @@ import types
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple, Type, Union, _SpecialForm, get_origin
+from typing import Any, Dict, List, Optional, Tuple, Type, Union, _SpecialForm, get_origin, Mapping
 
 SExpressionAtom = Any
 SExpressionTerm = List["SExpression"]
@@ -866,6 +866,10 @@ class Theory:
     ground_terms: List[Term] = field(default_factory=list)
     _annotations: Optional[Dict[str, Any]] = None
     source_module_name: Optional[str] = None
+
+    @property
+    def predicate_definition_map(self) -> Mapping[str, PredicateDefinition]:
+        return {pd.predicate: pd for pd in self.predicate_definitions}
 
     @property
     def sentences(self) -> List[Sentence]:

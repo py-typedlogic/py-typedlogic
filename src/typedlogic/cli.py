@@ -31,7 +31,7 @@ from typedlogic.registry import get_compiler, get_solver, get_parser
 app = typer.Typer()
 
 input_format_option = typer.Option("python", "--input-format", "-f",
-                                         help="Input format. Currently supported: python, yaml")
+                                         help="Input format. Currently supported: python, yaml, owlpy")
 output_format_option = typer.Option(None, "--output-format", "-t",
                                           help="Output format")
 

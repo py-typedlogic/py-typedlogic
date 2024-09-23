@@ -1,3 +1,6 @@
+"""
+Note: requires pydantic
+"""
 from decimal import Decimal
 from typing import NewType, Union
 

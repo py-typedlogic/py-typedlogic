@@ -146,7 +146,7 @@ def test_pyparse():
         True,
         False),
 ])
-@pytest.mark.parametrize("solver", [Z3Solver, ClingoSolver, SouffleSolver])
+@pytest.mark.parametrize("solver", [SouffleSolver, Z3Solver, ClingoSolver, ])
 def test_reasoning(solver, facts, expected, abox, coherent):
     """
     Tests the OWL reasoner.
@@ -169,6 +169,9 @@ def test_reasoning(solver, facts, expected, abox, coherent):
     reasoner = OWLReasoner(solver_class=solver)
     assert __file__.endswith(".py")
     reasoner.init_from_file(__file__)
+    assert reasoner.theory.source_module_name == 'test_owldl'
+    for s in reasoner.theory.sentences:
+        assert "develops" not in str(s)
     for f in facts:
         reasoner.add(f)
     if solver != SouffleSolver:
@@ -181,7 +184,7 @@ def test_reasoning(solver, facts, expected, abox, coherent):
         model = reasoner.model()
         print(reasoner.solver.dump())
         for t in model.ground_terms:
-            print(t)
+            print("GROUND", t)
         expected = [e.to_model_object() for e in expected]
         for e in expected:
             assert e in model.ground_terms

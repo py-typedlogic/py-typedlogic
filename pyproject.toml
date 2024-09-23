@@ -17,7 +17,7 @@ snakelog = { version="*" , optional = true }
 clorm = { version="*" , optional = true }
 rdflib = { version="*" , optional = true }
 sympy = { version="*" , optional = true }
-#py-horned-owldl = { version="*" , optional = true }
+py-horned-owl = { version="*" , optional = true }
 llm = { version="*" , optional = true }
 typer = "^0.12.5"
 
@@ -38,6 +38,7 @@ mknotebooks = "^0.8.0"
 mkdocs-windmill = "*"
 mkdocs-material = "*"
 mkdocs-click = "*"
+mkdocs-with-pdf = "*"
 
 
 [tool.poetry.extras]
@@ -49,7 +50,7 @@ pyprover = ["pyprover"]
 snakelog = ["snakelog"]
 clorm = ["clorm"]
 rdflib = ["rdflib"]
-#owldl = ["py-horned-owldl"]
+owl = ["py-horned-owl"]
 llm = ["llm"]
 sympy = ["sympy"]
 

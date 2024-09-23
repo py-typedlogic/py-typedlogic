@@ -38,6 +38,7 @@ plugins:
             docstring_style: sphinx
   - mermaid2:
       version: 9.3.0
+  - with-pdf
   - autorefs
   - mknotebooks:
       execute: false
@@ -84,6 +85,7 @@ nav:
       - Parser overview: conversion/parsers/index.md
       - Python: conversion/parsers/python.md
       - YAML: conversion/parsers/yaml.md
+      - OWLPy: conversion/parsers/owlpy.md
   - Frameworks:
       - OWL-DL:
           - OWL-DL: integrations/frameworks/owldl/index.md

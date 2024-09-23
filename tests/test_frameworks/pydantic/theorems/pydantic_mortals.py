@@ -2,10 +2,12 @@
 from typing import Union
 
 from pydantic import BaseModel, Field
-from typedlogic import FactMixin, gen
+from typedlogic import FactMixin, gen, axiom
 from typedlogic.integrations.frameworks.pydantic import FactBaseModel
 
 ID = str
+
+IntOrFloat= Union[int, float]
 
 class Person(BaseModel, FactMixin):
     name: ID = Field(..., description="unique name")
@@ -22,6 +24,11 @@ class PersonHeight(FactBaseModel):
     person: ID = Field(..., description="unique name of person")
     height: Union[int, float] = Field(..., description="height in cm")
 
+class PersonHeight2(FactBaseModel):
+    person: ID = Field(..., description="unique name of person")
+    height: IntOrFloat = Field(..., description="height in cm")
+
+@axiom
 def axioms():
     all(
         AncestorOf(ancestor=x, descendant=y)

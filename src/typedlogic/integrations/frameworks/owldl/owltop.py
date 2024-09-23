@@ -53,7 +53,7 @@ def instance_of(inst_var: Variable, ce: "ClassExpression") -> Sentence:
 
 def instance_of_op(inst_var1: Variable, inst_var2: Variable, ce: "ObjectPropertyExpression") -> Optional[Sentence]:
     if isinstance(ce, InverseObjectProperty):
-        return instance_of_op(inst_var2, inst_var1, ce.property)
+        return instance_of_op(inst_var2, inst_var1, ce.first)
     return Term(ce.__name__, inst_var1, inst_var2)
 
 
@@ -391,6 +391,10 @@ class SimpleLiteral:
 class LanguageLiteral:
     """
     A language literal.
+
+    Example:
+
+        >>> v = LanguageLiteral("fromage", "en")
     """
 
     literal: str
@@ -400,6 +404,10 @@ class LanguageLiteral:
 class DatatypeLiteral:
     """
     A datatype literal.
+
+    Example:
+
+        >>> v = LanguageLiteral("12", "xsd:int")
     """
 
     literal: str
@@ -1360,7 +1368,7 @@ class InverseObjectProperty:
 
     """
 
-    property: ObjectProperty
+    first: ObjectProperty
 
     def as_fol(self) -> Optional[Sentence]:
         raise AssertionError("Not to be called directly")
@@ -1533,6 +1541,9 @@ class ObjectOneOf(AnonymousClassExpression):
     """
 
     operands: Tuple[Individual, ...] = field(default_factory=tuple)
+
+    def __init__(self, *operands: Individual):
+        self.operands = operands
 
     def as_fol(self) -> Optional[Sentence]:
         return Or(*[Term("eq", I, ind) for ind in self.operands])
@@ -1907,7 +1918,7 @@ class DataSomeValuesFrom(AnonymousDataRange):
     A DataRange representing an existential restriction.
     """
 
-    dpe: DataPropertyExpression
+    dp: DataPropertyExpression
     dr: DataRange
 
 @dataclass
@@ -1982,16 +1993,16 @@ class DataPropertyDomain(Axiom):
     ```mermaid
     classDiagram
     Axiom <|-- DataPropertyDomain
-    DataPropertyDomain --> "1" DataPropertyExpression : dpe
+    DataPropertyDomain --> "1" DataPropertyExpression : dp
     DataPropertyDomain --> "1" ClassExpression : ce
     ``
     """
 
-    dpe: DataPropertyExpression
+    dp: DataPropertyExpression
     ce: ClassExpression
 
     def as_fol(self) -> Optional[Sentence]:
-        return Forall([I, J], Implies(instance_of_dp(I, J, self.dpe), instance_of(I, self.ce)))
+        return Forall([I, J], Implies(instance_of_dp(I, J, self.dp), instance_of(I, self.ce)))
 
 @dataclass
 class ObjectPropertyRange(Axiom):
@@ -2064,17 +2075,17 @@ class DataPropertyRange(Axiom):
     ```mermaid
     classDiagram
     Axiom <|-- DataPropertyRange
-    DataPropertyRange --> "1" DataPropertyExpression : dpe
+    DataPropertyRange --> "1" DataPropertyExpression : dp
     DataPropertyRange --> "1" DataRange : dr
     ``
     """
 
-    dpe: DataPropertyExpression
+    dp: DataPropertyExpression
     dr: DataRange
 
     # TODO
     #def as_fol(self) -> Optional[Sentence]:
-    #    return Forall([I, J], Implies(instance_of_dp(I, J, self.dpe), instance_of(J, self.dr)))
+    #    return Forall([I, J], Implies(instance_of_dp(I, J, self.dp), instance_of(J, self.dr)))
 
 
 @dataclass(frozen=True)
