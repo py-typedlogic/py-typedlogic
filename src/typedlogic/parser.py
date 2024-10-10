@@ -1,10 +1,24 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TextIO, Union, Any, ClassVar, List
+from typing import TextIO, Union, Any, ClassVar, List, Iterator, Optional
 
 from typedlogic import Theory, Sentence, Term
 
+@dataclass
+class ValidationMessage:
+    """
+    A message from a parser that indicates the result of a validation.
+    """
+    message: str
+    line: Optional[int] = None
+    column: Optional[int] = None
+    level: str = field(default="error")
 
+    def __str__(self):
+        return f"{self.level}: {self.message} at line {self.line}, column {self.column}"
+
+@dataclass
 class Parser(ABC):
     """
     A parser is a class that can parse a source and return a Theory object.
@@ -16,8 +30,8 @@ class Parser(ABC):
 
 
     """
-
     default_suffix: ClassVar[str] = "txt"
+    auto_validate: Optional[bool] = None
 
     def parse_file(self, source: Union[Path, str, TextIO], **kwargs) -> Theory:
         if isinstance(source, str):
@@ -68,3 +82,23 @@ class Parser(ABC):
         :return:
         """
         raise NotImplementedError("Translation not supported by this parser")
+
+    def validate_iter(self, source: Union[Path, str, TextIO], **kwargs) -> Iterator[ValidationMessage]:
+        """
+        Validate a source and return an iterator of validation messages.
+
+        :param source:
+        :param kwargs:
+        :return:
+        """
+        return iter([])
+
+    def validate(self, source: Union[Path, str, TextIO], **kwargs) -> List[ValidationMessage]:
+        """
+        Validate a source and return a list of validation messages.
+
+        :param source:
+        :param kwargs:
+        :return:
+        """
+        return list(self.validate_iter(source, **kwargs))

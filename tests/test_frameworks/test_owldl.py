@@ -3,8 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from typedlogic import FactMixin
-from typedlogic.datamodel import NotInProfileError, Term
+from typedlogic import FactMixin, Theory, Variable
+from typedlogic.datamodel import NotInProfileError, Term, Exists
 from typedlogic.decorators import predicate
 from typedlogic.integrations.frameworks.owldl import (
     ObjectIntersectionOf,
@@ -13,6 +13,7 @@ from typedlogic.integrations.frameworks.owldl import (
     Thing,
     TopObjectProperty,
 )
+from typedlogic.integrations.frameworks.owldl.owlpy_parser import OWLPyParser
 from typedlogic.integrations.frameworks.owldl.reasoner import OWLReasoner
 from typedlogic.integrations.solvers.clingo import ClingoSolver
 from typedlogic.integrations.solvers.prover9 import Prover9Solver
@@ -20,7 +21,7 @@ from typedlogic.integrations.solvers.snakelog import SnakeLogSolver
 from typedlogic.integrations.solvers.souffle import SouffleSolver
 from typedlogic.integrations.solvers.z3 import Z3Solver
 from typedlogic.parsers.pyparser.python_parser import PythonParser
-from typedlogic.transformations import PrologConfig, as_prolog, to_horn_rules
+from typedlogic.transformations import PrologConfig, as_prolog, to_horn_rules, as_fol, to_cnf
 
 from tests import INPUT_DIR, TESTS_DIR
 
@@ -91,12 +92,21 @@ def test_instances():
             print(f"CLASS={cls} AXIOMS={cls.axioms()} SENTENCE={s}")
 
 
-def test_pyparse():
+def test_plain_pyparse():
+    """
+    Tests the plain python parser.
+
+    Note: this is not expected to determine the OWL axioms
+    """
     p = PythonParser()
     theory = p.parse(Path(__file__))
     assert theory.predicate_definitions
-    for s in theory.sentences:
-        print(s)
+    pd_map = theory.predicate_definition_map
+    assert pd_map
+    assert pd_map["Person"].arguments == {"iri": "str"}
+    assert pd_map["Person"].parents == ["Thing"]
+    assert pd_map["HasChild"].parents == ["HasDescendant"]
+    assert pd_map["HasDescendant"].parents == ["TopObjectProperty"]
     progs = {}
     for nesting in [True, False]:
         prolog_config = PrologConfig(disjunctive_datalog=True, allow_nesting=nesting)
@@ -110,6 +120,34 @@ def test_pyparse():
         progs[nesting] = lines
 
     assert progs[True] == progs[False]
+
+
+def test_owlpy_parse():
+    p = OWLPyParser()
+    theory = p.parse(Path(__file__))
+    assert theory.predicate_definitions
+    pd_map = theory.predicate_definition_map
+    assert pd_map
+    assert pd_map["Person"].arguments == {"iri": "str"}
+    assert pd_map["Person"].parents == ["Thing"]
+    assert pd_map["HasChild"].parents == ["HasDescendant"]
+    assert pd_map["HasDescendant"].parents == ["TopObjectProperty"]
+    progs = {}
+    for nesting in [True, False]:
+        prolog_config = PrologConfig(disjunctive_datalog=True, allow_nesting=nesting)
+        lines = []
+        for sentence in theory.sentences:
+            try:
+                for rule in to_horn_rules(sentence, allow_disjunctions_in_head=True, allow_goal_clauses=True):
+                    lines.append(as_prolog(rule, config=prolog_config))
+            except NotInProfileError as e:
+                print(f"Skipping sentence {sentence} due to {e}")
+        progs[nesting] = lines
+        for line in lines:
+            print(line)
+        assert lines
+        assert "person(J) :- hasdescendant(I, J)." in lines
+        assert ":- hasgrandchild(I, J), hasgrandchild(J, I)." in lines
 
 
 @pytest.mark.parametrize("facts,expected,abox,coherent", [
@@ -292,4 +330,19 @@ def test_via_load():
                 print(f"    PROLOG={pl}")
             except NotInProfileError as e:
                 print(f"Skipping sentence {s} due to {e}")
+
+def test_to_owldl():
+    # TODO
+    x = Variable("x")
+    y = Variable("y")
+    z = Variable("z")
+    s = (Term("cell", y) & Term("part_of", z,y)) | ~ Term("nucleus", z)
+    print(as_fol(s))
+    print(as_fol(to_cnf(s)))
+    s = (Term("nucleus", x) >> Exists([y], Term("part_of", x, y) & Term("nucleus", y)))
+    print(as_fol(s))
+    print(as_fol(to_cnf(s)))
+
+
+
 

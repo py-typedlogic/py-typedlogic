@@ -1,10 +1,9 @@
-from tests import INPUT_DIR
+from tests.test_frameworks.hornedowl import HORNEDOWL_INPUT_DIR
 from typedlogic import Term
-from typedlogic.integrations.frameworks.owldl.horned_owl_bridge import load_ontology
+from typedlogic.integrations.frameworks.hornedowl.horned_owl_bridge import load_ontology
 from typedlogic.integrations.frameworks.owldl.reasoner import OWLReasoner
-from typedlogic.transformations import as_prolog
 
-RO = INPUT_DIR / "ro.ofn"
+RO = HORNEDOWL_INPUT_DIR / "ro.ofn"
 
 def test_parse():
     axioms = load_ontology(RO)

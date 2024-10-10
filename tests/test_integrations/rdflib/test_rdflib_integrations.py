@@ -4,6 +4,7 @@ import rdflib
 from rdflib import RDFS, Graph
 from typedlogic import Forall, Term
 from typedlogic.integrations.frameworks.rdflib import rdf, rdfs
+from typedlogic.integrations.frameworks.rdflib.rdf_parser import RDFParser
 from typedlogic.integrations.solvers.souffle import SouffleSolver
 from typedlogic.integrations.solvers.z3 import Z3Solver
 from typedlogic.parsers.pyparser.python_parser import PythonParser
@@ -32,6 +33,19 @@ def test_inference():
         #    # print(f"     {as_prolog(trs)}")
     for sentence in rdf.generate_sentences(g):
         s.add(sentence)
+    model = s.model()
+    assert model
+    for fact in model.ground_terms:
+        print("FACT", fact)
+    assert Term("Type", str(EX["Fido"]), str(EX.Dog)) in model.ground_terms
+    assert Term("Type", str(EX["Fido"]), str(EX.Animal)) in model.ground_terms
+    assert Term("Type", str(EX["Fred"]), str(EX.Human)) in model.ground_terms
+
+def test_parser():
+    parser = RDFParser()
+    theory = parser.parse(TEST_TTL)
+    s = SouffleSolver()
+    s.add(theory)
     model = s.model()
     assert model
     for fact in model.ground_terms:

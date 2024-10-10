@@ -6,7 +6,7 @@ from typedlogic import FactMixin, Iff
 from typedlogic.decorators import axiom
 from typedlogic.integrations.frameworks.rdflib.rdf import Node, Triple
 
-SUBCLASS_OF = RDFS.subClassOf
+RDFS_SUBCLASS_OF = RDFS.subClassOf
 RDF_TYPE = RDF.type
 RDFS_DOMAIN = RDFS.domain
 RDFS_RANGE = RDFS.range
@@ -70,7 +70,7 @@ def domain_and_range(s: Node, p: Node, o: Node, c: Node):
 
 @axiom
 def classification_of_triples(s: Node, p: Node, o: Node):
-    assert Iff((Triple(s, p, o) and (p == SUBCLASS_OF)),
+    assert Iff((Triple(s, p, o) and (p == RDFS_SUBCLASS_OF)),
         SubClassOf(s, o))
     assert Iff((Triple(s, p, o) and (p == RDF_TYPE)),
                Type(s, o))

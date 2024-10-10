@@ -19,6 +19,8 @@ rdflib = { version="*" , optional = true }
 sympy = { version="*" , optional = true }
 py-horned-owl = { version="*" , optional = true }
 llm = { version="*" , optional = true }
+gavel-owl = { version="*" , optional = true }
+ply = { version="*" , optional = true }
 typer = "^0.12.5"
 
 [tool.poetry.group.dev.dependencies]
@@ -51,6 +53,7 @@ snakelog = ["snakelog"]
 clorm = ["clorm"]
 rdflib = ["rdflib"]
 owl = ["py-horned-owl"]
+gavel-owl = ["gavel-owl", "ply"]
 llm = ["llm"]
 sympy = ["sympy"]
 
@@ -105,3 +108,12 @@ ignore-words-list = "fof,te"
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
 build-backend = "poetry_dynamic_versioning.backend"
+
+[[tool.mypy.overrides]]
+module = "pyhornedowl.*"
+ignore_errors = true
+follow_imports = "skip"
+
+
+[tool.mypy]
+exclude = "owl"

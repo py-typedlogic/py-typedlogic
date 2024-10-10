@@ -8,6 +8,7 @@ from typedlogic import Fact
 from typedlogic.integrations.frameworks.linkml import ClassDefinition
 from typedlogic.integrations.frameworks.linkml.instance import InstanceMemberType
 from typedlogic.integrations.solvers.clingo.clingo_solver import ClingoSolver
+from typedlogic.integrations.solvers.prover9 import Prover9Solver
 from typedlogic.integrations.solvers.souffle import SouffleSolver
 from typedlogic.integrations.solvers.z3 import Z3Solver
 from typedlogic.parsers.pyparser.python_parser import PythonParser
@@ -82,6 +83,7 @@ SCHEMA1 = {
                              ),
                          ]
                          )
+#@pytest.mark.parametrize("solver_class", [Z3Solver, SouffleSolver, ClingoSolver, Prover9Solver])
 @pytest.mark.parametrize("solver_class", [Z3Solver, SouffleSolver, ClingoSolver])
 def test_validate(solver_class, schema, data, valid, expected, request):
     if solver_class == Z3Solver:
@@ -102,7 +104,7 @@ def test_validate(solver_class, schema, data, valid, expected, request):
 
     solver = solver_class()
     solver.add(theory)
-    if solver_class == Z3Solver:
+    if solver_class in [Z3Solver, ClingoSolver]:
         assert solver.check().satisfiable is valid
     with open(OUTPUT_DIR / f"v{id}.txt", "w") as f:
         f.write(solver.dump())
@@ -114,7 +116,7 @@ def test_validate(solver_class, schema, data, valid, expected, request):
     expected = [e if isinstance(e, tuple) else (e, {solver_class}) for e in expected]
     expected = [e[0] for e in expected  if solver_class in e[1]]
     expected = [e.to_model_object() for e in expected]
-    if solver_class == Z3Solver:
+    if solver_class in [Z3Solver, Prover9Solver]:
         for e in expected:
             assert solver.prove(e)
     else:

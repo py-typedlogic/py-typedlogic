@@ -33,6 +33,7 @@ def disjoint(lhs: ElementID, rhs: ElementID, parent: ElementID):
 def invalid_class_slot(cls: ElementID, slot: ElementID):
     """
     Closed world assumption rule for marking slots that are not allowed for a class
+
     :param cls:
     :param slot:
     :return:

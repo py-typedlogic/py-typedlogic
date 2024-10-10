@@ -216,8 +216,27 @@ class Sentence(ABC):
         return Term(operator.add.__name__, self, other)
 
     @property
-    def annotations(self):
-        return self._annotations
+    def annotations(self) -> Dict[str, Any]:
+        """
+        Annotations for the sentence.
+
+        Annotations are always logically silent, but can be used to store metadata or other information.
+
+        :return:
+        """
+        return self._annotations or {}
+
+    def add_annotation(self, key: str, value: Any):
+        """
+        Add an annotation to the sentence
+
+        :param key:
+        :param value:
+        :return:
+        """
+        if not self._annotations:
+            self._annotations = {}
+        self._annotations[key] = value
 
     def as_sexpr(self) -> SExpression:
         raise NotImplementedError(f"type = {type(self)} // {self}")

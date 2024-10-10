@@ -24,6 +24,8 @@ from typedlogic.integrations.frameworks.owldl.owltop import (
     Ontology,
 )
 
+from typedlogic.integrations.frameworks.owldl.owlpy_parser import OWLPyParser
+
 __all__ = [
     "IRI",
     "Thing",
@@ -48,6 +50,8 @@ __all__ = [
     "InverseObjectProperties",
     "PropertyExpressionChain",
     "Ontology",
+
+    "OWLPyParser",
 
 
 

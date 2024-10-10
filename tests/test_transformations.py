@@ -1,7 +1,7 @@
 from typing import List
 
 import pytest
-from typedlogic import And, Exists, Forall, Iff, Not, Or, Term, Variable
+from typedlogic import And, Exists, Forall, Iff, Not, Or, Term, Variable, Implies
 from typedlogic.transformations import (
     PrologConfig,
     as_prolog,
@@ -56,6 +56,7 @@ Q1xy = Term("Q1", X, Y)
         ((P1x & ~P3x)  >> P2x, r"p2(X) :- p1(X), \+ (p3(X)).", False),
         ((~P3x & P1x)  >> P2x, r"p2(X) :- p1(X), \+ (p3(X)).", False),
         #(Exists([X], P1x), r"p1(sk__1).", False),
+        #(Implies(P1x, Exists([X], P2x)), "x", False),
         (Exists([Y], Term("P", X, Y)) >> Term("Q", X), r"q(X) :- p(X, Y).", False),
         (Forall([X], (~P3x & P1x)  >> P2x), r"p2(X) :- p1(X), \+ (p3(X)).", False),
         (Forall([X], P1x >> P2x), "p2(X) :- p1(X).", False),

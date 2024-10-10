@@ -1,6 +1,8 @@
 RUN = poetry run
 
+all: test
 test: pytest doctest mypy
+test-full: test all-nb
 
 pytest:
 	$(RUN) pytest

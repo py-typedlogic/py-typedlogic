@@ -28,6 +28,32 @@ C = Variable("C")
 D = Variable("D")
 
 
+# classes and properties are canonically declared as python classes (types);
+# support str for forward references and to allow easier bridging with py-horned-owl
+OntologyElementReference = str
+IRI = str
+
+@dataclass
+class OntologyElement:
+    """
+    A class or property.
+
+    Note this is designed to simulate python classes, such that it can be used in place
+    of Thing, TopObjectProperty, TopDataProperty, etc.
+    """
+    __name__: OntologyElementReference
+    owl_type: Optional[str] = None
+    iri: Optional[IRI] = None
+
+    def __str__(self):
+        return f"{self.owl_type}({self.__name__})"
+
+    def __repr__(self):
+        if self.iri:
+            return f"{self.owl_type}({self.__name__}, {self.iri})"
+        else:
+            return f"{self.owl_type}({self.__name__})"
+
 
 def as_list(e) -> List:
     if e == None:
@@ -51,16 +77,20 @@ def instance_of(inst_var: Variable, ce: "ClassExpression") -> Sentence:
     return Term(ce.__name__, inst_var)
 
 
-def instance_of_op(inst_var1: Variable, inst_var2: Variable, ce: "ObjectPropertyExpression") -> Optional[Sentence]:
-    if isinstance(ce, InverseObjectProperty):
-        return instance_of_op(inst_var2, inst_var1, ce.first)
-    return Term(ce.__name__, inst_var1, inst_var2)
+def instance_of_op(inst_var1: Variable, inst_var2: Variable, ope: "ObjectPropertyExpression") -> Optional[Sentence]:
+    if isinstance(ope, InverseObjectProperty):
+        return instance_of_op(inst_var2, inst_var1, ope.first)
+    if isinstance(ope, str):
+        return Term(ope, inst_var1, inst_var2)
+    return Term(ope.__name__, inst_var1, inst_var2)
 
 
-def instance_of_dp(inst_var1: Variable, inst_var2: Variable, ce: "DataPropertyExpression") -> Optional[Sentence]:
-    return Term(ce.__name__, inst_var1, inst_var2)
+def instance_of_dp(inst_var1: Variable, inst_var2: Variable, dpe: "DataPropertyExpression") -> Optional[Sentence]:
+    if isinstance(dpe, str):
+        return Term(dpe, inst_var1, inst_var2)
+    return Term(dpe.__name__, inst_var1, inst_var2)
 
-IRI = str
+
 
 
 
@@ -293,8 +323,6 @@ class TopObjectProperty(Fact):
         return [a for a in [axiom.as_fol() for axiom in cls.axioms()] if a is not None]
 
 
-ObjectProperty = Type[TopObjectProperty]
-
 
 @dataclass(frozen=True)
 class TopDataProperty(Fact):
@@ -413,19 +441,18 @@ class DatatypeLiteral:
     literal: str
     datatype_iri: IRI
 
-# classes and properties are declared as python classes (types)
 
-# support str for forward references
-Class = Union[Type[Thing], str]
 
-DataProperty = Type[TopDataProperty]
 
+Class = Union[Type[Thing], OntologyElementReference, OntologyElement]
+DataProperty = Union[Type[TopDataProperty], OntologyElementReference, OntologyElement]
 Datatype = Union[IRI, Type[str], Type[int], Type[float], Type[bool]]
+ObjectProperty = Union[Type[TopObjectProperty], OntologyElementReference, OntologyElement]
+
 Individual = IRI
 ClassExpression = Union[Class, "AnonymousClassExpression"]
 ObjectPropertyExpression = Union[ObjectProperty, "InverseObjectProperty"]
 DataPropertyExpression = DataProperty
-# DataRange = Union[DataIntersectionOf, DataUnionOf, DataComplementOf, DataOneOf, DatatypeRestriction, Datatype]
 DataRange = Union[Datatype, "AnonymousDataRange"]
 
 @dataclass
@@ -509,6 +536,10 @@ class SubClassOf(Axiom):
 
     def as_fol(self) -> Optional[Sentence]:
         return Forall([I], Implies(instance_of(I, self.sub), instance_of(I, self.sup)))
+
+    def __repr__(self) -> str:
+        return f"SubClassOf({self.sub}, {self.sup})"
+
 
 
 @dataclass

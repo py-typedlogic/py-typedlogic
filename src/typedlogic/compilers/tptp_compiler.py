@@ -1,7 +1,6 @@
+from collections import defaultdict
 from dataclasses import dataclass
 from typing import ClassVar, Dict, Optional, Union
-
-from mypy.checkexpr import defaultdict
 
 from typedlogic import Theory
 from typedlogic.compiler import Compiler, ModelSyntax

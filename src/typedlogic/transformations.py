@@ -598,6 +598,8 @@ def as_prover9(sentence: Sentence, config: Optional[PrologConfig] = None, depth=
         return f"{quantifier} {vars} ({as_prover9(sentence.sentence, config, depth)})"
 
     elif isinstance(sentence, And):
+        if not sentence.operands:
+            return "true"
         return f"({' & '.join(as_prover9(op, config, depth + 1) for op in sentence.operands)})"
 
     elif isinstance(sentence, Xor):
@@ -607,6 +609,8 @@ def as_prover9(sentence: Sentence, config: Optional[PrologConfig] = None, depth=
         return as_prover9(expand_exactly_one(sentence), config, depth)
 
     elif isinstance(sentence, Or):
+        if not sentence.operands:
+            return "false"
         return f"({' | '.join(as_prover9(op, config, depth + 1) for op in sentence.operands)})"
 
     elif isinstance(sentence, Not):

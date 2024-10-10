@@ -1,13 +1,14 @@
 import logging
 import os
 import sys
+import tempfile
 from io import TextIOWrapper
 from pathlib import Path
 from types import ModuleType
-from typing import Optional, TextIO, Union
+from typing import Optional, TextIO, Union, Iterator, Tuple
 
 from typedlogic import Theory
-from typedlogic.parser import Parser
+from typedlogic.parser import Parser, ValidationMessage
 from typedlogic.parsers.pyparser.introspection import (
     get_module_predicate_definitions,
     get_module_sentence_groups,
@@ -74,6 +75,10 @@ class PythonParser(Parser):
     def parse(self, source: Union[Path, str, TextIO, ModuleType], file_name: Optional[str] = None, **kwargs) -> Theory:
         if isinstance(source, ModuleType):
             return translate_module_to_theory(source)
+        if self.auto_validate:
+            errs = self.validate(source)
+            if errs:
+                raise ValueError(f"Validation errors: {errs}")
         if isinstance(source, Path):
             with source.open() as f:
                 return self.parse(f, file_name=str(source), **kwargs)
@@ -92,3 +97,36 @@ class PythonParser(Parser):
             lines = "\n".join(source.readlines())
             return self.parse(lines, file_name=file_name, **kwargs)
         raise ValueError(f"Unsupported source type: {type(source)}")
+
+    def validate_iter(self, source: Union[Path, str, TextIO, ModuleType], file_name: Optional[str] = None, **kwargs) -> Iterator[ValidationMessage]:
+        """
+        Validate a Python module
+
+        Note that mypy is assumed to be installed
+
+        :param source:
+        :param file_name:
+        :param kwargs:
+        :return:
+        """
+        from mypy import api
+        result: Optional[Tuple] = None
+        if isinstance(source, str):
+            with tempfile.NamedTemporaryFile(mode='w+t', delete=False) as temp_file:
+                temp_file.write(source)
+                result = api.run([temp_file.name])
+        if isinstance(source, Path):
+            result = api.run([str(source)])
+        if result is None:
+            raise ValueError(f"Unsupported source type: {type(source)}")
+        stdout, stderr, exit_code = result
+        if exit_code == 0:
+            return
+        lines = stderr.splitlines() + stdout.splitlines()
+        if not lines:
+            raise ValueError(f"No output from mypy; ret={exit_code}; stdout={stdout}; stderr={stderr}")
+        for line in lines:
+            yield ValidationMessage(line)
+
+
+

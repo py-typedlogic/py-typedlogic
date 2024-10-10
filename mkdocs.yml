@@ -86,6 +86,7 @@ nav:
       - Python: conversion/parsers/python.md
       - YAML: conversion/parsers/yaml.md
       - OWLPy: conversion/parsers/owlpy.md
+      - RDF: conversion/parsers/rdf.md
   - Frameworks:
       - OWL-DL:
           - OWL-DL: integrations/frameworks/owldl/index.md

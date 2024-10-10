@@ -1,8 +1,11 @@
 import os
 import tempfile
+from pathlib import Path
 
 import pytest
 from mypy import api
+
+from typedlogic.parsers.pyparser import PythonParser
 
 # Template code with named placeholders
 test_code = """
@@ -21,7 +24,6 @@ def temp_file_with_test_code():
             t1=t1,
             t2=t2,
         )
-        print(filled_code)
 
         # Write the code to a temporary file
         with tempfile.NamedTemporaryFile(delete=False, suffix=".py") as temp_file:
@@ -44,10 +46,19 @@ def temp_file_with_test_code():
         ("float", "int", True),
     ]
 )
-def test_typing_combinations(temp_file_with_test_code, type1, type2, valid):
+@pytest.mark.parametrize("use_parser", [True, False])
+def test_typing_combinations(temp_file_with_test_code, use_parser, type1, type2, valid):
     # Create the temporary file with the filled-in code
     temp_file_path = temp_file_with_test_code(type1, type2)
 
+    if use_parser:
+        pp = PythonParser()
+        errs = pp.validate(Path(temp_file_path))
+        if valid:
+            assert not errs
+        else:
+            assert errs
+        return
     try:
         # Run mypy via its Python API
         result = api.run([temp_file_path])

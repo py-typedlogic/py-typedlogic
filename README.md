@@ -1,5 +1,3 @@
-from typedlogic.registry import get_solver
-
 # py-typedlogic: Pythonic logic for your data models.
 
 Define logical predicates directly in Python as Pydantic, dataclasses, SQLModel, or plain python objects:
@@ -78,13 +76,15 @@ Path(source='CA', target='WA')
 
 ## Key Features
 
-- Write logical axioms and rules using Python syntax (but can also be used independently of this)
+- Write logical axioms and rules using [Python syntax](https://py-typedlogic.github.io/py-typedlogic/tutorial/01-first-program/) 
+- Interconvert between different logical formats and formalisms
+    - [Compilers](https://py-typedlogic.github.io/py-typedlogic/conversion/compilers/)
+    - [Parsers](https://py-typedlogic.github.io/py-typedlogic/conversion/parsers/)
 - Benefit from strong typing and mypy validation
-- Integration with multiple FOL solvers and logic programming engines
-- Interconversion between multiple syntaxes for FOL, Rules, and logical models
-- Integration with OWL-DL
-- Integration with Python libraries like Pydantic
-- Command Line and Python interfaces
+- Integration with multiple [FOL solvers](https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/) and logic programming engines
+- Integration with [OWL-DL](https://py-typedlogic.github.io/py-typedlogic/integrations/frameworks/owldl/)
+- Integration with Python libraries like [Pydantic](https://py-typedlogic.github.io/py-typedlogic/integrations/frameworks/pydantic/)
+- [Command Line](https://py-typedlogic.github.io/py-typedlogic/cli/) and Python interfaces
 
 ## Installation
 
@@ -96,4 +96,4 @@ pip install "typedlogic"
 
 ## Next Steps
 
-- Consult the main docs 
+- Consult the [main docs](https://py-typedlogic.github.io/py-typedlogic/) for more information

@@ -66,6 +66,8 @@ B1y = Term("B1", Y)
 @pytest.mark.parametrize(
     "theory,asserted_axioms,asserted_ground_terms,expected_num_models,expected_ground_terms,profile", [
     (PROP_LOGIC_THEORY, [], [], 1, [], None),
+    (PROP_LOGIC_THEORY, [And()], [], 1, [], None),
+    (PROP_LOGIC_THEORY, [~Or()], [], 1, [], None),
     (PROP_LOGIC_THEORY, [A0], [], 1, [A0], None),
     (PROP_LOGIC_THEORY, [], [A0], 1, [A0], None),
     (PROP_LOGIC_THEORY, [~A0], [A0], 0, None, OpenWorld),

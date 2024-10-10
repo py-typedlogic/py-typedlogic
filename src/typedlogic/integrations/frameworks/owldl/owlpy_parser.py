@@ -1,10 +1,11 @@
 import inspect
 from pathlib import Path
 from types import ModuleType
-from typing import Union, TextIO, Type, Set, Optional, List
+from typing import Union, TextIO, Type, Set, Optional, List, Tuple
 
 from typedlogic import Theory
 from typedlogic.integrations.frameworks.owldl import Thing, TopDataProperty, TopObjectProperty, Ontology
+from typedlogic.integrations.frameworks.owldl.owltop import Axiom
 from typedlogic.parser import Parser
 from typedlogic.parsers.pyparser import PythonParser
 from typedlogic.parsers.pyparser.introspection import get_module_predicate_definitions
@@ -70,6 +71,33 @@ class OWLPyParser(Parser):
 
     """
     def parse(self, source: Union[Path, str, TextIO], include_all=False, modules: Optional[List[ModuleType]] = None, **kwargs) -> Theory:
+        """
+        Parse the source into a theory.
+
+        :param source:
+        :param include_all:
+        :param modules:
+        :param kwargs:
+        :return:
+        """
+        theory, _ = self._parse_to_theory_and_axioms(source, include_all=include_all, modules=modules, **kwargs)
+        return theory
+
+    def parse_to_owl_axioms(self, source: Union[Path, str, TextIO], include_all=False, modules: Optional[List[ModuleType]] = None, **kwargs) -> List[Axiom]:
+        """
+        Parse the source into a list of tl-OWL axioms.
+
+        :param source:
+        :param include_all:
+        :param modules:
+        :param kwargs:
+        :return:
+        """
+        _, axioms = self._parse_to_theory_and_axioms(source, include_all=include_all, modules=modules, **kwargs)
+        return axioms
+
+    def _parse_to_theory_and_axioms(self, source: Union[Path, str, TextIO], include_all=False, modules: Optional[List[ModuleType]] = None,
+              **kwargs) -> Tuple[Theory, List[Axiom]]:
         p = PythonParser()
         def get_file():
             if isinstance(source, (Path, str)):
@@ -78,16 +106,25 @@ class OWLPyParser(Parser):
                 return source
         theory = p.parse(get_file())
         python_txt = get_file().read()
+        # TODO: check for multiple invocations
         module = compile_python(python_txt, name=None, package_path=str(source))
         # module = importlib.import_module(str(source))
         theory.source_module_name = module.__name__
         # TODO: ensure loaded
-        self._axioms_from_classes(theory, include_all=include_all, modules=modules)
-        return theory
+        owl_axioms = self._generate_from_classes(theory, include_all=include_all, modules=modules)
+        return theory, owl_axioms
 
 
-    def _axioms_from_classes(self, theory: Theory, include_all=False, modules: Optional[List[ModuleType]] = None):
-        # find all subclasses of Thing
+    def _generate_from_classes(self, theory: Theory, include_all=False, modules: Optional[List[ModuleType]] = None) -> List[Axiom]:
+        """
+        Iterates through owlpy classes, gathering axioms, and injecting corresponding FOL into the theory.
+
+        :param theory:
+        :param include_all:
+        :param modules:
+        :return:
+        """
+        owl_axioms = []
         class_classes = _get_all_subclasses(Thing)
         op_classes = _get_all_subclasses(TopObjectProperty)
         dp_classes = _get_all_subclasses(TopDataProperty)
@@ -101,12 +138,23 @@ class OWLPyParser(Parser):
                 import_closure = compute_import_closure(source_module_name)
                 all_classes = {c for c in all_classes if c.__module__ in import_closure}
         for cls in all_classes:
-            sentences = cls.to_sentences()
-            for s in sentences:
-                theory.add(s)
+            sentences = []
+            for a in cls.axioms():
+                if a is not None:
+                    s = a.as_fol()
+                    s.add_annotation("owl_axiom", a)
+                    if s not in sentences:
+                        theory.add(s)
+                    sentences.append(s)
+            #sentences = cls.to_sentences()
+            #for s in sentences:
+            #    theory.add(s)
+            #owl_axioms.extend(cls.axioms())
             #for root in [Thing, TopDataProperty, TopObjectProperty]:
             #    if issubclass(cls, root):
             #        pd =
+
+        # print(f"|S|= {len(theory.sentences)}")
 
         for cls in all_classes:
             # Get the module where the class is defined
@@ -124,6 +172,7 @@ class OWLPyParser(Parser):
                         fol = axiom.as_fol()
                         if fol:
                             theory.add(fol)
+                        owl_axioms.append(axiom)
                 pds = get_module_predicate_definitions(module)
                 if not theory.predicate_definitions:
                     theory.predicate_definitions = []
@@ -131,3 +180,4 @@ class OWLPyParser(Parser):
                 for pd in pds.values():
                     if pd.predicate not in existing:
                         theory.predicate_definitions.append(pd)
+        return owl_axioms
