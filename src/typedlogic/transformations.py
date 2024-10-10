@@ -4,13 +4,33 @@ Function for performing transformation and manipulation of Sentences and Theorie
 import json
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import List, Iterator, Iterable, Mapping, Callable, Optional, Dict, Any, Union, Type, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional, Tuple, Type, Union
 
-from typedlogic import Theory, Forall, Variable, Implies, Term, SentenceGroup, Sentence, BooleanSentence, \
-    NegationAsFailure
-from typedlogic.builtins import NUMERIC_BUILTINS, NAME_TO_INFIX_OP
-from typedlogic.datamodel import Iff, And, Implied, Or, QuantifiedSentence, Not, Exists, Extension, Xor, ExactlyOne, \
-    NotInProfileError
+from typedlogic import (
+    BooleanSentence,
+    Forall,
+    Implies,
+    NegationAsFailure,
+    Sentence,
+    SentenceGroup,
+    Term,
+    Theory,
+    Variable,
+)
+from typedlogic.builtins import NAME_TO_INFIX_OP
+from typedlogic.datamodel import (
+    And,
+    ExactlyOne,
+    Exists,
+    Extension,
+    Iff,
+    Implied,
+    Not,
+    NotInProfileError,
+    Or,
+    QuantifiedSentence,
+    Xor,
+)
 from typedlogic.utils.detect_stratified_negation import analyze_datalog_program
 
 
@@ -90,6 +110,7 @@ class PrologConfig:
     """
     Configuration for Prolog output.
     """
+
     use_lowercase_vars: Optional[bool] = False
     use_uppercase_predicates: Optional[bool]  = False
     disjunctive_datalog: Optional[bool]  = False
@@ -449,7 +470,8 @@ def as_tptp(sentence: Sentence, config: Optional[PrologConfig] = None, depth=0) 
     :param depth: Current depth in the sentence structure (used for indentation)
     :return: TPTP representation of the sentence
 
-    Examples:
+    Examples
+    --------
     >>> from typedlogic import Term, Variable, Forall, Exists, And, Or, Not, Implies
     >>> X = Variable("X", "str")
     >>> Y = Variable("Y", "str")
@@ -462,6 +484,7 @@ def as_tptp(sentence: Sentence, config: Optional[PrologConfig] = None, depth=0) 
     ? [X, Y] : (p(X) & q(X, Y))
     >>> print(as_tptp(Or(P, Not(R))))
     (p(X) | ~r(Y))
+
     """
     if not config:
         config = PrologConfig(use_lowercase_vars=False, use_uppercase_predicates=False)
@@ -510,6 +533,7 @@ def tptp_problem(theory: Theory, conjecture: Optional[Sentence] = None) -> str:
     :return: TPTP representation of the problem
 
     Example:
+    -------
     >>> from typedlogic import Theory, PredicateDefinition, Term, Variable, Forall, Implies
     >>> X = Variable("X", "str")
     >>> Y = Variable("Y", "str")
@@ -530,6 +554,7 @@ def tptp_problem(theory: Theory, conjecture: Optional[Sentence] = None) -> str:
     % Problem: example
     fof(axiom1, axiom, ! [X] : (p(X) => q(X, Y))).
     fof(conjecture, conjecture, ! [X, Y] : (p(X) => q(X, Y))).
+
     """
     lines = [f"% Problem: {theory.name}"]
 
@@ -551,7 +576,8 @@ def as_prover9(sentence: Sentence, config: Optional[PrologConfig] = None, depth=
     :param depth: Current depth in the sentence structure (used for indentation)
     :return: Prover9 representation of the sentence
 
-    Examples:
+    Examples
+    --------
     >>> from typedlogic import Term, Variable, Forall, Exists, And, Or, Not, Implies
     >>> X = Variable("X", "str")
     >>> Y = Variable("Y", "str")
@@ -566,6 +592,7 @@ def as_prover9(sentence: Sentence, config: Optional[PrologConfig] = None, depth=
     (P(x) | - ( R(y) ))
     >>> print(as_prover9(Term("S", "hello")))
     S(s_hello)
+
     """
     if not config:
         config = PrologConfig(use_lowercase_vars=True, use_uppercase_predicates=False)
@@ -647,6 +674,7 @@ def prover9_problem(theory: Theory, conjecture: Optional[Sentence] = None) -> st
     :return: Prover9 representation of the problem
 
     Example:
+    -------
     >>> from typedlogic import Theory, PredicateDefinition, Term, Variable, Forall, Implies
     >>> X = Variable("X", "str")
     >>> Y = Variable("Y", "str")
@@ -671,6 +699,7 @@ def prover9_problem(theory: Theory, conjecture: Optional[Sentence] = None) -> st
     formulas(goals).
         all x y ((P(x) -> Q(x, y))).
     end_of_list.
+
     """
     lines = []
 
@@ -967,8 +996,8 @@ def skolemize(sentence: Sentence, universal_vars: Optional[List[Variable]] = Non
     """
     Skolemize a sentence.
 
-    Examples:
-
+    Examples
+    --------
         >>> from typedlogic import And, Or, Variable, Term, Forall, Exists
         >>> X = Variable("X", "str")
         >>> Y = Variable("Y", "str")
@@ -988,6 +1017,7 @@ def skolemize(sentence: Sentence, universal_vars: Optional[List[Variable]] = Non
     :param universal_vars:
     :param substitution_map:
     :return:
+
     """
     if substitution_map is None:
         substitution_map = {}
@@ -1019,8 +1049,8 @@ def to_cnf(sentence: Sentence, skip_skolemization=False) -> Sentence:
     """
     Convert a sentence to conjunctive normal form.
 
-    Examples:
-
+    Examples
+    --------
         >>> from typedlogic.profiles import SortedLogic
         >>> from typedlogic import And, Or, Variable, Term, Forall
         >>> X = Variable("X", "str")
@@ -1056,6 +1086,7 @@ def to_cnf(sentence: Sentence, skip_skolemization=False) -> Sentence:
     :param sentence:
     :param skip_skolemization:
     :return:
+
     """
     # Eliminate XORs
     sentence = transform_sentence_chained(sentence, [expand_xor, expand_exactly_one])
@@ -1083,8 +1114,8 @@ def to_cnf_lol(sentence: Sentence, **kwargs) -> List[List[Sentence]]:
     """
     Convert a sentence to a list of lists of sentences in conjunctive normal form.
 
-    Examples:
-
+    Examples
+    --------
         >>> from typedlogic import And, Or, Variable, Term, Forall
         >>> X = Variable("X", "str")
         >>> Y = Variable("Y", "str")
@@ -1104,6 +1135,7 @@ def to_cnf_lol(sentence: Sentence, **kwargs) -> List[List[Sentence]]:
     :param sentence:
     :param kwargs:
     :return:
+
     """
     sentence = to_cnf(sentence, **kwargs)
     sentence = simplify(sentence)
@@ -1117,8 +1149,8 @@ def to_horn_rules(sentence: Sentence, allow_disjunctions_in_head=False, allow_go
     """
     Convert a sentence to a list of Horn rules.
 
-    Examples:
-
+    Examples
+    --------
         >>> from typedlogic import And, Or, Variable, Term, Forall
         >>> X = Variable("X", "str")
         >>> Y = Variable("Y", "str")
@@ -1136,6 +1168,7 @@ def to_horn_rules(sentence: Sentence, allow_disjunctions_in_head=False, allow_go
     :param sentence:
     :param allow_disjunctions_in_head:
     :return:
+
     """
     if allow_goal_clauses is None:
         allow_goal_clauses = allow_disjunctions_in_head

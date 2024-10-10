@@ -1,15 +1,10 @@
-import os
-import tempfile
-from pathlib import Path
 
 import pytest
-
-from tests.test_frameworks.hornedowl import HORNEDOWL_INPUT_DIR
 from typedlogic.cli import app  # Import your Typer app
 from typer.testing import CliRunner
 
 from tests import OUTPUT_DIR
-from typedlogic.integrations.frameworks.hornedowl.owl_parser import OWLParser
+from tests.test_frameworks.hornedowl import HORNEDOWL_INPUT_DIR
 
 runner = CliRunner()
 

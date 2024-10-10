@@ -1,7 +1,7 @@
 from typing import List
 
 import pytest
-from typedlogic import And, Exists, Forall, Iff, Not, Or, Term, Variable, Implies
+from typedlogic import And, Exists, Forall, Iff, Not, Or, Term, Variable
 from typedlogic.transformations import (
     PrologConfig,
     as_prolog,

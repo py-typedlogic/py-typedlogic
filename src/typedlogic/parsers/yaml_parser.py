@@ -1,11 +1,11 @@
 from io import TextIOWrapper
 from pathlib import Path
-from typing import TextIO, Union, List, Any, Optional, Dict
+from typing import Any, Dict, List, Optional, TextIO, Union
 
 import yaml
 
 from typedlogic import Theory
-from typedlogic.datamodel import from_object, Term
+from typedlogic.datamodel import Term, from_object
 from typedlogic.parser import Parser
 
 

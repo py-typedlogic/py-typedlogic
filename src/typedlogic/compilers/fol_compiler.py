@@ -36,6 +36,7 @@ class FOLCompiler(Compiler):
         :param syntax:
         :param kwargs:
         :return:
+
         """
         lines = []
         for s in theory.sentences:

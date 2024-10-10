@@ -3,10 +3,10 @@ from collections import abc
 from dataclasses import dataclass, field
 from pathlib import Path
 from types import ModuleType
-from typing import Union, Optional, Iterable, Iterator, Any, ClassVar, List, Type, Dict, Tuple, TextIO
+from typing import Any, ClassVar, Dict, Iterable, Iterator, List, Optional, TextIO, Tuple, Type, Union
 
-from typedlogic import FactMixin, Variable, Implies
-from typedlogic.datamodel import Theory, SentenceGroup, PredicateDefinition, Sentence, SentenceGroupType, Term, Exists
+from typedlogic import FactMixin, Variable
+from typedlogic.datamodel import Exists, PredicateDefinition, Sentence, SentenceGroup, SentenceGroupType, Term, Theory
 from typedlogic.parsers.pyparser.python_parser import PythonParser
 from typedlogic.profiles import Profile, UnspecifiedProfile
 from typedlogic.pybridge import fact_to_term
@@ -22,6 +22,7 @@ class Model:
     """
     A model is a set of ground terms that satisfy a set of axioms.
     """
+
     description: Optional[str] = None
     source_object: Optional[Any] = None
     ground_terms: List[Term] = field(default_factory=list)
@@ -54,6 +55,7 @@ class Method:
     """
     A method is a way to solve a set of axioms.
     """
+
     name: str
     description: Optional[str] = None
     is_default: bool = False
@@ -110,6 +112,7 @@ class Solver(ABC):
         AncestorOf(p1, p1aa)
 
     """
+
     strict: bool = False
     method_name: Optional[str] = None
     methods_supported: ClassVar[Optional[List[Method]]] = None

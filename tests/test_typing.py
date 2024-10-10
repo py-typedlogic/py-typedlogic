@@ -4,7 +4,6 @@ from pathlib import Path
 
 import pytest
 from mypy import api
-
 from typedlogic.parsers.pyparser import PythonParser
 
 # Template code with named placeholders

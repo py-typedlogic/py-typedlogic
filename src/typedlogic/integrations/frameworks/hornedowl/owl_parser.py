@@ -1,6 +1,6 @@
 from pathlib import Path
 from types import ModuleType
-from typing import Union, TextIO, Type, Set, Optional, List
+from typing import List, Optional, Set, TextIO, Type, Union
 
 from typedlogic import Theory
 from typedlogic.integrations.frameworks.hornedowl.horned_owl_bridge import parse_owl_ontology_to_theory
@@ -18,7 +18,7 @@ class OWLParser(Parser):
     Py-horned OWL is used
 
     Example:
-
+    -------
         >>> from typedlogic.transformations import as_fol
         >>> parser = OWLParser()
 
@@ -28,6 +28,7 @@ class OWLParser(Parser):
 
 
     """
+
     def parse(self, source: Union[Path, str, TextIO], include_all=False, modules: Optional[List[ModuleType]] = None, **kwargs) -> Theory:
         """
         Parse the source into a theory.

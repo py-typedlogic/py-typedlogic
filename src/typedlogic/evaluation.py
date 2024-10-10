@@ -2,10 +2,9 @@ import hashlib
 import random
 import timeit
 from dataclasses import dataclass
-from typing import Optional, List, Any, Type, Callable, Dict, Union, Iterator
+from typing import Any, Callable, Dict, Iterator, List, Optional, Type, Union
 
-
-from typedlogic import Theory, Sentence, Term, NegationAsFailure, Variable
+from typedlogic import NegationAsFailure, Sentence, Term, Theory, Variable
 from typedlogic.datamodel import Extension
 from typedlogic.registry import get_solver
 from typedlogic.solver import Solver

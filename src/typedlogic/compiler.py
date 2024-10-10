@@ -16,6 +16,7 @@ class ModelSyntax(str, Enum):
 
     TODO: consider deprecated
     """
+
     UNKNOWN = "unknown"
     SEXPR = "sexpr"
     FUNCTIONAL = "functional"

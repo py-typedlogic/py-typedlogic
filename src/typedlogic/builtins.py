@@ -2,7 +2,7 @@
 Mappings for builtin functions and datatypes.
 """
 import operator as op
-from typing import Mapping, Callable
+from typing import Callable, Mapping
 
 NUMERIC_BUILTINS: Mapping[str, Callable] = {
     'ge': op.ge,

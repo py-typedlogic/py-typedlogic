@@ -1,15 +1,17 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TextIO, Union, Any, ClassVar, List, Iterator, Optional
+from typing import Any, ClassVar, Iterator, List, Optional, TextIO, Union
 
-from typedlogic import Theory, Sentence, Term
+from typedlogic import Sentence, Term, Theory
+
 
 @dataclass
 class ValidationMessage:
     """
     A message from a parser that indicates the result of a validation.
     """
+
     message: str
     line: Optional[int] = None
     column: Optional[int] = None
@@ -30,6 +32,7 @@ class Parser(ABC):
 
 
     """
+
     default_suffix: ClassVar[str] = "txt"
     auto_validate: Optional[bool] = None
 

@@ -3,6 +3,7 @@ from importlib.util import find_spec
 from pathlib import Path
 from random import randint
 from typing import Iterable, Tuple
+
 import pytest
 
 TESTS_DIR = Path(__file__).parent

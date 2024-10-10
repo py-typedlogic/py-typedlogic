@@ -5,7 +5,7 @@ import tempfile
 from io import TextIOWrapper
 from pathlib import Path
 from types import ModuleType
-from typing import Optional, TextIO, Union, Iterator, Tuple
+from typing import Iterator, Optional, TextIO, Tuple, Union
 
 from typedlogic import Theory
 from typedlogic.parser import Parser, ValidationMessage

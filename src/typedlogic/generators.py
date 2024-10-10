@@ -3,7 +3,7 @@ Generators can be used to create universally quantified variables in a way
 that preserves type safety.
 
 Example:
-
+-------
 ```python
 
 TreeNodeType = str
@@ -28,8 +28,9 @@ range is all strings.
 Note that while the semantics of the above program are consistent with Python semantics,
 actually executing the above code would take infinite time as there are infinite strings.
 Instead, the python is treated as a logical specification.
+
 """
-from typing import TypeVar, Type, Any, Generator, Tuple
+from typing import Any, Generator, Tuple, Type, TypeVar
 
 T = TypeVar('T')
 T1 = TypeVar('T1')

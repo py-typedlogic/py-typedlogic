@@ -48,7 +48,7 @@ class LLMSolver(Solver):
     and should not be used as a replacement for a deterministic logic-based solver.
 
     Example:
-
+    -------
     ```python
         from typedlogic import Term
         from typedlogic.integrations.frameworks.pydantic import FactBaseModel

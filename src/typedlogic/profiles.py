@@ -1,6 +1,6 @@
 from abc import ABC
 from dataclasses import dataclass, field
-from typing import Collection, Type, Tuple, Optional, ClassVar, Set
+from typing import ClassVar, Optional, Set, Tuple, Type
 
 
 class Profile(ABC):
@@ -9,7 +9,8 @@ class Profile(ABC):
     disjoint_profiles: ClassVar[Set[Type["Profile"]]] = set()
 
     def impl(self, profile: Type["Profile"]) -> bool:
-        """True if self is an implementation of profile.
+        """
+        True if self is an implementation of profile.
 
         Operates under NAF: if it cannot be proven that self is an implementation of profile, it returns None.
 
@@ -25,7 +26,8 @@ class Profile(ABC):
         return isinstance(self, profile)
 
     def not_impl(self, profile: Type["Profile"]) -> Optional[bool]:
-        """True if self is provably not an implementation of profile
+        """
+        True if self is provably not an implementation of profile
 
         >>> p = WellFoundedSemantics()
         >>> p.not_impl(WellFoundedSemantics)
@@ -52,7 +54,8 @@ class Profile(ABC):
 
 @dataclass
 class MixedProfile(Profile):
-    """A profile that mixes multiple profiles.md
+    """
+    A profile that mixes multiple profiles.md
 
     >>> p = MixedProfile(Unrestricted(), SortedLogic())
     >>> p.impl(Unrestricted)
@@ -61,6 +64,7 @@ class MixedProfile(Profile):
     True
 
     """
+
     profiles: Tuple = field(default_factory=tuple)
 
     def __init__(self, *profiles: Profile):
@@ -78,7 +82,8 @@ class MixedProfile(Profile):
 
 @dataclass
 class ExcludedProfile(Profile):
-    """A profile that excludes other profiles.md
+    """
+    A profile that excludes other profiles.md
 
     >>> p = ExcludedProfile(WellFoundedSemantics())
     >>> p.impl(WellFoundedSemantics)
@@ -95,6 +100,7 @@ class ExcludedProfile(Profile):
     True
 
     """
+
     profile: Profile
 
     def impl(self, profile: Type["Profile"]) -> bool:
@@ -150,6 +156,7 @@ class OpenWorld(Assumption):
 
 class ClosedWorld(Assumption):
     """The assumption that what is not known to be true is unknown"""
+
     disjoint_profiles = {OpenWorld}
 
 class WellFoundedSemantics(ClosedWorld):
@@ -207,7 +214,8 @@ class DescriptionLogic(LogicalSubset, Decidable):
     """A subset of logic that corresponds to Description Logic"""
 
 class OWLProfile(LogicalSubset, ABC):
-    """The OWL 2 DL subset of Description Logic.
+    """
+    The OWL 2 DL subset of Description Logic.
 
     Note al OWL Profile is not necessarily a DL profile
     """

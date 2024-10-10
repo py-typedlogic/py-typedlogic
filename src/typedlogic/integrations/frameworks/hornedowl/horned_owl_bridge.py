@@ -5,16 +5,25 @@ Bridge between typedlogic OWL model and py-horned-owl.
 """
 import logging
 from dataclasses import dataclass, field
-from typing import Any, List, Dict
-
-from typedlogic import Theory, PredicateDefinition, And
-from typedlogic.integrations.frameworks.owldl import Thing, TopDataProperty, TopObjectProperty
-import typedlogic.integrations.frameworks.owldl.owltop as owltop
+from typing import Any, Dict, List
 
 import pyhornedowl  # type: ignore
-from pyhornedowl.model import DataPropertyAssertion  # type: ignore
-from pyhornedowl.model import ObjectPropertyAssertion, AnnotationAssertion, SimpleLiteral, DatatypeLiteral, LanguageLiteral, IRI, NamedIndividual, Class, ObjectProperty, DataProperty  # type: ignore
+from pyhornedowl.model import (  # type: ignore
+    IRI,
+    AnnotationAssertion,
+    Class,
+    DataProperty,
+    DatatypeLiteral,
+    LanguageLiteral,
+    NamedIndividual,
+    ObjectProperty,
+    SimpleLiteral,
+)
 from rdflib import RDFS
+
+import typedlogic.integrations.frameworks.owldl.owltop as owltop
+from typedlogic import And, PredicateDefinition, Theory
+from typedlogic.integrations.frameworks.owldl import Thing, TopDataProperty, TopObjectProperty
 from typedlogic.integrations.frameworks.owldl.owltop import OntologyElement
 
 logger = logging.getLogger(__name__)
@@ -24,6 +33,7 @@ class ConversionContext:
     """
     Additional context and configuration for the conversion to/from py-horned-owl.
     """
+
     label_map: Dict[str, str] = field(default_factory=dict)
     decl_map: Dict[str, str] = field(default_factory=dict)
     ontology: pyhornedowl.PyIndexedOntology = field(default_factory=pyhornedowl.PyIndexedOntology)
@@ -100,7 +110,7 @@ def parse_owl_ontology_to_theory(source: str) -> Theory:
     This is just the composition of py-horned-owl's `open_ontology` and `py_indexed_ontology_to_theory`.
 
     Example:
-
+    -------
         >>> theory = parse_owl_ontology_to_theory("tests/test_frameworks/hornedowl/input/ro.ofn")
         >>> for pd in theory.predicate_definitions:
         ...     print(pd.predicate, pd.parents)
@@ -112,6 +122,7 @@ def parse_owl_ontology_to_theory(source: str) -> Theory:
 
     :param source:
     :return:
+
     """
     onto = pyhornedowl.open_ontology(source)
     return py_indexed_ontology_to_theory(onto)
@@ -122,7 +133,7 @@ def py_indexed_ontology_to_theory(ontology: pyhornedowl.PyIndexedOntology) -> Th
     Convert the PHO ontology to a theory.
 
     Example:
-
+    -------
         >>> onto = pyhornedowl.open_ontology("tests/test_frameworks/hornedowl/input/ro.ofn")
         >>> theory = py_indexed_ontology_to_theory(onto)
         >>> for pd in theory.predicate_definitions:
@@ -142,6 +153,7 @@ def py_indexed_ontology_to_theory(ontology: pyhornedowl.PyIndexedOntology) -> Th
 
     :param ontology:
     :return:
+
     """
     axioms = py_indexed_ontology_to_pyowl(ontology)
     theory = Theory()
@@ -224,8 +236,8 @@ def rev_tr(x: Any, context: ConversionContext) -> Any:
     """
     Reverse translate the axiom from PyOwl to py-horned-owl.
 
-    Examples:
-
+    Examples
+    --------
         >>> from typedlogic.integrations.frameworks.owldl.owltop import OntologyElement
         >>> o = pyhornedowl.PyIndexedOntology()
         >>> o.add_prefix_mapping("", "https://example.com/")
@@ -250,6 +262,7 @@ def rev_tr(x: Any, context: ConversionContext) -> Any:
     :param x:
     :param label_map:
     :return:
+
     """
     if isinstance(x, str):
         decl_map = context.decl_map

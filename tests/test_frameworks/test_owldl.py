@@ -3,8 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from typedlogic import FactMixin, Theory, Variable
-from typedlogic.datamodel import NotInProfileError, Term, Exists
+from typedlogic import FactMixin, Variable
+from typedlogic.datamodel import Exists, NotInProfileError, Term
 from typedlogic.decorators import predicate
 from typedlogic.integrations.frameworks.owldl import (
     ObjectIntersectionOf,
@@ -21,7 +21,7 @@ from typedlogic.integrations.solvers.snakelog import SnakeLogSolver
 from typedlogic.integrations.solvers.souffle import SouffleSolver
 from typedlogic.integrations.solvers.z3 import Z3Solver
 from typedlogic.parsers.pyparser.python_parser import PythonParser
-from typedlogic.transformations import PrologConfig, as_prolog, to_horn_rules, as_fol, to_cnf
+from typedlogic.transformations import PrologConfig, as_fol, as_prolog, to_cnf, to_horn_rules
 
 from tests import INPUT_DIR, TESTS_DIR
 

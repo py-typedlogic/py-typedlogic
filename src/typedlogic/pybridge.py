@@ -1,6 +1,5 @@
 from abc import ABC
-from typing import Tuple, Mapping, Any, Dict, Type
-
+from typing import Any, Dict, Mapping, Tuple, Type
 
 from typedlogic import Sentence, Term
 from typedlogic.datamodel import Extension
@@ -13,6 +12,7 @@ class FactMixin(Extension, ABC):
     You can use this if you want to effectively inherit from Fact, but want to base your
     classes using your own base class, or something like the Pydantic BaseModel.
     """
+
     def to_model_object(self) -> Sentence:
         return fact_to_term(self)
 
@@ -42,6 +42,7 @@ class Fact(FactMixin, ABC):
         >>> assert fact_arg_py_types(p) == {'name': str, 'age': int}
 
     """
+
     pass
 
 

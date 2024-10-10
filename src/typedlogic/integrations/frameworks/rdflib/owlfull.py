@@ -1,9 +1,10 @@
 """
 https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules
 """
-from typedlogic import Implies, And, Not
-from typedlogic.integrations.frameworks.rdflib.rdfs import *
 from rdflib import OWL
+
+from typedlogic import And, Not
+from typedlogic.integrations.frameworks.rdflib.rdfs import *
 
 OWL_SAME_AS = OWL.sameAs
 OWL_DIFFERENT_FROM = OWL.differentFrom

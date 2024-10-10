@@ -2,7 +2,7 @@
 Decorators for marking functions as axioms and goals.
 
 Example:
-
+-------
 ```python
     from dataclasses import dataclass
     from typedlogic import Fact

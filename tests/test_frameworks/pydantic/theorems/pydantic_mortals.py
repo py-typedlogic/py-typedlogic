@@ -2,7 +2,7 @@
 from typing import Union
 
 from pydantic import BaseModel, Field
-from typedlogic import FactMixin, gen, axiom
+from typedlogic import FactMixin, axiom, gen
 from typedlogic.integrations.frameworks.pydantic import FactBaseModel
 
 ID = str

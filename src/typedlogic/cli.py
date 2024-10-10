@@ -21,12 +21,12 @@ pipx run "typedlogic[pydantic,clingo]" --help
 
 """
 from pathlib import Path
-from typing import List, Optional, Annotated
+from typing import Annotated, List, Optional
 
 import typer
 from typer.main import get_command
 
-from typedlogic.registry import get_compiler, get_solver, get_parser
+from typedlogic.registry import get_compiler, get_parser, get_solver
 
 app = typer.Typer()
 
@@ -54,7 +54,7 @@ def convert(
     Note that some conversions may be lossy. Currently no warnings are issued for such cases.
 
     Example:
-
+    -------
     ```bash
     typedlogic convert  my_theory.py -t fol
     ```
@@ -101,10 +101,11 @@ def solve(
     Solve using the specified solver.
 
     Example:
-
+    -------
     ```bash
     typedlogic solve --solver clingo my_theory.py my_data.yaml
     ```
+
     """
     parser = get_parser(input_format or "python")
     theory = parser.parse(theory_file)

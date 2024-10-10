@@ -1,7 +1,8 @@
-from tests.test_frameworks.hornedowl import HORNEDOWL_INPUT_DIR
 from typedlogic import Term
 from typedlogic.integrations.frameworks.hornedowl.horned_owl_bridge import load_ontology
 from typedlogic.integrations.frameworks.owldl.reasoner import OWLReasoner
+
+from tests.test_frameworks.hornedowl import HORNEDOWL_INPUT_DIR
 
 RO = HORNEDOWL_INPUT_DIR / "ro.ofn"
 

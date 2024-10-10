@@ -4,9 +4,8 @@ import logging
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, Type, Union, Tuple
+from typing import Dict, Type, Union
 
-import typedlogic
 from typedlogic.compiler import Compiler
 from typedlogic.parser import Parser
 from typedlogic.solver import Solver
@@ -33,10 +32,10 @@ class Registry:
 
     def get_implementation_class(self, category: Type, name: str) -> Type[Extendable]:
         if category not in self.implementation_classes:
-            raise ValueError(f"Unknown category: {category}\n" 
+            raise ValueError(f"Unknown category: {category}\n"
                              f"Known categories: {list(self.implementation_classes.keys())}")
         if name not in self.implementation_classes[category]:
-            raise ValueError(f"Unknown handle: {name}\n" 
+            raise ValueError(f"Unknown handle: {name}\n"
                              f"Known implementations: {list(self.implementation_classes[category].keys())}")
         return self.implementation_classes[category][name]
 

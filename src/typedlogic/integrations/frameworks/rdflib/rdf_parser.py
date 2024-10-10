@@ -1,8 +1,10 @@
 from pathlib import Path
-from typing import Union, TextIO
-from rdflib import RDFS, Graph
+from typing import TextIO, Union
+
+from rdflib import Graph
+
 from typedlogic import Theory
-from typedlogic.integrations.frameworks.rdflib import rdfs, rdf
+from typedlogic.integrations.frameworks.rdflib import rdf, rdfs
 from typedlogic.parser import Parser
 from typedlogic.parsers.pyparser import PythonParser
 

@@ -1,7 +1,7 @@
 import pytest
+from typedlogic.parsers.yaml_parser import YAMLParser
 
 from tests import TEST_THEOREMS_DIR
-from typedlogic.parsers.yaml_parser import YAMLParser
 
 
 @pytest.fixture

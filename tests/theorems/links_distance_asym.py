@@ -8,12 +8,14 @@ ID = str
 
 class Link(BaseModel, FactMixin):
     """A link between two entities"""
+
     source: ID
     target: ID
 
 
 class Path(BaseModel, FactMixin):
     """An N-hop path between two entities"""
+
     source: ID
     target: ID
     hops: int

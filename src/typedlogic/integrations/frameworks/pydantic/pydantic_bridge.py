@@ -13,7 +13,7 @@ class FactBaseModel(BaseModel, Fact):
     Additionally, it allows for positional arguments, which is not the default in Pydantic.
 
     Example:
-
+    -------
     ```python
     class PersonAge(FactBaseModel):
         name: str

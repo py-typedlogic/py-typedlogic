@@ -35,7 +35,7 @@ import types
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple, Type, Union, _SpecialForm, get_origin, Mapping
+from typing import Any, Dict, List, Mapping, Optional, Tuple, Type, Union, _SpecialForm, get_origin
 
 SExpressionAtom = Any
 SExpressionTerm = List["SExpression"]
