@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.35">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.38">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.35f28582.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.8c3ca2c6.min.css">
       
         
         <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
@@ -1002,6 +1002,48 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../conversion/parsers/owlpy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OWLPy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../conversion/parsers/rdf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDF
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1209,6 +1251,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#typedlogic.integrations.frameworks.owldl.reasoner.OWLReasoner.init_axioms" class="md-nav__link">
+    <span class="md-ellipsis">
+      init_axioms
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#typedlogic.integrations.frameworks.owldl.reasoner.OWLReasoner.add" class="md-nav__link">
     <span class="md-ellipsis">
       add
@@ -1414,6 +1465,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#typedlogic.integrations.frameworks.owldl.reasoner.OWLReasoner.init_axioms" class="md-nav__link">
+    <span class="md-ellipsis">
+      init_axioms
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#typedlogic.integrations.frameworks.owldl.reasoner.OWLReasoner.add" class="md-nav__link">
     <span class="md-ellipsis">
       add
@@ -1510,7 +1570,7 @@ of their own, these must be represented as separate relationships, which are sub
 <p>We can now create an OWL reasoner:</p>
 <div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.integrations.frameworks.owldl.reasoner</span><span class="w"> </span><span class="kn">import</span><span class="w"> </span><span class="n">OWLReasoner</span>
 <span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OWLReasoner</span><span class="p">()</span>
-<span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">init_axioms</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">init_axioms</span><span class="p">([</span><span class="n">Person</span><span class="p">,</span><span class="w"> </span><span class="n">Knows</span><span class="p">])</span>
 </code></pre></div>
 
 <p>And add some facts. These are standard python objects:</p>
@@ -1520,20 +1580,29 @@ of their own, these must be represented as separate relationships, which are sub
 <p>We can now reason with the model:</p>
 <div class="codehilite"><pre><span></span><code>&gt;&gt;&gt; assert r.coherent()
 &gt;&gt;&gt; model = r.model()
-&gt;&gt;&gt; for fact in model.iter_retrieve(&quot;knows&quot;):
+&gt;&gt;&gt; for fact in model.iter_retrieve(&quot;Knows&quot;):
 <span class="k">...</span>     print(fact)
-knows(p1, p2)
-knows(p2, p1)
+Knows(p1, p2)
+Knows(p2, p1)
 </code></pre></div>
 
 <p>Note that because we declared the relationship as symmetric, the reasoner inferred the reverse relationship.</p>
 <p>By default, the reasoner uses the Clingo solver. This can be changed by setting the <code>solver_class</code> attribute.</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.integrations.solvers.souffle</span><span class="w"> </span><span class="kn">import</span><span class="w"> </span><span class="n">SouffleSolver</span>
+<span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OWLReasoner</span><span class="p">(</span><span class="n">solver_class</span><span class="o">=</span><span class="n">SouffleSolver</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">init_axioms</span><span class="p">([</span><span class="n">Person</span><span class="p">,</span><span class="w"> </span><span class="n">Knows</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Knows</span><span class="p">(</span><span class="s2">&quot;p1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;p2&quot;</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="k">assert</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">coherent</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">fact</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">model</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;Knows&quot;</span><span class="p">):</span>
+<span class="o">...</span><span class="w">     </span><span class="nb">print</span><span class="p">(</span><span class="n">fact</span><span class="p">)</span>
+<span class="n">Knows</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span><span class="w"> </span><span class="n">p2</span><span class="p">)</span>
+<span class="n">Knows</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span><span class="w"> </span><span class="n">p1</span><span class="p">)</span>
+</code></pre></div>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/integrations/frameworks/owldl/reasoner.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 20</span>
-<span class="normal"> 21</span>
-<span class="normal"> 22</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 22</span>
 <span class="normal"> 23</span>
 <span class="normal"> 24</span>
 <span class="normal"> 25</span>
@@ -1701,23 +1770,7 @@ knows(p2, p1)
 <span class="normal">187</span>
 <span class="normal">188</span>
 <span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span>
-<span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">190</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">OWLReasoner</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A reasoner for OWL-DL ontologies.</span>
@@ -1741,7 +1794,7 @@ knows(p2, p1)
 
 <span class="sd">        &gt;&gt;&gt; from typedlogic.integrations.frameworks.owldl.reasoner import OWLReasoner</span>
 <span class="sd">        &gt;&gt;&gt; r = OWLReasoner()</span>
-<span class="sd">        &gt;&gt;&gt; r.init_axioms()</span>
+<span class="sd">        &gt;&gt;&gt; r.init_axioms([Person, Knows])</span>
 
 <span class="sd">    And add some facts. These are standard python objects:</span>
 
@@ -1751,14 +1804,25 @@ knows(p2, p1)
 
 <span class="sd">        &gt;&gt;&gt; assert r.coherent()</span>
 <span class="sd">        &gt;&gt;&gt; model = r.model()</span>
-<span class="sd">        &gt;&gt;&gt; for fact in model.iter_retrieve(&quot;knows&quot;):</span>
+<span class="sd">        &gt;&gt;&gt; for fact in model.iter_retrieve(&quot;Knows&quot;):</span>
 <span class="sd">        ...     print(fact)</span>
-<span class="sd">        knows(p1, p2)</span>
-<span class="sd">        knows(p2, p1)</span>
+<span class="sd">        Knows(p1, p2)</span>
+<span class="sd">        Knows(p2, p1)</span>
 
 <span class="sd">    Note that because we declared the relationship as symmetric, the reasoner inferred the reverse relationship.</span>
 
 <span class="sd">    By default, the reasoner uses the Clingo solver. This can be changed by setting the `solver_class` attribute.</span>
+
+<span class="sd">        &gt;&gt;&gt; from typedlogic.integrations.solvers.souffle import SouffleSolver</span>
+<span class="sd">        &gt;&gt;&gt; r = OWLReasoner(solver_class=SouffleSolver)</span>
+<span class="sd">        &gt;&gt;&gt; r.init_axioms([Person, Knows])</span>
+<span class="sd">        &gt;&gt;&gt; r.add(Knows(&quot;p1&quot;, &quot;p2&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; assert r.coherent()</span>
+<span class="sd">        &gt;&gt;&gt; model = r.model()</span>
+<span class="sd">        &gt;&gt;&gt; for fact in model.iter_retrieve(&quot;Knows&quot;):</span>
+<span class="sd">        ...     print(fact)</span>
+<span class="sd">        Knows(p1, p2)</span>
+<span class="sd">        Knows(p2, p1)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1771,59 +1835,30 @@ knows(p2, p1)
         <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">init_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]):</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">PythonParser</span><span class="p">()</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">theory</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="n">python_txt</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">source</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="n">module</span> <span class="o">=</span> <span class="n">compile_python</span><span class="p">(</span><span class="n">python_txt</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">package_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
-        <span class="c1"># module = importlib.import_module(str(source))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">theory</span><span class="o">.</span><span class="n">source_module_name</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="vm">__name__</span>
-        <span class="c1"># TODO: ensure loaded</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_axioms_from_classes</span><span class="p">()</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">OWLPyParser</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theory</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">init_axioms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">theory</span> <span class="o">=</span> <span class="n">Theory</span><span class="p">()</span>
-        <span class="n">pp</span> <span class="o">=</span> <span class="n">PythonParser</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">init_axioms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes axioms from what is currently loaded.</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">import</span> <span class="nn">typedlogic.integrations.frameworks.owldl.owltop</span> <span class="k">as</span> <span class="nn">owltop</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">theory</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">owltop</span><span class="o">.</span><span class="vm">__file__</span><span class="p">))</span>
-        <span class="c1"># Do not restrict to imports closure</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">theory</span><span class="o">.</span><span class="n">source_module_name</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_axioms_from_classes</span><span class="p">()</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">OWLPyParser</span><span class="p">()</span>
+        <span class="n">modules</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">classes</span><span class="p">:</span>
+            <span class="n">modules</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+                <span class="n">module</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmodule</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">module</span><span class="p">:</span>
+                    <span class="n">modules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+            <span class="n">modules</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">modules</span><span class="p">))</span>
 
-
-    <span class="k">def</span> <span class="nf">_axioms_from_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
-        <span class="c1"># find all subclasses of Thing</span>
-        <span class="n">class_classes</span> <span class="o">=</span> <span class="n">get_all_subclasses</span><span class="p">(</span><span class="n">Thing</span><span class="p">)</span>
-        <span class="n">op_classes</span> <span class="o">=</span> <span class="n">get_all_subclasses</span><span class="p">(</span><span class="n">TopObjectProperty</span><span class="p">)</span>
-        <span class="n">dp_classes</span> <span class="o">=</span> <span class="n">get_all_subclasses</span><span class="p">(</span><span class="n">TopDataProperty</span><span class="p">)</span>
-        <span class="n">ont_classes</span> <span class="o">=</span> <span class="n">get_all_subclasses</span><span class="p">(</span><span class="n">Ontology</span><span class="p">)</span>
-        <span class="n">all_classes</span> <span class="o">=</span> <span class="n">class_classes</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">op_classes</span><span class="p">)</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">dp_classes</span><span class="p">)</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">ont_classes</span><span class="p">)</span>
-        <span class="n">source_module_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theory</span><span class="o">.</span><span class="n">source_module_name</span>
-        <span class="k">if</span> <span class="n">source_module_name</span><span class="p">:</span>
-            <span class="n">import_closure</span> <span class="o">=</span> <span class="n">compute_import_closure</span><span class="p">(</span><span class="n">source_module_name</span><span class="p">)</span>
-            <span class="n">all_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">all_classes</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="vm">__module__</span> <span class="ow">in</span> <span class="n">import_closure</span><span class="p">]</span>
-        <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">all_classes</span><span class="p">:</span>
-            <span class="n">sentences</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">to_sentences</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sentences</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">theory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">all_classes</span><span class="p">:</span>
-            <span class="c1"># Get the module where the class is defined</span>
-            <span class="n">module</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmodule</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">module</span><span class="p">:</span>
-                <span class="n">module_name</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="vm">__name__</span>
-
-                <span class="c1"># Check if __axioms__ is defined in the module</span>
-                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="s1">&#39;__axioms__&#39;</span><span class="p">):</span>
-                    <span class="n">axioms</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">__axioms__</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">axioms</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                        <span class="n">axioms</span> <span class="o">=</span> <span class="p">[</span><span class="n">axioms</span><span class="p">]</span>
-                    <span class="k">for</span> <span class="n">axiom</span> <span class="ow">in</span> <span class="n">axioms</span><span class="p">:</span>
-                        <span class="n">fol</span> <span class="o">=</span> <span class="n">axiom</span><span class="o">.</span><span class="n">as_fol</span><span class="p">()</span>
-                        <span class="k">if</span> <span class="n">fol</span><span class="p">:</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">theory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">fol</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theory</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">owltop</span><span class="o">.</span><span class="vm">__file__</span><span class="p">,</span> <span class="n">include_all</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="n">modules</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">classes</span><span class="p">:</span>
+            <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+                <span class="n">pd</span> <span class="o">=</span> <span class="n">PredicateDefinition</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">introspect_attributes</span><span class="p">(</span><span class="bp">cls</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Sentence</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1922,6 +1957,90 @@ knows(p2, p1)
 <div class="doc doc-object doc-function">
 
 
+<h3 id="typedlogic.integrations.frameworks.owldl.reasoner.OWLReasoner.init_axioms" class="doc doc-heading">
+            <code class=" language-python"><span class="n">init_axioms</span><span class="p">(</span><span class="n">classes</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Initializes axioms from what is currently loaded.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+            <details class="quote">
+              <summary>Source code in <code>src/typedlogic/integrations/frameworks/owldl/reasoner.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">init_axioms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initializes axioms from what is currently loaded.</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">typedlogic.integrations.frameworks.owldl.owltop</span> <span class="k">as</span> <span class="nn">owltop</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">OWLPyParser</span><span class="p">()</span>
+    <span class="n">modules</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">classes</span><span class="p">:</span>
+        <span class="n">modules</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmodule</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">module</span><span class="p">:</span>
+                <span class="n">modules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+        <span class="n">modules</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">modules</span><span class="p">))</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">theory</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">owltop</span><span class="o">.</span><span class="vm">__file__</span><span class="p">,</span> <span class="n">include_all</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="n">modules</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">classes</span><span class="p">:</span>
+        <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+            <span class="n">pd</span> <span class="o">=</span> <span class="n">PredicateDefinition</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">introspect_attributes</span><span class="p">(</span><span class="bp">cls</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
 <h3 id="typedlogic.integrations.frameworks.owldl.reasoner.OWLReasoner.add" class="doc doc-heading">
             <code class=" language-python"><span class="n">add</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span></code>
 
@@ -1985,23 +2104,23 @@ knows(p2, p1)
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/integrations/frameworks/owldl/reasoner.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Sentence</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]]):</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Sentence</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add a sentence to the reasoner</span>
 
@@ -2090,27 +2209,27 @@ knows(p2, p1)
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/integrations/frameworks/owldl/reasoner.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">146</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
 <span class="normal">147</span>
 <span class="normal">148</span>
 <span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">):</span>
+<span class="normal">150</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Register a python class with the reasoner</span>
 
@@ -2204,7 +2323,7 @@ knows(p2, p1)
     <script id="__config" type="application/json">{"base": "../../../..", "features": ["content.tabs.link"], "search": "../../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.56dfad97.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.d6f25eb3.min.js"></script>
       
     
   </body>

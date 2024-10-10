@@ -8,24 +8,28 @@
       
       
       
-        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/quickstart/">
+        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/conversion/parsers/rdf/">
       
       
+        <link rel="prev" href="../owlpy/">
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+        <link rel="next" href="../../../integrations/frameworks/owldl/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.38">
     
     
       
-        <title>Getting Started with TypedLogic - py-typedlogic</title>
+        <title>RDF - py-typedlogic</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.8c3ca2c6.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -44,15 +48,15 @@
       
     
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../css/ansi-colours.css">
+      <link rel="stylesheet" href="../../../css/ansi-colours.css">
     
-      <link rel="stylesheet" href="../css/jupyter-cells.css">
+      <link rel="stylesheet" href="../../../css/jupyter-cells.css">
     
-      <link rel="stylesheet" href="../css/pandas-dataframe.css">
+      <link rel="stylesheet" href="../../../css/pandas-dataframe.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#getting-started-with-typedlogic" class="md-skip">
+        <a href="#rdf-parser" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +98,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="py-typedlogic" class="md-header__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+    <a href="../../.." title="py-typedlogic" class="md-header__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Getting Started with TypedLogic
+              RDF
             
           </span>
         </div>
@@ -227,7 +231,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="py-typedlogic" class="md-nav__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+    <a href="../../.." title="py-typedlogic" class="md-nav__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -257,7 +261,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -312,7 +316,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/01-first-program" class="md-nav__link">
+      <a href="../../../tutorial/01-first-program" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -333,7 +337,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/02-using-python-data-model" class="md-nav__link">
+      <a href="../../../tutorial/02-using-python-data-model" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -396,7 +400,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concepts/" class="md-nav__link">
+      <a href="../../../concepts/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -417,7 +421,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concepts/datamodel/" class="md-nav__link">
+      <a href="../../../concepts/datamodel/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -438,7 +442,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concepts/decorators/" class="md-nav__link">
+      <a href="../../../concepts/decorators/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -459,7 +463,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concepts/generators/" class="md-nav__link">
+      <a href="../../../concepts/generators/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -480,7 +484,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concepts/solvers/" class="md-nav__link">
+      <a href="../../../concepts/solvers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -501,7 +505,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concepts/models/" class="md-nav__link">
+      <a href="../../../concepts/models/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -522,7 +526,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concepts/benchmarks.md" class="md-nav__link">
+      <a href="../../../concepts/benchmarks.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -585,7 +589,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/solvers/" class="md-nav__link">
+      <a href="../../../integrations/solvers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -606,7 +610,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/solvers/clingo/" class="md-nav__link">
+      <a href="../../../integrations/solvers/clingo/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -627,7 +631,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/solvers/z3/" class="md-nav__link">
+      <a href="../../../integrations/solvers/z3/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -648,7 +652,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/solvers/souffle/" class="md-nav__link">
+      <a href="../../../integrations/solvers/souffle/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -669,7 +673,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/solvers/prover9/" class="md-nav__link">
+      <a href="../../../integrations/solvers/prover9/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -690,7 +694,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/solvers/snakelog/" class="md-nav__link">
+      <a href="../../../integrations/solvers/snakelog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -711,7 +715,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/solvers/llm/" class="md-nav__link">
+      <a href="../../../integrations/solvers/llm/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -774,7 +778,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/compilers/" class="md-nav__link">
+      <a href="../../compilers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -795,7 +799,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/compilers/yaml/" class="md-nav__link">
+      <a href="../../compilers/yaml/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -816,7 +820,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/compilers/prolog/" class="md-nav__link">
+      <a href="../../compilers/prolog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -837,7 +841,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/compilers/tptp/" class="md-nav__link">
+      <a href="../../compilers/tptp/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -858,7 +862,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/compilers/fol/" class="md-nav__link">
+      <a href="../../compilers/fol/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -879,7 +883,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/compilers/sexpr/" class="md-nav__link">
+      <a href="../../compilers/sexpr/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -904,17 +908,19 @@
       
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -928,7 +934,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             Parsers
@@ -942,7 +948,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/parsers/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -963,7 +969,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/parsers/python/" class="md-nav__link">
+      <a href="../python/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -984,7 +990,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/parsers/yaml/" class="md-nav__link">
+      <a href="../yaml/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1005,7 +1011,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/parsers/owlpy/" class="md-nav__link">
+      <a href="../owlpy/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1023,10 +1029,19 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../conversion/parsers/rdf/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1035,6 +1050,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -1124,7 +1140,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/frameworks/owldl/" class="md-nav__link">
+      <a href="../../../integrations/frameworks/owldl/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1145,7 +1161,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/frameworks/owldl/owldl-tutorial" class="md-nav__link">
+      <a href="../../../integrations/frameworks/owldl/owldl-tutorial" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1166,7 +1182,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/frameworks/owldl/owltop/" class="md-nav__link">
+      <a href="../../../integrations/frameworks/owldl/owltop/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1187,7 +1203,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/frameworks/owldl/reasoner/" class="md-nav__link">
+      <a href="../../../integrations/frameworks/owldl/reasoner/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1216,7 +1232,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/frameworks/pydantic" class="md-nav__link">
+      <a href="../../../integrations/frameworks/pydantic" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1237,7 +1253,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/frameworks/sqlmodel.md" class="md-nav__link">
+      <a href="../../../integrations/frameworks/sqlmodel.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1265,7 +1281,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/" class="md-nav__link">
+      <a href="../../../cli/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1285,7 +1301,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../troubleshooting/" class="md-nav__link">
+      <a href="../../../troubleshooting/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1305,7 +1321,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../roadmap/" class="md-nav__link">
+      <a href="../../../roadmap/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1325,7 +1341,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributing.md" class="md-nav__link">
+      <a href="../../../contributing.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1358,50 +1374,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#basic-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Basic Usage
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#satisfiability-checking" class="md-nav__link">
-    <span class="md-ellipsis">
-      Satisfiability checking
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      Next Steps
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -1418,90 +1390,60 @@
   
 
 
-<h1 id="getting-started-with-typedlogic">Getting Started with TypedLogic</h1>
-<p>This guide will help you get up and running with TypedLogic quickly.</p>
-<h2 id="installation">Installation</h2>
-<p>Install TypedLogic using pip:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;typedlogic[snakelog]&quot;</span>
-</code></pre></div>
-<h2 id="basic-usage">Basic Usage</h2>
-<p>First define some basic data structures that you want to reason over. Here we will use Pydantic, but you
-can use dataframes or plain python objects (and in the future, SQLModels, SQL Alchemy):</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typedlogic.integrations.frameworks.pydantic</span> <span class="kn">import</span> <span class="n">FactBaseModel</span>
-
-<span class="n">ID</span> <span class="o">=</span> <span class="nb">str</span>
+<h1 id="rdf-parser">RDF Parser</h1>
 
 
-<span class="k">class</span> <span class="nc">Link</span><span class="p">(</span><span class="n">FactBaseModel</span><span class="p">):</span>
-    <span class="n">source</span><span class="p">:</span> <span class="n">ID</span>
-    <span class="n">target</span><span class="p">:</span> <span class="n">ID</span>
+<div class="doc doc-object doc-class">
 
 
-<span class="k">class</span> <span class="nc">Path</span><span class="p">(</span><span class="n">FactBaseModel</span><span class="p">):</span>
-    <span class="n">source</span><span class="p">:</span> <span class="n">ID</span>
-    <span class="n">target</span><span class="p">:</span> <span class="n">ID</span>
-</code></pre></div>
-<p>These can be used in the standard way in Python:</p>
-<div class="highlight"><pre><span></span><code><span class="n">links</span> <span class="o">=</span> <span class="p">[</span><span class="n">Link</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s1">&#39;CA&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;OR&#39;</span><span class="p">),</span> <span class="n">Link</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s1">&#39;OR&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;WA&#39;</span><span class="p">)]</span>
-</code></pre></div>
-<p>Now we can define some rules:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typedlogic.decorators</span> <span class="kn">import</span> <span class="n">axiom</span>
 
-<span class="nd">@axiom</span>
-<span class="k">def</span> <span class="nf">link_implies_path</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ID</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">ID</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;&quot;For all x, y, if there is a link from x to y, then there is a path from x to y&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">Link</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
 
-<span class="nd">@axiom</span>
-<span class="k">def</span> <span class="nf">transitivity</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ID</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">ID</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">ID</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;For all x, y, z, if there is a path from x to y and a path from y to z,</span>
-<span class="sd">       then there is a path from x to z&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y</span><span class="p">)</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">z</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">z</span><span class="p">)</span>
-</code></pre></div>
-<p>Note that these rules are not actually executed in a Python environment, but
-they are syntactically well-formed and accurately typed.</p>
-<p>Now we can reason over the data. We will use a lightweight pure Python solver called <code>snakelog</code> that is easily installed
-as an extra:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typedlogic.integrations.snakelogic</span> <span class="kn">import</span> <span class="n">SnakeSolver</span>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="typedlogic.parser.Parser" href="../#typedlogic.parser.Parser">Parser</a></code></p>
 
-<span class="n">solver</span> <span class="o">=</span> <span class="n">SnakeSolver</span><span class="p">()</span>
-<span class="n">solver</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;links.py&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
-    <span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">fact</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;Path&quot;</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">fact</span><span class="p">)</span>
-</code></pre></div>
-<p>This will print:</p>
-<div class="highlight"><pre><span></span><code>Path(source=&#39;CA&#39;, target=&#39;OR&#39;)
-Path(source=&#39;OR&#39;, target=&#39;WA&#39;)
-Path(source=&#39;CA&#39;, target=&#39;WA&#39;)
-</code></pre></div>
-<h2 id="satisfiability-checking">Satisfiability checking</h2>
-<div class="highlight"><pre><span></span><code><span class="nd">@axiom</span>
-<span class="k">def</span> <span class="nf">acyclicity</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ID</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">ID</span><span class="p">):</span>
-    <span class="k">assert</span> <span class="o">~</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y</span><span class="p">)</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">x</span><span class="p">))</span>
-</code></pre></div>
-<p>Now we can check if the model is satisfiable. We will use the <a href="...">Z3 solver</a> for this</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typedlogic.integrations.solvers.z3</span> <span class="kn">import</span> <span class="n">Z3Solver</span>
 
-<span class="n">solver</span> <span class="o">=</span> <span class="n">Z3Solver</span><span class="p">()</span>
-<span class="n">solver</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;links_with_acyclicity.py&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
-    <span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
-<span class="c1"># add a link that causes a cycle</span>
-<span class="n">solver</span><span class="o">.</span><span class="n">add_link</span><span class="p">(</span><span class="n">Link</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s1">&#39;WA&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="s1">&#39;CA&#39;</span><span class="p">))</span>
-<span class="n">solver</span><span class="o">.</span><span class="n">check</span><span class="p">()</span><span class="o">.</span><span class="n">satisfiable</span>
-</code></pre></div>
-<p>This will return <code>False</code> because the model is not satisfiable.</p>
-<h2 id="next-steps">Next Steps</h2>
-<ul>
-<li>Explore the <a href="concepts/index">Core Concepts</a> to understand the fundamental ideas behind TypedLogic</li>
-<li>Check out the <a href="api_reference.md">API Reference</a> for detailed information on available classes and functions</li>
-<li>See <a href="advanced_usage.md">Advanced Usage</a> for more complex examples and techniques</li>
-</ul>
+              <details class="quote">
+                <summary>Source code in <code>src/typedlogic/integrations/frameworks/rdflib/rdf_parser.py</code></summary>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">RDFParser</span><span class="p">(</span><span class="n">Parser</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Theory</span><span class="p">:</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">()</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;ttl&quot;</span><span class="p">)</span>
+        <span class="n">parser</span> <span class="o">=</span> <span class="n">PythonParser</span><span class="p">()</span>
+        <span class="n">theory</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">rdfs</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">rdf</span><span class="o">.</span><span class="n">generate_sentences</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+            <span class="n">theory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">theory</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
 
 
 
@@ -1550,10 +1492,10 @@ Path(source=&#39;CA&#39;, target=&#39;WA&#39;)
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.tabs.link"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.d6f25eb3.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d6f25eb3.min.js"></script>
       
     
   </body>

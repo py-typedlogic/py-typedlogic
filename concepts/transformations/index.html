@@ -14,7 +14,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.35">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.38">
     
     
       
@@ -22,7 +22,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.35f28582.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -989,6 +989,48 @@
   
   <span class="md-ellipsis">
     YAML
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/owlpy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OWLPy
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/rdf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDF
   </span>
   
 
@@ -3493,7 +3535,11 @@ print(as_fol(A|B))
 <span class="normal">631</span>
 <span class="normal">632</span>
 <span class="normal">633</span>
-<span class="normal">634</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">as_prover9</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PrologConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">634</span>
+<span class="normal">635</span>
+<span class="normal">636</span>
+<span class="normal">637</span>
+<span class="normal">638</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">as_prover9</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PrologConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a sentence to Prover9 syntax.</span>
 
@@ -3549,6 +3595,8 @@ print(as_fol(A|B))
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">quantifier</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="nb">vars</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">as_prover9</span><span class="p">(</span><span class="n">sentence</span><span class="o">.</span><span class="n">sentence</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="p">,</span><span class="w"> </span><span class="n">depth</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
 
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">And</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sentence</span><span class="o">.</span><span class="n">operands</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;true&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="s1">&#39; &amp; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">as_prover9</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="p">,</span><span class="w"> </span><span class="n">depth</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">sentence</span><span class="o">.</span><span class="n">operands</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
 
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">Xor</span><span class="p">):</span>
@@ -3558,6 +3606,8 @@ print(as_fol(A|B))
         <span class="k">return</span> <span class="n">as_prover9</span><span class="p">(</span><span class="n">expand_exactly_one</span><span class="p">(</span><span class="n">sentence</span><span class="p">),</span> <span class="n">config</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">Or</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sentence</span><span class="o">.</span><span class="n">operands</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;false&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="s1">&#39; | &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">as_prover9</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="p">,</span><span class="w"> </span><span class="n">depth</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">sentence</span><span class="o">.</span><span class="n">operands</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
 
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">Not</span><span class="p">):</span>
@@ -3670,11 +3720,7 @@ print(as_fol(A|B))
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">637</span>
-<span class="normal">638</span>
-<span class="normal">639</span>
-<span class="normal">640</span>
-<span class="normal">641</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">641</span>
 <span class="normal">642</span>
 <span class="normal">643</span>
 <span class="normal">644</span>
@@ -3719,7 +3765,11 @@ print(as_fol(A|B))
 <span class="normal">683</span>
 <span class="normal">684</span>
 <span class="normal">685</span>
-<span class="normal">686</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">prover9_problem</span><span class="p">(</span><span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">conjecture</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">686</span>
+<span class="normal">687</span>
+<span class="normal">688</span>
+<span class="normal">689</span>
+<span class="normal">690</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">prover9_problem</span><span class="p">(</span><span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">conjecture</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate a complete Prover9 problem from a theory and an optional conjecture.</span>
 
@@ -3867,11 +3917,7 @@ print(as_fol(A|B))
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">689</span>
-<span class="normal">690</span>
-<span class="normal">691</span>
-<span class="normal">692</span>
-<span class="normal">693</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">693</span>
 <span class="normal">694</span>
 <span class="normal">695</span>
 <span class="normal">696</span>
@@ -3888,7 +3934,11 @@ print(as_fol(A|B))
 <span class="normal">707</span>
 <span class="normal">708</span>
 <span class="normal">709</span>
-<span class="normal">710</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">transform_sentence_chained</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">rules</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Sentence</span><span class="p">],</span> <span class="n">Sentence</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="normal">710</span>
+<span class="normal">711</span>
+<span class="normal">712</span>
+<span class="normal">713</span>
+<span class="normal">714</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">transform_sentence_chained</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">rules</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Sentence</span><span class="p">],</span> <span class="n">Sentence</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transform a sentence using a chain of rules.</span>
 
@@ -4028,11 +4078,7 @@ print(as_fol(A|B))
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">712</span>
-<span class="normal">713</span>
-<span class="normal">714</span>
-<span class="normal">715</span>
-<span class="normal">716</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">716</span>
 <span class="normal">717</span>
 <span class="normal">718</span>
 <span class="normal">719</span>
@@ -4070,7 +4116,11 @@ print(as_fol(A|B))
 <span class="normal">751</span>
 <span class="normal">752</span>
 <span class="normal">753</span>
-<span class="normal">754</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">transform_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Sentence</span><span class="p">],</span> <span class="n">Sentence</span><span class="p">],</span> <span class="n">varmap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Variable</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="normal">754</span>
+<span class="normal">755</span>
+<span class="normal">756</span>
+<span class="normal">757</span>
+<span class="normal">758</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">transform_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">rule</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Sentence</span><span class="p">],</span> <span class="n">Sentence</span><span class="p">],</span> <span class="n">varmap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Variable</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transform a sentence recursively using a rule.</span>
 
@@ -4211,11 +4261,7 @@ print(as_fol(A|B))
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">757</span>
-<span class="normal">758</span>
-<span class="normal">759</span>
-<span class="normal">760</span>
-<span class="normal">761</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">761</span>
 <span class="normal">762</span>
 <span class="normal">763</span>
 <span class="normal">764</span>
@@ -4243,7 +4289,11 @@ print(as_fol(A|B))
 <span class="normal">786</span>
 <span class="normal">787</span>
 <span class="normal">788</span>
-<span class="normal">789</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">replace_constants</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">constant_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="normal">789</span>
+<span class="normal">790</span>
+<span class="normal">791</span>
+<span class="normal">792</span>
+<span class="normal">793</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">replace_constants</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">constant_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Replace constants in a sentence with new values.</span>
 
@@ -4368,11 +4418,7 @@ print(as_fol(A|B))
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">792</span>
-<span class="normal">793</span>
-<span class="normal">794</span>
-<span class="normal">795</span>
-<span class="normal">796</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">796</span>
 <span class="normal">797</span>
 <span class="normal">798</span>
 <span class="normal">799</span>
@@ -4398,7 +4444,11 @@ print(as_fol(A|B))
 <span class="normal">819</span>
 <span class="normal">820</span>
 <span class="normal">821</span>
-<span class="normal">822</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">reduce_singleton</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="normal">822</span>
+<span class="normal">823</span>
+<span class="normal">824</span>
+<span class="normal">825</span>
+<span class="normal">826</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">reduce_singleton</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reduce singleton conjunctions and disjunctions in a sentence.</span>
 
@@ -4517,11 +4567,7 @@ A</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">824</span>
-<span class="normal">825</span>
-<span class="normal">826</span>
-<span class="normal">827</span>
-<span class="normal">828</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">828</span>
 <span class="normal">829</span>
 <span class="normal">830</span>
 <span class="normal">831</span>
@@ -4560,7 +4606,11 @@ A</p>
 <span class="normal">864</span>
 <span class="normal">865</span>
 <span class="normal">866</span>
-<span class="normal">867</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">simplify</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="normal">867</span>
+<span class="normal">868</span>
+<span class="normal">869</span>
+<span class="normal">870</span>
+<span class="normal">871</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">simplify</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Simplify a sentence by reducing nested conjunctions and disjunctions.</span>
 
@@ -4694,11 +4744,7 @@ A</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">869</span>
-<span class="normal">870</span>
-<span class="normal">871</span>
-<span class="normal">872</span>
-<span class="normal">873</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">873</span>
 <span class="normal">874</span>
 <span class="normal">875</span>
 <span class="normal">876</span>
@@ -4723,7 +4769,11 @@ A</p>
 <span class="normal">895</span>
 <span class="normal">896</span>
 <span class="normal">897</span>
-<span class="normal">898</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">distribute_and_over_or</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="normal">898</span>
+<span class="normal">899</span>
+<span class="normal">900</span>
+<span class="normal">901</span>
+<span class="normal">902</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">distribute_and_over_or</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Distribute AND over OR in a sentence.</span>
 
@@ -4838,11 +4888,7 @@ Replace (A ∨ B) ∨ C with A ∨ B ∨ C</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">930</span>
-<span class="normal">931</span>
-<span class="normal">932</span>
-<span class="normal">933</span>
-<span class="normal">934</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">934</span>
 <span class="normal">935</span>
 <span class="normal">936</span>
 <span class="normal">937</span>
@@ -4866,7 +4912,11 @@ Replace (A ∨ B) ∨ C with A ∨ B ∨ C</p>
 <span class="normal">955</span>
 <span class="normal">956</span>
 <span class="normal">957</span>
-<span class="normal">958</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">flatten_nested_conjunctions_and_disjunctions</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="normal">958</span>
+<span class="normal">959</span>
+<span class="normal">960</span>
+<span class="normal">961</span>
+<span class="normal">962</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">flatten_nested_conjunctions_and_disjunctions</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Flatten nested conjunctions and disjunctions in a sentence.</span>
 
@@ -5011,11 +5061,7 @@ Replace (A ∨ B) ∨ C with A ∨ B ∨ C</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 962</span>
-<span class="normal"> 963</span>
-<span class="normal"> 964</span>
-<span class="normal"> 965</span>
-<span class="normal"> 966</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 966</span>
 <span class="normal"> 967</span>
 <span class="normal"> 968</span>
 <span class="normal"> 969</span>
@@ -5060,7 +5106,11 @@ Replace (A ∨ B) ∨ C with A ∨ B ∨ C</p>
 <span class="normal">1008</span>
 <span class="normal">1009</span>
 <span class="normal">1010</span>
-<span class="normal">1011</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">skolemize</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">universal_vars</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Variable</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">substitution_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Term</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="normal">1011</span>
+<span class="normal">1012</span>
+<span class="normal">1013</span>
+<span class="normal">1014</span>
+<span class="normal">1015</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">skolemize</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">universal_vars</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Variable</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">substitution_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Term</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Skolemize a sentence.</span>
 
@@ -5229,11 +5279,7 @@ Replace (A ∨ B) ∨ C with A ∨ B ∨ C</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1014</span>
-<span class="normal">1015</span>
-<span class="normal">1016</span>
-<span class="normal">1017</span>
-<span class="normal">1018</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1018</span>
 <span class="normal">1019</span>
 <span class="normal">1020</span>
 <span class="normal">1021</span>
@@ -5291,7 +5337,11 @@ Replace (A ∨ B) ∨ C with A ∨ B ∨ C</p>
 <span class="normal">1073</span>
 <span class="normal">1074</span>
 <span class="normal">1075</span>
-<span class="normal">1076</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">to_cnf</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">skip_skolemization</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="normal">1076</span>
+<span class="normal">1077</span>
+<span class="normal">1078</span>
+<span class="normal">1079</span>
+<span class="normal">1080</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">to_cnf</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">skip_skolemization</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a sentence to conjunctive normal form.</span>
 
@@ -5457,11 +5507,7 @@ Replace (A ∨ B) ∨ C with A ∨ B ∨ C</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1078</span>
-<span class="normal">1079</span>
-<span class="normal">1080</span>
-<span class="normal">1081</span>
-<span class="normal">1082</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1082</span>
 <span class="normal">1083</span>
 <span class="normal">1084</span>
 <span class="normal">1085</span>
@@ -5489,7 +5535,11 @@ Replace (A ∨ B) ∨ C with A ∨ B ∨ C</p>
 <span class="normal">1107</span>
 <span class="normal">1108</span>
 <span class="normal">1109</span>
-<span class="normal">1110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">to_cnf_lol</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]]:</span>
+<span class="normal">1110</span>
+<span class="normal">1111</span>
+<span class="normal">1112</span>
+<span class="normal">1113</span>
+<span class="normal">1114</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">to_cnf_lol</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a sentence to a list of lists of sentences in conjunctive normal form.</span>
 
@@ -5623,11 +5673,7 @@ Replace (A ∨ B) ∨ C with A ∨ B ∨ C</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1112</span>
-<span class="normal">1113</span>
-<span class="normal">1114</span>
-<span class="normal">1115</span>
-<span class="normal">1116</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1116</span>
 <span class="normal">1117</span>
 <span class="normal">1118</span>
 <span class="normal">1119</span>
@@ -5695,7 +5741,11 @@ Replace (A ∨ B) ∨ C with A ∨ B ∨ C</p>
 <span class="normal">1181</span>
 <span class="normal">1182</span>
 <span class="normal">1183</span>
-<span class="normal">1184</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">to_horn_rules</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">allow_disjunctions_in_head</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_goal_clauses</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]:</span>
+<span class="normal">1184</span>
+<span class="normal">1185</span>
+<span class="normal">1186</span>
+<span class="normal">1187</span>
+<span class="normal">1188</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">to_horn_rules</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">allow_disjunctions_in_head</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_goal_clauses</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a sentence to a list of Horn rules.</span>
 
@@ -5848,11 +5898,7 @@ Replace (A ∨ B) ∨ C with A ∨ B ∨ C</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1186</span>
-<span class="normal">1187</span>
-<span class="normal">1188</span>
-<span class="normal">1189</span>
-<span class="normal">1190</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1190</span>
 <span class="normal">1191</span>
 <span class="normal">1192</span>
 <span class="normal">1193</span>
@@ -5869,7 +5915,11 @@ Replace (A ∨ B) ∨ C with A ∨ B ∨ C</p>
 <span class="normal">1204</span>
 <span class="normal">1205</span>
 <span class="normal">1206</span>
-<span class="normal">1207</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">expand_xor</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="normal">1207</span>
+<span class="normal">1208</span>
+<span class="normal">1209</span>
+<span class="normal">1210</span>
+<span class="normal">1211</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">expand_xor</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Expand XOR in a sentence.</span>
 
@@ -5977,11 +6027,7 @@ Replace A ↔ B with (A → B) ∧ (B → A), then apply the above rule</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1225</span>
-<span class="normal">1226</span>
-<span class="normal">1227</span>
-<span class="normal">1228</span>
-<span class="normal">1229</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1229</span>
 <span class="normal">1230</span>
 <span class="normal">1231</span>
 <span class="normal">1232</span>
@@ -6017,7 +6063,11 @@ Replace A ↔ B with (A → B) ∧ (B → A), then apply the above rule</p>
 <span class="normal">1262</span>
 <span class="normal">1263</span>
 <span class="normal">1264</span>
-<span class="normal">1265</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">eliminate_all_implications_recursive</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="normal">1265</span>
+<span class="normal">1266</span>
+<span class="normal">1267</span>
+<span class="normal">1268</span>
+<span class="normal">1269</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">eliminate_all_implications_recursive</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Replace A → B with ¬A ∨ B</span>
 <span class="sd">    Replace A ↔ B with (A → B) ∧ (B → A), then apply the above rule</span>
@@ -6145,11 +6195,7 @@ Replace A ↔ B with (A → B) ∧ (B → A), then apply the above rule</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1268</span>
-<span class="normal">1269</span>
-<span class="normal">1270</span>
-<span class="normal">1271</span>
-<span class="normal">1272</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1272</span>
 <span class="normal">1273</span>
 <span class="normal">1274</span>
 <span class="normal">1275</span>
@@ -6172,7 +6218,11 @@ Replace A ↔ B with (A → B) ∧ (B → A), then apply the above rule</p>
 <span class="normal">1292</span>
 <span class="normal">1293</span>
 <span class="normal">1294</span>
-<span class="normal">1295</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">eliminate_iff</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="normal">1295</span>
+<span class="normal">1296</span>
+<span class="normal">1297</span>
+<span class="normal">1298</span>
+<span class="normal">1299</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">eliminate_iff</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Eliminate iff from a sentence.</span>
 
@@ -6283,11 +6333,7 @@ Replace A ↔ B with (A → B) ∧ (B → A), then apply the above rule</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1297</span>
-<span class="normal">1298</span>
-<span class="normal">1299</span>
-<span class="normal">1300</span>
-<span class="normal">1301</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1301</span>
 <span class="normal">1302</span>
 <span class="normal">1303</span>
 <span class="normal">1304</span>
@@ -6303,7 +6349,11 @@ Replace A ↔ B with (A → B) ∧ (B → A), then apply the above rule</p>
 <span class="normal">1314</span>
 <span class="normal">1315</span>
 <span class="normal">1316</span>
-<span class="normal">1317</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">eliminate_implied</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="normal">1317</span>
+<span class="normal">1318</span>
+<span class="normal">1319</span>
+<span class="normal">1320</span>
+<span class="normal">1321</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">eliminate_implied</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Eliminate implied from a sentence.</span>
 
@@ -6355,11 +6405,7 @@ Replace A ↔ B with (A → B) ∧ (B → A), then apply the above rule</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1319</span>
-<span class="normal">1320</span>
-<span class="normal">1321</span>
-<span class="normal">1322</span>
-<span class="normal">1323</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1323</span>
 <span class="normal">1324</span>
 <span class="normal">1325</span>
 <span class="normal">1326</span>
@@ -6372,7 +6418,11 @@ Replace A ↔ B with (A → B) ∧ (B → A), then apply the above rule</p>
 <span class="normal">1333</span>
 <span class="normal">1334</span>
 <span class="normal">1335</span>
-<span class="normal">1336</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">eliminate_implies</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="normal">1336</span>
+<span class="normal">1337</span>
+<span class="normal">1338</span>
+<span class="normal">1339</span>
+<span class="normal">1340</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">eliminate_implies</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Eliminate implies from a sentence in translation to CNF</span>
 
@@ -6474,11 +6524,7 @@ Replace ¬(A ∨ B) with ¬A ∧ ¬B</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1341</span>
-<span class="normal">1342</span>
-<span class="normal">1343</span>
-<span class="normal">1344</span>
-<span class="normal">1345</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1345</span>
 <span class="normal">1346</span>
 <span class="normal">1347</span>
 <span class="normal">1348</span>
@@ -6500,7 +6546,11 @@ Replace ¬(A ∨ B) with ¬A ∧ ¬B</p>
 <span class="normal">1364</span>
 <span class="normal">1365</span>
 <span class="normal">1366</span>
-<span class="normal">1367</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">apply_demorgans</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="normal">1367</span>
+<span class="normal">1368</span>
+<span class="normal">1369</span>
+<span class="normal">1370</span>
+<span class="normal">1371</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">apply_demorgans</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply De Morgan&#39;s laws to a sentence.</span>
 
@@ -6608,11 +6658,7 @@ Replace ¬∃x P(x) with ∀x ¬P(x)</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1369</span>
-<span class="normal">1370</span>
-<span class="normal">1371</span>
-<span class="normal">1372</span>
-<span class="normal">1373</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1373</span>
 <span class="normal">1374</span>
 <span class="normal">1375</span>
 <span class="normal">1376</span>
@@ -6631,7 +6677,11 @@ Replace ¬∃x P(x) with ∀x ¬P(x)</p>
 <span class="normal">1389</span>
 <span class="normal">1390</span>
 <span class="normal">1391</span>
-<span class="normal">1392</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">apply_quantifier_negation</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="normal">1392</span>
+<span class="normal">1393</span>
+<span class="normal">1394</span>
+<span class="normal">1395</span>
+<span class="normal">1396</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">apply_quantifier_negation</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply negation of quantifiers to a sentence.</span>
 
@@ -6746,11 +6796,7 @@ and recurse.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1394</span>
-<span class="normal">1395</span>
-<span class="normal">1396</span>
-<span class="normal">1397</span>
-<span class="normal">1398</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1398</span>
 <span class="normal">1399</span>
 <span class="normal">1400</span>
 <span class="normal">1401</span>
@@ -6806,7 +6852,11 @@ and recurse.</p>
 <span class="normal">1451</span>
 <span class="normal">1452</span>
 <span class="normal">1453</span>
-<span class="normal">1454</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">force_stratification</span><span class="p">(</span><span class="n">horn_rules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Sentence</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]:</span>
+<span class="normal">1454</span>
+<span class="normal">1455</span>
+<span class="normal">1456</span>
+<span class="normal">1457</span>
+<span class="normal">1458</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">force_stratification</span><span class="p">(</span><span class="n">horn_rules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Sentence</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Force stratification of a list of horn rules.</span>
 
@@ -6962,11 +7012,7 @@ and recurse.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/transformations.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1456</span>
-<span class="normal">1457</span>
-<span class="normal">1458</span>
-<span class="normal">1459</span>
-<span class="normal">1460</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1460</span>
 <span class="normal">1461</span>
 <span class="normal">1462</span>
 <span class="normal">1463</span>
@@ -7002,7 +7048,11 @@ and recurse.</p>
 <span class="normal">1493</span>
 <span class="normal">1494</span>
 <span class="normal">1495</span>
-<span class="normal">1496</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ensure_terms_positional</span><span class="p">(</span><span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">):</span>
+<span class="normal">1496</span>
+<span class="normal">1497</span>
+<span class="normal">1498</span>
+<span class="normal">1499</span>
+<span class="normal">1500</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ensure_terms_positional</span><span class="p">(</span><span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Ensure that all terms in a theory have all positions filled and ordered.</span>
 
@@ -7107,7 +7157,7 @@ and recurse.</p>
     <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.56dfad97.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d6f25eb3.min.js"></script>
       
     
   </body>
