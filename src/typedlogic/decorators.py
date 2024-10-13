@@ -23,7 +23,7 @@ Example:
 
     @goal
     def unit_test1():
-        '''unit test: if Violet is a cat, then it must be provable that Violet is not a dog```
+        '''unit test: if Violet is a cat, then it must be provable that Violet is not a dog'''
         if Cat('Violet'):
            assert not Dog('Violet')
 ```

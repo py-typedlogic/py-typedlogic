@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from pathlib import Path
+from types import ModuleType
 from typing import Any, ClassVar, Iterator, List, Optional, TextIO, Union
 
 from typedlogic import Sentence, Term, Theory
@@ -84,6 +85,10 @@ class Parser(ABC):
         :param kwargs:
         :return:
         """
+        if isinstance(source, ModuleType):
+            if not source.__file__:
+                raise ValueError("Module must have a file attribute")
+            return self.parse(source.__file__, **kwargs)
         raise NotImplementedError("Translation not supported by this parser")
 
     def validate_iter(self, source: Union[Path, str, TextIO], **kwargs) -> Iterator[ValidationMessage]:

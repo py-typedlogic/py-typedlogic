@@ -69,6 +69,27 @@ def _conjunction(sentences: List[Sentence]) -> Sentence:
         return sentences[0]
     return And(*sentences)
 
+def individual_name(e: "Individual") -> str:
+    if isinstance(e, str):
+        return e
+    if isinstance(e, OntologyElement):
+        return e.__name__
+    return str(e)
+
+def class_name(ce: "Class") -> str:
+    if isinstance(ce, str):
+        return ce
+    if isinstance(ce, OntologyElement):
+        return ce.__name__
+    return str(ce)
+
+def object_property_name(op: "ObjectProperty") -> str:
+    if isinstance(op, str):
+        return op
+    if isinstance(op, OntologyElement):
+        return op.__name__
+    return str(op)
+
 def instance_of(inst_var: Variable, ce: "ClassExpression") -> Sentence:
     if isinstance(ce, AnonymousClassExpression):
         return ce.as_fol() or And()
@@ -400,6 +421,14 @@ class TopDataProperty(Fact):
         return [a for a in [axiom.as_fol() for axiom in cls.axioms()] if a is not None]
 
 @dataclass
+class AnonymousIndividual(ABC):
+    """
+    An anonymous individual.
+    """
+    first: str
+
+
+@dataclass
 class Literal(ABC):
     """
     A literal.
@@ -449,7 +478,8 @@ DataProperty = Union[Type[TopDataProperty], OntologyElementReference, OntologyEl
 Datatype = Union[IRI, Type[str], Type[int], Type[float], Type[bool]]
 ObjectProperty = Union[Type[TopObjectProperty], OntologyElementReference, OntologyElement]
 
-Individual = IRI
+NamedIndividual = IRI
+Individual = Union[NamedIndividual, "AnonymousIndividual", OntologyElement]
 ClassExpression = Union[Class, "AnonymousClassExpression"]
 ObjectPropertyExpression = Union[ObjectProperty, "InverseObjectProperty"]
 DataPropertyExpression = DataProperty
@@ -1577,7 +1607,7 @@ class ObjectOneOf(AnonymousClassExpression):
         self.operands = operands
 
     def as_fol(self) -> Optional[Sentence]:
-        return Or(*[Term("eq", I, ind) for ind in self.operands])
+        return Or(*[Term("eq", I, individual_name(ind)) for ind in self.operands])
 
 @dataclass
 class ObjectSomeValuesFrom(AnonymousClassExpression):
@@ -1952,6 +1982,31 @@ class DataSomeValuesFrom(AnonymousDataRange):
     dp: DataPropertyExpression
     dr: DataRange
 
+
+@dataclass
+class FacetRestriction:
+    """
+    A restriction on a datatype.
+    """
+
+    f: IRI
+    l: Literal
+
+    def as_fol(self) -> Optional[Sentence]:
+        return None
+
+@dataclass
+class DatatypeRestriction(AnonymousDataRange):
+    """
+    A DataRange representing a datatype restriction.
+    """
+
+    first: Datatype
+    second: List[FacetRestriction]
+
+    def as_fol(self) -> Optional[Sentence]:
+        return None
+
 @dataclass
 class ObjectPropertyDomain(Axiom):
     """
@@ -2118,6 +2173,102 @@ class DataPropertyRange(Axiom):
     #def as_fol(self) -> Optional[Sentence]:
     #    return Forall([I, J], Implies(instance_of_dp(I, J, self.dp), instance_of(J, self.dr)))
 
+
+@dataclass
+class ClassAssertion(Axiom):
+    """
+    A class-assertion axiom.
+
+    Example of explicit declaration:
+
+    ```python
+    class Person(Thing):
+        pass
+
+    alice = Person("Alice")
+
+    __axioms__ = [ ClassAssertion(alice, Person) ]
+    ```
+
+    Normally, the more Frame-style equivalent is preferred:
+
+    ```python
+    class Person(Thing):
+        pass
+
+    alice = Person("Alice")
+    ```
+
+    UML:
+
+    ```mermaid
+    classDiagram
+    Axiom <|-- ClassAssertion
+    ClassAssertion --> "1" Individual : i
+    ClassAssertion --> "1" ClassExpression : ce
+    ``
+    """
+
+    ce: ClassExpression
+    i: Individual
+
+    def as_fol(self) -> Optional[Sentence]:
+        # TODO:
+        if isinstance(self.ce, AnonymousClassExpression):
+            return And(instance_of(I, self.ce))
+        return Term(class_name(self.ce), individual_name(self.i))
+
+@dataclass
+class ObjectPropertyAssertion(Axiom):
+    """
+    An object-property-assertion axiom.
+
+    Example of explicit declaration:
+
+    ```python
+    class HasParent(TopObjectProperty):
+        '''A property that relates a person to their parent'''
+
+    alice = Person("Alice")
+    bob = Person("Bob")
+
+    __axioms__ = [ ObjectPropertyAssertion(HasParent, alice, bob) ]
+    ```
+
+    Normally, the more Frame-style equivalent is preferred:
+
+    ```python
+    class HasParent(TopObjectProperty):
+        '''A property that relates a person to their parent'''
+
+    alice = Person("Alice")
+    bob = Person("Bob")
+
+    alice.has_parent = bob
+    ```
+
+    UML:
+
+    ```mermaid
+    classDiagram
+    Axiom <|-- ObjectPropertyAssertion
+    ObjectPropertyAssertion --> "1" ObjectPropertyExpression : ope
+    ObjectPropertyAssertion --> "1" Individual : i
+    ObjectPropertyAssertion --> "1" Individual : j
+    ``
+    """
+
+    ope: ObjectPropertyExpression
+    i: Individual
+    j: Individual
+
+    def as_fol(self) -> Optional[Sentence]:
+        if isinstance(self.ope, InverseObjectProperty):
+            return ObjectPropertyAssertion(self.ope.first, self.j, self.i).as_fol()
+        ope = object_property_name(self.ope)
+        i_name = individual_name(self.i)
+        j_name = individual_name(self.j)
+        return Term(ope, i_name, j_name)
 
 @dataclass(frozen=True)
 class Ontology(Fact):

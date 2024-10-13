@@ -40,11 +40,21 @@ def test_convert_command(sample_input_file):
     assert "Person" in result.stdout
 
 
-def test_convert_command_from_owlpy(sample_input_file):
+def test_convert_command_from_owlpy_to_fol():
     import tests.test_frameworks.owldl.family as family
     result = runner.invoke(app, ['convert', '--input-format', "owlpy",  family.__file__, '--output-format', 'fol'])
     assert result.exit_code == 0
     assert "∀[I J]. HasParent(I, J) ↔ HasChild(J, I)" in result.stdout
+
+
+@pytest.mark.parametrize("output_format", ["sexpr", "yaml", "prolog", "tptp", "souffle", "owl"])
+def test_convert_command_from_owlpy(output_format):
+    import tests.test_frameworks.owldl.family as family
+    output_path = OUTPUT_DIR / "test_cli" / (family.__name__ + "." + output_format)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    result = runner.invoke(app, ['convert', '--input-format', "owlpy",  family.__file__, '--output-format', output_format, '-o', str(output_path)])
+    assert result.exit_code == 0
+
 
 
 @pytest.mark.parametrize("module", [

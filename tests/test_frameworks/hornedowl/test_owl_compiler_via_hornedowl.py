@@ -1,0 +1,69 @@
+import pytest
+
+from typedlogic import Term
+from typedlogic.integrations.frameworks.hornedowl.horned_owl_bridge import load_ontology
+from typedlogic.integrations.frameworks.hornedowl.owl_compiler import OWLCompiler
+from typedlogic.integrations.frameworks.hornedowl.owl_parser import OWLParser
+from typedlogic.integrations.frameworks.owldl import OWLPyParser
+from typedlogic.integrations.frameworks.owldl.reasoner import OWLReasoner
+
+from tests.test_frameworks.hornedowl import HORNEDOWL_INPUT_DIR, HORNEDOWL_OUTPUT_DIR
+
+import tests.test_frameworks.owldl.family as family
+from typedlogic.registry import get_compiler
+
+RO = HORNEDOWL_INPUT_DIR / "ro.ofn"
+
+@pytest.mark.parametrize("input_path", [
+        RO,
+])
+def test_convert_owlpy_to_owl(input_path):
+    parser = OWLParser()
+    theory = parser.parse(input_path)
+    #for s in theory.sentences:
+    #    print(s, s.annotations["owl_axiom"])
+    compiler = OWLCompiler()
+    out = compiler.compile(theory)
+    print(out)
+
+
+@pytest.mark.parametrize("module", [
+        family,
+])
+def test_convert_native_to_owl(module):
+    parser = OWLPyParser()
+    theory = parser.translate(module)
+    module_name = module.__name__.split('.')[-1]
+    for s in theory.sentences:
+        print(s, s.annotations["owl_axiom"])
+    compiler = OWLCompiler()
+    out = compiler.compile(theory)
+    print(out)
+    output_path = HORNEDOWL_OUTPUT_DIR / f"{module_name}.ofn"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, "w") as f:
+        f.write(out)
+
+
+
+
+@pytest.mark.parametrize("module", [
+        family,
+])
+@pytest.mark.parametrize("output_format", [
+    "fol",
+    "prolog",
+    "sexpr",
+    "owl",
+])
+def test_convert_native_to_fol(module, output_format):
+    parser = OWLPyParser()
+    theory = parser.translate(module)
+    module_name = module.__name__.split('.')[-1]
+    compiler = get_compiler(output_format)
+    out = compiler.compile(theory)
+    print(out)
+    output_path = HORNEDOWL_OUTPUT_DIR / f"{module_name}.{output_format}"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, "w") as f:
+        f.write(out)

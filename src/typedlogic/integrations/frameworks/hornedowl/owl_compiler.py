@@ -1,5 +1,5 @@
 import tempfile
-from typing import Optional, Union
+from typing import Optional, Union, ClassVar
 
 from typedlogic import Theory
 from typedlogic.compiler import Compiler, ModelSyntax
@@ -24,6 +24,7 @@ class OWLCompiler(Compiler):
 
 
     """
+    default_suffix: ClassVar[str] = "owl"
 
     def compile(self, theory: Theory, syntax: Optional[Union[str, ModelSyntax]] = None, **kwargs) -> str:
         pho_ontology = theory_to_py_indexed_ontology(theory)

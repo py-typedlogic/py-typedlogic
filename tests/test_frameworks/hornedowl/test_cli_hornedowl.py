@@ -16,9 +16,17 @@ RO = HORNEDOWL_INPUT_DIR / "ro.ofn"
 @pytest.mark.parametrize("output_format", [
     "fol",
     "prolog",
-    "sexpr"
+    #"sexpr",
+    "owl",
 ])
 def test_convert_owl(input_file, output_format):
+    """
+    Tests conversion from OWL via horned-owl to other formats.
+
+    :param input_file:
+    :param output_format:
+    :return:
+    """
     stem = input_file.stem
     output_path = OUTPUT_DIR /  f"from-owl-{stem}.{output_format}"
     output_path.parent.mkdir(parents=True, exist_ok=True)
