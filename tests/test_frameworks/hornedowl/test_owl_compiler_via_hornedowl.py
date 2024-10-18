@@ -10,6 +10,7 @@ from typedlogic.integrations.frameworks.owldl.reasoner import OWLReasoner
 from tests.test_frameworks.hornedowl import HORNEDOWL_INPUT_DIR, HORNEDOWL_OUTPUT_DIR
 
 import tests.test_frameworks.owldl.family as family
+import tests.test_frameworks.owldl.paths_owldl as paths_owldl
 from typedlogic.registry import get_compiler
 
 RO = HORNEDOWL_INPUT_DIR / "ro.ofn"
@@ -29,6 +30,8 @@ def test_convert_owlpy_to_owl(input_path):
 
 @pytest.mark.parametrize("module", [
         family,
+        paths_owldl,
+
 ])
 def test_convert_native_to_owl(module):
     parser = OWLPyParser()
@@ -38,11 +41,21 @@ def test_convert_native_to_owl(module):
         print(s, s.annotations["owl_axiom"])
     compiler = OWLCompiler()
     out = compiler.compile(theory)
-    print(out)
+    # print(out)
     output_path = HORNEDOWL_OUTPUT_DIR / f"{module_name}.ofn"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w") as f:
         f.write(out)
+    # ensure no cross-ontology leakage
+    if module == family:
+        assert "Path" not in out
+        assert "EquivalentClasses(Parent ObjectIntersectionOf(Person ObjectSomeValuesFrom(HasChild Thing)))" in out
+    elif module == paths_owldl:
+        assert "Parent" not in out
+        assert "TransitiveObjectProperty(Path)" in out
+    else:
+        assert False
+
 
 
 

@@ -4,7 +4,8 @@ Framework for compiling a theory to an external format (e.g., FOL, CL, TPTP, Pro
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
-from typing import ClassVar, Optional, Type, Union
+from pathlib import Path
+from typing import ClassVar, Optional, Type, Union, TextIO
 
 from typedlogic import Sentence, Theory
 from typedlogic.parser import Parser
@@ -107,9 +108,27 @@ class Compiler(ABC):
         :param theory:
         :param syntax:
         :param kwargs:
-        :return:
+        :return: string representation of the compiled artefact
         """
         pass
+
+    def compile_to_target(self, theory: Theory, target: Union[str, Path, TextIO], syntax: Optional[Union[str, ModelSyntax]] = None, **kwargs):
+        """
+        Compile a theory to a file or stream.
+
+        :param theory:
+        :param target:
+        :param syntax:
+        :param kwargs:
+        :return:
+        """
+        if isinstance(target, str):
+            target = Path(target)
+        if isinstance(target, Path):
+            with target.open("w") as f:
+                f.write(self.compile(theory, syntax=syntax, **kwargs))
+        else:
+            target.write(self.compile(theory, syntax=syntax, **kwargs))
 
     def compile_sentence(self, sentence: Sentence, syntax: Optional[Union[str, ModelSyntax]] = None, **kwargs) -> str:
         """

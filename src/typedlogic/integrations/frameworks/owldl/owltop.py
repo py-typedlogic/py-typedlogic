@@ -46,7 +46,8 @@ class OntologyElement:
     iri: Optional[IRI] = None
 
     def __str__(self):
-        return f"{self.owl_type}({self.__name__})"
+        #return f"{self.owl_type}({self.__name__})"
+        return self.__name__
 
     def __repr__(self):
         if self.iri:
@@ -493,7 +494,7 @@ class Axiom(ABC):
     Axioms can be declared implicitly, in "Frame-style" class definitions, or in
     an `__axioms__` module variable
     """
-
+    frame_keyword: ClassVar[Optional[str]] = None
     annotations: ClassVar[Optional[Mapping[str, Any]]] = None
 
     #@abstractmethod
@@ -560,7 +561,7 @@ class SubClassOf(Axiom):
     ```
 
     """
-
+    frame_keyword = "subclass_of"
     sub: ClassExpression
     sup: ClassExpression
 
@@ -653,7 +654,7 @@ class SubObjectPropertyOf(Axiom):
     ```
 
     """
-
+    frame_keyword = "subproperty_of"
     sub: Union[ObjectPropertyExpression, PropertyExpressionChain]
     sup: ObjectPropertyExpression
 
@@ -700,7 +701,7 @@ class TransitiveObjectProperty(Axiom):
     ```
 
     """
-
+    frame_keyword = "transitive"
     first: ObjectPropertyExpression
 
     def as_fol(self) -> Optional[Sentence]:
@@ -746,7 +747,7 @@ class InverseObjectProperties(Axiom):
     InverseObjectProperties --> "1" ObjectPropertyExpression : second
     ```
     """
-
+    frame_keyword = "inverse_of"
     first: ObjectPropertyExpression
     second: ObjectPropertyExpression
 
@@ -788,7 +789,7 @@ class SymmetricObjectProperty(Axiom):
     ```
 
     """
-
+    frame_keyword = "symmetric"
     first: ObjectPropertyExpression
 
     def as_fol(self) -> Optional[Sentence]:
@@ -829,7 +830,7 @@ class AsymmetricObjectProperty(Axiom):
     ```
 
     """
-
+    frame_keyword = "asymmetric"
     first: ObjectPropertyExpression
 
     def as_fol(self) -> Optional[Sentence]:
@@ -872,7 +873,7 @@ class ReflexiveObjectProperty(Axiom):
     ```
 
     """
-
+    frame_keyword = "reflexive"
     first: ObjectPropertyExpression
 
     def as_fol(self) -> Optional[Sentence]:
@@ -906,7 +907,7 @@ class IrreflexiveObjectProperty(Axiom):
     ```
 
     """
-
+    frame_keyword = "irreflexive"
     first: ObjectPropertyExpression
 
     def as_fol(self) -> Optional[Sentence]:
@@ -951,7 +952,7 @@ class FunctionalObjectProperty(Axiom):
     ```
 
     """
-
+    frame_keyword = "functional"
     first: ObjectPropertyExpression
 
     def as_fol(self) -> Optional[Sentence]:
@@ -992,7 +993,7 @@ class InverseFunctionalObjectProperty(Axiom):
     InverseFunctionalObjectProperty --> "1" ObjectPropertyExpression : first
     ```
     """
-
+    frame_keyword = "inverse_functional"
     first: ObjectPropertyExpression
 
     def as_fol(self) -> Optional[Sentence]:
@@ -1033,7 +1034,7 @@ class FunctionalDataProperty(Axiom):
     ```
 
     """
-
+    frame_keyword = "functional"
     first: DataPropertyExpression
 
     def as_fol(self) -> Optional[Sentence]:
@@ -1084,7 +1085,7 @@ class SubDataPropertyOf(Axiom):
     SubDataPropertyOf --> "*" DataPropertyExpression : sup
     ```
     """
-
+    frame_keyword = "subproperty_of"
     sub: DataPropertyExpression
     sup: DataPropertyExpression
 
@@ -2041,7 +2042,7 @@ class ObjectPropertyDomain(Axiom):
     ObjectPropertyDomain --> "1" ClassExpression : ce
     ``
     """
-
+    frame_keyword = "domain"
     ope: ObjectPropertyExpression
     ce: ClassExpression
 
@@ -2083,7 +2084,7 @@ class DataPropertyDomain(Axiom):
     DataPropertyDomain --> "1" ClassExpression : ce
     ``
     """
-
+    frame_keyword = "domain"
     dp: DataPropertyExpression
     ce: ClassExpression
 
@@ -2124,7 +2125,7 @@ class ObjectPropertyRange(Axiom):
     ObjectPropertyRange --> "1" ClassExpression : ce
     ``
     """
-
+    frame_keyword = "range"
     ope: ObjectPropertyExpression
     ce: ClassExpression
 
@@ -2165,7 +2166,7 @@ class DataPropertyRange(Axiom):
     DataPropertyRange --> "1" DataRange : dr
     ``
     """
-
+    frame_keyword = "range"
     dp: DataPropertyExpression
     dr: DataRange
 

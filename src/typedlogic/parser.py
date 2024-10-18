@@ -47,15 +47,31 @@ class Parser(ABC):
         """
         Parse a source and return a Theory object.
 
+        TODO: in future, if the source is a text representation, use parse_text() instead.
+
         :param source: A path to a file, a string representation of the source, or a file-like object.
         :param kwargs:
         :return:
         """
         pass
 
-    def parse_sentences(self, source: Union[Path, str, TextIO], **kwargs) -> List[Sentence]:
+    def parse_text(self, source: str, **kwargs) -> Theory:
+        """
+        Parse a text string and return a Theory object.
+
+        :param source:
+        :param kwargs:
+        :return:
+        """
+        return self.parse(source, **kwargs)
+
+    def parse_to_sentences(self, source: Union[Path, str, TextIO], **kwargs) -> List[Sentence]:
         """
         Parse a source and return a list of sentences.
+
+        .. note::
+
+            This method is a convenience method that calls `parse` and returns the sentences from the resulting Theory.
 
         :param source:
         :param kwargs:
@@ -66,7 +82,7 @@ class Parser(ABC):
 
     def parse_ground_terms(self, source: Union[Path, str, TextIO], **kwargs) -> List[Term]:
         """
-        Parse a source and return a list of sentences.
+        Parse a source and return a list of ground terms (facts).
 
         :param source:
         :param kwargs:
@@ -94,6 +110,9 @@ class Parser(ABC):
     def validate_iter(self, source: Union[Path, str, TextIO], **kwargs) -> Iterator[ValidationMessage]:
         """
         Validate a source and return an iterator of validation messages.
+
+        Validation might include type checking (for python source), syntax checking (for text source),
+        linting, etc.
 
         :param source:
         :param kwargs:

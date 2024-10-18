@@ -4,7 +4,7 @@ import pyhornedowl.model as phom
 
 from typedlogic import Term, Exists, Variable, Forall
 from typedlogic.datamodel import NotInProfileError, as_sexpr
-from typedlogic.integrations.frameworks.hornedowl.horned_owl_bridge import load_ontology, rev_tr, ConversionContext, tr
+from typedlogic.integrations.frameworks.hornedowl.horned_owl_bridge import load_ontology, translate_to_horned_owl, ConversionContext, translate_from_horned_owl
 from typedlogic.integrations.frameworks.owldl.reasoner import OWLReasoner
 
 from tests.test_frameworks.hornedowl import HORNEDOWL_INPUT_DIR
@@ -60,9 +60,9 @@ IND_J = o.named_individual("ind_j")
 VAR_I = Variable("I")
 @pytest.mark.parametrize("horned_owl_object,expected_fol",
     [
-        (phom.SubClassOf(D, C), Forall([VAR_I], Term("C", VAR_I) >> Term("D", VAR_I))),
+        (phom.SubClassOf(sub=C, sup=D), Forall([VAR_I], Term("C", VAR_I) >> Term("D", VAR_I))),
         (phom.EquivalentClasses([C, D]), None),
-        (phom.SubClassOf(C, phom.ObjectSomeValuesFrom(P, D)), None),
+        (phom.SubClassOf(sub=C, sup=phom.ObjectSomeValuesFrom(P, D)), None),
         (phom.SubObjectPropertyOf(P, Q), None),
         (phom.EquivalentObjectProperties([P, Q]), None),
         (phom.ObjectPropertyDomain(P, C), None),
@@ -75,7 +75,7 @@ VAR_I = Variable("I")
         (phom.AsymmetricObjectProperty(P), None),
         (phom.IrreflexiveObjectProperty(P), ~Exists([VAR_I], Term("P", VAR_I, VAR_I))),
         (phom.ReflexiveObjectProperty(P), None),
-        #(phom.ObjectPropertyAssertion(P, I, J), None),
+        (phom.ObjectPropertyAssertion(P, IND_I, IND_J), None), # https://github.com/ontology-tools/py-horned-owl/issues/31
         (phom.ClassAssertion(C, IND_I), None),
         (phom.FacetRestriction(phom.Facet.MinExclusive, DTL_1), None),
         (phom.DatatypeRestriction(phom.Datatype(phom.IRI.parse("DT")),
@@ -83,7 +83,7 @@ VAR_I = Variable("I")
     ])
 def test_translate(horned_owl_object, expected_fol):
     context = ConversionContext(ontology=o)
-    pyowl_object = tr(horned_owl_object, {})
+    pyowl_object = translate_from_horned_owl(horned_owl_object, {})
     #print(pyowl_object)
     as_fol = pyowl_object.as_fol()
     #print(f"From {horned_owl_object} got {pyowl_object}\n  {as_fol} ({repr(as_fol)})")
@@ -92,29 +92,29 @@ def test_translate(horned_owl_object, expected_fol):
         # in future this could be made less rigid by checking semantics of expression
         assert as_fol == expected_fol, f"{as_fol} != {expected_fol}"
     #print(repr(pyowl_object))
-    roundtripped = rev_tr(pyowl_object, context)
+    roundtripped = translate_to_horned_owl(pyowl_object, context)
     #print(roundtripped)
     assert roundtripped == horned_owl_object
 
 
-def test_as_hoc():
+def test_ad_hoc():
     f = phom.Facet
     me = f.MinExclusive
     print(me)
     me2 = getattr(f, "MinExclusive")
     print(me2)
     assert me == me2
-    pyowl_object = tr(DTL_1, {})
+    pyowl_object = translate_from_horned_owl(DTL_1, {})
     print(repr(pyowl_object))
     print(type(pyowl_object.datatype_iri))
     context = ConversionContext(ontology=o)
-    roundtripped = rev_tr(pyowl_object, context)
+    roundtripped = translate_to_horned_owl(pyowl_object, context)
     dtr = phom.DatatypeRestriction(phom.Datatype(phom.IRI.parse("http://www.w3.org/2001/XMLSchema#integer")),
                                    [phom.FacetRestriction(phom.Facet.MinExclusive, DTL_1)])
-    pyowl_dtr = tr(dtr, {})
+    pyowl_dtr = translate_from_horned_owl(dtr, {})
     print(repr(pyowl_dtr))
     print(type(pyowl_dtr.first))
-    roundtripped = rev_tr(pyowl_dtr, context)
+    roundtripped = translate_to_horned_owl(pyowl_dtr, context)
     dpa = phom.DataPropertyAssertion(DP, IND_I, DTL_1)
     print(dpa)
     # https://github.com/ontology-tools/py-horned-owl/issues/31

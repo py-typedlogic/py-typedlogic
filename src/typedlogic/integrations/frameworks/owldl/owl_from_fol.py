@@ -8,19 +8,20 @@ from typedlogic.integrations.frameworks.owldl.owltop import Axiom, ClassExpressi
 
 def axioms_from_theory(theory: Union[Theory, List[Sentence]]) -> Iterator[Axiom]:
     """
-    ...
+    Translates a FOL theory into OWL axioms.
+
+    .. warning:: TODO: highly incomplete
 
     Example:
 
         >>> x = Variable("x")
         >>> for a in axioms_from_theory([Term("C", x) >> Term("D", x)]):
         ...     print(a)
-        SubClassOf(Class(C), Class(C))
+        SubClassOf(C, D)
 
-    :param theory:
-    :return:
+    :param theory: a Theory object or a list of sentences
+    :return: an iterator of OWL axioms
     """
-    # TODO: highly incomplete
     if isinstance(theory, list):
         sentences = theory
         theory = Theory()
@@ -38,7 +39,7 @@ def axioms_from_theory(theory: Union[Theory, List[Sentence]]) -> Iterator[Axiom]
             rhs = to_expression(body.consequent)
             if lhs and rhs:
                 lhs_ce = as_class_expression(lhs)
-                rhs_ce = as_class_expression(lhs)
+                rhs_ce = as_class_expression(rhs)
                 if lhs_ce and rhs_ce:
                     if lhs[1] == rhs[1]:
                         if not vars or vars == lhs[1]:
