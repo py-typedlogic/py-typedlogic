@@ -1285,7 +1285,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../troubleshooting/" class="md-nav__link">
+      <a href="../../faq/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1983,13 +1983,16 @@
 <span class="normal">47</span>
 <span class="normal">48</span>
 <span class="normal">49</span>
-<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Profile</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Profile</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A profile of FOL&quot;&quot;&quot;</span>
 
     <span class="n">disjoint_profiles</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="s2">&quot;Profile&quot;</span><span class="p">]]]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="s2">&quot;Profile&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;True if self is an implementation of profile.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        True if self is an implementation of profile.</span>
 
 <span class="sd">        Operates under NAF: if it cannot be proven that self is an implementation of profile, it returns None.</span>
 
@@ -2005,7 +2008,8 @@
         <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">not_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="s2">&quot;Profile&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;True if self is provably not an implementation of profile</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        True if self is provably not an implementation of profile</span>
 
 <span class="sd">        &gt;&gt;&gt; p = WellFoundedSemantics()</span>
 <span class="sd">        &gt;&gt;&gt; p.not_impl(WellFoundedSemantics)</span>
@@ -2086,8 +2090,10 @@ False</p>
 <span class="normal">22</span>
 <span class="normal">23</span>
 <span class="normal">24</span>
-<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="s2">&quot;Profile&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;True if self is an implementation of profile.</span>
+<span class="normal">25</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="s2">&quot;Profile&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    True if self is an implementation of profile.</span>
 
 <span class="sd">    Operates under NAF: if it cannot be proven that self is an implementation of profile, it returns None.</span>
 
@@ -2138,8 +2144,7 @@ assert p.not_impl(SortedLogic) is None</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
-<span class="normal">28</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">28</span>
 <span class="normal">29</span>
 <span class="normal">30</span>
 <span class="normal">31</span>
@@ -2161,8 +2166,11 @@ assert p.not_impl(SortedLogic) is None</p>
 <span class="normal">47</span>
 <span class="normal">48</span>
 <span class="normal">49</span>
-<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">not_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="s2">&quot;Profile&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;True if self is provably not an implementation of profile</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">not_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="s2">&quot;Profile&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    True if self is provably not an implementation of profile</span>
 
 <span class="sd">    &gt;&gt;&gt; p = WellFoundedSemantics()</span>
 <span class="sd">    &gt;&gt;&gt; p.not_impl(WellFoundedSemantics)</span>
@@ -2234,9 +2242,7 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">55</span>
 <span class="normal">56</span>
 <span class="normal">57</span>
 <span class="normal">58</span>
@@ -2258,9 +2264,14 @@ True</p>
 <span class="normal">74</span>
 <span class="normal">75</span>
 <span class="normal">76</span>
-<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">MixedProfile</span><span class="p">(</span><span class="n">Profile</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A profile that mixes multiple profiles.md</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A profile that mixes multiple profiles.md</span>
 
 <span class="sd">    &gt;&gt;&gt; p = MixedProfile(Unrestricted(), SortedLogic())</span>
 <span class="sd">    &gt;&gt;&gt; p.impl(Unrestricted)</span>
@@ -2269,6 +2280,7 @@ True</p>
 <span class="sd">    True</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">profiles</span><span class="p">:</span> <span class="n">Tuple</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">tuple</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">profiles</span><span class="p">:</span> <span class="n">Profile</span><span class="p">):</span>
@@ -2348,11 +2360,7 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 79</span>
-<span class="normal"> 80</span>
-<span class="normal"> 81</span>
-<span class="normal"> 82</span>
-<span class="normal"> 83</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 83</span>
 <span class="normal"> 84</span>
 <span class="normal"> 85</span>
 <span class="normal"> 86</span>
@@ -2379,9 +2387,16 @@ True</p>
 <span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
-<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">ExcludedProfile</span><span class="p">(</span><span class="n">Profile</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A profile that excludes other profiles.md</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A profile that excludes other profiles.md</span>
 
 <span class="sd">    &gt;&gt;&gt; p = ExcludedProfile(WellFoundedSemantics())</span>
 <span class="sd">    &gt;&gt;&gt; p.impl(WellFoundedSemantics)</span>
@@ -2398,6 +2413,7 @@ True</p>
 <span class="sd">    True</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">profile</span><span class="p">:</span> <span class="n">Profile</span>
 
     <span class="k">def</span> <span class="nf">impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="s2">&quot;Profile&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -2441,11 +2457,11 @@ True</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="s2">&quot;Profile&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="s2">&quot;Profile&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;True if self is an implementation of profile&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">impl</span><span class="p">(</span><span class="n">profile</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
@@ -2471,11 +2487,11 @@ True</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">not_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="s2">&quot;Profile&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">not_impl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="s2">&quot;Profile&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;True if self is not an implementation of profile&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">True</span>
@@ -2514,8 +2530,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
-<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ComputationalProfile</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">118</span>
+<span class="normal">119</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ComputationalProfile</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A profile that describes the computational properties of a logic&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -2560,8 +2576,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
-<span class="normal">116</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Decidable</span><span class="p">(</span><span class="n">ComputationalProfile</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">121</span>
+<span class="normal">122</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Decidable</span><span class="p">(</span><span class="n">ComputationalProfile</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The logic is decidable&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -2606,8 +2622,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">118</span>
-<span class="normal">119</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Undecidable</span><span class="p">(</span><span class="n">ComputationalProfile</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">124</span>
+<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Undecidable</span><span class="p">(</span><span class="n">ComputationalProfile</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The logic is undecidable&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -2652,8 +2668,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">121</span>
-<span class="normal">122</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">LogicalFeature</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">127</span>
+<span class="normal">128</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">LogicalFeature</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A profile grouping corresponding to a feature of logic&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -2698,8 +2714,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">124</span>
-<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">NegationLogic</span><span class="p">(</span><span class="n">LogicalFeature</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">130</span>
+<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">NegationLogic</span><span class="p">(</span><span class="n">LogicalFeature</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The logic has negation&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -2744,8 +2760,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">127</span>
-<span class="normal">128</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">DisjunctionLogic</span><span class="p">(</span><span class="n">LogicalFeature</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">133</span>
+<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">DisjunctionLogic</span><span class="p">(</span><span class="n">LogicalFeature</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The logic has disjunction&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -2790,8 +2806,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">130</span>
-<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ConjunctionLogic</span><span class="p">(</span><span class="n">LogicalFeature</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">136</span>
+<span class="normal">137</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ConjunctionLogic</span><span class="p">(</span><span class="n">LogicalFeature</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The logic has conjunction&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -2836,8 +2852,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">133</span>
-<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">AllowsComparisonTerms</span><span class="p">(</span><span class="n">LogicalFeature</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
+<span class="normal">140</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">AllowsComparisonTerms</span><span class="p">(</span><span class="n">LogicalFeature</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The logic allows comparison terms&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -2882,8 +2898,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">136</span>
-<span class="normal">137</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ModelMultiplicitySemantics</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">142</span>
+<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ModelMultiplicitySemantics</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A profile grouping corresponding to a model semantics&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -2928,8 +2944,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
-<span class="normal">140</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SingleModelSemantics</span><span class="p">(</span><span class="n">ModelMultiplicitySemantics</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
+<span class="normal">146</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SingleModelSemantics</span><span class="p">(</span><span class="n">ModelMultiplicitySemantics</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The logic has a single model&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -2974,8 +2990,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">142</span>
-<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">MultipleModelSemantics</span><span class="p">(</span><span class="n">ModelMultiplicitySemantics</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
+<span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">MultipleModelSemantics</span><span class="p">(</span><span class="n">ModelMultiplicitySemantics</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The logic has multiple models&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3020,8 +3036,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
-<span class="normal">146</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Assumption</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
+<span class="normal">152</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Assumption</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Category of assumptions&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3066,8 +3082,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
-<span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">OpenWorld</span><span class="p">(</span><span class="n">Assumption</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">154</span>
+<span class="normal">155</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">OpenWorld</span><span class="p">(</span><span class="n">Assumption</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The assumption that what is not known to be true is false&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3112,10 +3128,12 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ClosedWorld</span><span class="p">(</span><span class="n">Assumption</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ClosedWorld</span><span class="p">(</span><span class="n">Assumption</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The assumption that what is not known to be true is unknown&quot;&quot;&quot;</span>
+
     <span class="n">disjoint_profiles</span> <span class="o">=</span> <span class="p">{</span><span class="n">OpenWorld</span><span class="p">}</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3160,8 +3178,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">155</span>
-<span class="normal">156</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">WellFoundedSemantics</span><span class="p">(</span><span class="n">ClosedWorld</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">162</span>
+<span class="normal">163</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">WellFoundedSemantics</span><span class="p">(</span><span class="n">ClosedWorld</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The assumption that the world is well-founded&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3206,8 +3224,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">158</span>
-<span class="normal">159</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ClassicPrologNegationAsFailure</span><span class="p">(</span><span class="n">ClosedWorld</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">165</span>
+<span class="normal">166</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ClassicPrologNegationAsFailure</span><span class="p">(</span><span class="n">ClosedWorld</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The assumption that negation is failure&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3252,8 +3270,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">161</span>
-<span class="normal">162</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">TypeSystem</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">168</span>
+<span class="normal">169</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">TypeSystem</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Category of type systems&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3298,8 +3316,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">164</span>
-<span class="normal">165</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">UnsortedLogic</span><span class="p">(</span><span class="n">TypeSystem</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">171</span>
+<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">UnsortedLogic</span><span class="p">(</span><span class="n">TypeSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The logic has no type system&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3344,8 +3362,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">167</span>
-<span class="normal">168</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SortedLogic</span><span class="p">(</span><span class="n">TypeSystem</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">174</span>
+<span class="normal">175</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SortedLogic</span><span class="p">(</span><span class="n">TypeSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The logic has a type system&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3390,8 +3408,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">170</span>
-<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">LogicalFamily</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">177</span>
+<span class="normal">178</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">LogicalFamily</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A profile grouping corresponding to a family of logics&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3436,8 +3454,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">173</span>
-<span class="normal">174</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Classical</span><span class="p">(</span><span class="n">LogicalFamily</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">180</span>
+<span class="normal">181</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Classical</span><span class="p">(</span><span class="n">LogicalFamily</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The classical logic family&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3482,8 +3500,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">176</span>
-<span class="normal">177</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">NonClassical</span><span class="p">(</span><span class="n">LogicalFamily</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">183</span>
+<span class="normal">184</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">NonClassical</span><span class="p">(</span><span class="n">LogicalFamily</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The non-classical logic family&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3528,8 +3546,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
-<span class="normal">180</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Modal</span><span class="p">(</span><span class="n">LogicalFamily</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">186</span>
+<span class="normal">187</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Modal</span><span class="p">(</span><span class="n">LogicalFamily</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The modal logic family&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3574,8 +3592,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">182</span>
-<span class="normal">183</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Temporal</span><span class="p">(</span><span class="n">LogicalFamily</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">189</span>
+<span class="normal">190</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Temporal</span><span class="p">(</span><span class="n">LogicalFamily</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The temporal logic family&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3620,8 +3638,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">185</span>
-<span class="normal">186</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Paraconsistent</span><span class="p">(</span><span class="n">LogicalFamily</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">192</span>
+<span class="normal">193</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Paraconsistent</span><span class="p">(</span><span class="n">LogicalFamily</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The paraconsistent logic family&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3666,8 +3684,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">188</span>
-<span class="normal">189</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Intuitionistic</span><span class="p">(</span><span class="n">LogicalFamily</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">195</span>
+<span class="normal">196</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Intuitionistic</span><span class="p">(</span><span class="n">LogicalFamily</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The intuitionistic logic family&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3712,8 +3730,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">191</span>
-<span class="normal">192</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Probabilistic</span><span class="p">(</span><span class="n">LogicalFamily</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">198</span>
+<span class="normal">199</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Probabilistic</span><span class="p">(</span><span class="n">LogicalFamily</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The probabilistic logic family&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3758,8 +3776,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">194</span>
-<span class="normal">195</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">LogicalSubset</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">201</span>
+<span class="normal">202</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">LogicalSubset</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A profile grouping corresponding to a subset of logic&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3804,8 +3822,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">197</span>
-<span class="normal">198</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Unrestricted</span><span class="p">(</span><span class="n">LogicalSubset</span><span class="p">,</span> <span class="n">Undecidable</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">204</span>
+<span class="normal">205</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Unrestricted</span><span class="p">(</span><span class="n">LogicalSubset</span><span class="p">,</span> <span class="n">Undecidable</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The an unrestricted logic&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3850,8 +3868,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">200</span>
-<span class="normal">201</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ClassicDatalog</span><span class="p">(</span><span class="n">LogicalSubset</span><span class="p">,</span> <span class="n">ClosedWorld</span><span class="p">,</span> <span class="n">SingleModelSemantics</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">207</span>
+<span class="normal">208</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ClassicDatalog</span><span class="p">(</span><span class="n">LogicalSubset</span><span class="p">,</span> <span class="n">ClosedWorld</span><span class="p">,</span> <span class="n">SingleModelSemantics</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A subset of logic that corresponds to Datalog&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3896,8 +3914,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">203</span>
-<span class="normal">204</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">DisjunctiveDatalog</span><span class="p">(</span><span class="n">LogicalSubset</span><span class="p">,</span> <span class="n">ClosedWorld</span><span class="p">,</span> <span class="n">MultipleModelSemantics</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">210</span>
+<span class="normal">211</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">DisjunctiveDatalog</span><span class="p">(</span><span class="n">LogicalSubset</span><span class="p">,</span> <span class="n">ClosedWorld</span><span class="p">,</span> <span class="n">MultipleModelSemantics</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A subset of logic that corresponds to Datalog&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3942,8 +3960,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">206</span>
-<span class="normal">207</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">DescriptionLogic</span><span class="p">(</span><span class="n">LogicalSubset</span><span class="p">,</span> <span class="n">Decidable</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">213</span>
+<span class="normal">214</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">DescriptionLogic</span><span class="p">(</span><span class="n">LogicalSubset</span><span class="p">,</span> <span class="n">Decidable</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A subset of logic that corresponds to Description Logic&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3989,12 +4007,14 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">209</span>
-<span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span>
-<span class="normal">213</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">OWLProfile</span><span class="p">(</span><span class="n">LogicalSubset</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The OWL 2 DL subset of Description Logic.</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">OWLProfile</span><span class="p">(</span><span class="n">LogicalSubset</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The OWL 2 DL subset of Description Logic.</span>
 
 <span class="sd">    Note al OWL Profile is not necessarily a DL profile</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -4041,8 +4061,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">215</span>
-<span class="normal">216</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">OWL2DL</span><span class="p">(</span><span class="n">DescriptionLogic</span><span class="p">,</span> <span class="n">OWLProfile</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">223</span>
+<span class="normal">224</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">OWL2DL</span><span class="p">(</span><span class="n">DescriptionLogic</span><span class="p">,</span> <span class="n">OWLProfile</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The OWL 2 DL subset of Description Logic&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -4087,8 +4107,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">218</span>
-<span class="normal">219</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ModalLogic</span><span class="p">(</span><span class="n">LogicalSubset</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">226</span>
+<span class="normal">227</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ModalLogic</span><span class="p">(</span><span class="n">LogicalSubset</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A subset of logic that corresponds to Modal Logic&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -4133,8 +4153,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">221</span>
-<span class="normal">222</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">OrderOfLogic</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">229</span>
+<span class="normal">230</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">OrderOfLogic</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Category of orderings&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -4179,8 +4199,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">224</span>
-<span class="normal">225</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">PropositionalLogic</span><span class="p">(</span><span class="n">OrderOfLogic</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">232</span>
+<span class="normal">233</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">PropositionalLogic</span><span class="p">(</span><span class="n">OrderOfLogic</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The assumption that all predicates are propositional&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -4225,8 +4245,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">227</span>
-<span class="normal">228</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">FirstOrder</span><span class="p">(</span><span class="n">OrderOfLogic</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">235</span>
+<span class="normal">236</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">FirstOrder</span><span class="p">(</span><span class="n">OrderOfLogic</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The assumption that all predicates are first-order&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -4271,8 +4291,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">230</span>
-<span class="normal">231</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">HigherOrder</span><span class="p">(</span><span class="n">OrderOfLogic</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">238</span>
+<span class="normal">239</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">HigherOrder</span><span class="p">(</span><span class="n">OrderOfLogic</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The assumption that predicates may be higher-order&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -4317,8 +4337,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">233</span>
-<span class="normal">234</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">NamedLogic</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">241</span>
+<span class="normal">242</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">NamedLogic</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A named logic&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -4363,8 +4383,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">236</span>
-<span class="normal">237</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">AnswerSetProgramming</span><span class="p">(</span><span class="n">NamedLogic</span><span class="p">,</span> <span class="n">WellFoundedSemantics</span><span class="p">,</span> <span class="n">DisjunctiveDatalog</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">244</span>
+<span class="normal">245</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">AnswerSetProgramming</span><span class="p">(</span><span class="n">NamedLogic</span><span class="p">,</span> <span class="n">WellFoundedSemantics</span><span class="p">,</span> <span class="n">DisjunctiveDatalog</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The Answer Set Programming logic&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -4409,8 +4429,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">239</span>
-<span class="normal">240</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ReasoningParadigm</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">247</span>
+<span class="normal">248</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ReasoningParadigm</span><span class="p">(</span><span class="n">Profile</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A profile grouping corresponding to a reasoning paradigm&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -4455,8 +4475,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">242</span>
-<span class="normal">243</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Inductive</span><span class="p">(</span><span class="n">ReasoningParadigm</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">250</span>
+<span class="normal">251</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Inductive</span><span class="p">(</span><span class="n">ReasoningParadigm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The inductive reasoning paradigm&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -4501,8 +4521,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">245</span>
-<span class="normal">246</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Deductive</span><span class="p">(</span><span class="n">ReasoningParadigm</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">253</span>
+<span class="normal">254</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Deductive</span><span class="p">(</span><span class="n">ReasoningParadigm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The deductive reasoning paradigm&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -4547,8 +4567,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">248</span>
-<span class="normal">249</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Abductive</span><span class="p">(</span><span class="n">ReasoningParadigm</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">256</span>
+<span class="normal">257</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Abductive</span><span class="p">(</span><span class="n">ReasoningParadigm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The abductive reasoning paradigm&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -4593,8 +4613,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">251</span>
-<span class="normal">252</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Monotonic</span><span class="p">(</span><span class="n">ReasoningParadigm</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">259</span>
+<span class="normal">260</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Monotonic</span><span class="p">(</span><span class="n">ReasoningParadigm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The monotonic reasoning paradigm&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -4639,8 +4659,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">254</span>
-<span class="normal">255</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">NonMonotonic</span><span class="p">(</span><span class="n">ReasoningParadigm</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">262</span>
+<span class="normal">263</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">NonMonotonic</span><span class="p">(</span><span class="n">ReasoningParadigm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The non-monotonic reasoning paradigm&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -4685,8 +4705,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">257</span>
-<span class="normal">258</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ConstraintSolver</span><span class="p">(</span><span class="n">ReasoningParadigm</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">265</span>
+<span class="normal">266</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ConstraintSolver</span><span class="p">(</span><span class="n">ReasoningParadigm</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The constraint solver reasoning paradigm&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -4731,8 +4751,8 @@ True</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/profiles.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">261</span>
-<span class="normal">262</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">UnspecifiedProfile</span><span class="p">(</span><span class="n">Profile</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">269</span>
+<span class="normal">270</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">UnspecifiedProfile</span><span class="p">(</span><span class="n">Profile</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;An unspecified profile&quot;&quot;&quot;</span>
 </code></pre></div></td></tr></table></div>
               </details>

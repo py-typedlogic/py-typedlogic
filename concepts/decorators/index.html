@@ -490,6 +490,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#typedlogic.decorators--example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example:
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#typedlogic.decorators.axiom" class="md-nav__link">
     <span class="md-ellipsis">
       axiom
@@ -1349,7 +1358,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../troubleshooting/" class="md-nav__link">
+      <a href="../../faq/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1429,6 +1438,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#typedlogic.decorators--example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example:
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#typedlogic.decorators.axiom" class="md-nav__link">
     <span class="md-ellipsis">
       axiom
@@ -1475,7 +1493,7 @@
     <div class="doc doc-contents first">
 
         <p>Decorators for marking functions as axioms and goals.</p>
-<p>Example:</p>
+<h3 id="typedlogic.decorators--example">Example:</h3>
 <div class="highlight"><pre><span></span><code>    <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
     <span class="kn">from</span> <span class="nn">typedlogic</span> <span class="kn">import</span> <span class="n">Fact</span>
     <span class="kn">from</span> <span class="nn">typedlogic.decorators</span> <span class="kn">import</span> <span class="n">axiom</span><span class="p">,</span> <span class="n">goal</span>
@@ -1495,9 +1513,9 @@
 
     <span class="nd">@goal</span>
     <span class="k">def</span> <span class="nf">unit_test1</span><span class="p">():</span>
-        <span class="s1">&#39;&#39;&#39;unit test: if Violet is a cat, then it must be provable that Violet is not a dog```</span>
-<span class="s1">        if Cat(&#39;Violet&#39;):</span>
-<span class="s1">           assert not Dog(&#39;Violet&#39;)</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;unit test: if Violet is a cat, then it must be provable that Violet is not a dog&#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">Cat</span><span class="p">(</span><span class="s1">&#39;Violet&#39;</span><span class="p">):</span>
+           <span class="k">assert</span> <span class="ow">not</span> <span class="n">Dog</span><span class="p">(</span><span class="s1">&#39;Violet&#39;</span><span class="p">)</span>
 </code></pre></div>
 <p>Note: when axioms are expressed directly in python programs, it is possible to use
 logical connectives such as <code>and</code>, <code>or</code>, as well as <code>if...then</code> to express implication.</p>

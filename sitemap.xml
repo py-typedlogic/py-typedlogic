@@ -2,174 +2,174 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/advanced/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/cli/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/examples/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
+    </url>
+    <url>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/faq/</loc>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/quickstart/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/roadmap/</loc>
-         <lastmod>2024-10-10</lastmod>
-    </url>
-    <url>
-         <loc>https://py-typedlogic.github.io/py-typedlogic/troubleshooting/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/api/solver/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/api/transformations/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/datamodel/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/decorators/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/generators/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/models/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/profiles/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/solvers/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/concepts/transformations/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/compilers/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/compilers/fol/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/compilers/prolog/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/compilers/sexpr/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/compilers/tptp/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/compilers/yaml/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/parsers/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/parsers/owlpy/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/parsers/python/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/parsers/rdf/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/parsers/yaml/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/frameworks/pydantic/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/frameworks/owldl/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/frameworks/owldl/owldl-tutorial/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/frameworks/owldl/owltop/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/frameworks/owldl/reasoner/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/clingo/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/llm/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/prover9/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/snakelog/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/souffle/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/z3/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/learning/multiple-models/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/tutorial/01-first-program/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/tutorial/02-using-python-data-model/</loc>
-         <lastmod>2024-10-10</lastmod>
+         <lastmod>2024-10-18</lastmod>
     </url>
 </urlset>
