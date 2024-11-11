@@ -14,6 +14,7 @@ clingo = { version="*" , optional = true }
 z3-solver = { version="*" , optional = true }
 pyprover = { version="*" , optional = true }
 snakelog = { version="*" , optional = true }
+problog = { version="*" , optional = true }
 clorm = { version="*" , optional = true }
 rdflib = { version="*" , optional = true }
 sympy = { version="*" , optional = true }
@@ -50,6 +51,7 @@ z3 = ["z3-solver"]
 clingo = ["clingo"]
 pyprover = ["pyprover"]
 snakelog = ["snakelog"]
+problog = ["problog"]
 clorm = ["clorm"]
 rdflib = ["rdflib"]
 owl = ["py-horned-owl"]
