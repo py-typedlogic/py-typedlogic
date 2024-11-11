@@ -18,7 +18,7 @@ problog = { version="*" , optional = true }
 clorm = { version="*" , optional = true }
 rdflib = { version="*" , optional = true }
 sympy = { version="*" , optional = true }
-py-horned-owl = { version="*" , optional = true }
+py-horned-owl = { version="1.0.0" , optional = true }  ## https://github.com/ontology-tools/py-horned-owl/issues/34
 llm = { version="*" , optional = true }
 gavel-owl = { version="*" , optional = true }
 ply = { version="*" , optional = true }
