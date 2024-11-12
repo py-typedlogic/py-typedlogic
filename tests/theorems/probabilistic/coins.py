@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from typedlogic import FactMixin, axiom, Term
+from typedlogic import FactMixin, axiom
 from typedlogic.extensions.probabilistic import Probability, That
 
 

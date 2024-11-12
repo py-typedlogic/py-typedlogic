@@ -1,15 +1,15 @@
 from typing import Dict, Union
 
 import pytest
-from problog.program import PrologString
 from problog import get_evaluatable
 from problog.logic import Term
-
-from tests.theorems.probabilistic import coins, coins2, smokers
+from problog.program import PrologString
 from typedlogic.extensions.probabilistic import Evidence, ProbabilisticModel
 from typedlogic.integrations.solvers.problog.problog_compiler import ProbLogCompiler
 from typedlogic.integrations.solvers.problog.problog_solver import ProbLogSolver
 from typedlogic.parsers.pyparser.introspection import translate_module_to_theory
+
+from tests.theorems.probabilistic import coins, coins2, smokers
 
 
 def as_simple_dict(result: Dict[Union[Term, str], float], precision=3) -> Dict[str, float]:

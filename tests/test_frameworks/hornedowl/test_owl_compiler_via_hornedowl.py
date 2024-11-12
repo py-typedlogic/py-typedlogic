@@ -1,17 +1,12 @@
 import pytest
-
-from typedlogic import Term
-from typedlogic.integrations.frameworks.hornedowl.horned_owl_bridge import load_ontology
 from typedlogic.integrations.frameworks.hornedowl.owl_compiler import OWLCompiler
 from typedlogic.integrations.frameworks.hornedowl.owl_parser import OWLParser
 from typedlogic.integrations.frameworks.owldl import OWLPyParser
-from typedlogic.integrations.frameworks.owldl.reasoner import OWLReasoner
-
-from tests.test_frameworks.hornedowl import HORNEDOWL_INPUT_DIR, HORNEDOWL_OUTPUT_DIR
+from typedlogic.registry import get_compiler
 
 import tests.test_frameworks.owldl.family as family
 import tests.test_frameworks.owldl.paths_owldl as paths_owldl
-from typedlogic.registry import get_compiler
+from tests.test_frameworks.hornedowl import HORNEDOWL_INPUT_DIR, HORNEDOWL_OUTPUT_DIR
 
 RO = HORNEDOWL_INPUT_DIR / "ro.ofn"
 

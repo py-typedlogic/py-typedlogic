@@ -2,13 +2,12 @@
 Tests that py-horned-owl integrates with the CLI framework
 """
 import pytest
-
-from tests.test_frameworks.owldl import FAMILY_OWLPY, PATHS_OWLDL
 from typedlogic.cli import app  # Import your Typer app
 from typer.testing import CliRunner
 
 from tests import OUTPUT_DIR
 from tests.test_frameworks.hornedowl import HORNEDOWL_INPUT_DIR
+from tests.test_frameworks.owldl import FAMILY_OWLPY, PATHS_OWLDL
 
 runner = CliRunner()
 

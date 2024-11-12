@@ -1,19 +1,16 @@
+import pyhornedowl.model as phom
 import pytest
 from pyhornedowl.pyhornedowl import PyIndexedOntology
-import pyhornedowl.model as phom
-
-from typedlogic import Term, Exists, Variable, Forall
-from typedlogic.datamodel import NotInProfileError, as_sexpr
+from typedlogic import Exists, Forall, Term, Variable
 from typedlogic.integrations.frameworks.hornedowl.horned_owl_bridge import (
-    load_ontology,
-    translate_to_horned_owl,
     ConversionContext,
+    load_ontology,
     translate_from_horned_owl,
+    translate_to_horned_owl,
 )
 from typedlogic.integrations.frameworks.owldl.reasoner import OWLReasoner
 
 from tests.test_frameworks.hornedowl import HORNEDOWL_INPUT_DIR
-from typedlogic.transformations import as_prolog
 
 RO = HORNEDOWL_INPUT_DIR / "ro.ofn"
 
@@ -117,7 +114,7 @@ def test_ad_hoc():
     f = phom.Facet
     me = f.MinExclusive
     print(me)
-    me2 = getattr(f, "MinExclusive")
+    me2 = f.MinExclusive
     print(me2)
     assert me == me2
     pyowl_object = translate_from_horned_owl(DTL_1, {})

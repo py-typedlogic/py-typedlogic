@@ -1,7 +1,4 @@
 import pytest
-
-from tests.theorems import unary_predicates
-from tests.theorems.probabilistic import coins2
 from typedlogic.compilers.fol_compiler import FOLCompiler
 from typedlogic.compilers.prolog_compiler import PrologCompiler
 from typedlogic.compilers.prover9_compiler import Prover9Compiler
@@ -24,6 +21,7 @@ import tests.theorems.paths_with_distance as pwd
 import tests.theorems.simple_contradiction as simple_contradiction
 import tests.theorems.types_example as types_example
 from tests import SNAPSHOTS_DIR
+from tests.theorems import unary_predicates
 
 
 @pytest.mark.parametrize(
