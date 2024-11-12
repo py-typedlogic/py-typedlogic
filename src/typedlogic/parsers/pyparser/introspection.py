@@ -3,9 +3,9 @@ import importlib
 import inspect
 import types
 import typing
-from dataclasses import fields
+from dataclasses import fields, Field
 from types import ModuleType
-from typing import Any, Dict, List, NewType, Tuple, Type, Union
+from typing import Any, Dict, List, NewType, Tuple, Type, Union, Optional
 
 from typedlogic import Fact, FactMixin, Theory
 from typedlogic.datamodel import DefinedType, PredicateDefinition, SentenceGroupType
@@ -132,22 +132,27 @@ def introspect_attributes(cls: Type) -> dict[str, Any]:
     except ImportError:
         pass    # Get all attributes of the class
     if fields(cls):
-        r = {field.name: field.type.__name__ for field in fields(cls)}
+        def _field_type_name(f: Field) -> str:
+            if not hasattr(f.type, "__name__"):
+                raise ValueError(f"Cannot introspect field type for: {f.type} field: {f} in {cls}")
+            return f.type.__name__
+        r = {field.name: _field_type_name(field) for field in fields(cls)}
         return r
+    return {}
 
-    attributes = inspect.getmembers(cls)
-
-    # Filter out class variables and built-in attributes
-    non_classvar_attributes = [
-        attr for attr in attributes
-        if not isinstance(attr[1], type)
-           and not attr[0].startswith('__')
-           and not attr[0].startswith('_')
-           and not inspect.ismethod(attr[1])
-           and not inspect.isfunction(attr[1])
-    ]
-
-    return {attr[0]: attr[1] for attr in non_classvar_attributes}
+    # attributes = inspect.getmembers(cls)
+    #
+    # # Filter out class variables and built-in attributes
+    # non_classvar_attributes = [
+    #     attr for attr in attributes
+    #     if not isinstance(attr[1], type)
+    #        and not attr[0].startswith('__')
+    #        and not attr[0].startswith('_')
+    #        and not inspect.ismethod(attr[1])
+    #        and not inspect.isfunction(attr[1])
+    # ]
+    #
+    # return {attr[0]: attr[1] for attr in non_classvar_attributes}
 
 def get_module_constants(module: ModuleType) -> Dict[str, Any]:
     """

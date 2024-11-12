@@ -1,0 +1,3 @@
+(declare-fun Win () Bool)
+(declare-fun Heads (String) Bool)
+(assert (forall ((c String)) (=> (Heads c) Win)))

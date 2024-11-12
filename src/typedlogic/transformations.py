@@ -179,6 +179,11 @@ def as_prolog(sentence: Union[Sentence, List[Sentence]], config: Optional[Prolog
     :param strict:
     :return:
     """
+    if not strict:
+        try:
+            return as_prolog(sentence, config, depth=depth, translate=translate, strict=True)
+        except NotInProfileError:
+            return ""
     if isinstance(sentence, list):
         return "\n".join(as_prolog(s, config, depth=depth) for s in sentence)
     if not config:
@@ -192,6 +197,8 @@ def as_prolog(sentence: Union[Sentence, List[Sentence]], config: Optional[Prolog
         return "\n".join(as_prolog(s, config, depth=depth) for s in rules)
     if isinstance(sentence, Forall):
         sentence = sentence.sentence
+    if isinstance(sentence, Extension):
+        sentence = sentence.to_model_object()
     if depth == 0 and not isinstance(sentence, (Implies, Term)):
         raise NotInProfileError(f"Top level sentence must be an implication or term {sentence}, got {type(sentence)}")
     if isinstance(sentence, Exists) and depth > 0:
@@ -1527,7 +1534,7 @@ def ensure_terms_positional(theory: Theory):
                 # could include builtins
                 return
             pd = pds[0]
-            if not s.positional:
+            if s.positional is False:
                 s.bindings = {k: s.bindings.get(k) for k, v in pd.arguments.items()}
     for s in theory.sentences:
         transform_sentence(s, tr)

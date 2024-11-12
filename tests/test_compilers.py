@@ -1,10 +1,14 @@
 import pytest
+
+from tests.theorems import unary_predicates
+from tests.theorems.probabilistic import coins2
 from typedlogic.compilers.fol_compiler import FOLCompiler
 from typedlogic.compilers.prolog_compiler import PrologCompiler
 from typedlogic.compilers.prover9_compiler import Prover9Compiler
 from typedlogic.compilers.sexpr_compiler import SExprCompiler
 from typedlogic.compilers.tptp_compiler import TPTPCompiler
 from typedlogic.compilers.yaml_compiler import YAMLCompiler
+from typedlogic.integrations.solvers.problog.problog_compiler import ProbLogCompiler
 from typedlogic.integrations.solvers.souffle.souffle_compiler import SouffleCompiler
 from typedlogic.integrations.solvers.z3.z3_compiler import Z3Compiler, Z3FunctionalCompiler, Z3SExprCompiler
 from typedlogic.parsers.pyparser.introspection import translate_module_to_theory
@@ -23,10 +27,12 @@ from tests import SNAPSHOTS_DIR
 
 
 @pytest.mark.parametrize("compiler_class",
-    [FOLCompiler, Z3SExprCompiler, Z3FunctionalCompiler, PrologCompiler, SouffleCompiler, TPTPCompiler, Prover9Compiler, YAMLCompiler, SExprCompiler]
+    [FOLCompiler, Z3SExprCompiler, Z3FunctionalCompiler, PrologCompiler, SouffleCompiler, TPTPCompiler, Prover9Compiler, YAMLCompiler, SExprCompiler,
+     ProbLogCompiler,
+     ]
 )
 @pytest.mark.parametrize("theory_module",
-    [pwd, mortals, animals, types_example, defined_types_example, import_test_ext, numbers, paths, optional_example, simple_contradiction]
+    [pwd, mortals, animals, types_example, defined_types_example, import_test_ext, numbers, paths, optional_example, simple_contradiction, unary_predicates]
 )
 def test_compiler(compiler_class, theory_module):
     if issubclass(compiler_class, Z3Compiler) and theory_module == defined_types_example:

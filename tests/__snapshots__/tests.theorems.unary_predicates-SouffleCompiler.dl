@@ -1,0 +1,5 @@
+.decl Coin(id: symbol)
+.decl Heads(id: symbol)
+.decl Tails(id: symbol)
+.decl Win()
+Win() :- Heads(c).

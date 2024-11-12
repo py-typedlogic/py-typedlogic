@@ -103,6 +103,25 @@ def test_complex_term():
     ct = Term("p", "foo", Term("q", x))
     assert str(ct) == "p(foo, q(?x))"
 
+def test_that():
+    quoted_term = Exists([Variable("x")],
+                         Term("Alien", "x"))
+    that = Term("that", quoted_term)
+    prop = Forall([Variable("y")],
+                    Implies(Term("Believer", "y"),
+                            Term("Believes", "y", that)))
+    assert str(prop) == "∀y: None : (Believer(y) -> Believes(y, that(∃Alien(x))))"
+
+
+def test_unary():
+    t = Term("p")
+    assert str(t) == "p"
+    assert t.is_ground
+    assert t.positional is None
+    assert t.bindings == {}
+    assert t.predicate == "p"
+    assert t.values == ()
+
 
 @pytest.mark.parametrize("ex1, ex2, eq", [
     (Variable('x'), Variable('x'), True),

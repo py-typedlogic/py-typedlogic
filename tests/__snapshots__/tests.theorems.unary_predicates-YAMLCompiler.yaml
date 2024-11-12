@@ -1,0 +1,47 @@
+type: Theory
+name: tests.theorems.unary_predicates
+constants: {}
+type_definitions: {}
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: Coin
+  arguments:
+    id: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Heads
+  arguments:
+    id: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Tails
+  arguments:
+    id: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Win
+  arguments: {}
+  parents: []
+sentence_groups:
+- type: SentenceGroup
+  name: win_heads
+  group_type: axiom
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - c
+        - str
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - Heads
+        - type: Variable
+          arguments:
+          - c
+      - type: Term
+        arguments:
+        - Win
+ground_terms: []

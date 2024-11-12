@@ -61,6 +61,14 @@ def parse_sentence(node: Union[ast.AST, List[ast.stmt]]) -> Sentence:
         >>> negated
         Person(?x)
 
+    Unary predicates:
+
+        >>> tree = ast.parse("if Coin(c): assert Win()")
+        >>> func_def = tree.body[0]
+        >>> sentence = parse_sentence(func_def)
+        >>> str(sentence)
+        '(Coin(?c) -> Win)'
+
     :param node: The AST node to parse
     :type node: Union[ast.AST, List[ast.stmt]]
     :return: A Term instance
@@ -73,7 +81,7 @@ def parse_sentence(node: Union[ast.AST, List[ast.stmt]]) -> Sentence:
         elif isinstance(v, (ast.BinOp, ast.UnaryOp, ast.Call)):
             return parse_sentence(v)
         else:
-            raise ValueError(f"Unsupported argument type: {type(v)}")
+            raise ValueError(f"Unsupported argument type: {type(v)} in {v}")
 
     def parse_sentence_or_variable(v: ast.expr) -> Union[Sentence, Variable, Any]:
         if isinstance(v, ast.Name):
@@ -190,7 +198,8 @@ def parse_sentence(node: Union[ast.AST, List[ast.stmt]]) -> Sentence:
             pos_args = [tr_arg_or_kw_value(arg) for arg in node.args]
             return Term(predicate, *pos_args)
         else:
-            return Term(predicate, {})
+            return Term(predicate)
+            # return Term(predicate, {})
     elif isinstance(node, ast.Compare):
         left = tr_arg_or_kw_value(node.left)
         if len(node.comparators) != 1:

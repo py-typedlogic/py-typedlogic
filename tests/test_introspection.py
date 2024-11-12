@@ -157,3 +157,30 @@ def test_function_term_example():
                 Term("Path", x, z, Term("add", d1, d2))
                 ))
     assert theory.sentences[1] == s
+
+def test_unary_predicates():
+    import tests.theorems.unary_predicates as unary_predicates
+    theory = translate_module_to_theory(unary_predicates)
+    coin_cls = unary_predicates.Coin
+    assert coin_cls
+    assert list(coin_cls.__annotations__.keys()) == ['id']
+    win_cls = unary_predicates.Win
+    assert win_cls
+    assert list(win_cls.__annotations__.keys()) == []
+    pd_map = {pd.predicate: pd for pd in theory.predicate_definitions}
+    win_pd = pd_map['Win']
+    assert win_pd
+    assert win_pd.predicate == 'Win'
+    #assert win_pd.arguments == {}
+    found = False
+    for s in theory.sentences:
+        if isinstance(s, Forall):
+            s = s.sentence
+        if isinstance(s, Implies):
+            cons = s.consequent
+            if isinstance(cons, Term):
+                if cons.predicate == 'Win':
+                    assert cons.values == ()
+                    found = True
+    assert found
+

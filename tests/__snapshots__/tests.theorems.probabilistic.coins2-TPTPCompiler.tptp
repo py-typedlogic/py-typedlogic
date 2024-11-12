@@ -1,0 +1,4 @@
+% Problem: tests.theorems.probabilistic.coins2
+fof(axiom1, axiom, ! [C] : (heads(C) => win())).
+fof(axiom2, axiom, ! [C] : eq(probability((Coin(?c) -> Heads(?c))), 0.4)).
+fof(axiom3, axiom, ! [C] : eq(probability((Coin(?c) -> Tails(?c))), 0.6)).

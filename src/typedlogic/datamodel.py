@@ -822,6 +822,7 @@ class Exists(QuantifiedSentence):
 class SentenceGroupType(str, Enum):
     AXIOM = "axiom"
     GOAL = "goal"
+    #PROBABILISTIC_AXIOM = "probabilistic_axiom"
 
 @dataclass
 class SentenceGroup:

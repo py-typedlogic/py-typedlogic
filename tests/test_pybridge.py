@@ -6,6 +6,7 @@ from typedlogic.datamodel import PredicateDefinition, SentenceGroup, Term, Theor
 from typedlogic.pybridge import fact_arg_py_types, fact_args, fact_to_term
 
 from tests.theorems.mortals import *
+from typedlogic.transformations import to_horn_rules
 
 
 def test_python_instances():
@@ -70,3 +71,11 @@ def test_gen():
     def _f() -> None:
         for x, y in gen2(str, str):
             _dummy = AncestorOf(ancestor=x, descendant=y)
+
+def test_unary():
+    from tests.theorems.unary_predicates import Win
+    t = Win()
+    args = fact_args(t)
+    assert args == ()
+
+
