@@ -240,7 +240,7 @@ def translate_from_horned_owl(x: Any, label_map: Optional[Dict[str, str]] = None
         entity_lbl = label_map.get(entity_iri, entity_iri)
         if entity_lbl.startswith("http"):
             entity_lbl = entity_lbl.split("/")[-1]
-        # replace any non alpha-numeric characters with _
+        # replace any non alphanumeric characters with _
         entity_lbl = "".join([c if c.isalnum() else "_" for c in entity_lbl])
         return OntologyElement(entity_lbl, type(x).__name__, entity_iri)
         # entity_lbl = entity_lbl.replace("#", "_").replace(":", "_")
