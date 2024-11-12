@@ -32,10 +32,10 @@ Instead, the python is treated as a logical specification.
 """
 from typing import Any, Generator, Tuple, Type, TypeVar
 
-T = TypeVar('T')
-T1 = TypeVar('T1')
-T2 = TypeVar('T2')
-T3 = TypeVar('T3')
+T = TypeVar("T")
+T1 = TypeVar("T1")
+T2 = TypeVar("T2")
+T3 = TypeVar("T3")
 
 
 def gen(*types: Type[Any]) -> Generator[Tuple[Any, ...], None, None]:

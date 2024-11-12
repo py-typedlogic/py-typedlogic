@@ -12,11 +12,7 @@ from typedlogic.solver import Solver
 
 logger = logging.getLogger(__name__)
 
-SUFFIXES = {
-    Compiler: "compiler",
-    Parser: "parser",
-    Solver: "solver"
-}
+SUFFIXES = {Compiler: "compiler", Parser: "parser", Solver: "solver"}
 
 Extendable = Union[Compiler, Parser, Solver]
 
@@ -32,11 +28,14 @@ class Registry:
 
     def get_implementation_class(self, category: Type, name: str) -> Type[Extendable]:
         if category not in self.implementation_classes:
-            raise ValueError(f"Unknown category: {category}\n"
-                             f"Known categories: {list(self.implementation_classes.keys())}")
+            raise ValueError(
+                f"Unknown category: {category}\n" f"Known categories: {list(self.implementation_classes.keys())}"
+            )
         if name not in self.implementation_classes[category]:
-            raise ValueError(f"Unknown handle: {name}\n"
-                             f"Known implementations: {list(self.implementation_classes[category].keys())}")
+            raise ValueError(
+                f"Unknown handle: {name}\n"
+                f"Known implementations: {list(self.implementation_classes[category].keys())}"
+            )
         return self.implementation_classes[category][name]
 
     def create_instance(self, category: Type, handle: str, **kwargs) -> Extendable:
@@ -71,6 +70,7 @@ class Registry:
 
 
 registry = Registry.load_implementations("typedlogic")
+
 
 def get_compiler(handle: str, **kwargs) -> Compiler:
     """

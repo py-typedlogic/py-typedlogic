@@ -1,0 +1,111 @@
+(Theory 
+  (name "tests.theorems.probabilistic.coins2") 
+  (constants 
+    (dict 
+      ())) 
+  (type_definitions 
+    (dict 
+      ())) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "Probability") 
+        (arguments 
+          (dict 
+            ((probability "float") 
+              (that "That")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "That") 
+        (arguments 
+          (dict 
+            ((sentence "Sentence")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Coin") 
+        (arguments 
+          (dict 
+            ((id "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Heads") 
+        (arguments 
+          (dict 
+            ((id "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Tails") 
+        (arguments 
+          (dict 
+            ((id "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Win") 
+        (arguments 
+          (dict 
+            ())) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)))) 
+  (sentence_groups 
+    ((SentenceGroup 
+        (name "win") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "c" "str")) 
+              (Implies 
+                (Heads 
+                  (Variable "c")) 
+                (Win))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "probs") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "c" "str")) 
+              (eq 
+                (probability 
+                  (Implies 
+                    (Coin 
+                      (Variable "c")) 
+                    (Heads 
+                      (Variable "c")))) 0.4)) 
+            (Forall 
+              ((Variable "c" "str")) 
+              (eq 
+                (probability 
+                  (Implies 
+                    (Coin 
+                      (Variable "c")) 
+                    (Tails 
+                      (Variable "c")))) 0.6)))) 
+        (_annotations null)))) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))

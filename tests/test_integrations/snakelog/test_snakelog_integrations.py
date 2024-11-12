@@ -28,11 +28,11 @@ def test_solver(method_name):
 
     models = list(solver.models())
     assert models
-    print("MODELS:" , models)
+    print("MODELS:", models)
     # Standard prolog-like engines only return one model
     assert len(models) == 1
     model = models[0]
-    expected_fact = Term('AncestorOf', {'ancestor': 'p1', 'descendant': 'p1aa'})
+    expected_fact = Term("AncestorOf", {"ancestor": "p1", "descendant": "p1aa"})
     for f in model.ground_terms:
         print(f" FACT={f}")
     assert expected_fact in model.ground_terms
@@ -57,10 +57,13 @@ def test_strict(method_name):
     with pytest.raises(NotInProfileError):
         solver.add(theory)
 
+
 @pytest.mark.parametrize("method_name", ["litelog", "souffle"])
 def test_solver_simple(method_name):
     solver = SnakeLogSolver(method_name=method_name)
-    solver.add_predicate_definition(PredicateDefinition(predicate="AncestorOf", arguments={'ancestor': str, 'descendant': str}))
+    solver.add_predicate_definition(
+        PredicateDefinition(predicate="AncestorOf", arguments={"ancestor": str, "descendant": str})
+    )
     f1 = mortals.AncestorOf(ancestor="p1", descendant="p1a")
     solver.add_fact(f1)
     model = solver.model()
@@ -84,16 +87,16 @@ def test_animals(method_name):
         print(f" FACT={f}")
 
 
-
-
-@pytest.mark.parametrize("depth,num_children,expected",
-                         [
-                             (1, 2, 4),
-                             (2, 2, 16),
-                             (5, 2, 320),
-                             (5, 3, 2004),
-                             (7, 3, 24603),
-                         ])
+@pytest.mark.parametrize(
+    "depth,num_children,expected",
+    [
+        (1, 2, 4),
+        (2, 2, 16),
+        (5, 2, 320),
+        (5, 3, 2004),
+        (7, 3, 24603),
+    ],
+)
 @pytest.mark.parametrize("method_name", ["litelog", "souffle"])
 def test_paths(method_name, depth, num_children, expected):
     """
@@ -128,9 +131,11 @@ def test_paths(method_name, depth, num_children, expected):
     model = solver.model()
     elapsed = timeit.default_timer() - start_time
     num_facts = len(model.ground_terms)
-    print(f"method: {method_name}, depth: {depth}, num_children: {num_children}, entailed: {num_facts} elapsed: {elapsed:.3f}")
+    print(
+        f"method: {method_name}, depth: {depth}, num_children: {num_children}, entailed: {num_facts} elapsed: {elapsed:.3f}"
+    )
     assert model.ground_terms
     if expected is not None:
         assert num_facts == expected
-    #for f in model.facts:
+    # for f in model.facts:
     #    print(f" FACT={f}")

@@ -10,7 +10,7 @@ class Z3Compiler(Compiler):
     Implementation of the Compiler interface for Z3
     """
 
-    def compile(self, theory: Theory, syntax: Optional[Union[str, ModelSyntax]] = None,  **kwargs) -> str:
+    def compile(self, theory: Theory, syntax: Optional[Union[str, ModelSyntax]] = None, **kwargs) -> str:
         solver = Z3Solver()
         solver.add(theory)
         if syntax is None:
@@ -22,6 +22,7 @@ class Z3Compiler(Compiler):
         else:
             raise ValueError(f"Unknown syntax: {syntax}")
 
+
 class Z3SExprCompiler(Z3Compiler):
     """
     Implementation of the Compiler interface for Z3 with S-Expression syntax
@@ -32,6 +33,7 @@ class Z3SExprCompiler(Z3Compiler):
     def compile(self, theory: Theory, syntax: Optional[Union[str, ModelSyntax]] = None, **kwargs) -> str:
         return super().compile(theory, ModelSyntax.SEXPR, **kwargs)
 
+
 class Z3FunctionalCompiler(Z3Compiler):
     """
     Implementation of the Compiler interface for Z3 with functional syntax
@@ -39,5 +41,5 @@ class Z3FunctionalCompiler(Z3Compiler):
 
     default_suffix: ClassVar[str] = "z3.fun"
 
-    def compile(self, theory: Theory,syntax: Optional[Union[str, ModelSyntax]] = None,  **kwargs) -> str:
+    def compile(self, theory: Theory, syntax: Optional[Union[str, ModelSyntax]] = None, **kwargs) -> str:
         return super().compile(theory, ModelSyntax.FUNCTIONAL, **kwargs)

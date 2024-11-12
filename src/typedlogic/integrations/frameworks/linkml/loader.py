@@ -35,6 +35,7 @@ Result = Union[Sentence, PredicateDefinition]
 
 SchemaDict = Dict[str, Any]
 
+
 def generate_from_object(obj: SchemaDict) -> Iterator[Sentence]:
     for k, v in obj.items():
         if k == "classes":
@@ -44,6 +45,7 @@ def generate_from_object(obj: SchemaDict) -> Iterator[Sentence]:
             for type_name, type_defn in v.items():
                 yield from generate_type_definition(type_name, type_defn)
     return
+
 
 def generate_class_definition(class_name: str, class_defn: Dict) -> Iterator[Sentence]:
     """
@@ -74,23 +76,30 @@ def generate_class_definition(class_name: str, class_defn: Dict) -> Iterator[Sen
                 yield ClassSlot(class_name, slot_name)
         if k == "is_a":
             yield IsA(class_name, v)
-            yield Forall([inst_var],
-                         Implies(Term(InstanceMemberType.__name__, inst_var, class_name),
-                                 Term(InstanceMemberType.__name__, inst_var, v)))
+            yield Forall(
+                [inst_var],
+                Implies(
+                    Term(InstanceMemberType.__name__, inst_var, class_name),
+                    Term(InstanceMemberType.__name__, inst_var, v),
+                ),
+            )
         if k == "mixins":
             for v1 in v:
                 yield Mixin(class_name, v1)
-                yield Forall([inst_var],
-                             Implies(Term(InstanceMemberType.__name__, inst_var, class_name),
-                                     Term(InstanceMemberType.__name__, inst_var, v1)))
+                yield Forall(
+                    [inst_var],
+                    Implies(
+                        Term(InstanceMemberType.__name__, inst_var, class_name),
+                        Term(InstanceMemberType.__name__, inst_var, v1),
+                    ),
+                )
         if k == "tree_root":
             yield TreeRoot(class_name)
             yield InstanceMemberType("/", class_name)
     if conjs:
-        yield Forall([inst_var],
-                     Implies(Term(InstanceMemberType.__name__, inst_var, class_name),
-                             And(*conjs)))
+        yield Forall([inst_var], Implies(Term(InstanceMemberType.__name__, inst_var, class_name), And(*conjs)))
     return
+
 
 def generate_type_definition(type_name: str, type_defn: Dict) -> Iterator[Sentence]:
     yield TypeDefinition(type_name)
@@ -99,20 +108,26 @@ def generate_type_definition(type_name: str, type_defn: Dict) -> Iterator[Senten
     for k, v in type_defn.items():
         if k == "typeof":
             yield IsA(type_name, v)
-            yield Forall([inst_var],
-                         Implies(Term(InstanceMemberType.__name__, inst_var, type_name),
-                                 Term(InstanceMemberType.__name__, inst_var, v)))
+            yield Forall(
+                [inst_var],
+                Implies(
+                    Term(InstanceMemberType.__name__, inst_var, type_name),
+                    Term(InstanceMemberType.__name__, inst_var, v),
+                ),
+            )
         if k == "mixins":
             for v1 in v:
-                yield Forall([inst_var],
-                             Implies(Term(InstanceMemberType.__name__, inst_var, type_name),
-                                     Term(InstanceMemberType.__name__, inst_var, v1)))
-        #for conj in conjunctions_from_type_expression(inst_var, type_name, type_defn):
+                yield Forall(
+                    [inst_var],
+                    Implies(
+                        Term(InstanceMemberType.__name__, inst_var, type_name),
+                        Term(InstanceMemberType.__name__, inst_var, v1),
+                    ),
+                )
+        # for conj in conjunctions_from_type_expression(inst_var, type_name, type_defn):
         #    conjs.append(conj)
     if conjs:
-        yield Forall([inst_var],
-                     Implies(Term(InstanceMemberType.__name__, inst_var, type_name),
-                             And(*conjs)))
+        yield Forall([inst_var], Implies(Term(InstanceMemberType.__name__, inst_var, type_name), And(*conjs)))
     return
 
 
@@ -160,29 +175,45 @@ def conjunctions_from_slot_expression(inst_var: Variable, slot_name: str, slot_e
         elif k == "required":
             if v:
                 yield Exists([val_var], Term(Association.__name__, inst_var, slot_name, val_var))
-        #elif k == "identifier":
+        # elif k == "identifier":
         #    yield Identifier(class_name, slot_name)
         elif k == "range":
             # assumes pre-processing has decorated the range with the appropriate type
             # TODO: linkml:Any
-            yield Forall([val_var], Implies(Term(Association.__name__, inst_var, slot_name, val_var),
-                                            Term(InstanceMemberType.__name__, val_var, v)))
+            yield Forall(
+                [val_var],
+                Implies(
+                    Term(Association.__name__, inst_var, slot_name, val_var),
+                    Term(InstanceMemberType.__name__, val_var, v),
+                ),
+            )
         elif k == "multivalued" and v is not None:
             if v is True:
                 pred = NodeIsMultiValued.__name__
             else:
                 pred = NodeIsSingleValued.__name__
-            yield Forall([val_var], Implies(Term(ObjectNodeLookup.__name__, inst_var, slot_name, val_var),
-                                            Term(pred, val_var)))
+            yield Forall(
+                [val_var], Implies(Term(ObjectNodeLookup.__name__, inst_var, slot_name, val_var), Term(pred, val_var))
+            )
         elif k == "inlined_as_list" and v is True:
-            yield Forall([val_var], Implies(Term(ObjectNodeLookup.__name__, inst_var, slot_name, val_var),
-                                            Term(NodeIsList.__name__, val_var)))
-            yield Forall([val_var], Implies(Term(ObjectNodeLookup.__name__, inst_var, slot_name, val_var),
-                                            Term(InlinedObject.__name__, val_var, v)))
+            yield Forall(
+                [val_var],
+                Implies(
+                    Term(ObjectNodeLookup.__name__, inst_var, slot_name, val_var), Term(NodeIsList.__name__, val_var)
+                ),
+            )
+            yield Forall(
+                [val_var],
+                Implies(
+                    Term(ObjectNodeLookup.__name__, inst_var, slot_name, val_var),
+                    Term(InlinedObject.__name__, val_var, v),
+                ),
+            )
         elif k == "inlined" and v is True:
-            yield Forall([val_var], Implies(Term(ObjectNodeLookup.__name__, inst_var, slot_name, val_var),
-                                            Term(InlinedObject.__name__, val_var, v)))
-
-
-
-
+            yield Forall(
+                [val_var],
+                Implies(
+                    Term(ObjectNodeLookup.__name__, inst_var, slot_name, val_var),
+                    Term(InlinedObject.__name__, val_var, v),
+                ),
+            )

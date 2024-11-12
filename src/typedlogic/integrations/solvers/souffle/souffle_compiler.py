@@ -18,24 +18,27 @@ def _base_type(t: str) -> str:
     else:
         return "symbol"
 
+
 def _type(name: str) -> str:
     return name.capitalize()
+
 
 def _pred(name: str) -> str:
     # return name.lower()
     return name
 
+
 def _var(name: str) -> str:
     return name.lower()
 
-class SouffleCompiler(Compiler):
 
+class SouffleCompiler(Compiler):
     default_suffix: ClassVar[str] = "dl"
 
-    def compile(self, theory: Theory, syntax: Optional[Union[str, ModelSyntax]] = None,  **kwargs) -> str:
+    def compile(self, theory: Theory, syntax: Optional[Union[str, ModelSyntax]] = None, **kwargs) -> str:
         blocks = []
 
-        #for k, v in theory.constants.items():
+        # for k, v in theory.constants.items():
         #    blocks.append(f".const {k}: {_base_type(v)}")
         tds = theory.type_definitions or {}
         for k, v in tds.items():
@@ -51,11 +54,13 @@ class SouffleCompiler(Compiler):
             raise ValueError("No predicate definitions found in theory")
         for pd in theory.predicate_definitions:
             p = _pred(pd.predicate)
+
             def _ref_type(t):
                 if t in theory.type_definitions:
                     return _type(t)
                 else:
                     return _base_type(t)
+
             args = [f"{_var(v)}: {_ref_type(v_typ)}" for v, v_typ in pd.arguments.items()]
             blocks.append(f".decl {p}({', '.join(args)})")
 
@@ -93,8 +98,3 @@ class SouffleCompiler(Compiler):
                 continue
 
         return "\n".join(blocks)
-
-
-
-
-

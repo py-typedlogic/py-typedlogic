@@ -1,0 +1,5 @@
+win :- heads(C).
+query(coin(Id)).
+query(heads(Id)).
+query(tails(Id)).
+query(win).

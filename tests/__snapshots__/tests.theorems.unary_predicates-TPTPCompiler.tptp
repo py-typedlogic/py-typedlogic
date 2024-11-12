@@ -1,0 +1,2 @@
+% Problem: tests.theorems.unary_predicates
+fof(axiom1, axiom, ! [C] : (heads(C) => win())).

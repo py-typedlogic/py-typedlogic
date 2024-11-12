@@ -99,7 +99,6 @@ class Compiler(ABC):
     parser_class: ClassVar[Optional[Type[Parser]]] = None
     strict: Optional[bool] = None
 
-
     @abstractmethod
     def compile(self, theory: Theory, syntax: Optional[Union[str, ModelSyntax]] = None, **kwargs) -> str:
         """
@@ -112,7 +111,13 @@ class Compiler(ABC):
         """
         pass
 
-    def compile_to_target(self, theory: Theory, target: Union[str, Path, TextIO], syntax: Optional[Union[str, ModelSyntax]] = None, **kwargs):
+    def compile_to_target(
+        self,
+        theory: Theory,
+        target: Union[str, Path, TextIO],
+        syntax: Optional[Union[str, ModelSyntax]] = None,
+        **kwargs,
+    ):
         """
         Compile a theory to a file or stream.
 

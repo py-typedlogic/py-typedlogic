@@ -25,6 +25,7 @@ class ListNodeHasMember(Fact):
     offset: int
     member: NodeID
 
+
 @dataclass(frozen=True)
 class ObjectNodeLookup(Fact):
     """True if the node is an object and has the specified key with the given value."""
@@ -33,12 +34,14 @@ class ObjectNodeLookup(Fact):
     key: Key
     member: NodeID
 
+
 @dataclass(frozen=True)
 class NodeStringValue(Fact):
     """The node is a terminal node with a string value."""
 
     loc: NodeID
     value: str
+
 
 @dataclass(frozen=True)
 class NodeIntValue(Fact):
@@ -47,6 +50,7 @@ class NodeIntValue(Fact):
     loc: NodeID
     value: int
 
+
 @dataclass(frozen=True)
 class NodeFloatValue(Fact):
     """The node is a terminal node with a float value."""
@@ -54,12 +58,14 @@ class NodeFloatValue(Fact):
     loc: NodeID
     value: float
 
+
 @dataclass(frozen=True)
 class NodeBooleanValue(Fact):
     """The node is a terminal node with a boolean value."""
 
     loc: NodeID
     value: bool
+
 
 @dataclass(frozen=True)
 class NodeNullValue(Fact):
@@ -72,12 +78,12 @@ class NodeNullValue(Fact):
 class NodeIsList(Fact):
     loc: NodeID
 
+
 @dataclass(frozen=True)
 class NodeIsObject(Fact):
     loc: NodeID
 
+
 @dataclass(frozen=True)
 class NodeIsLiteral(Fact):
     loc: NodeID
-
-

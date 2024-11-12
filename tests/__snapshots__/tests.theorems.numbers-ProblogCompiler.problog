@@ -1,0 +1,6 @@
+personage("Alice", 25).
+personage("Bob", 30).
+personage("Ciara", 30).
+sameage(Name1, Name2) :- personage(Name1, Age), personage(Name2, Age).
+query(personage(Name, Age)).
+query(sameage(Name1, Name2)).

@@ -27,19 +27,23 @@ from tests import INPUT_DIR, TESTS_DIR
 
 ONTOLOGY_DIR = TESTS_DIR / "test_frameworks" / "owldl"
 
+
 @predicate
 class Person(Thing):
     """A person is a thing."""
 
     disjoint_union_of = ["Man", "Woman"]
 
+
 @predicate
 class Man(Person):
     pass
 
+
 @predicate
 class Woman(Person):
     pass
+
 
 @predicate
 class HasDescendant(TopObjectProperty):
@@ -48,27 +52,33 @@ class HasDescendant(TopObjectProperty):
     domain = Person
     range = Person
 
+
 @predicate
 class HasChild(HasDescendant):
     range = Person
+
 
 @predicate
 class HasAncestor(TopObjectProperty):
     inverse_of = HasDescendant
 
+
 @predicate
 class HasParent(HasAncestor):
     inverse_of = HasChild
 
+
 @predicate
 class HasGrandchild(HasDescendant):
     subproperty_chain = PropertyExpressionChain(HasChild, HasChild)
+
 
 @predicate
 class Parent(Person):
     """A parent is a person who has a child."""
 
     equivalent_to = ObjectIntersectionOf(Person, ObjectSomeValuesFrom(HasChild, Thing))
+
 
 @predicate
 class Father(Person):
@@ -150,41 +160,58 @@ def test_owlpy_parse():
         assert ":- hasgrandchild(I, J), hasgrandchild(J, I)." in lines
 
 
-@pytest.mark.parametrize("facts,expected,abox,coherent", [
-    ([
-        #Person("P1"),
-        #Person("P2"),
-        HasChild("P1", "P2"),
-        HasChild("P2", "P3"),
-        Man("P1"),
-      ],
-      [Person("P1"),
-       Person("P2"),
-       HasDescendant("P1", "P2"), HasDescendant("P1", "P3"), HasDescendant("P2", "P3"),
-       HasGrandchild("P1", "P3"),
-       Parent("P1"),
-       # Parent("P2"),
-       Father("P1"),
-       HasParent("P2", "P1"),
-       HasParent("P3", "P2"),
-       HasAncestor("P2", "P1"),
-       HasAncestor("P3", "P2"),
-       HasAncestor("P3", "P1"),
-       ],
-        True,
-        True),
-    ([
-        Person("P1"),
-        Person("P2"),
-        HasChild("P1", "P2"),
-        HasChild("P2", "P3"),
-        HasChild("P3", "P1"),
-        ],
-        None,
-        True,
-        False),
-])
-@pytest.mark.parametrize("solver", [SouffleSolver, Z3Solver, ClingoSolver, ])
+@pytest.mark.parametrize(
+    "facts,expected,abox,coherent",
+    [
+        (
+            [
+                # Person("P1"),
+                # Person("P2"),
+                HasChild("P1", "P2"),
+                HasChild("P2", "P3"),
+                Man("P1"),
+            ],
+            [
+                Person("P1"),
+                Person("P2"),
+                HasDescendant("P1", "P2"),
+                HasDescendant("P1", "P3"),
+                HasDescendant("P2", "P3"),
+                HasGrandchild("P1", "P3"),
+                Parent("P1"),
+                # Parent("P2"),
+                Father("P1"),
+                HasParent("P2", "P1"),
+                HasParent("P3", "P2"),
+                HasAncestor("P2", "P1"),
+                HasAncestor("P3", "P2"),
+                HasAncestor("P3", "P1"),
+            ],
+            True,
+            True,
+        ),
+        (
+            [
+                Person("P1"),
+                Person("P2"),
+                HasChild("P1", "P2"),
+                HasChild("P2", "P3"),
+                HasChild("P3", "P1"),
+            ],
+            None,
+            True,
+            False,
+        ),
+    ],
+)
+@pytest.mark.parametrize(
+    "solver",
+    [
+        SouffleSolver,
+        Z3Solver,
+        ClingoSolver,
+    ],
+)
 def test_reasoning(solver, facts, expected, abox, coherent):
     """
     Tests the OWL reasoner.
@@ -207,14 +234,14 @@ def test_reasoning(solver, facts, expected, abox, coherent):
     reasoner = OWLReasoner(solver_class=solver)
     assert __file__.endswith(".py")
     reasoner.init_from_file(__file__)
-    assert reasoner.theory.source_module_name == 'test_owldl'
+    assert reasoner.theory.source_module_name == "test_owldl"
     for s in reasoner.theory.sentences:
         assert "develops" not in str(s)
     for f in facts:
         reasoner.add(f)
     if solver != SouffleSolver:
-        #print("COHERENT=", reasoner.coherent())
-        #print(reasoner.solver.dump())
+        # print("COHERENT=", reasoner.coherent())
+        # print(reasoner.solver.dump())
         assert reasoner.coherent() == coherent, f"Expected {coherent} for {facts}"
     if solver == Z3Solver:
         pytest.skip("TODO: models from Z3")
@@ -228,7 +255,6 @@ def test_reasoning(solver, facts, expected, abox, coherent):
             assert e in model.ground_terms
 
 
-
 @pytest.mark.parametrize("solver_class", [Z3Solver, ClingoSolver, Prover9Solver, SouffleSolver])
 def test_consistency(solver_class):
     if solver_class == Prover9Solver:
@@ -237,19 +263,22 @@ def test_consistency(solver_class):
         pytest.skip("TODO")
     reasoner = OWLReasoner(solver_class=solver_class)
     reasoner.init_from_file(str(INPUT_DIR / "family_owldl.py"))
-    facts = [Term("HasChild", "a", "b"), Term("HasChild", "b", "c") , Term("HasChild", "c", "a")]
+    facts = [Term("HasChild", "a", "b"), Term("HasChild", "b", "c"), Term("HasChild", "c", "a")]
     for f in facts:
         reasoner.add(f)
     assert not reasoner.coherent()
 
-@pytest.mark.parametrize("depth,num_children,expected",
-                         [
-                             (1, 2, 4),
-                             (2, 2, 16),
-                             (5, 2, 320),
-                             #(5, 3, 2004),
-                             # (7, 3, 24603),
-                         ])
+
+@pytest.mark.parametrize(
+    "depth,num_children,expected",
+    [
+        (1, 2, 4),
+        (2, 2, 16),
+        (5, 2, 320),
+        # (5, 3, 2004),
+        # (7, 3, 24603),
+    ],
+)
 @pytest.mark.parametrize("solver_class", [ClingoSolver, SouffleSolver, SnakeLogSolver])
 def test_paths(solver_class, depth, num_children, expected):
     """
@@ -272,12 +301,13 @@ def test_paths(solver_class, depth, num_children, expected):
     """
     reasoner = OWLReasoner(solver_class=solver_class)
     import tests.test_frameworks.owldl.paths_owldl as paths_owldl
+
     links = paths_owldl.generate_ontology(node="a", depth=depth, num_children=num_children)
     reasoner.init_from_file(str(ONTOLOGY_DIR / "paths_owldl.py"))
     for s in reasoner.theory.sentences:
         print(f"S={s}")
     reasoner.add(links)
-    #for s in reasoner.theory.sentences:
+    # for s in reasoner.theory.sentences:
     #    print(f"S2={s}")
     assert reasoner.coherent()
     model = reasoner.model()
@@ -286,7 +316,6 @@ def test_paths(solver_class, depth, num_children, expected):
     num_facts = len(list(model.iter_retrieve("Path"))) + len(list(model.iter_retrieve("Link")))
     if expected is not None:
         assert num_facts == expected
-
 
 
 def test_incremental():
@@ -312,8 +341,10 @@ def test_incremental():
         print(s)
     assert not reasoner.coherent()
 
+
 def test_via_load():
     import tests.test_frameworks.owldl.family as family
+
     sentences = family.Parent.to_sentences()
     assert sentences
     for s in sentences:
@@ -331,18 +362,15 @@ def test_via_load():
             except NotInProfileError as e:
                 print(f"Skipping sentence {s} due to {e}")
 
+
 def test_to_owldl():
     # TODO
     x = Variable("x")
     y = Variable("y")
     z = Variable("z")
-    s = (Term("cell", y) & Term("part_of", z,y)) | ~ Term("nucleus", z)
+    s = (Term("cell", y) & Term("part_of", z, y)) | ~Term("nucleus", z)
     print(as_fol(s))
     print(as_fol(to_cnf(s)))
-    s = (Term("nucleus", x) >> Exists([y], Term("part_of", x, y) & Term("nucleus", y)))
+    s = Term("nucleus", x) >> Exists([y], Term("part_of", x, y) & Term("nucleus", y))
     print(as_fol(s))
     print(as_fol(to_cnf(s)))
-
-
-
-

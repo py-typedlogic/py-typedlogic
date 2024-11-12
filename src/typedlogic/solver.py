@@ -13,9 +13,11 @@ from typedlogic.pybridge import fact_to_term
 
 ELEMENT = Union[FactMixin, SentenceGroup, Sentence, Theory, PredicateDefinition]
 
+
 @dataclass
 class Solution:
     satisfiable: Optional[bool] = None
+
 
 @dataclass
 class Model:
@@ -60,6 +62,7 @@ class Method:
     description: Optional[str] = None
     is_default: bool = False
     impl_class: Optional[Type] = None
+
 
 @dataclass
 class Solver(ABC):
@@ -224,7 +227,6 @@ class Solver(ABC):
             theory = parser.parse(source)
         self.add(theory)
 
-
     def add(self, element: Union[ELEMENT, Iterable[ELEMENT]]) -> None:
         if isinstance(element, (list, abc.Iterator)):
             for e in element:
@@ -258,8 +260,7 @@ class Solver(ABC):
 
     def add_sentence(self, sentence: Sentence) -> None:
         if sentence not in self.base_theory.sentences:
-            self.base_theory.sentence_groups.append(SentenceGroup(name="dynamic",
-                                                                  sentences=[sentence]))
+            self.base_theory.sentence_groups.append(SentenceGroup(name="dynamic", sentences=[sentence]))
 
     def add_predicate_definition(self, predicate_definition: PredicateDefinition) -> None:
         """
@@ -292,7 +293,6 @@ class Solver(ABC):
             for t in theory.ground_terms:
                 self.add(t)
 
-
     def dump(self) -> str:
         """
         Dump the internal state of the solver as a string.
@@ -300,4 +300,3 @@ class Solver(ABC):
         :return:
         """
         raise NotImplementedError
-

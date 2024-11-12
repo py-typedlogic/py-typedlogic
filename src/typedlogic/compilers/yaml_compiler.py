@@ -11,7 +11,6 @@ from typedlogic.parsers.yaml_parser import YAMLParser
 
 @dataclass
 class YAMLCompiler(Compiler):
-
     default_suffix: ClassVar[str] = "yaml"
     parser_class = YAMLParser
 

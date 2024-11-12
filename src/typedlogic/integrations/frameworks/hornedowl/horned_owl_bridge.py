@@ -18,7 +18,9 @@ from pyhornedowl.model import (  # type: ignore
     LanguageLiteral,
     NamedIndividual,
     ObjectProperty,
-    SimpleLiteral, Facet, Datatype,
+    SimpleLiteral,
+    Facet,
+    Datatype,
     FacetRestriction,
 )
 from rdflib import RDFS
@@ -46,9 +48,11 @@ FACET_MAP = {
 
 XSD = "http://www.w3.org/2001/XMLSchema#"
 
+
 @lru_cache
 def facet_map_rev():
     return {v: k for k, v in FACET_MAP.items()}
+
 
 @dataclass
 class ConversionContext:
@@ -59,6 +63,7 @@ class ConversionContext:
     label_map: Dict[str, str] = field(default_factory=dict)
     decl_map: Dict[str, str] = field(default_factory=dict)
     ontology: pyhornedowl.PyIndexedOntology = field(default_factory=pyhornedowl.PyIndexedOntology)
+
 
 def load_ontology(source: str) -> List[owltop.Axiom]:
     """
@@ -95,6 +100,7 @@ def _get_label_map(ontology: pyhornedowl.PyIndexedOntology) -> Dict[str, str]:
                     label_map[str(a.subject)] = lbl
     return label_map
 
+
 def py_indexed_ontology_to_pyowl(ontology: pyhornedowl.PyIndexedOntology) -> List[owltop.Axiom]:
     """
     Convert the PHO ontology to PyOwl.
@@ -124,6 +130,7 @@ def py_indexed_ontology_to_pyowl(ontology: pyhornedowl.PyIndexedOntology) -> Lis
         if isinstance(axiom, owltop.Axiom):
             axioms.append(axiom)
     return axioms
+
 
 def parse_owl_ontology_to_theory(source: str) -> Theory:
     """
@@ -192,10 +199,13 @@ def py_indexed_ontology_to_theory(ontology: pyhornedowl.PyIndexedOntology) -> Th
         theory.predicate_definitions.append(pd)
     for op in ontology.get_object_properties():
         entity_lbl = label_map.get(op, op)
-        pd = PredicateDefinition(entity_lbl, arguments={"subject": "str", "object": "str"}, parents=["TopObjectProperty"])
+        pd = PredicateDefinition(
+            entity_lbl, arguments={"subject": "str", "object": "str"}, parents=["TopObjectProperty"]
+        )
         theory.predicate_definitions.append(pd)
     # TODO: PHO does not return data properties?
     return theory
+
 
 def translate_from_horned_owl(x: Any, label_map: Optional[Dict[str, str]] = None, parent=None) -> Any:
     """
@@ -223,7 +233,7 @@ def translate_from_horned_owl(x: Any, label_map: Optional[Dict[str, str]] = None
         return [translate_from_horned_owl(i, label_map) for i in x]
     if isinstance(x, IRI):
         return str(x)
-    #if isinstance(x, NamedIndividual):
+    # if isinstance(x, NamedIndividual):
     #    return str(x.first)
     if isinstance(x, (Class, ObjectProperty, DataProperty, Datatype, NamedIndividual)):
         # TODO: remove unused code; we now use a generic OntologyElement
@@ -235,18 +245,20 @@ def translate_from_horned_owl(x: Any, label_map: Optional[Dict[str, str]] = None
             superclass = TopDataProperty
 
         entity_iri = str(x.first)
+
         def class_body(namespace):
             namespace["iri"] = entity_iri
+
         entity_lbl = label_map.get(entity_iri, entity_iri)
         if entity_lbl.startswith("http"):
             entity_lbl = entity_lbl.split("/")[-1]
-        # replace any non alpha-numeric characters with _
+        # replace any non alphanumeric characters with _
         entity_lbl = "".join([c if c.isalnum() else "_" for c in entity_lbl])
         return OntologyElement(entity_lbl, type(x).__name__, entity_iri)
         # entity_lbl = entity_lbl.replace("#", "_").replace(":", "_")
-        #py_cls = types.new_class(entity_lbl, (superclass,), {}, class_body)
-        #py_cls.__module__ = "__temp__"
-        #return py_cls
+        # py_cls = types.new_class(entity_lbl, (superclass,), {}, class_body)
+        # py_cls.__module__ = "__temp__"
+        # return py_cls
     typ = type(x)
     typ_name = typ.__name__
     if typ_name in owltop.__dict__:
@@ -276,6 +288,7 @@ def translate_from_horned_owl(x: Any, label_map: Optional[Dict[str, str]] = None
                 obj = tl_cls(**kwargs)
         return obj
     return x
+
 
 def translate_to_horned_owl(x: Any, context: ConversionContext, target_property=None) -> Any:
     """
@@ -358,7 +371,7 @@ def translate_to_horned_owl(x: Any, context: ConversionContext, target_property=
     if typ_name == owltop.FacetRestriction.__name__:
         f = x.f
         if f.startswith(XSD):
-            f = f[len(XSD):]
+            f = f[len(XSD) :]
             f = facet_map_rev()[f]
         f = f.replace("Facet.", "")
         f = getattr(Facet, f)
@@ -412,8 +425,6 @@ def theory_to_py_indexed_ontology(theory: Theory) -> pyhornedowl.PyIndexedOntolo
     return pho
 
 
-
-
 def owl_axioms_to_py_indexed_ontology(axioms: List[owltop.Axiom]) -> pyhornedowl.PyIndexedOntology:
     """
     Convert the owldl axioms to a horned-owl PyIndexedOntology.
@@ -425,8 +436,3 @@ def owl_axioms_to_py_indexed_ontology(axioms: List[owltop.Axiom]) -> pyhornedowl
     context = ConversionContext(ontology=pho)
     for axiom in axioms:
         pho_axiom = translate_to_horned_owl(axiom, context)
-
-
-
-
-

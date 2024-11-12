@@ -10,6 +10,7 @@ class Node:
     lowlink: int = -1
     on_stack: bool = False
 
+
 @dataclass
 class Graph:
     nodes: Dict[int, Node] = field(default_factory=dict)
@@ -55,6 +56,7 @@ class Graph:
                     break
             self.sccs.append(scc)
 
+
 def main():
     g = Graph()
     edges = [(0, 1), (1, 2), (2, 0), (1, 3), (3, 4), (4, 3)]
@@ -65,6 +67,7 @@ def main():
     print("Strongly Connected Components:")
     for i, scc in enumerate(sccs, 1):
         print(f"SCC {i}: {scc}")
+
 
 if __name__ == "__main__":
     main()

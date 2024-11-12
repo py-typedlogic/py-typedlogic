@@ -12,6 +12,7 @@ class Person:
     name: str
     age: int
 
+
 @dataclass
 class Animal(FactMixin):
     name: str
@@ -37,6 +38,7 @@ def test_predicate():
     with pytest.raises(FrozenInstanceError):
         p.age = 43
 
+
 def test_pyparse():
     p = PythonParser()
     p.parse("1 + 2")
@@ -47,6 +49,4 @@ def test_pyparse():
     [person_def] = [pd for pd in theory.predicate_definitions if pd.predicate == "Person"]
     assert person_def
     # TODO: use strings for arguments
-    assert person_def.arguments == {"name": 'str', "age": 'int'}
-
-
+    assert person_def.arguments == {"name": "str", "age": "int"}

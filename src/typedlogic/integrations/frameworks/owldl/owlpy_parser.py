@@ -17,6 +17,7 @@ def _get_all_subclasses(cls: Type) -> Set[Type]:
     subclasses = set(cls.__subclasses__())
     return subclasses.union(s for c in subclasses for s in _get_all_subclasses(c))
 
+
 class OWLPyParser(Parser):
     """
     A parser that converts OWL programs in Python.
@@ -70,7 +71,10 @@ class OWLPyParser(Parser):
         ∀[P I J]. HasParent(I, J) → HasAncestor(I, J)
 
     """
-    def parse(self, source: Union[Path, str, TextIO], include_all=False, modules: Optional[List[ModuleType]] = None, **kwargs) -> Theory:
+
+    def parse(
+        self, source: Union[Path, str, TextIO], include_all=False, modules: Optional[List[ModuleType]] = None, **kwargs
+    ) -> Theory:
         """
         Parse the source into a theory.
 
@@ -83,7 +87,9 @@ class OWLPyParser(Parser):
         theory, _ = self._parse_to_theory_and_axioms(source, include_all=include_all, modules=modules, **kwargs)
         return theory
 
-    def parse_to_owl_axioms(self, source: Union[Path, str, TextIO], include_all=False, modules: Optional[List[ModuleType]] = None, **kwargs) -> List[Axiom]:
+    def parse_to_owl_axioms(
+        self, source: Union[Path, str, TextIO], include_all=False, modules: Optional[List[ModuleType]] = None, **kwargs
+    ) -> List[Axiom]:
         """
         Parse the source into a list of tl-OWL axioms.
 
@@ -96,14 +102,17 @@ class OWLPyParser(Parser):
         _, axioms = self._parse_to_theory_and_axioms(source, include_all=include_all, modules=modules, **kwargs)
         return axioms
 
-    def _parse_to_theory_and_axioms(self, source: Union[Path, str, TextIO], include_all=False, modules: Optional[List[ModuleType]] = None,
-              **kwargs) -> Tuple[Theory, List[Axiom]]:
+    def _parse_to_theory_and_axioms(
+        self, source: Union[Path, str, TextIO], include_all=False, modules: Optional[List[ModuleType]] = None, **kwargs
+    ) -> Tuple[Theory, List[Axiom]]:
         p = PythonParser()
+
         def get_file():
             if isinstance(source, (Path, str)):
                 return open(source)
             else:
                 return source
+
         theory = p.parse(get_file())
         python_txt = get_file().read()
         # TODO: check for multiple invocations
@@ -114,8 +123,9 @@ class OWLPyParser(Parser):
         owl_axioms = self._generate_from_classes(theory, include_all=include_all, modules=modules)
         return theory, owl_axioms
 
-
-    def _generate_from_classes(self, theory: Theory, include_all=False, modules: Optional[List[ModuleType]] = None) -> List[Axiom]:
+    def _generate_from_classes(
+        self, theory: Theory, include_all=False, modules: Optional[List[ModuleType]] = None
+    ) -> List[Axiom]:
         """
         Iterates through owlpy classes, gathering axioms, and injecting corresponding FOL into the theory.
 
@@ -146,11 +156,11 @@ class OWLPyParser(Parser):
                     if s not in sentences:
                         theory.add(s)
                     sentences.append(s)
-            #sentences = cls.to_sentences()
-            #for s in sentences:
+            # sentences = cls.to_sentences()
+            # for s in sentences:
             #    theory.add(s)
-            #owl_axioms.extend(cls.axioms())
-            #for root in [Thing, TopDataProperty, TopObjectProperty]:
+            # owl_axioms.extend(cls.axioms())
+            # for root in [Thing, TopDataProperty, TopObjectProperty]:
             #    if issubclass(cls, root):
             #        pd =
 
@@ -164,7 +174,7 @@ class OWLPyParser(Parser):
                 module_name = module.__name__
 
                 # Check if __axioms__ is defined in the module
-                if hasattr(module, '__axioms__'):
+                if hasattr(module, "__axioms__"):
                     axioms = module.__axioms__
                     if not isinstance(axioms, list):
                         axioms = [axioms]

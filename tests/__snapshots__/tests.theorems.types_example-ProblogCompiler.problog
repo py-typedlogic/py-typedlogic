@@ -1,0 +1,4 @@
+adult("Alice") :- personwithage("Alice", 25).
+query(personwithage(Name, Age)).
+query(adult(Name)).
+query(stageage(Stage, Age)).

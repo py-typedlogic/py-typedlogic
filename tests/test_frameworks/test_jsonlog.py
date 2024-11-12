@@ -1,4 +1,3 @@
-
 import pytest
 from typedlogic.integrations.solvers.snakelog import SnakeLogSolver
 from typedlogic.integrations.solvers.souffle import SouffleSolver
@@ -22,21 +21,16 @@ from typedlogic.theories.jsonlog.loader import generate_from_object
         ({}, {NodeIsObject("/")}),
         ("x", {NodeIsLiteral("/"), NodeStringValue("/", "x")}),
         (1, {NodeIsLiteral("/"), NodeIntValue("/", 1)}),
-        ({"k": 1},
-         {
-             NodeIsObject("/"),
-             ObjectNodeLookup("/", "k", "/k/"),
-             NodeIntValue("/k/", 1),
-             NodeIsLiteral("/k/")
-            }),
-        (["x"],
-         {
-             NodeIsList("/"),
-             ListNodeHasMember("/", 0, "/[0]"),
-             NodeStringValue("/[0]", "x"),
-             NodeIsLiteral("/[0]")
-            }),
-        (["x", 1],
+        (
+            {"k": 1},
+            {NodeIsObject("/"), ObjectNodeLookup("/", "k", "/k/"), NodeIntValue("/k/", 1), NodeIsLiteral("/k/")},
+        ),
+        (
+            ["x"],
+            {NodeIsList("/"), ListNodeHasMember("/", 0, "/[0]"), NodeStringValue("/[0]", "x"), NodeIsLiteral("/[0]")},
+        ),
+        (
+            ["x", 1],
             {
                 NodeIsList("/"),
                 ListNodeHasMember("/", 0, "/[0]"),
@@ -44,9 +38,11 @@ from typedlogic.theories.jsonlog.loader import generate_from_object
                 NodeIsLiteral("/[0]"),
                 ListNodeHasMember("/", 1, "/[1]"),
                 NodeIntValue("/[1]", 1),
-                NodeIsLiteral("/[1]")
-                }),
-          ({"k": ["x", 1]},
+                NodeIsLiteral("/[1]"),
+            },
+        ),
+        (
+            {"k": ["x", 1]},
             {
                 NodeIsObject("/"),
                 ObjectNodeLookup("/", "k", "/k/"),
@@ -57,8 +53,8 @@ from typedlogic.theories.jsonlog.loader import generate_from_object
                 ListNodeHasMember("/k/", 1, "/k/[1]"),
                 NodeIntValue("/k/[1]", 1),
                 NodeIsLiteral("/k/[1]"),
-                }),
-
+            },
+        ),
     ],
 )
 def test_jsonlog_loader(source, expected):
@@ -66,10 +62,7 @@ def test_jsonlog_loader(source, expected):
     assert facts == expected
 
 
-@pytest.mark.parametrize(
-    "source,valid", [
-        ({"k": ["x", 1]}, True)
-    ])
+@pytest.mark.parametrize("source,valid", [({"k": ["x", 1]}, True)])
 @pytest.mark.parametrize("solver_class", [Z3Solver, SouffleSolver, SnakeLogSolver])
 def test_jsonlog_check(solver_class, source, valid):
     solver = solver_class()
@@ -85,5 +78,3 @@ def test_jsonlog_check(solver_class, source, valid):
         facts = model.ground_terms
         for f in facts:
             print(f)
-
-

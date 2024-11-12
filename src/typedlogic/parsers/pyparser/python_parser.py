@@ -17,6 +17,7 @@ from typedlogic.parsers.pyparser.introspection import (
 
 logger = logging.getLogger(__name__)
 
+
 def compile_python(python_txt: str, name: Optional[str] = None, package_path: Optional[str] = None) -> ModuleType:
     """
     Compile a Python module from a string
@@ -27,10 +28,10 @@ def compile_python(python_txt: str, name: Optional[str] = None, package_path: Op
     """
     if name is None:
         if package_path:
-            name = os.path.basename(package_path).split('.')[0]
+            name = os.path.basename(package_path).split(".")[0]
         else:
-            name = 'test'
-    spec = compile(python_txt, name, 'exec')
+            name = "test"
+    spec = compile(python_txt, name, "exec")
     module = ModuleType(name)
     if package_path:
         package_path_abs = os.path.join(os.getcwd(), package_path)
@@ -44,8 +45,10 @@ def compile_python(python_txt: str, name: Optional[str] = None, package_path: Op
                 break
         else:
             logger.warning(f"There is no established path to {package_path} - compile_python may or may not work")
-            path_from_tests_parent = os.path.relpath(package_path, os.path.join(os.getcwd(), '..'))
-        module.__package__ = os.path.dirname(os.path.relpath(path_from_tests_parent, os.getcwd())).replace(os.path.sep, '.')
+            path_from_tests_parent = os.path.relpath(package_path, os.path.join(os.getcwd(), ".."))
+        module.__package__ = os.path.dirname(os.path.relpath(path_from_tests_parent, os.getcwd())).replace(
+            os.path.sep, "."
+        )
     sys.modules[module.__name__] = module
     exec(spec, module.__dict__)
     return module
@@ -98,7 +101,9 @@ class PythonParser(Parser):
             return self.parse(lines, file_name=file_name, **kwargs)
         raise ValueError(f"Unsupported source type: {type(source)}")
 
-    def validate_iter(self, source: Union[Path, str, TextIO, ModuleType], file_name: Optional[str] = None, **kwargs) -> Iterator[ValidationMessage]:
+    def validate_iter(
+        self, source: Union[Path, str, TextIO, ModuleType], file_name: Optional[str] = None, **kwargs
+    ) -> Iterator[ValidationMessage]:
         """
         Validate a Python module
 
@@ -110,9 +115,10 @@ class PythonParser(Parser):
         :return:
         """
         from mypy import api
+
         result: Optional[Tuple] = None
         if isinstance(source, str):
-            with tempfile.NamedTemporaryFile(mode='w+t', delete=False) as temp_file:
+            with tempfile.NamedTemporaryFile(mode="w+t", delete=False) as temp_file:
                 temp_file.write(source)
                 result = api.run([temp_file.name])
         if isinstance(source, Path):
@@ -127,6 +133,3 @@ class PythonParser(Parser):
             raise ValueError(f"No output from mypy; ret={exit_code}; stdout={stdout}; stderr={stderr}")
         for line in lines:
             yield ValidationMessage(line)
-
-
-

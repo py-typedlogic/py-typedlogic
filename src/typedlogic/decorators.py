@@ -47,25 +47,25 @@ AXIOM_REGISTRY = []
 def axiom(func: Callable) -> Callable:
     """
     Decorator to mark a function as an axiom.
-    
+
     The marked function is not intended to be executed in a standard python environment.
 
     The arguments to the function are treated as universally quantified variables
-    
+
     Example usage:
-    
+
         from dataclasses import dataclass
         from typedlogic import Fact
         from typedlogic.decorators import axiom, goal
-    
+
         @dataclass
         class Dog(Fact):
             unique_name: str
-    
+
         @dataclass
         class Cat(Fact):
             unique_name: str
-    
+
         @axiom
         def disjointness(n: str):
             '''Forall n: Dog(n) => not Cat(n)'''
@@ -104,8 +104,8 @@ def goal(func: Callable) -> Callable:
 def predicate(cls=None, *, exclude_from_hash=None, **kwargs):
     if exclude_from_hash is None:
         exclude_from_hash = []
-    def wrapper(cls):
 
+    def wrapper(cls):
         if not issubclass(cls, FactMixin):
             cls = type(cls.__name__, (cls, FactMixin), dict(cls.__dict__))
 
@@ -117,10 +117,9 @@ def predicate(cls=None, *, exclude_from_hash=None, **kwargs):
         original_eq = cls.__eq__
 
         def custom_hash(self):
-            return hash(tuple(
-                getattr(self, f.name) for f in fields(self)
-                if f.name not in exclude_from_hash and f.compare
-            ))
+            return hash(
+                tuple(getattr(self, f.name) for f in fields(self) if f.name not in exclude_from_hash and f.compare)
+            )
 
         def custom_eq(self, other):
             if not isinstance(other, self.__class__):

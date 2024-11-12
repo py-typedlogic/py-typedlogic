@@ -34,6 +34,7 @@ logger = logging.getLogger(__name__)
 
 PRIMITIVE_TYPES = (int, float, str, bool, bytes)
 
+
 @dataclass
 class SnakeLogSolver(Solver):
     """
@@ -125,10 +126,7 @@ class SnakeLogSolver(Solver):
             except sqlite3.OperationalError:
                 # TODO: better way to detect zero implications
                 pass
-        m = Model(
-            source_object=s,
-            ground_terms=facts
-        )
+        m = Model(source_object=s, ground_terms=facts)
         yield m
 
     def prove(self, sentence: Sentence) -> Optional[bool]:
@@ -177,8 +175,9 @@ class SnakeLogSolver(Solver):
         if isinstance(sentence, tlog.Implied):
             return self.to_clauses(tlog.Implies(sentence.operands[1], sentence.operands[0]))
         if isinstance(sentence, tlog.Iff):
-            return self.to_clauses(tlog.And(tlog.Implies(sentence.left, sentence.right),
-                                            tlog.Implies(sentence.right, sentence.left)))
+            return self.to_clauses(
+                tlog.And(tlog.Implies(sentence.left, sentence.right), tlog.Implies(sentence.right, sentence.left))
+            )
         if isinstance(sentence, tlog.And):
             sentences = []
             for s in sentence.operands:
@@ -200,6 +199,7 @@ class SnakeLogSolver(Solver):
 
     def to_atom(self, sentence: Sentence) -> litelog.Atom:
         if isinstance(sentence, tlog.Term):
+
             def _render_arg(arg):
                 if arg is None:
                     return None
@@ -212,12 +212,17 @@ class SnakeLogSolver(Solver):
                         return arg
                     else:
                         return str(arg)
-            return litelog.Atom(self.to_predicate(sentence.predicate), [_render_arg(a) for a in sentence.bindings.values()])
+
+            return litelog.Atom(
+                self.to_predicate(sentence.predicate), [_render_arg(a) for a in sentence.bindings.values()]
+            )
         if isinstance(sentence, typedlogic.pybridge.FactMixin):
+
             def _render_arg(arg):
                 if arg is None:
                     return None
                 return Var(arg.upper())
+
             p = self.to_predicate(fact_predicate(sentence))
             return litelog.Atom(p, [_render_arg(a) for a in fact_arg_values(sentence)])
         raise NotInProfileError(f"Unknown atom type {type(sentence)} :: {sentence}")
@@ -230,8 +235,5 @@ class SnakeLogSolver(Solver):
             return litelog.Body([self.to_atom(sentence)])
         raise NotInProfileError(f"Unknown body type {type(sentence)} :: {sentence}")
 
-
-
     def dump(self) -> str:
         return str(self.wrapped_solver)
-
