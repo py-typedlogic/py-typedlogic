@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.38">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.8c3ca2c6.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.0253249f.min.css">
       
         
         <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
@@ -342,6 +342,27 @@
   
   <span class="md-ellipsis">
     2. Using the Python Data Model
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tutorial/03-probabilistic-logic" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3. Probabilistic Logic
   </span>
   
 
@@ -715,6 +736,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../solvers/problog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ProbLog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../solvers/llm/" class="md-nav__link">
         
   
@@ -825,6 +867,27 @@
   
   <span class="md-ellipsis">
     Prolog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../conversion/compilers/problog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ProbLog
   </span>
   
 
@@ -1526,6 +1589,11 @@
 
 
 
+
+
+
+
+
   <div class="doc doc-children">
 
 
@@ -1599,6 +1667,11 @@ Knows(p2, p1)
 <span class="n">Knows</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span><span class="w"> </span><span class="n">p2</span><span class="p">)</span>
 <span class="n">Knows</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span><span class="w"> </span><span class="n">p1</span><span class="p">)</span>
 </code></pre></div>
+
+
+
+
+
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/integrations/frameworks/owldl/reasoner.py</code></summary>
@@ -1844,6 +1917,7 @@ Knows(p2, p1)
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">import</span> <span class="nn">typedlogic.integrations.frameworks.owldl.owltop</span> <span class="k">as</span> <span class="nn">owltop</span>
+
         <span class="n">p</span> <span class="o">=</span> <span class="n">OWLPyParser</span><span class="p">()</span>
         <span class="n">modules</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">classes</span><span class="p">:</span>
@@ -1891,8 +1965,7 @@ Knows(p2, p1)
         <span class="n">pd</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">mc</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Thing</span><span class="p">,</span> <span class="n">TopObjectProperty</span><span class="p">,</span> <span class="n">TopDataProperty</span><span class="p">]:</span>
             <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">mc</span><span class="p">):</span>
-                <span class="n">pd</span> <span class="o">=</span> <span class="n">PredicateDefinition</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-                                         <span class="n">pd_map</span><span class="p">[</span><span class="n">mc</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span>
+                <span class="n">pd</span> <span class="o">=</span> <span class="n">PredicateDefinition</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">pd_map</span><span class="p">[</span><span class="n">mc</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Class </span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2"> is not a recognized OWL-DL class&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="p">)</span>
@@ -2011,12 +2084,14 @@ Knows(p2, p1)
 <span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
-<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">init_axioms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="normal">110</span>
+<span class="normal">111</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">init_axioms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">classes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Initializes axioms from what is currently loaded.</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">typedlogic.integrations.frameworks.owldl.owltop</span> <span class="k">as</span> <span class="nn">owltop</span>
+
     <span class="n">p</span> <span class="o">=</span> <span class="n">OWLPyParser</span><span class="p">()</span>
     <span class="n">modules</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">classes</span><span class="p">:</span>
@@ -2064,7 +2139,9 @@ Knows(p2, p1)
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>sentence</code></td>
+            <td>
+                <code>sentence</code>
+            </td>
             <td>
                   <code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="typedlogic.Sentence" href="../../../../concepts/datamodel/#typedlogic.datamodel.Sentence">Sentence</a>, <span title="typing.List">List</span>[<a class="autorefs autorefs-internal" title="typedlogic.Sentence" href="../../../../concepts/datamodel/#typedlogic.datamodel.Sentence">Sentence</a>]]</code>
             </td>
@@ -2104,8 +2181,7 @@ Knows(p2, p1)
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/integrations/frameworks/owldl/reasoner.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">112</span>
-<span class="normal">113</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">113</span>
 <span class="normal">114</span>
 <span class="normal">115</span>
 <span class="normal">116</span>
@@ -2120,7 +2196,8 @@ Knows(p2, p1)
 <span class="normal">125</span>
 <span class="normal">126</span>
 <span class="normal">127</span>
-<span class="normal">128</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Sentence</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]]):</span>
+<span class="normal">128</span>
+<span class="normal">129</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Sentence</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add a sentence to the reasoner</span>
 
@@ -2169,7 +2246,9 @@ Knows(p2, p1)
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>cls</code></td>
+            <td>
+                <code>cls</code>
+            </td>
             <td>
                   <code><span title="typing.Type">Type</span></code>
             </td>
@@ -2209,8 +2288,7 @@ Knows(p2, p1)
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/integrations/frameworks/owldl/reasoner.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">130</span>
-<span class="normal">131</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">131</span>
 <span class="normal">132</span>
 <span class="normal">133</span>
 <span class="normal">134</span>
@@ -2242,8 +2320,7 @@ Knows(p2, p1)
     <span class="n">pd</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">for</span> <span class="n">mc</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Thing</span><span class="p">,</span> <span class="n">TopObjectProperty</span><span class="p">,</span> <span class="n">TopDataProperty</span><span class="p">]:</span>
         <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">mc</span><span class="p">):</span>
-            <span class="n">pd</span> <span class="o">=</span> <span class="n">PredicateDefinition</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-                                     <span class="n">pd_map</span><span class="p">[</span><span class="n">mc</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span>
+            <span class="n">pd</span> <span class="o">=</span> <span class="n">PredicateDefinition</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">pd_map</span><span class="p">[</span><span class="n">mc</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Class </span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2"> is not a recognized OWL-DL class&quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="p">)</span>
@@ -2323,7 +2400,7 @@ Knows(p2, p1)
     <script id="__config" type="application/json">{"base": "../../../..", "features": ["content.tabs.link"], "search": "../../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.d6f25eb3.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
     
   </body>

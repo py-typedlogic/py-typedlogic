@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.38">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.8c3ca2c6.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.0253249f.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
@@ -342,6 +342,27 @@
   
   <span class="md-ellipsis">
     2. Using the Python Data Model
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorial/03-probabilistic-logic" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3. Probabilistic Logic
   </span>
   
 
@@ -727,6 +748,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../problog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ProbLog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../llm/" class="md-nav__link">
         
   
@@ -837,6 +879,27 @@
   
   <span class="md-ellipsis">
     Prolog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../conversion/compilers/problog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ProbLog
   </span>
   
 
@@ -1438,10 +1501,14 @@ part of the Potsdam Answer Set Solving Collection (Potassco; <a href="https://po
 <p>This means that when you call <code>solver.models()</code>, you will get all models that satisfy the program.
 See the tutorial for examples of this.</p>
 
+
+
+
+
+
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/integrations/solvers/clingo/clingo_solver.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 21</span>
-<span class="normal"> 22</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 22</span>
 <span class="normal"> 23</span>
 <span class="normal"> 24</span>
 <span class="normal"> 25</span>
@@ -1544,7 +1611,9 @@ See the tutorial for examples of this.</p>
 <span class="normal">122</span>
 <span class="normal">123</span>
 <span class="normal">124</span>
-<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">ClingoSolver</span><span class="p">(</span><span class="n">Solver</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A solver that uses clingo.</span>
@@ -1587,12 +1656,13 @@ See the tutorial for examples of this.</p>
 
     <span class="n">exec_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;clingo&quot;</span><span class="p">)</span>
     <span class="n">profile</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Profile</span><span class="p">]</span> <span class="o">=</span> <span class="n">MixedProfile</span><span class="p">(</span><span class="n">AnswerSetProgramming</span><span class="p">(),</span> <span class="n">AllowsComparisonTerms</span><span class="p">(),</span> <span class="n">MultipleModelSemantics</span><span class="p">())</span>
-    <span class="n">ctl</span> <span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Control</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-
+    <span class="n">ctl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Control</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">_clauses</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="n">negation_symbol</span> <span class="o">=</span> <span class="s2">&quot;not&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">assume_closed_world</span> <span class="k">else</span> <span class="s2">&quot;-&quot;</span>
-        <span class="n">prolog_config</span> <span class="o">=</span> <span class="n">PrologConfig</span><span class="p">(</span><span class="n">disjunctive_datalog</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">double_quote_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">negation_symbol</span><span class="o">=</span><span class="n">negation_symbol</span><span class="p">,</span> <span class="n">allow_nesting</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">prolog_config</span> <span class="o">=</span> <span class="n">PrologConfig</span><span class="p">(</span>
+            <span class="n">disjunctive_datalog</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">double_quote_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">negation_symbol</span><span class="o">=</span><span class="n">negation_symbol</span><span class="p">,</span> <span class="n">allow_nesting</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
         <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_theory</span><span class="o">.</span><span class="n">sentences</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_theory</span><span class="o">.</span><span class="n">ground_terms</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">Sentence</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected Sentence, got </span><span class="si">{</span><span class="n">sentence</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1609,8 +1679,6 @@ See the tutorial for examples of this.</p>
                 <span class="k">except</span> <span class="n">NotInProfileError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping sentence </span><span class="si">{</span><span class="n">sentence</span><span class="si">}</span><span class="s2"> due to </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-
-
     <span class="k">def</span> <span class="nf">models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Model</span><span class="p">]:</span>
         <span class="n">ctl</span> <span class="o">=</span> <span class="n">Control</span><span class="p">([</span><span class="s2">&quot;0&quot;</span><span class="p">])</span>
         <span class="n">predicate_name_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">pd</span><span class="o">.</span><span class="n">predicate</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">pd</span><span class="o">.</span><span class="n">predicate</span> <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">}</span>
@@ -1625,12 +1693,14 @@ See the tutorial for examples of this.</p>
                 <span class="n">facts</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">clingo_model</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="n">shown</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
                     <span class="n">p</span> <span class="o">=</span> <span class="n">predicate_name_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">atom</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
                     <span class="k">def</span> <span class="nf">_v</span><span class="p">(</span><span class="n">sym</span><span class="p">:</span> <span class="n">clingo</span><span class="o">.</span><span class="n">Symbol</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">sym</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">SymbolType</span><span class="o">.</span><span class="n">String</span><span class="p">:</span>
                             <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">sym</span><span class="o">.</span><span class="n">string</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">sym</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">SymbolType</span><span class="o">.</span><span class="n">Number</span><span class="p">:</span>
                             <span class="k">return</span> <span class="n">sym</span><span class="o">.</span><span class="n">number</span>
                         <span class="k">return</span> <span class="n">sym</span>
+
                     <span class="n">term</span> <span class="o">=</span> <span class="n">Term</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="o">*</span><span class="p">[</span><span class="n">_v</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">atom</span><span class="o">.</span><span class="n">arguments</span><span class="p">])</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">atom</span><span class="o">.</span><span class="n">positive</span><span class="p">:</span>
                         <span class="n">term</span> <span class="o">=</span> <span class="o">~</span><span class="n">term</span>
@@ -1722,7 +1792,7 @@ See the tutorial for examples of this.</p>
     <script id="__config" type="application/json">{"base": "../../..", "features": ["content.tabs.link"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.d6f25eb3.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
     
   </body>

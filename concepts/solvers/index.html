@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.38">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.8c3ca2c6.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0253249f.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -342,6 +342,27 @@
   
   <span class="md-ellipsis">
     2. Using the Python Data Model
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/03-probabilistic-logic" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3. Probabilistic Logic
   </span>
   
 
@@ -793,6 +814,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../integrations/solvers/problog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ProbLog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../integrations/solvers/llm/" class="md-nav__link">
         
   
@@ -903,6 +945,27 @@
   
   <span class="md-ellipsis">
     Prolog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/problog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ProbLog
   </span>
   
 
@@ -1557,12 +1620,14 @@ AncestorOf(p1a, p1aa)
 AncestorOf(p1, p1aa)
 </code></pre></div>
 
+
+
+
+
+
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/solver.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 64</span>
-<span class="normal"> 65</span>
-<span class="normal"> 66</span>
-<span class="normal"> 67</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 67</span>
 <span class="normal"> 68</span>
 <span class="normal"> 69</span>
 <span class="normal"> 70</span>
@@ -1960,7 +2025,6 @@ AncestorOf(p1, p1aa)
             <span class="n">theory</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">theory</span><span class="p">)</span>
 
-
     <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ELEMENT</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ELEMENT</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">Iterator</span><span class="p">)):</span>
             <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">element</span><span class="p">:</span>
@@ -1994,8 +2058,7 @@ AncestorOf(p1, p1aa)
 
     <span class="k">def</span> <span class="nf">add_sentence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">sentence</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_theory</span><span class="o">.</span><span class="n">sentences</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">base_theory</span><span class="o">.</span><span class="n">sentence_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SentenceGroup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;dynamic&quot;</span><span class="p">,</span>
-                                                                  <span class="n">sentences</span><span class="o">=</span><span class="p">[</span><span class="n">sentence</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">base_theory</span><span class="o">.</span><span class="n">sentence_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SentenceGroup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;dynamic&quot;</span><span class="p">,</span> <span class="n">sentences</span><span class="o">=</span><span class="p">[</span><span class="n">sentence</span><span class="p">]))</span>
 
     <span class="k">def</span> <span class="nf">add_predicate_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate_definition</span><span class="p">:</span> <span class="n">PredicateDefinition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -2027,7 +2090,6 @@ AncestorOf(p1, p1aa)
         <span class="k">if</span> <span class="n">theory</span><span class="o">.</span><span class="n">ground_terms</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">ground_terms</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-
 
     <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -2077,7 +2139,9 @@ AncestorOf(p1, p1aa)
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>sentence</code></td>
+            <td>
+                <code>sentence</code>
+            </td>
             <td>
                   <code><a class="autorefs autorefs-internal" title="typedlogic.datamodel.Sentence" href="../datamodel/#typedlogic.datamodel.Sentence">Sentence</a></code>
             </td>
@@ -2118,10 +2182,7 @@ AncestorOf(p1, p1aa)
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/solver.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">178</span>
 <span class="normal">179</span>
 <span class="normal">180</span>
 <span class="normal">181</span>
@@ -2154,7 +2215,10 @@ AncestorOf(p1, p1aa)
 <span class="normal">208</span>
 <span class="normal">209</span>
 <span class="normal">210</span>
-<span class="normal">211</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">prove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">prove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Prove a sentence.</span>
 
@@ -2223,7 +2287,9 @@ AncestorOf(p1, p1aa)
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>source</code></td>
+            <td>
+                <code>source</code>
+            </td>
             <td>
                   <code><span title="typing.Union">Union</span>[str, <span title="pathlib.Path">Path</span>, <span title="typing.TextIO">TextIO</span>, <span title="types.ModuleType">ModuleType</span>]</code>
             </td>
@@ -2264,10 +2330,7 @@ AncestorOf(p1, p1aa)
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/solver.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">213</span>
-<span class="normal">214</span>
-<span class="normal">215</span>
-<span class="normal">216</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">216</span>
 <span class="normal">217</span>
 <span class="normal">218</span>
 <span class="normal">219</span>
@@ -2276,7 +2339,10 @@ AncestorOf(p1, p1aa)
 <span class="normal">222</span>
 <span class="normal">223</span>
 <span class="normal">224</span>
-<span class="normal">225</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">,</span> <span class="n">ModuleType</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">,</span> <span class="n">ModuleType</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load a theory from a file.</span>
 
@@ -2323,7 +2389,9 @@ as pure FOL solvers). However, many solvers need some kind of typing information
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>predicate_definition</code></td>
+            <td>
+                <code>predicate_definition</code>
+            </td>
             <td>
                   <code><a class="autorefs autorefs-internal" title="typedlogic.datamodel.PredicateDefinition" href="../datamodel/#typedlogic.datamodel.PredicateDefinition">PredicateDefinition</a></code>
             </td>
@@ -2364,8 +2432,7 @@ as pure FOL solvers). However, many solvers need some kind of typing information
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/solver.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">264</span>
-<span class="normal">265</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">265</span>
 <span class="normal">266</span>
 <span class="normal">267</span>
 <span class="normal">268</span>
@@ -2374,7 +2441,8 @@ as pure FOL solvers). However, many solvers need some kind of typing information
 <span class="normal">271</span>
 <span class="normal">272</span>
 <span class="normal">273</span>
-<span class="normal">274</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add_predicate_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate_definition</span><span class="p">:</span> <span class="n">PredicateDefinition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">274</span>
+<span class="normal">275</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add_predicate_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate_definition</span><span class="p">:</span> <span class="n">PredicateDefinition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add a predicate definition to the solver.</span>
 
@@ -2506,7 +2574,7 @@ as pure FOL solvers). However, many solvers need some kind of typing information
     <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d6f25eb3.min.js"></script>
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
     
   </body>

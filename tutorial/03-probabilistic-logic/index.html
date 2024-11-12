@@ -8,24 +8,24 @@
       
       
       
-        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/integrations/frameworks/pydantic/">
+        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/tutorial/03-probabilistic-logic/">
       
       
       
       
-      <link rel="icon" href="../../../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.44">
     
     
       
-        <title>Pydantic - py-typedlogic</title>
+        <title>03 probabilistic logic - py-typedlogic</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.0253249f.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0253249f.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -44,15 +44,15 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../../css/ansi-colours.css">
+      <link rel="stylesheet" href="../../css/ansi-colours.css">
     
-      <link rel="stylesheet" href="../../../css/jupyter-cells.css">
+      <link rel="stylesheet" href="../../css/jupyter-cells.css">
     
-      <link rel="stylesheet" href="../../../css/pandas-dataframe.css">
+      <link rel="stylesheet" href="../../css/pandas-dataframe.css">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#pydantic-integration" class="md-skip">
+        <a href="#probabilistic-logic" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +94,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="py-typedlogic" class="md-header__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+    <a href="../.." title="py-typedlogic" class="md-header__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Pydantic
+              03 probabilistic logic
             
           </span>
         </div>
@@ -227,7 +227,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="py-typedlogic" class="md-nav__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+    <a href="../.." title="py-typedlogic" class="md-nav__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -257,7 +257,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -312,7 +312,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../tutorial/01-first-program" class="md-nav__link">
+      <a href="../01-first-program" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -333,7 +333,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../tutorial/02-using-python-data-model" class="md-nav__link">
+      <a href="../02-using-python-data-model" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -354,7 +354,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../tutorial/03-probabilistic-logic" class="md-nav__link">
+      <a href="." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -417,7 +417,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../concepts/" class="md-nav__link">
+      <a href="../../concepts/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -438,7 +438,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../concepts/datamodel/" class="md-nav__link">
+      <a href="../../concepts/datamodel/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -459,7 +459,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../concepts/decorators/" class="md-nav__link">
+      <a href="../../concepts/decorators/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -480,7 +480,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../concepts/generators/" class="md-nav__link">
+      <a href="../../concepts/generators/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -501,7 +501,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../concepts/solvers/" class="md-nav__link">
+      <a href="../../concepts/solvers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -522,7 +522,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../concepts/models/" class="md-nav__link">
+      <a href="../../concepts/models/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -543,7 +543,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../concepts/benchmarks.md" class="md-nav__link">
+      <a href="../../concepts/benchmarks.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -606,7 +606,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../solvers/" class="md-nav__link">
+      <a href="../../integrations/solvers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -627,7 +627,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../solvers/clingo/" class="md-nav__link">
+      <a href="../../integrations/solvers/clingo/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -648,7 +648,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../solvers/z3/" class="md-nav__link">
+      <a href="../../integrations/solvers/z3/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -669,7 +669,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../solvers/souffle/" class="md-nav__link">
+      <a href="../../integrations/solvers/souffle/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -690,7 +690,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../solvers/prover9/" class="md-nav__link">
+      <a href="../../integrations/solvers/prover9/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -711,7 +711,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../solvers/snakelog/" class="md-nav__link">
+      <a href="../../integrations/solvers/snakelog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -732,7 +732,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../solvers/problog/" class="md-nav__link">
+      <a href="../../integrations/solvers/problog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -753,7 +753,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../solvers/llm/" class="md-nav__link">
+      <a href="../../integrations/solvers/llm/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -816,7 +816,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../conversion/compilers/" class="md-nav__link">
+      <a href="../../conversion/compilers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -837,7 +837,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../conversion/compilers/yaml/" class="md-nav__link">
+      <a href="../../conversion/compilers/yaml/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -858,7 +858,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../conversion/compilers/prolog/" class="md-nav__link">
+      <a href="../../conversion/compilers/prolog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -879,7 +879,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../conversion/compilers/problog/" class="md-nav__link">
+      <a href="../../conversion/compilers/problog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -900,7 +900,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../conversion/compilers/tptp/" class="md-nav__link">
+      <a href="../../conversion/compilers/tptp/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -921,7 +921,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../conversion/compilers/fol/" class="md-nav__link">
+      <a href="../../conversion/compilers/fol/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -942,7 +942,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../conversion/compilers/sexpr/" class="md-nav__link">
+      <a href="../../conversion/compilers/sexpr/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1005,7 +1005,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../conversion/parsers/" class="md-nav__link">
+      <a href="../../conversion/parsers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1026,7 +1026,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../conversion/parsers/python/" class="md-nav__link">
+      <a href="../../conversion/parsers/python/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1047,7 +1047,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../conversion/parsers/yaml/" class="md-nav__link">
+      <a href="../../conversion/parsers/yaml/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1068,7 +1068,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../conversion/parsers/owlpy/" class="md-nav__link">
+      <a href="../../conversion/parsers/owlpy/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1089,7 +1089,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../conversion/parsers/rdf/" class="md-nav__link">
+      <a href="../../conversion/parsers/rdf/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1187,7 +1187,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../owldl/" class="md-nav__link">
+      <a href="../../integrations/frameworks/owldl/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1208,7 +1208,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../owldl/owldl-tutorial" class="md-nav__link">
+      <a href="../../integrations/frameworks/owldl/owldl-tutorial" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1229,7 +1229,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../owldl/owltop/" class="md-nav__link">
+      <a href="../../integrations/frameworks/owldl/owltop/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1250,7 +1250,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../owldl/reasoner/" class="md-nav__link">
+      <a href="../../integrations/frameworks/owldl/reasoner/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1279,7 +1279,7 @@
   
   
     <li class="md-nav__item">
-      <a href="." class="md-nav__link">
+      <a href="../../integrations/frameworks/pydantic" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1300,7 +1300,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sqlmodel.md" class="md-nav__link">
+      <a href="../../integrations/frameworks/sqlmodel.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1328,7 +1328,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../cli/" class="md-nav__link">
+      <a href="../../cli/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1348,7 +1348,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../faq/" class="md-nav__link">
+      <a href="../../faq/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1368,7 +1368,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../roadmap/" class="md-nav__link">
+      <a href="../../roadmap/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1388,7 +1388,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../contributing.md" class="md-nav__link">
+      <a href="../../contributing.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1428,9 +1428,63 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#using-the-pydantic-bridge" class="md-nav__link">
+  <a href="#data-model" class="md-nav__link">
     <span class="md-ellipsis">
-      Using the Pydantic bridge
+      Data model
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#logical-sentences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Logical Sentences
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probabilistic-sentences" class="md-nav__link">
+    <span class="md-ellipsis">
+      Probabilistic Sentences
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problog-solver" class="md-nav__link">
+    <span class="md-ellipsis">
+      ProbLog Solver
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adding Evidence
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      How it works
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Work
     </span>
   </a>
   
@@ -1487,45 +1541,90 @@
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="pydantic-integration">Pydantic Integration</h1>
-<p><img alt="Pydantic Logo" src="https://avatars.githubusercontent.com/u/110818415?s=200&amp;v=4" /></p>
-<p>With typed-logic, you can use whatever framework you like to define the classes
-that specify <em>predicate definitions</em> in your theory:</p>
-<ul>
-<li>Python <code>dataclasses</code> (part of the Python standard)</li>
-<li>Hand-rolled classes</li>
-<li>Pydantic</li>
-</ul>
-<p>The only requirement is that you inherit from <code>Fact</code> or <code>FactMixin</code>, <em>or</em> declare your class
-to be a predicate definition with <code>@predicate</code>. For convenience, there is a ready-made base class for you to use.</p>
-<p>However, there are some specific considerations for Pydantic due to its aversion to <em>positional arguments</em>.</p>
+<h1 id="probabilistic-logic">Probabilistic Logic</h1>
+<p>In this example, we will explore a probabilistic extension of logic using the <a href="https://dtai.cs.kuleuven.be/problog/index.html">ProbLog</a> framework.</p>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="using-the-pydantic-bridge">Using the Pydantic bridge</h2>
+<h2 id="data-model">Data model</h2>
+<p>Our data model will consist of:</p>
+<ul>
+<li>unary predicates that represent properties of a <em>person</em></li>
+<li>binary predicates that represent relationships between <em>persons</em></li>
+</ul>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typedlogic.integrations.frameworks.pydantic</span> <span class="kn">import</span> <span class="n">FactBaseModel</span>
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Field</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 
-<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">FactBaseModel</span><span class="p">):</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;unique name of the person&quot;</span><span class="p">)</span>
-    <span class="n">age</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;age in years&quot;</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">typedlogic</span> <span class="kn">import</span> <span class="n">FactMixin</span>
+
+<span class="n">PersonID</span> <span class="o">=</span> <span class="nb">str</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">FactMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An instance of a person.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="n">PersonID</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Smokes</span><span class="p">(</span><span class="n">FactMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A person that smokes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="n">PersonID</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Asthma</span><span class="p">(</span><span class="n">FactMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A person with asthma.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="n">PersonID</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Stress</span><span class="p">(</span><span class="n">FactMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A person with stress.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="n">PersonID</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Friend</span><span class="p">(</span><span class="n">FactMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A relationship between two people where both are friends.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="n">PersonID</span>
+    <span class="n">other_id</span><span class="p">:</span> <span class="n">PersonID</span>
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Influences</span><span class="p">(</span><span class="n">FactMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A relationship between two people where one influences the other.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="n">PersonID</span>
+    <span class="n">other_id</span><span class="p">:</span> <span class="n">PersonID</span>
 </code></pre></div>
 
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can create data just as for any other python data model:</p>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="n">Person</span><span class="p">(</span><span class="s2">&quot;Akira&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">Person</span><span class="p">(</span><span class="s2">&quot;joris&quot;</span><span class="p">)</span>
 </code></pre></div>
 
 </div>
@@ -1534,7 +1633,7 @@ to be a predicate definition with <code>@predicate</code>. For convenience, ther
 <div class="output_area">
 <div class="output_text output_subarea output_execute_result">
 <pre>
-<code>Person(name='Akira', age=20)</code>
+<code>Person(id='joris')</code>
 </pre>
 </div>
 </div>
@@ -1544,13 +1643,292 @@ to be a predicate definition with <code>@predicate</code>. For convenience, ther
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Field</span><span class="p">,</span> <span class="n">ValidationError</span>
+<div class="highlight"><pre><span></span><code><span class="n">Friend</span><span class="p">(</span><span class="s2">&quot;joris&quot;</span><span class="p">,</span> <span class="s2">&quot;jonas&quot;</span><span class="p">)</span>
+</code></pre></div>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">Person</span><span class="p">(</span><span class="s2">&quot;Akira&quot;</span><span class="p">,</span> <span class="s2">&quot;20 years&quot;</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Got in error (this is expected!)&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea output_execute_result">
+<pre>
+<code>Friend(id='joris', other_id='jonas')</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can build up a database of facts:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">persons_data</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;angelika&quot;</span><span class="p">,</span> <span class="s2">&quot;joris&quot;</span><span class="p">,</span> <span class="s2">&quot;jonas&quot;</span><span class="p">,</span> <span class="s2">&quot;dimitar&quot;</span><span class="p">]</span>
+<span class="n">friends_data</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;joris&quot;</span><span class="p">,</span> <span class="s2">&quot;jonas&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;joris&quot;</span><span class="p">,</span> <span class="s2">&quot;angelika&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;joris&quot;</span><span class="p">,</span> <span class="s2">&quot;dimitar&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;angelika&quot;</span><span class="p">,</span> <span class="s2">&quot;jonas&quot;</span><span class="p">)]</span>
+
+<span class="n">facts</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">person</span> <span class="ow">in</span> <span class="n">persons_data</span><span class="p">:</span>
+    <span class="n">facts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Person</span><span class="p">(</span><span class="n">person</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">friend</span> <span class="ow">in</span> <span class="n">friends_data</span><span class="p">:</span>
+    <span class="n">facts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Friend</span><span class="p">(</span><span class="n">friend</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">friend</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="nb">len</span><span class="p">(</span><span class="n">facts</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea output_execute_result">
+<pre>
+<code>8</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="logical-sentences">Logical Sentences</h2>
+<p>We will now augment our data model with logical sentences for simple rules. Note that these
+rules that have the same logical semantics as previous tutorials. </p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typedlogic</span> <span class="kn">import</span> <span class="n">axiom</span>
+
+<span class="nd">@axiom</span>
+<span class="k">def</span> <span class="nf">smoking_from_stress</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">PersonID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    If a person has stress, they smoke.</span>
+
+<span class="sd">    :param p: id of the person</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">Stress</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">Smokes</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+<span class="nd">@axiom</span>
+<span class="k">def</span> <span class="nf">smoking_from_influencer</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">PersonID</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">PersonID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    If a person is influenced by another person, and that person smokes, then the influenced person smokes.</span>
+
+<span class="sd">    :param p: id of the person that is entailed to smoke</span>
+<span class="sd">    :param other: id of the person that influences the person</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">Friend</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="ow">and</span> <span class="n">Influences</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="ow">and</span> <span class="n">Smokes</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">Smokes</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So far, our model looks similar to all other models we have seen so far. We could reason
+over data using our model using any of the solvers we have seen so far, including simple
+rule-based solvers.</p>
+<p>Next we will introduce <em>probabilistic sentences</em> to our model. We will do this using a special
+<code>probability</code> function.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="probabilistic-sentences">Probabilistic Sentences</h2>
+<p>We will augment this data model with probabilistic sentences using <code>probability/1</code>. With normal axiom-decorated
+functions, we assert a crisp logical fact. We can also assert reified probability statements of the form
+<code>probability(&lt;sentence&gt;) == &lt;probability&gt;</code>.
+</probability></sentence></p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typedlogic.extensions.probabilistic</span> <span class="kn">import</span> <span class="n">probability</span>
+
+<span class="nd">@axiom</span>
+<span class="k">def</span> <span class="nf">priors_for_person</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">PersonID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prior probabilities for a person to have stress, or</span>
+<span class="sd">    for a smoker to have asthma.</span>
+
+<span class="sd">    :param p: id of the person</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">probability</span><span class="p">(</span><span class="n">Person</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">Stress</span><span class="p">(</span><span class="n">p</span><span class="p">))</span> <span class="o">==</span> <span class="mf">0.3</span>
+    <span class="k">assert</span> <span class="n">probability</span><span class="p">(</span><span class="n">Smokes</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">Asthma</span><span class="p">(</span><span class="n">p</span><span class="p">))</span> <span class="o">==</span> <span class="mf">0.4</span>
+
+<span class="nd">@axiom</span>
+<span class="k">def</span> <span class="nf">priors_for_influences</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">PersonID</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">PersonID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prior probability for one person to influence another.</span>
+<span class="sd">    :param p: id of the influencer</span>
+<span class="sd">    :param other: id of the influenced</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">probability</span><span class="p">((</span><span class="n">Person</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="ow">and</span> <span class="n">Person</span><span class="p">(</span><span class="n">other</span><span class="p">))</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">Influences</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">other</span><span class="p">))</span> <span class="o">==</span> <span class="mf">0.2</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>TODO</strong> investigate why <code>&gt;&gt;</code> renders as <code>&gt;&gt;</code> in the online docs.</p>
+<p>The above program is combined into a single file in <a href="../examples/influencers.py">examples/influencers.py</a>.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="problog-solver">ProbLog Solver</h2>
+<p>We will use the ProbLog solver to reason over the probabilistic logic program we have defined.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typedlogic.registry</span> <span class="kn">import</span> <span class="n">get_solver</span>
+<span class="n">solver</span> <span class="o">=</span> <span class="n">get_solver</span><span class="p">(</span><span class="s2">&quot;problog&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next we will load <a href="../examples/influencers.py">examples/influencers.py</a>.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">examples.influencers</span> <span class="k">as</span> <span class="nn">influencers</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">influencers</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">facts</span><span class="p">:</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can now query the solver to retrieve a model. This will be a subclass of the normal <code>Model</code> class.</p>
+<p><strong>Note</strong> the concept of a Model in model-theoretic terms may not exactly apply here, but we keep the same
+concepts for consistency with other parts of this framework.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">model</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can now retrieve the probabilities for a given predicate.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">model</span><span class="o">.</span><span class="n">retrieve_probabilities</span><span class="p">(</span><span class="s1">&#39;Asthma&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea output_execute_result">
+<pre>
+<code>[(Asthma(joris), 0.169205184),
+ (Asthma(dimitar), 0.12000000000000001),
+ (Asthma(angelika), 0.1368),
+ (Asthma(jonas), 0.12000000000000001)]</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="adding-evidence">Adding Evidence</h2>
+<p>We can add evidence to the solver to update the probabilities.
+Note that adding evidence for one individual can propagate changes to other individuals.
+Here we will assert that Jonas has Asthma, this will increase the probability of his friends having asthma.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typedlogic.extensions.probabilistic</span> <span class="kn">import</span> <span class="n">Evidence</span><span class="p">,</span> <span class="n">That</span>
+
+<span class="n">solver</span><span class="o">.</span><span class="n">add_evidence</span><span class="p">(</span><span class="n">Asthma</span><span class="p">(</span><span class="s2">&quot;joris&quot;</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">model</span><span class="o">.</span><span class="n">retrieve_probabilities</span><span class="p">(</span><span class="s1">&#39;Asthma&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea output_execute_result">
+<pre>
+<code>[(Asthma(joris), 1.0),
+ (Asthma(dimitar), 0.14437776090831828),
+ (Asthma(angelika), 0.16630049348842646),
+ (Asthma(jonas), 0.14749142437621768)]</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="how-it-works">How it works</h2>
+<p>The ProbLog solver works by converting the theorem into a ProbLog program, and then using a ProbLog.</p>
+<p>We can examine the ProbLog program that is generated:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">solver</span><span class="o">.</span><span class="n">dump</span><span class="p">())</span>
 </code></pre></div>
 
 </div>
@@ -1559,11 +1937,26 @@ to be a predicate definition with <code>@predicate</code>. For convenience, ther
 <div class="output_area">
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-<code>Got in error (this is expected!)
-1 validation error for Person
-age
-  Input should be a valid integer, unable to parse string as an integer [type=int_parsing, input_value='20 years', input_type=str]
-    For further information visit https://errors.pydantic.dev/2.9/v/int_parsing
+<code>smokes(P) :- stress(P).
+smokes(P) :- friend(P, Other), influences(Other, P), smokes(Other).
+0.3::stress(P) :- person(P).
+0.4::asthma(P) :- smokes(P).
+0.2::influences(P, Other) :- person(P), person(Other).
+person("angelika").
+person("joris").
+person("jonas").
+person("dimitar").
+friend("joris", "jonas").
+friend("joris", "angelika").
+friend("joris", "dimitar").
+friend("angelika", "jonas").
+evidence(asthma("joris"), true).
+query(person(Id)).
+query(smokes(Id)).
+query(asthma(Id)).
+query(stress(Id)).
+query(friend(Id, Other_id)).
+query(influences(Id, Other_id)).
 </code>
 </pre>
 </div>
@@ -1571,138 +1964,19 @@ age
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">show</span>
-<span class="n">show</span><span class="p">(</span><span class="s2">&quot;examples/pydantic_example.py&quot;</span><span class="p">)</span>
-</code></pre></div>
-
-</div>
-<div class="output_wrapper">
-<div class="output">
-<div class="output_area">
-<div class="output_html rendered_html output_subarea output_execute_result">
-<style>pre { line-height: 125%; }
-td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
-td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
-.output_html .hll { background-color: #ffffcc }
-.output_html { background: #f8f8f8; }
-.output_html .c { color: #3D7B7B; font-style: italic } /* Comment */
-.output_html .err { border: 1px solid #FF0000 } /* Error */
-.output_html .k { color: #008000; font-weight: bold } /* Keyword */
-.output_html .o { color: #666666 } /* Operator */
-.output_html .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
-.output_html .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
-.output_html .cp { color: #9C6500 } /* Comment.Preproc */
-.output_html .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
-.output_html .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
-.output_html .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
-.output_html .gd { color: #A00000 } /* Generic.Deleted */
-.output_html .ge { font-style: italic } /* Generic.Emph */
-.output_html .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.output_html .gr { color: #E40000 } /* Generic.Error */
-.output_html .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.output_html .gi { color: #008400 } /* Generic.Inserted */
-.output_html .go { color: #717171 } /* Generic.Output */
-.output_html .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
-.output_html .gs { font-weight: bold } /* Generic.Strong */
-.output_html .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.output_html .gt { color: #0044DD } /* Generic.Traceback */
-.output_html .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
-.output_html .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
-.output_html .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
-.output_html .kp { color: #008000 } /* Keyword.Pseudo */
-.output_html .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
-.output_html .kt { color: #B00040 } /* Keyword.Type */
-.output_html .m { color: #666666 } /* Literal.Number */
-.output_html .s { color: #BA2121 } /* Literal.String */
-.output_html .na { color: #687822 } /* Name.Attribute */
-.output_html .nb { color: #008000 } /* Name.Builtin */
-.output_html .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.output_html .no { color: #880000 } /* Name.Constant */
-.output_html .nd { color: #AA22FF } /* Name.Decorator */
-.output_html .ni { color: #717171; font-weight: bold } /* Name.Entity */
-.output_html .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.output_html .nf { color: #0000FF } /* Name.Function */
-.output_html .nl { color: #767600 } /* Name.Label */
-.output_html .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
-.output_html .nt { color: #008000; font-weight: bold } /* Name.Tag */
-.output_html .nv { color: #19177C } /* Name.Variable */
-.output_html .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.output_html .w { color: #bbbbbb } /* Text.Whitespace */
-.output_html .mb { color: #666666 } /* Literal.Number.Bin */
-.output_html .mf { color: #666666 } /* Literal.Number.Float */
-.output_html .mh { color: #666666 } /* Literal.Number.Hex */
-.output_html .mi { color: #666666 } /* Literal.Number.Integer */
-.output_html .mo { color: #666666 } /* Literal.Number.Oct */
-.output_html .sa { color: #BA2121 } /* Literal.String.Affix */
-.output_html .sb { color: #BA2121 } /* Literal.String.Backtick */
-.output_html .sc { color: #BA2121 } /* Literal.String.Char */
-.output_html .dl { color: #BA2121 } /* Literal.String.Delimiter */
-.output_html .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
-.output_html .s2 { color: #BA2121 } /* Literal.String.Double */
-.output_html .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
-.output_html .sh { color: #BA2121 } /* Literal.String.Heredoc */
-.output_html .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
-.output_html .sx { color: #008000 } /* Literal.String.Other */
-.output_html .sr { color: #A45A77 } /* Literal.String.Regex */
-.output_html .s1 { color: #BA2121 } /* Literal.String.Single */
-.output_html .ss { color: #19177C } /* Literal.String.Symbol */
-.output_html .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.output_html .fm { color: #0000FF } /* Name.Function.Magic */
-.output_html .vc { color: #19177C } /* Name.Variable.Class */
-.output_html .vg { color: #19177C } /* Name.Variable.Global */
-.output_html .vi { color: #19177C } /* Name.Variable.Instance */
-.output_html .vm { color: #19177C } /* Name.Variable.Magic */
-.output_html .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typedlogic.integrations.frameworks.pydantic</span> <span class="kn">import</span> <span class="n">FactBaseModel</span>
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Field</span>
-
-<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">FactBaseModel</span><span class="p">):</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"unique name of the person"</span><span class="p">)</span>
-    <span class="n">age</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"age in years"</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</pre></div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This is the same as the ProbLog program in the <a href="https://dtai.cs.kuleuven.be/problog/index.html#">ProbLog tutorial</a>
+(with the addition of the <code>evidence</code> we added, and a collection of queries).</p>
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">examples.pydantic_example</span>
-</code></pre></div>
-
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typedlogic.parsers.pyparser</span> <span class="kn">import</span> <span class="n">PythonParser</span>
-<span class="n">pp</span> <span class="o">=</span> <span class="n">PythonParser</span><span class="p">()</span>
-<span class="n">theory</span> <span class="o">=</span> <span class="n">pp</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;examples/pydantic_example.py&quot;</span><span class="p">))</span>
-</code></pre></div>
-
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="highlight"><pre><span></span><code><span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</code></pre></div>
-
-</div>
-<div class="output_wrapper">
-<div class="output">
-<div class="output_area">
-<div class="output_text output_subarea output_execute_result">
-<pre>
-<code>PredicateDefinition(predicate='FactBaseModel', arguments={}, description=None, metadata=None, parents=[], python_class=None)</code>
-</pre>
-</div>
-</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="future-work">Future Work</h2>
+<p>In the future other frameworks that extend probabilistic horn rules, including Markov Logic Networks, will be supported.</p>
 </div>
 </div>
 </div>
@@ -1762,10 +2036,10 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.tabs.link"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
       
     
   </body>
