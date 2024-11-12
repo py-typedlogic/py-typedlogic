@@ -26,7 +26,7 @@ def temp_file_with_test_code():
 
         # Write the code to a temporary file
         with tempfile.NamedTemporaryFile(delete=False, suffix=".py") as temp_file:
-            temp_file.write(filled_code.encode('utf-8'))
+            temp_file.write(filled_code.encode("utf-8"))
             temp_file_path = temp_file.name
 
         return temp_file_path
@@ -43,7 +43,7 @@ def temp_file_with_test_code():
         ("str", "int", False),
         ("int", "int", True),
         ("float", "int", True),
-    ]
+    ],
 )
 @pytest.mark.parametrize("use_parser", [True, False])
 def test_typing_combinations(temp_file_with_test_code, use_parser, type1, type2, valid):

@@ -9,15 +9,18 @@ from typedlogic.solver import Model
 class That(Fact):
     sentence: Sentence
 
+
 @dataclass(frozen=True)
 class Probability(Fact):
     probability: float
     that: That
 
+
 @dataclass(frozen=True)
 class Evidence(Fact):
     that: Sentence
     truth_value: bool
+
 
 def probability(sentence: Sentence) -> float:
     raise NotImplementedError
@@ -28,6 +31,7 @@ class ProbabilisticModel(Model):
     """
     An extension of a stable model that includes probabilities.
     """
+
     term_probabilities: Dict[Term, float] = field(default_factory=dict)
 
     def retrieve_probabilities(self, predicate: str, *args) -> List[Tuple[Term, float]]:

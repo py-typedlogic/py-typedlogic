@@ -21,6 +21,7 @@ class ValidationMessage:
     def __str__(self):
         return f"{self.level}: {self.message} at line {self.line}, column {self.column}"
 
+
 @dataclass
 class Parser(ABC):
     """

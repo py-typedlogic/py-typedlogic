@@ -12,7 +12,8 @@ from typedlogic.profiles import (
     AllowsComparisonTerms,
     MixedProfile,
     MultipleModelSemantics,
-    Profile, Probabilistic,
+    Profile,
+    Probabilistic,
 )
 from typedlogic.solver import Solution, Solver
 
@@ -74,7 +75,6 @@ class ProbLogSolver(Solver):
             raise NotInProfileError("Multiple models found")
         return models[0]
 
-
     def check(self) -> Solution:
         models = list(self.models())
         sat = len(models) > 0
@@ -91,4 +91,3 @@ class ProbLogSolver(Solver):
     def add_evidence(self, fact: Sentence, truth_value: bool) -> None:
         ev = Evidence(fact, truth_value)
         self.add(ev)
-

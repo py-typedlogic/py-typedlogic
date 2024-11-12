@@ -2,7 +2,6 @@ import clingo
 
 
 def test_clingo():
-
     # Create a Control object
     ctl = clingo.Control(["0"])
 
@@ -28,7 +27,6 @@ def test_clingo():
 
 
 def test_clingo_unsat():
-
     # Create a Control object
     ctl = clingo.Control(["0"])
 

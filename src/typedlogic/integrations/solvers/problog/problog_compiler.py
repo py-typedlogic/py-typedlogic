@@ -18,12 +18,12 @@ logger = logging.getLogger(__name__)
 PROBABILITY_PREDICATE = "Probability"
 THAT_PREDICATE = "That"
 
-class ProbLogCompiler(Compiler):
 
+class ProbLogCompiler(Compiler):
     default_suffix: ClassVar[str] = "problog"
     _predicate_mappings: Optional[Dict[str, str]] = None
 
-    def compile(self, theory: Theory, syntax: Optional[Union[str, ModelSyntax]] = None,  **kwargs) -> str:
+    def compile(self, theory: Theory, syntax: Optional[Union[str, ModelSyntax]] = None, **kwargs) -> str:
         """
         Compile a Theory object into ProbLog code.
 
@@ -54,14 +54,13 @@ class ProbLogCompiler(Compiler):
         :param kwargs:
         :return:
         """
-        prolog_config = PrologConfig(disjunctive_datalog=True, double_quote_strings=True,
-                                     allow_nesting=False)
+        prolog_config = PrologConfig(disjunctive_datalog=True, double_quote_strings=True, allow_nesting=False)
         if not self._predicate_mappings:
             self._predicate_mappings = {}
         for pd in theory.predicate_definitions:
             prolog_pd = as_prolog(Term(pd.predicate), config=prolog_config)
             if "(" in prolog_pd:
-                prolog_pd = prolog_pd[:prolog_pd.index("(")]
+                prolog_pd = prolog_pd[: prolog_pd.index("(")]
             self._predicate_mappings[prolog_pd] = pd.predicate
         clauses = []
         for sentence in theory.sentences + theory.ground_terms:
@@ -88,7 +87,10 @@ class ProbLogCompiler(Compiler):
                     if isinstance(first, Term) and first.predicate == "probability":
                         inner_expr = first.values[0]
                         pr = vals[1]
-                        return self._sentence_to_problog(Term(Probability.__name__, pr, That(inner_expr).to_model_object()), prolog_config)
+                        return self._sentence_to_problog(
+                            Term(Probability.__name__, pr, That(inner_expr).to_model_object()), prolog_config
+                        )
+
         def _to_rules(s: Sentence) -> List[Sentence]:
             rules = []
             try:
@@ -97,6 +99,7 @@ class ProbLogCompiler(Compiler):
             except NotInProfileError as e:
                 logger.info(f"Skipping sentence {s} due to {e}")
             return rules
+
         pr_sent = self._sentence_probability(sentence)
         if pr_sent:
             pr, inner = pr_sent
@@ -147,6 +150,7 @@ class ProbLogCompiler(Compiler):
         if isinstance(compiled_term, pl.Term):
             pms = self._predicate_mappings or {}
             functor = pms.get(compiled_term.functor, compiled_term.functor)
+
             def _decompile_const(a: Any) -> Any:
                 if isinstance(a, pl.Constant):
                     v = a.value
@@ -155,14 +159,8 @@ class ProbLogCompiler(Compiler):
                             v = v[1:-1]
                     return v
                 return str(a)
-            vals = [_decompile_const(a)  for a in compiled_term.args]
+
+            vals = [_decompile_const(a) for a in compiled_term.args]
             plt_term = Term(functor, *vals)
             return plt_term
         raise ValueError(f"Expected a Prolog term, got {compiled_term}")
-
-
-
-
-
-
-

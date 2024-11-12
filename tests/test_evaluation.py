@@ -1,4 +1,3 @@
-
 import pytest
 from typedlogic.evaluation import randomize_entity_names, run_benchmark
 from typedlogic.integrations.solvers.clingo import ClingoSolver
@@ -13,7 +12,3 @@ def test_create_benchmark(randomize, path_benchmark):
     for sc in [SouffleSolver, ClingoSolver]:
         result = run_benchmark(benchmark, sc)
         assert result.score == 1.0
-
-
-
-

@@ -107,7 +107,7 @@ max-complexity = 10
 skip = "*.po,*.ts,.git,pyproject.toml,*.ofn,*.owl,*.ttl"
 count = ""
 quiet-level = 3
-ignore-words-list = "fof,te"
+ignore-words-list = "fof,te,NotIn"
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]

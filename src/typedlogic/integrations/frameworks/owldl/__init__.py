@@ -50,12 +50,5 @@ __all__ = [
     "InverseObjectProperties",
     "PropertyExpressionChain",
     "Ontology",
-
     "OWLPyParser",
-
-
-
-
-
 ]
-

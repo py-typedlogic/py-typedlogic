@@ -16,6 +16,7 @@ Age = Union[int, Decimal]
 # Constant
 AGE_THRESHOLD = 18
 
+
 class PersonWithAge(BaseModel, FactMixin):
     name: Thing
     age: Age
@@ -29,6 +30,7 @@ class StageAge(BaseModel, FactMixin):
     stage: Thing
     age: Age
 
+
 IntOrDecimal = Union[int, Decimal]
 
 
@@ -36,7 +38,8 @@ class PersonWithAge2(BaseModel, FactMixin):
     name: Thing
     age_in_years: int
 
-ZipCode = NewType('ZipCode', str)
+
+ZipCode = NewType("ZipCode", str)
 
 
 class PersonWithAddress(BaseModel, FactMixin):
@@ -44,14 +47,16 @@ class PersonWithAddress(BaseModel, FactMixin):
     zip_code: ZipCode
 
 
-#@axiom
-#def facts():
+# @axiom
+# def facts():
 #    assert StageAge(stage="Adult", age=AGE_THRESHOLD)
+
 
 @axiom
 def classifications(name: Thing, age: Age):
     if age >= 18:
         assert Adult(name=name)
+
 
 @goal
 def goals():

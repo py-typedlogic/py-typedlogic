@@ -6,6 +6,7 @@ from typedlogic.decorators import axiom
 
 Person = str
 
+
 @dataclass
 class FriendOf(FactMixin):
     subject: Person
@@ -19,10 +20,12 @@ class FriendPath(FactMixin):
     subject: Person
     object: Person
 
+
 @axiom
 def tr(s: Person, o: Person, y: int):
     assert FriendOf(subject=s, object=o) >> FriendPath(subject=s, object=o)
     assert FriendOf(subject=s, object=o) >> FriendPath(subject=s, object=o)
+
 
 @axiom
 def facts():

@@ -8,22 +8,27 @@ from typedlogic.extensions.probabilistic import Probability, That
 class Coin(FactMixin):
     id: str
 
+
 @dataclass
 class Heads(FactMixin):
     id: str
+
 
 @dataclass
 class Tails(FactMixin):
     id: str
 
+
 @dataclass
 class Win(FactMixin):
     """a win"""
+
 
 @axiom
 def win(c: str):
     if Heads(c):
         assert Win()
+
 
 @axiom
 def prior_probabilities(c: str):

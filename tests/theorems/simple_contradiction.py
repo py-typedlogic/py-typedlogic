@@ -12,6 +12,7 @@ class Foo(FactMixin):
 def pos():
     assert Foo("bar")
 
+
 @axiom
 def neg():
     assert ~Foo("bar")

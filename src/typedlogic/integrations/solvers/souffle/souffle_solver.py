@@ -20,6 +20,7 @@ from typedlogic.utils.term_maker import make_terms
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class SouffleSolver(Solver):
     """
@@ -53,7 +54,9 @@ class SouffleSolver(Solver):
     """
 
     exec_name: str = field(default="souffle")
-    profile: ClassVar[Profile] = MixedProfile(ClassicDatalog(), SortedLogic(), AllowsComparisonTerms(), SingleModelSemantics())
+    profile: ClassVar[Profile] = MixedProfile(
+        ClassicDatalog(), SortedLogic(), AllowsComparisonTerms(), SingleModelSemantics()
+    )
 
     def models(self) -> Iterator[Model]:
         compiler = SouffleCompiler()
@@ -74,7 +77,7 @@ class SouffleSolver(Solver):
                 input_file = Path(temp_dir) / f"{pred}__in.csv"
                 input_files[pred] = str(input_file)
                 program += f'\n.input {pred}(IO=file, filename="{input_file}")\n'
-                with open(input_file, 'w', encoding="utf-8") as csvfile:
+                with open(input_file, "w", encoding="utf-8") as csvfile:
                     writer = csv.writer(csvfile, delimiter="\t")
                     for term in self.base_theory.ground_terms:
                         if term.predicate == pred:
@@ -87,29 +90,25 @@ class SouffleSolver(Solver):
                 if res.stderr:
                     msg = res.stderr.decode()
                     import re
+
                     if re.match(r".*Variable (\S+) only occurs once.*", msg):
                         logger.info(msg)
                     else:
                         logger.error(msg)
-
 
             for pred, filename in output_files.items():
                 if not Path(filename).exists():
                     continue
                 pd = pdmap[pred]
                 rows = []
-                with open(filename, 'r') as csvfile:
+                with open(filename, "r") as csvfile:
                     reader = csv.reader(csvfile, delimiter="\t")
                     for row in reader:
                         rows.append(row)
                 facts.extend(make_terms(rows, pd))
 
-        model = Model(
-            source_object=self,
-            ground_terms=facts
-        )
+        model = Model(source_object=self, ground_terms=facts)
         yield model
-
 
     def check(self) -> Solution:
         return Solution(satisfiable=None)

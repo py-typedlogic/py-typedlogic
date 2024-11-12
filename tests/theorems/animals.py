@@ -4,19 +4,23 @@ from typedlogic import FactMixin, axiom
 
 Thing = str
 
+
 @dataclass
 class Likes(FactMixin):
     subject: Thing
     object: Thing
 
+
 @dataclass
 class Person(FactMixin):
     name: Thing
+
 
 @dataclass
 class Animal(FactMixin):
     name: Thing
     species: Thing
+
 
 @axiom
 def persons():

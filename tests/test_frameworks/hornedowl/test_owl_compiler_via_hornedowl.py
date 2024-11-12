@@ -15,28 +15,34 @@ from typedlogic.registry import get_compiler
 
 RO = HORNEDOWL_INPUT_DIR / "ro.ofn"
 
-@pytest.mark.parametrize("input_path", [
+
+@pytest.mark.parametrize(
+    "input_path",
+    [
         RO,
-])
+    ],
+)
 def test_convert_owlpy_to_owl(input_path):
     parser = OWLParser()
     theory = parser.parse(input_path)
-    #for s in theory.sentences:
+    # for s in theory.sentences:
     #    print(s, s.annotations["owl_axiom"])
     compiler = OWLCompiler()
     out = compiler.compile(theory)
     print(out)
 
 
-@pytest.mark.parametrize("module", [
+@pytest.mark.parametrize(
+    "module",
+    [
         family,
         paths_owldl,
-
-])
+    ],
+)
 def test_convert_native_to_owl(module):
     parser = OWLPyParser()
     theory = parser.translate(module)
-    module_name = module.__name__.split('.')[-1]
+    module_name = module.__name__.split(".")[-1]
     for s in theory.sentences:
         print(s, s.annotations["owl_axiom"])
     compiler = OWLCompiler()
@@ -57,22 +63,25 @@ def test_convert_native_to_owl(module):
         assert False
 
 
-
-
-
-@pytest.mark.parametrize("module", [
+@pytest.mark.parametrize(
+    "module",
+    [
         family,
-])
-@pytest.mark.parametrize("output_format", [
-    "fol",
-    "prolog",
-    "sexpr",
-    "owl",
-])
+    ],
+)
+@pytest.mark.parametrize(
+    "output_format",
+    [
+        "fol",
+        "prolog",
+        "sexpr",
+        "owl",
+    ],
+)
 def test_convert_native_to_fol(module, output_format):
     parser = OWLPyParser()
     theory = parser.translate(module)
-    module_name = module.__name__.split('.')[-1]
+    module_name = module.__name__.split(".")[-1]
     compiler = get_compiler(output_format)
     out = compiler.compile(theory)
     print(out)

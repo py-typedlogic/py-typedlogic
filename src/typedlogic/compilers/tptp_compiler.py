@@ -10,7 +10,6 @@ from typedlogic.transformations import as_tptp
 
 @dataclass
 class TPTPCompiler(Compiler):
-
     default_suffix: ClassVar[str] = "tptp"
 
     def compile(self, theory: Theory, syntax: Optional[Union[str, ModelSyntax]] = None, **kwargs) -> str:

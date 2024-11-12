@@ -7,17 +7,21 @@ from typedlogic import FactMixin, axiom
 class Coin(FactMixin):
     id: str
 
+
 @dataclass
 class Heads(FactMixin):
     id: str
+
 
 @dataclass
 class Tails(FactMixin):
     id: str
 
+
 @dataclass
 class Win(FactMixin):
     """a win; unary predicate"""
+
 
 @axiom
 def win_heads(c: str):

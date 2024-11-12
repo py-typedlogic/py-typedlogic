@@ -23,7 +23,10 @@ P1x = Term("P1", X)
 P2x = Term("P2", X)
 P3x = Term("P3", X)
 Q1xy = Term("Q1", X, Y)
-@pytest.mark.parametrize("expression,program,disjunctive",
+
+
+@pytest.mark.parametrize(
+    "expression,program,disjunctive",
     [
         (P, "p.", False),
         (P & Q, "p. q.", False),
@@ -38,13 +41,12 @@ Q1xy = Term("Q1", X, Y)
         (P | Q, "p; q.", True),
         (Not(P), ":- p.", True),
         # (P ^ Q, "r :- p. r :- q.", False),
-
         # (P >> (Q | R), "", False),
         (P >> (Q & R), "q :- p. r :- p.", False),
         ((P & Q) >> R, "r :- p, q.", False),
         (Iff(P & Q, R), "r :- p, q. p :- r. q :- r", True),
         ((P | Q) >> R, "r :- p. r :- q.", False),
-        #((P ^ Q) >> R, "r :- p. r :- q.", False),
+        # ((P ^ Q) >> R, "r :- p. r :- q.", False),
         # ((P & ~Q) >> R, r"r :- p, \+ (q). q :- p, \+ (r).", False), # stratified negation
         ((P & ~Q) >> R, r"r :- p, \+ (q).", False),
         (Term("P", Term("Q", 1)), "p(q(1)).", False),
@@ -53,19 +55,20 @@ Q1xy = Term("Q1", X, Y)
         (Forall([X], (P1x & Term("eq", X, 5)) >> P2x), r"p2(X) :- p1(X), X == 5.", False),
         (P1x >> P2x, "p2(X) :- p1(X).", False),
         # ((P1x & ~P3x)  >> P2x, r"p2(X) :- p1(X), \+ (p3(X)). p3(X) :- p1(X), \+ (p2(X))", False), # stratified negation
-        ((P1x & ~P3x)  >> P2x, r"p2(X) :- p1(X), \+ (p3(X)).", False),
-        ((~P3x & P1x)  >> P2x, r"p2(X) :- p1(X), \+ (p3(X)).", False),
-        #(Exists([X], P1x), r"p1(sk__1).", False),
-        #(Implies(P1x, Exists([X], P2x)), "x", False),
+        ((P1x & ~P3x) >> P2x, r"p2(X) :- p1(X), \+ (p3(X)).", False),
+        ((~P3x & P1x) >> P2x, r"p2(X) :- p1(X), \+ (p3(X)).", False),
+        # (Exists([X], P1x), r"p1(sk__1).", False),
+        # (Implies(P1x, Exists([X], P2x)), "x", False),
         (Exists([Y], Term("P", X, Y)) >> Term("Q", X), r"q(X) :- p(X, Y).", False),
-        (Forall([X], (~P3x & P1x)  >> P2x), r"p2(X) :- p1(X), \+ (p3(X)).", False),
+        (Forall([X], (~P3x & P1x) >> P2x), r"p2(X) :- p1(X), \+ (p3(X)).", False),
         (Forall([X], P1x >> P2x), "p2(X) :- p1(X).", False),
         (Forall([X], ((P1x & Exists([Y], Term("Q", X, Y))) >> P2x)), "p2(X) :- p1(X), q(X, Y).", False),
-     ]
+    ],
 )
 def test_to_horn_rule_syntax(expression, program, disjunctive):
     def _norm(p: str) -> List[str]:
         return sorted([l.strip() for l in p.split(".") if l.strip()])
+
     print(f"\nTR: {expression}")
     cnf = to_cnf_lol(expression)
     print(f"CNF: {cnf}")
@@ -76,7 +79,8 @@ def test_to_horn_rule_syntax(expression, program, disjunctive):
     assert _norm(program) == _norm(result), f"via {horn_sentence}"
 
 
-@pytest.mark.parametrize("expression,expected,direct",
+@pytest.mark.parametrize(
+    "expression,expected,direct",
     [
         (~P, ~P, True),
         (~~P, P, True),
@@ -89,7 +93,8 @@ def test_to_horn_rule_syntax(expression, program, disjunctive):
         (And(And(P)), P, True),
         (And(Or(P)), P, True),
         (And(Q, Or(P)), And(Q, P), True),
-    ])
+    ],
+)
 def test_simplify(expression, expected, direct):
     """
 
@@ -105,7 +110,8 @@ def test_simplify(expression, expected, direct):
     assert simplified == expected, f"Expected {expected} but got {simplified}"
 
 
-@pytest.mark.parametrize("expression,expected",
+@pytest.mark.parametrize(
+    "expression,expected",
     [
         (P, P),
         (P & Q, P & Q),
@@ -113,7 +119,8 @@ def test_simplify(expression, expected, direct):
         (P | (Q & R), (Q | P) & (R | P)),
         ((P & ~Q) >> R, Or(~P, Q, R)),
         ((P >> Q) >> R, ((P | R) & (~Q | R))),
-    ])
+    ],
+)
 def test_to_cnf(expression, expected):
     """
     Test conversion to CNF
@@ -128,5 +135,3 @@ def test_to_cnf(expression, expected):
     """
     cnf = to_cnf(expression)
     assert cnf == expected, f"Expected {expected} but got {cnf}"
-
-

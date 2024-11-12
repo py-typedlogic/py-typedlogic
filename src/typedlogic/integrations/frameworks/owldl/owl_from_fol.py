@@ -2,8 +2,14 @@ from typing import Iterator, Union, List, Tuple, Type, Optional, Any
 
 from typedlogic import Theory, Forall, Implies, Sentence, Term, Variable
 from typedlogic.integrations.frameworks.owldl import SubClassOf
-from typedlogic.integrations.frameworks.owldl.owltop import Axiom, ClassExpression, ObjectPropertyExpression, \
-    OntologyElement, Class, AnonymousClassExpression
+from typedlogic.integrations.frameworks.owldl.owltop import (
+    Axiom,
+    ClassExpression,
+    ObjectPropertyExpression,
+    OntologyElement,
+    Class,
+    AnonymousClassExpression,
+)
 
 
 def axioms_from_theory(theory: Union[Theory, List[Sentence]]) -> Iterator[Axiom]:
@@ -46,6 +52,7 @@ def axioms_from_theory(theory: Union[Theory, List[Sentence]]) -> Iterator[Axiom]
                             yield SubClassOf(lhs_ce, rhs_ce)
     return None
 
+
 def as_class_expression(x: Optional[Tuple[Any, Any]]) -> Optional[ClassExpression]:
     if x is None:
         return None
@@ -55,7 +62,9 @@ def as_class_expression(x: Optional[Tuple[Any, Any]]) -> Optional[ClassExpressio
     return None
 
 
-def to_expression(sentence: Sentence) -> Optional[Tuple[Union[ClassExpression, ObjectPropertyExpression], List[Variable]]]:
+def to_expression(
+    sentence: Sentence,
+) -> Optional[Tuple[Union[ClassExpression, ObjectPropertyExpression], List[Variable]]]:
     """
     ...
 

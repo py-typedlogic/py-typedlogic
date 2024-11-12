@@ -11,6 +11,7 @@ def _get_all_subclasses(cls: Type) -> Set[Type]:
     subclasses = set(cls.__subclasses__())
     return subclasses.union(s for c in subclasses for s in _get_all_subclasses(c))
 
+
 class OWLParser(Parser):
     """
     A parser that converts OWL ontologies expressed in a standard OWL syntax.
@@ -29,7 +30,9 @@ class OWLParser(Parser):
 
     """
 
-    def parse(self, source: Union[Path, str, TextIO], include_all=False, modules: Optional[List[ModuleType]] = None, **kwargs) -> Theory:
+    def parse(
+        self, source: Union[Path, str, TextIO], include_all=False, modules: Optional[List[ModuleType]] = None, **kwargs
+    ) -> Theory:
         """
         Parse the source into a theory.
 

@@ -26,13 +26,36 @@ import tests.theorems.types_example as types_example
 from tests import SNAPSHOTS_DIR
 
 
-@pytest.mark.parametrize("compiler_class",
-    [FOLCompiler, Z3SExprCompiler, Z3FunctionalCompiler, PrologCompiler, SouffleCompiler, TPTPCompiler, Prover9Compiler, YAMLCompiler, SExprCompiler,
-     ProbLogCompiler,
-     ]
+@pytest.mark.parametrize(
+    "compiler_class",
+    [
+        FOLCompiler,
+        Z3SExprCompiler,
+        Z3FunctionalCompiler,
+        PrologCompiler,
+        SouffleCompiler,
+        TPTPCompiler,
+        Prover9Compiler,
+        YAMLCompiler,
+        SExprCompiler,
+        ProbLogCompiler,
+    ],
 )
-@pytest.mark.parametrize("theory_module",
-    [pwd, mortals, animals, types_example, defined_types_example, import_test_ext, numbers, paths, optional_example, simple_contradiction, unary_predicates]
+@pytest.mark.parametrize(
+    "theory_module",
+    [
+        pwd,
+        mortals,
+        animals,
+        types_example,
+        defined_types_example,
+        import_test_ext,
+        numbers,
+        paths,
+        optional_example,
+        simple_contradiction,
+        unary_predicates,
+    ],
 )
 def test_compiler(compiler_class, theory_module):
     if issubclass(compiler_class, Z3Compiler) and theory_module == defined_types_example:
@@ -54,4 +77,3 @@ def test_compiler(compiler_class, theory_module):
             # assert roundtripped == compiled
             compiled2 = compiler.compile(roundtripped)
             assert compiled2 == compiled
-
