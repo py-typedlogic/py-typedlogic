@@ -3,12 +3,15 @@ Bridge between typedlogic OWL model and py-horned-owl.
 
 
 """
+import inspect
 import logging
 from dataclasses import dataclass, field
 from functools import lru_cache
+from types import FunctionType, MethodType
 from typing import Any, Dict, List, Optional
 
 import pyhornedowl  # type: ignore
+from attr.validators import is_callable
 from pyhornedowl.model import (  # type: ignore
     IRI,
     AnnotationAssertion,
@@ -265,9 +268,16 @@ def translate_from_horned_owl(x: Any, label_map: Optional[Dict[str, str]] = None
         tl_cls = owltop.__dict__[typ_name]
         kwargs = {}
         for k in x.__dir__():
-            if not k.startswith("__"):
-                v = getattr(x, k)
-                kwargs[k] = translate_from_horned_owl(v, label_map)
+            if k.startswith("__"):
+                continue
+            v = getattr(x, k)
+            if isinstance(v, (MethodType, FunctionType, property)):
+                continue
+            if callable(v):
+                continue
+            if inspect.ismethod(v) or inspect.isfunction(v):
+                continue
+            kwargs[k] = translate_from_horned_owl(v, label_map)
         args = kwargs.values()
         if tl_cls == owltop.SubObjectPropertyOf and isinstance(kwargs["sub"], list):
             # https://github.com/ontology-tools/py-horned-owl/issues/32

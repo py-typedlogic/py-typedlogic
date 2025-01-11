@@ -23,6 +23,7 @@ llm = { version="*" , optional = true }
 gavel-owl = { version="*" , optional = true }
 ply = { version="*" , optional = true }
 pandas = { version="*" , optional = true }
+pandera = { version="*" , extras = ["mypy"], optional = true }
 typer = "^0.12.5"
 
 [tool.poetry.group.dev.dependencies]
@@ -58,6 +59,7 @@ rdflib = ["rdflib"]
 owl = ["py-horned-owl"]
 gavel-owl = ["gavel-owl", "ply"]
 pandas = ["pandas"]
+pandera = ["pandera"]
 llm = ["llm"]
 sympy = ["sympy"]
 
@@ -117,7 +119,6 @@ build-backend = "poetry_dynamic_versioning.backend"
 module = "pyhornedowl.*"
 ignore_errors = true
 follow_imports = "skip"
-
 
 [tool.mypy]
 exclude = "owl"

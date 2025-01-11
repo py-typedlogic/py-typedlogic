@@ -10,6 +10,8 @@ class OWLCompiler(Compiler):
     """
     Writes theories to OWL files.
 
+    TODO: this is incomplete
+
     Uses py-horned-owl
 
     Example:

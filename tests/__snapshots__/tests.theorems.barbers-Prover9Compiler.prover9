@@ -1,0 +1,8 @@
+% Problem: tests.theorems.barbers
+formulas(assumptions).
+    all shaver customer (((Barber(shaver) & Person(customer) & - ( Shaves(customer, customer) )) -> Shaves(shaver, customer))).
+    all name ((Person(name) -> Barber(name))).
+end_of_list.
+
+formulas(goals).
+end_of_list.

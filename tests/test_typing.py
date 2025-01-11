@@ -43,6 +43,7 @@ def temp_file_with_test_code():
         ("str", "int", False),
         ("int", "int", True),
         ("float", "int", True),
+        ("madeUpType", "int", False),
     ],
 )
 @pytest.mark.parametrize("use_parser", [True, False])

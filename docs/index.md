@@ -82,25 +82,12 @@ TypedLogic is a powerful Python package that bridges the gap between formal logi
     ¬∃[x:ID d:int]. Path(x, x, d)
     ```
 
-
 ## Key Features
 
 - Write logical axioms and rules using familiar Python syntax
 - Benefit from strong typing and mypy validation
-- Seamless integration with logic programming engines
-- Support for various solvers, including Z3 and Souffle
-- Compatible with popular Python libraries like Pydantic
-
-## Why TypedLogic?
-
-TypedLogic combines the best of both worlds: the expressiveness and familiarity of Python with the power of formal logic and fast logic programming engines. This unique approach allows developers to:
-
-1. Write more maintainable and less error-prone logical rules
-2. Catch type-related errors early in the development process
-3. Seamlessly integrate logical reasoning into existing Python projects
-4. Leverage the performance of specialized logic engines without sacrificing the Python ecosystem
-
-Get started with TypedLogic and experience a new way of combining logic programming with strongly typed Python!
+- Integration with multiple solvers and logic engines, including Z3 and Souffle
+- Compatible with popular Python validation libraries like Pydantic
 
 ## Installation
 
@@ -119,10 +106,12 @@ pip install typedlogic[all]
 You can also use pipx to run the [CLI](cli.md) without installing the package globally:
 
 ```bash
-pipx run "typedlogic[all]" --help
-````
+pipx run typedlogic --help
+```
 
 ## Define predicates using Pythonic idioms
+
+Inherit from one of the TypedLogic base models to add semantics to your data model. For Pydantic:
 
 ```python
 from typedlogic.integrations.frameworks.pydantic import FactBaseModel
@@ -146,6 +135,8 @@ links = [Link(source='CA', target='OR'), Link(source='OR', target='WA')]
 
 ## Specify logical axioms directly in Python
 
+Once you have defined your data model predicates, you can specify logical axioms directly in Python:
+
 ```python
 from typedlogic.decorators import axiom
 
@@ -165,6 +156,8 @@ def transitivity(x: ID, y: ID, z: ID):
 
 ## Performing reasoning from within Python
 
+Use any of the existing solvers to perform reasoning:
+
 ```python
 from typedlogic.integrations.snakelogic import SnakeSolver
 
@@ -176,7 +169,8 @@ model = solver.model()
 for fact in model.iter_retrieve("Path"):
     print(fact)
 ```
-prints:
+
+outputs:
 
 ```
 Path(source='CA', target='OR')

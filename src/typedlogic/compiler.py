@@ -92,7 +92,8 @@ class Compiler(ABC):
         likes(X, 'Jie') :- animal(X, 'cat').
         <BLANKLINE>
 
-
+    There are multiple variants of Prolog syntax, the `PrologConfig` object can be used to control the output.
+    Config arguments can be passed as kwargs to the `compile` method.
     """
 
     default_suffix: ClassVar[str] = "txt"

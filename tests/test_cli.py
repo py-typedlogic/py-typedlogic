@@ -10,10 +10,7 @@ from tests import OUTPUT_DIR
 
 runner = CliRunner()
 
-
-@pytest.fixture
-def sample_input_file():
-    content = """
+content = """
 from dataclasses import dataclass
 from typedlogic import Fact, axiom
 
@@ -24,14 +21,32 @@ class Person(Fact):
 @dataclass
 class Mortal(Fact):
     name: str
-    
+
 @axiom
 def all_persons_are_mortal(i: str):
     if Person(i):
         assert Mortal(i)
-    """
+"""
+
+bad_content = """
+
+@axiom
+def bad_axiom(i: int):
+    assert Moral(i)
+"""
+
+@pytest.fixture
+def sample_input_file():
     with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".py") as temp:
         temp.write(content)
+    yield temp.name
+    os.unlink(temp.name)
+
+@pytest.fixture
+def sample_bad_type_file():
+    with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".py") as temp:
+        temp.write(content)
+        temp.write(bad_content)
     yield temp.name
     os.unlink(temp.name)
 
@@ -147,12 +162,22 @@ def test_convert_command_with_output_file(sample_input_file):
 
 
 @pytest.mark.parametrize("solver", ["z3", "clingo", "souffle", "snakelog"])
-def test_solve_command(sample_input_file, solver):
-    result = runner.invoke(app, ["solve", sample_input_file, "--solver", solver])
+@pytest.mark.parametrize("validate_types", ["--validate-types", "--no-validate-types"])
+def test_solve_command(sample_input_file, solver, validate_types):
+    result = runner.invoke(app, ["solve", sample_input_file, "--solver", solver, validate_types])
     if result.exit_code != 0:
         print(result.stdout)
     assert result.exit_code == 0
     assert "Satisfiable:" in result.stdout
+
+
+@pytest.mark.parametrize("validate_types", ["--validate-types", "--no-validate-types", ""])
+def test_solve_bad_type(sample_bad_type_file, validate_types):
+    result = runner.invoke(app, ["solve", sample_bad_type_file, "--solver", "clingo", validate_types])
+    if validate_types == "--no-validate-types":
+        assert result.exit_code == 0
+    else:
+        assert result.exit_code != 0
 
 
 def test_solve_command_with_output_file(sample_input_file):

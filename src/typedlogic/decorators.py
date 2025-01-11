@@ -68,7 +68,7 @@ def axiom(func: Callable) -> Callable:
 
         @axiom
         def disjointness(n: str):
-            '''Forall n: Dog(n) => not Cat(n)'''
+            '''nothing is both a dog and a cat'''
             assert not(Dog(n) and Cat(n))
 
     The arguments of the wrapped functions are treated as universal quantifiers (Forall x: ...)

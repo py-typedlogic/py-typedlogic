@@ -1,5 +1,5 @@
 """
-This module provides a way to generate typedlogic sentences from RDFLib graphs.
+Theory corresponding to RDF.
 """
 from dataclasses import dataclass
 from typing import Iterator
@@ -12,6 +12,9 @@ from typedlogic import FactMixin, axiom
 
 @dataclass
 class Triple(FactMixin):
+    """
+    A triple is the basic unit of information in RDF.
+    """
     subject: Node
     predicate: Node
     object: Node
@@ -40,8 +43,14 @@ class IsBlank(FactMixin):
 
 
 @axiom
-def _sp_iris(s: Node, p: Node, o: Node):
-    # assert Triple("A", "B", "C")
+def sp_iris(s: Node, p: Node, o: Node):
+    """
+    IRI rules for triples
+    :param s:
+    :param p:
+    :param o:
+    :return:
+    """
     if Triple(s, p, o):
         IsIRI(p)
     if Triple(s, p, o):
