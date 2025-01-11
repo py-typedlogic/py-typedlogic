@@ -458,6 +458,7 @@ class TermBag(Sentence):
     def as_sexpr(self) -> SExpressionTerm:
         return [t.as_sexpr() for t in self.as_terms()]
 
+
 class Extension(Sentence, ABC):
     """
     Use this abstract class for framework-specific extensions.

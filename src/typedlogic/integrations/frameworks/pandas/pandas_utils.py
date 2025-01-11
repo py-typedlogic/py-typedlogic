@@ -30,7 +30,10 @@ def as_dataframe(model: Model) -> pd.DataFrame:
             rows.append(row)
     return pd.DataFrame(rows)
 
-def dataframe_to_terms(df: "pd.DataFrame", predicate: Optional[str] = None, predicate_field: str = "predicate") -> List[Term]:
+
+def dataframe_to_terms(
+    df: "pd.DataFrame", predicate: Optional[str] = None, predicate_field: str = "predicate"
+) -> List[Term]:
     """
     Convert a pandas DataFrame to a list of terms.
 
@@ -67,4 +70,3 @@ def dataframe_to_terms(df: "pd.DataFrame", predicate: Optional[str] = None, pred
         term = Term(this_predicate, bindings)
         terms.append(term)
     return terms
-

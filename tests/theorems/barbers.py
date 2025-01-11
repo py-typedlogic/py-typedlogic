@@ -1,8 +1,7 @@
 # Example usage
-from typing import List
 
 from pydantic import BaseModel
-from typedlogic import Fact, FactMixin, axiom, gen1, gen3, goal
+from typedlogic import Fact, FactMixin, axiom
 
 NameType = str
 
@@ -13,6 +12,7 @@ class Person(BaseModel, FactMixin):
 
 class Barber(Person):
     pass
+
 
 class Shaves(BaseModel, Fact):
     shaver: NameType

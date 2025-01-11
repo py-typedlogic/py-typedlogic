@@ -59,6 +59,7 @@ class RDFParser(Parser):
         Type(http://example.org/Fred, http://example.org/Human)
 
     """
+
     def parse(self, source: Union[Path, str, TextIO, Graph], format="ttl", **kwargs) -> Theory:
         """
         Parse am RDF Graph to a theory.

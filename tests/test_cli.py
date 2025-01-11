@@ -35,12 +35,14 @@ def bad_axiom(i: int):
     assert Moral(i)
 """
 
+
 @pytest.fixture
 def sample_input_file():
     with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".py") as temp:
         temp.write(content)
     yield temp.name
     os.unlink(temp.name)
+
 
 @pytest.fixture
 def sample_bad_type_file():

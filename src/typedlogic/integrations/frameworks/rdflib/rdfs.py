@@ -23,6 +23,7 @@ class OWLClass(FactMixin):
     Note that even though OWL predicates are typically defined in owlfull.py,
     owl:Class is considered part of RDFS.
     """
+
     node: Node
 
 
@@ -31,6 +32,7 @@ class RDFProperty(FactMixin):
     """
     RDF.Property axiom
     """
+
     node: Node
 
 
@@ -39,6 +41,7 @@ class SubClassOf(FactMixin):
     """
     SubClassOf axiom
     """
+
     subject: Node
     object: Node
 
@@ -48,6 +51,7 @@ class SubPropertyOf(FactMixin):
     """
     SubPropertyOf axiom
     """
+
     subject: Node
     object: Node
 
@@ -57,6 +61,7 @@ class Type(FactMixin):
     """
     rdf.Type axiom
     """
+
     subject: Node
     object: Node
 
@@ -66,6 +71,7 @@ class Domain(FactMixin):
     """
     property domain axiom
     """
+
     subject: Node
     object: Node
 
@@ -75,6 +81,7 @@ class Range(FactMixin):
     """
     property range axiom
     """
+
     subject: Node
     object: Node
 

@@ -45,7 +45,9 @@ def convert(
     input_format: str = input_format_option,
     output_format: str = output_format_option,
     output_file: Optional[Path] = output_file_option,
-    validate_types: bool = typer.Option(True, "--validate-types/--no-validate-types", help="Use mypy to validate types"),
+    validate_types: bool = typer.Option(
+        True, "--validate-types/--no-validate-types", help="Use mypy to validate types"
+    ),
 ):
     """
     Convert from one logic form to another.
@@ -100,7 +102,9 @@ def solve(
     theory_file: Path = typer.Argument(..., exists=True, dir_okay=False, readable=True),
     solver: str = typer.Option(None, help="Solver to use"),
     check_only: bool = typer.Option(False, "--check-only", "-c", help="Check only, do not solve"),
-    validate_types: bool = typer.Option(True, "--validate-types/--no-validate-types", help="Use mypy to validate types"),
+    validate_types: bool = typer.Option(
+        True, "--validate-types/--no-validate-types", help="Use mypy to validate types"
+    ),
     input_format: str = input_format_option,
     data_input_format: str = typer.Option(None, "--data-input-format", "-d", help="Format for ground terms"),
     output_format: str = output_format_option,

@@ -6,8 +6,16 @@ from types import ModuleType
 from typing import Any, ClassVar, Dict, Iterable, Iterator, List, Optional, TextIO, Tuple, Type, Union
 
 from typedlogic import FactMixin, Variable
-from typedlogic.datamodel import Exists, PredicateDefinition, Sentence, SentenceGroup, SentenceGroupType, Term, Theory, \
-    TermBag
+from typedlogic.datamodel import (
+    Exists,
+    PredicateDefinition,
+    Sentence,
+    SentenceGroup,
+    SentenceGroupType,
+    Term,
+    Theory,
+    TermBag,
+)
 from typedlogic.parsers.pyparser.python_parser import PythonParser
 from typedlogic.profiles import Profile, UnspecifiedProfile
 from typedlogic.pybridge import fact_to_term

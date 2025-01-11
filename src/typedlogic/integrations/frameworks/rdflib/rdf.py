@@ -15,6 +15,7 @@ class Triple(FactMixin):
     """
     A triple is the basic unit of information in RDF.
     """
+
     subject: Node
     predicate: Node
     object: Node

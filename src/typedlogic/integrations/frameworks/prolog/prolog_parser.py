@@ -46,10 +46,12 @@ class PrologParser(Parser):
         :param rule:
         :return:
         """
+
         def atom_to_term(atom: Union[pl.Atom, pl.Conjunction]):
             if not isinstance(atom, pl.Atom):
                 raise ValueError(f"Expected Atom, got {atom}")
             return Term(atom.predicate, *atom.terms)
+
         head = atom_to_term(rule.head)
         if rule.body:
             body: Union[Term, And, Or]
@@ -64,5 +66,3 @@ class PrologParser(Parser):
             return Implies(body, head)
         else:
             return head
-
-

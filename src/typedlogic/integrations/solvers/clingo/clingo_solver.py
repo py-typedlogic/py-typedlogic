@@ -67,7 +67,10 @@ class ClingoSolver(Solver):
     def _clauses(self) -> Iterator[str]:
         negation_symbol = "not" if self.assume_closed_world else "-"
         prolog_config = PrologConfig(
-            disjunctive_datalog=True, double_quote_strings=True, negation_symbol=negation_symbol, allow_nesting=False,
+            disjunctive_datalog=True,
+            double_quote_strings=True,
+            negation_symbol=negation_symbol,
+            allow_nesting=False,
             double_quote_floats=True,
         )
         for sentence in self.base_theory.sentences + self.base_theory.ground_terms:

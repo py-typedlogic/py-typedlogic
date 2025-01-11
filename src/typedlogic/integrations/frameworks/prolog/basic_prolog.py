@@ -12,6 +12,7 @@ class Atom:
     >>> str(atom)
     'parent(john, mary)'
     """
+
     predicate: str
     terms: List[Union[str, int]]
 
@@ -31,7 +32,8 @@ class Conjunction:
     >>> str(conj)
     '(parent(X, Y), age(Y, 42))'
     """
-    atoms: List[Union['Atom', 'Conjunction']]
+
+    atoms: List[Union["Atom", "Conjunction"]]
 
     def __str__(self):
         if len(self.atoms) == 1:
@@ -52,6 +54,7 @@ class Disjunction:
     >>> str(disj)
     'parent(X, Y); guardian(X, Y)'
     """
+
     conjunctions: List[Conjunction]
 
     def __str__(self):
@@ -72,6 +75,7 @@ class Rule:
     >>> str(rule)
     'ancestor(X, Y) :- parent(X, Y); (parent(X, Z), ancestor(Z, Y))'
     """
+
     head: Atom
     body: Optional[Disjunction]
 
@@ -90,6 +94,7 @@ class Query:
     >>> str(query)
     '?- parent(john, X)'
     """
+
     body: Conjunction
 
     def __str__(self):
@@ -124,19 +129,19 @@ class BasicPrologParser:
 
     def __init__(self):
         self.token_patterns = [
-            ('ATOM', r'[a-z][a-zA-Z0-9_]*'),
-            ('VAR', r'[A-Z][a-zA-Z0-9_]*'),
-            ('NUM', r'\d+'),
-            ('LP', r'\('),
-            ('RP', r'\)'),
-            ('COMMA', r','),
-            ('SEMI', r';'),
-            ('DOT', r'\.'),
-            ('IF', r':-'),
-            ('QUERY', r'\?-'),
-            ('WHITESPACE', r'\s+'),
+            ("ATOM", r"[a-z][a-zA-Z0-9_]*"),
+            ("VAR", r"[A-Z][a-zA-Z0-9_]*"),
+            ("NUM", r"\d+"),
+            ("LP", r"\("),
+            ("RP", r"\)"),
+            ("COMMA", r","),
+            ("SEMI", r";"),
+            ("DOT", r"\."),
+            ("IF", r":-"),
+            ("QUERY", r"\?-"),
+            ("WHITESPACE", r"\s+"),
         ]
-        self.token_regex = '|'.join(f'(?P<{name}>{pattern})' for name, pattern in self.token_patterns)
+        self.token_regex = "|".join(f"(?P<{name}>{pattern})" for name, pattern in self.token_patterns)
         self.token_re = re.compile(self.token_regex)
 
     def tokenize(self, text: str) -> List[tuple]:
@@ -156,7 +161,7 @@ class BasicPrologParser:
 
             token_type = match.lastgroup
             token_value = match.group()
-            if token_type != 'WHITESPACE':
+            if token_type != "WHITESPACE":
                 tokens.append((token_type, token_value))
             pos = match.end()
         return tokens
@@ -167,9 +172,9 @@ class BasicPrologParser:
             raise SyntaxError("Unexpected end of input while parsing term")
 
         token_type, token_value = tokens[pos]
-        if token_type in ('ATOM', 'VAR'):
+        if token_type in ("ATOM", "VAR"):
             return token_value, pos + 1
-        elif token_type == 'NUM':
+        elif token_type == "NUM":
             return int(token_value), pos + 1
         else:
             raise SyntaxError(f"Expected term, got {token_type}")
@@ -180,14 +185,14 @@ class BasicPrologParser:
             raise SyntaxError("Unexpected end of input while parsing atom")
 
         token_type, token_value = tokens[pos]
-        if token_type != 'ATOM':
+        if token_type != "ATOM":
             raise SyntaxError(f"Expected predicate, got {token_type}")
 
         predicate = token_value
         pos += 1
         terms = []
 
-        if pos < len(tokens) and tokens[pos][0] == 'LP':
+        if pos < len(tokens) and tokens[pos][0] == "LP":
             pos += 1
             while True:
                 term, pos = self.parse_term(tokens, pos)
@@ -196,10 +201,10 @@ class BasicPrologParser:
                 if pos >= len(tokens):
                     raise SyntaxError("Unexpected end of input while parsing atom arguments")
 
-                if tokens[pos][0] == 'RP':
+                if tokens[pos][0] == "RP":
                     pos += 1
                     break
-                elif tokens[pos][0] != 'COMMA':
+                elif tokens[pos][0] != "COMMA":
                     raise SyntaxError(f"Expected ',' or ')', got {tokens[pos][0]}")
                 pos += 1
 
@@ -210,7 +215,7 @@ class BasicPrologParser:
         operands: List[Union[Atom, Conjunction]] = []
 
         # Handle opening parenthesis
-        has_parens = pos < len(tokens) and tokens[pos][0] == 'LP'
+        has_parens = pos < len(tokens) and tokens[pos][0] == "LP"
         if has_parens:
             pos += 1
 
@@ -219,7 +224,7 @@ class BasicPrologParser:
                 raise SyntaxError("Unexpected end of input while parsing conjunction")
 
             # Handle nested conjunction
-            if tokens[pos][0] == 'LP':
+            if tokens[pos][0] == "LP":
                 conj, pos = self.parse_conjunction(tokens, pos)
                 operands.append(conj)
             else:
@@ -230,12 +235,12 @@ class BasicPrologParser:
                 raise SyntaxError("Unexpected end of input while parsing conjunction")
 
             # Handle closing parenthesis or end of conjunction
-            if has_parens and tokens[pos][0] == 'RP':
+            if has_parens and tokens[pos][0] == "RP":
                 pos += 1
                 break
-            elif not has_parens and tokens[pos][0] in ('DOT', 'SEMI', 'RP'):
+            elif not has_parens and tokens[pos][0] in ("DOT", "SEMI", "RP"):
                 break
-            elif tokens[pos][0] != 'COMMA':
+            elif tokens[pos][0] != "COMMA":
                 raise SyntaxError(f"Expected ',', ';', ')', or '.', got {tokens[pos][0]}")
             pos += 1
 
@@ -249,9 +254,9 @@ class BasicPrologParser:
             conj, pos = self.parse_conjunction(tokens, pos)
             conjunctions.append(conj)
 
-            if pos >= len(tokens) or tokens[pos][0] in ('DOT', 'RP'):
+            if pos >= len(tokens) or tokens[pos][0] in ("DOT", "RP"):
                 break
-            elif tokens[pos][0] != 'SEMI':
+            elif tokens[pos][0] != "SEMI":
                 raise SyntaxError(f"Expected ';', ')', or '.', got {tokens[pos][0]}")
             pos += 1
 
@@ -264,13 +269,13 @@ class BasicPrologParser:
         if pos >= len(tokens):
             raise SyntaxError("Unexpected end of input while parsing rule")
 
-        if tokens[pos][0] == 'IF':
+        if tokens[pos][0] == "IF":
             pos += 1
             body, pos = self.parse_disjunction(tokens, pos)
         else:
             body = None
 
-        if pos >= len(tokens) or tokens[pos][0] != 'DOT':
+        if pos >= len(tokens) or tokens[pos][0] != "DOT":
             raise SyntaxError("Expected '.' at end of rule")
         pos += 1
 
@@ -278,13 +283,13 @@ class BasicPrologParser:
 
     def parse_query(self, tokens: List[tuple], pos: int) -> tuple[Query, int]:
         """Parse a query."""
-        if pos >= len(tokens) or tokens[pos][0] != 'QUERY':
+        if pos >= len(tokens) or tokens[pos][0] != "QUERY":
             raise SyntaxError("Expected '?-' at start of query")
         pos += 1
 
         body, pos = self.parse_conjunction(tokens, pos)
 
-        if pos >= len(tokens) or tokens[pos][0] != 'DOT':
+        if pos >= len(tokens) or tokens[pos][0] != "DOT":
             raise SyntaxError("Expected '.' at end of query")
         pos += 1
 
@@ -300,7 +305,7 @@ class BasicPrologParser:
             raise SyntaxError("Empty input")
 
         result: Union[Rule, Query]
-        if tokens[0][0] == 'QUERY':
+        if tokens[0][0] == "QUERY":
             result, pos = self.parse_query(tokens, 0)
         else:
             result, pos = self.parse_rule(tokens, 0)
