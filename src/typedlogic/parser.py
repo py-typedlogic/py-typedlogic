@@ -108,7 +108,7 @@ class Parser(ABC):
             return self.parse(source.__file__, **kwargs)
         raise NotImplementedError("Translation not supported by this parser")
 
-    def validate_iter(self, source: Union[Path, str, TextIO], **kwargs) -> Iterator[ValidationMessage]:
+    def validate_iter(self, source: Union[Path, str, TextIO, ModuleType], **kwargs) -> Iterator[ValidationMessage]:
         """
         Validate a source and return an iterator of validation messages.
 
@@ -121,7 +121,7 @@ class Parser(ABC):
         """
         return iter([])
 
-    def validate(self, source: Union[Path, str, TextIO], **kwargs) -> List[ValidationMessage]:
+    def validate(self, source: Union[Path, str, TextIO, ModuleType], **kwargs) -> List[ValidationMessage]:
         """
         Validate a source and return a list of validation messages.
 

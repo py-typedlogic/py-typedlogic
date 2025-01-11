@@ -123,6 +123,7 @@ class PrologConfig:
     negation_as_failure_symbol: str = field(default=r"\+")
     assume_negation_as_failure: bool = False
     double_quote_strings: bool = False
+    double_quote_floats: bool = False
     include_parens_for_zero_args: bool = False
     allow_function_terms: bool = True
     allow_nesting: bool = True
@@ -248,6 +249,9 @@ def as_prolog(
                 if not config.allow_function_terms:
                     raise ValueError(f"Nested term not supported: {v}")
                 return as_prolog(v, config, depth + 1)
+            if config.double_quote_floats:
+                if isinstance(v, float):
+                    return json.dumps(str(v))
             if config.double_quote_strings:
                 return json.dumps(v)
             else:

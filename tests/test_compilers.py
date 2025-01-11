@@ -21,7 +21,7 @@ import tests.theorems.paths_with_distance as pwd
 import tests.theorems.simple_contradiction as simple_contradiction
 import tests.theorems.types_example as types_example
 from tests import SNAPSHOTS_DIR
-from tests.theorems import unary_predicates
+from tests.theorems import barbers, unary_predicates
 
 
 @pytest.mark.parametrize(
@@ -53,6 +53,7 @@ from tests.theorems import unary_predicates
         optional_example,
         simple_contradiction,
         unary_predicates,
+        barbers,
     ],
 )
 def test_compiler(compiler_class, theory_module):

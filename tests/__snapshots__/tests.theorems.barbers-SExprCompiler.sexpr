@@ -1,0 +1,80 @@
+(Theory 
+  (name "tests.theorems.barbers") 
+  (constants 
+    (dict 
+      ())) 
+  (type_definitions 
+    (dict 
+      ((NameType "str")))) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "Person") 
+        (arguments 
+          (dict 
+            ((name "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Barber") 
+        (arguments 
+          (dict 
+            ((name "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          (Person)) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Shaves") 
+        (arguments 
+          (dict 
+            ((shaver "str") 
+              (customer "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)))) 
+  (sentence_groups 
+    ((SentenceGroup 
+        (name "shaves") 
+        (group_type "axiom") 
+        (docstring "All persons are mortal") 
+        (sentences 
+          ((Forall 
+              ((Variable "shaver" "NameType") 
+                (Variable "customer" "NameType")) 
+              (Implies 
+                (And 
+                  (Barber 
+                    (Variable "shaver")) 
+                  (Person 
+                    (Variable "customer")) 
+                  (Not 
+                    (Shaves 
+                      (Variable "customer") 
+                      (Variable "customer")))) 
+                (Shaves 
+                  (Variable "shaver") 
+                  (Variable "customer")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "Sentences") 
+        (group_type null) 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "name" "str")) 
+              (Implies 
+                (Person 
+                  (Variable "name")) 
+                (Barber 
+                  (Variable "name")))))) 
+        (_annotations null)))) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))

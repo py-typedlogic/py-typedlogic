@@ -6,7 +6,16 @@ from types import ModuleType
 from typing import Any, ClassVar, Dict, Iterable, Iterator, List, Optional, TextIO, Tuple, Type, Union
 
 from typedlogic import FactMixin, Variable
-from typedlogic.datamodel import Exists, PredicateDefinition, Sentence, SentenceGroup, SentenceGroupType, Term, Theory
+from typedlogic.datamodel import (
+    Exists,
+    PredicateDefinition,
+    Sentence,
+    SentenceGroup,
+    SentenceGroupType,
+    Term,
+    Theory,
+    TermBag,
+)
 from typedlogic.parsers.pyparser.python_parser import PythonParser
 from typedlogic.profiles import Profile, UnspecifiedProfile
 from typedlogic.pybridge import fact_to_term
@@ -29,13 +38,18 @@ class Model:
     source_object: Optional[Any] = None
     ground_terms: List[Term] = field(default_factory=list)
 
-    def iter_retrieve(self, predicate: str, *args) -> Iterator[Term]:
+    def retrieve(self, predicate: Union[str, type], *args) -> List[Term]:
+        return list(self.iter_retrieve(predicate, *args))
+
+    def iter_retrieve(self, predicate: Union[str, type], *args) -> Iterator[Term]:
         """
         Retrieve all ground terms with a given predicate.
 
         :param predicate:
         :return:
         """
+        if isinstance(predicate, type):
+            predicate = predicate.__name__
         for t in self.ground_terms:
             if t.predicate != predicate:
                 continue
@@ -67,9 +81,9 @@ class Method:
 @dataclass
 class Solver(ABC):
     """
-    A solver is a class that can check a set of axioms for consistency, satisfiability, or some other property.
+    A solver an engine that can check a theory for consistency, satisfiability, or can infer new sentences.
 
-    This is an abstract class that defines the interface for a solver.
+    This is an abstract class that defines the *interface* for a solver.
 
     You can retrieve a specific solver with the `get_solver` function:
 
@@ -79,7 +93,7 @@ class Solver(ABC):
     Note that all solvers are provided via *integrations*, and may not be installed by default.
     Some may require additional command line setup.
 
-    Once you have a solver, you can can add theories, or individual sentences to it:
+    Once you have a solver, you can add theories, or individual sentences to it:
 
         >>> from typedlogic.integrations.frameworks.pydantic import FactBaseModel
         >>> class AncestorOf(FactBaseModel):
@@ -240,6 +254,9 @@ class Solver(ABC):
             self.add_theory(element)
         elif isinstance(element, PredicateDefinition):
             self.add_predicate_definition(element)
+        elif isinstance(element, TermBag):
+            for t in element.as_terms():
+                self.add(t)
         elif isinstance(element, Sentence):
             self.add_sentence(element)
         else:

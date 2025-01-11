@@ -37,9 +37,12 @@ class PrologCompiler(Compiler):
             <BLANKLINE>
             q(X) :- p(X).
 
-        :param theory:
+        There are multiple variants of Prolog syntax, the `PrologConfig` object can be used to control the output.
+        Config arguments can be passed as kwargs to the `compile` method.
+
+        :param theory: A Theory object to be compiled into prolog code
         :param syntax:
-        :param kwargs:
+        :param kwargs: PrologConfig arguments
         :return:
 
         """

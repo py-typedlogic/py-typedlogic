@@ -1,0 +1,3 @@
+% Problem: tests.theorems.barbers
+fof(axiom1, axiom, ! [Shaver, Customer] : ((barber(Shaver) & person(Customer) & ~shaves(Customer, Customer)) => shaves(Shaver, Customer))).
+fof(axiom2, axiom, ! [Name] : (person(Name) => barber(Name))).

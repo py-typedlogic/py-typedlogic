@@ -23,6 +23,7 @@ pipx run "typedlogic[pydantic,clingo]" --help
 from pathlib import Path
 from typing import Annotated, List, Optional
 
+import click
 import typer
 from typer.main import get_command
 
@@ -44,6 +45,9 @@ def convert(
     input_format: str = input_format_option,
     output_format: str = output_format_option,
     output_file: Optional[Path] = output_file_option,
+    validate_types: bool = typer.Option(
+        True, "--validate-types/--no-validate-types", help="Use mypy to validate types"
+    ),
 ):
     """
     Convert from one logic form to another.
@@ -61,6 +65,13 @@ def convert(
 
     """
     parser = get_parser(input_format)
+    if validate_types:
+        for p in theory_files:
+            errs = parser.validate(p)
+            if errs:
+                for err in errs:
+                    click.echo(str(err))
+                raise ValueError("Errors in file")
     theory = parser.parse(theory_files[0])
     if len(theory_files) > 1:
         for input_file in theory_files[1:]:
@@ -91,6 +102,9 @@ def solve(
     theory_file: Path = typer.Argument(..., exists=True, dir_okay=False, readable=True),
     solver: str = typer.Option(None, help="Solver to use"),
     check_only: bool = typer.Option(False, "--check-only", "-c", help="Check only, do not solve"),
+    validate_types: bool = typer.Option(
+        True, "--validate-types/--no-validate-types", help="Use mypy to validate types"
+    ),
     input_format: str = input_format_option,
     data_input_format: str = typer.Option(None, "--data-input-format", "-d", help="Format for ground terms"),
     output_format: str = output_format_option,
@@ -108,6 +122,12 @@ def solve(
 
     """
     parser = get_parser(input_format or "python")
+    if validate_types:
+        errs = parser.validate(theory_file)
+        if errs:
+            for err in errs:
+                click.echo(str(err))
+            raise ValueError("Errors in file")
     theory = parser.parse(theory_file)
     solver_instance = get_solver(solver or "souffle")
 

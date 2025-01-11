@@ -1,6 +1,8 @@
 """
 Data model for the typed-logic framework.
 
+## Overview
+
 This module defines the core classes and structures used to represent logical
 constructs such as sentences, terms, predicates, and theories. It is based
 on the Common Logic Interchange Format (CLIF) and the Common Logic Standard (CL),
@@ -29,6 +31,8 @@ Here is an example:
         ...                    Term('friend_of', y, x)))
         >>> theory.add(s)
 
+## Classes
+
 """
 import operator
 import types
@@ -47,6 +51,8 @@ class PredicateDefinition:
     """
     Defines the name and arguments of a predicate.
 
+    Example:
+
         >>> pdef = PredicateDefinition(predicate='FriendOf',
         ...                            arguments={'x': 'str', 'y': 'str'})
 
@@ -62,6 +68,8 @@ class PredicateDefinition:
         ...     type_definitions={'Person': 'str'},
         ...     predicate_definitions=[pdef],
         ... )
+
+    Model:
 
     ```mermaid
     classDiagram
@@ -372,12 +380,91 @@ class Term(Sentence):
         return [self.predicate] + [as_sexpr(v) for v in self.bindings.values()]
 
 
+class TermBag(Sentence):
+    """
+    A bag of terms.
+
+    Example (using keyword arguments):
+
+        >>> tb = TermBag('Distance', {'start': ['London', 'Paris', 'Tokyo'], 'end': ['Paris', 'Tokyo', 'New York'], 'miles': [344, 9561, 10838]})
+        >>> tb
+        Distance(London, Paris, 344), Distance(Paris, Tokyo, 9561), Distance(Tokyo, New York, 10838)
+
+    Example (using positional arguments):
+
+        >>> tb = TermBag('Distance', ['London', 'Paris', 'Tokyo'], ['Paris', 'Tokyo', 'New York'], [344, 9561, 10838])
+        >>> tb
+        Distance(London, Paris, 344), Distance(Paris, Tokyo, 9561), Distance(Tokyo, New York, 10838)
+
+    """
+
+    def __init__(self, predicate: str, *args, **kwargs):
+        self.predicate = predicate
+        bindings: Dict[str, List[Any]]
+        if not args:
+            self.positional = None
+            bindings = {}
+        elif len(args) == 1 and isinstance(args[0], dict):
+            bindings = args[0]
+            self.positional = False
+        else:
+            bindings = {f"arg{i}": arg for i, arg in enumerate(args)}
+            self.positional = True
+        self.bindings = bindings
+        self._annotations = kwargs
+        self._validate()
+
+    def _validate(self):
+        if not self.predicate:
+            raise ValueError("No predicate provided")
+        if not self.bindings:
+            raise ValueError("No bindings provided")
+        if not all(isinstance(v, List) for v in self.bindings.values()):
+            raise ValueError("All bindings must be collections")
+
+    @property
+    def values(self) -> Tuple[List[Any], ...]:
+        """
+        Representation of the arguments of the term as a fixed-position tuples
+
+        :return:
+        """
+        return tuple([v for v in self.bindings.values()])
+
+    def make_keyword_indexed(self, keywords: List[str]):
+        """
+        Convert positional arguments to keyword arguments
+        """
+        if self.positional:
+            self.bindings = {k: v for k, v in zip(keywords, self.bindings.values(), strict=False)}
+            self.positional = False
+        self._validate()
+
+    def __repr__(self):
+        terms = self.as_terms()
+        return ", ".join(repr(t) for t in terms)
+
+    def __eq__(self, other):
+        # return isinstance(other, Term) and self.predicate == other.predicate and self.bindings == other.bindings
+        return isinstance(other, TermBag) and self.predicate == other.predicate and self.values == other.values
+
+    def __hash__(self):
+        return hash((self.predicate, tuple(self.values)))
+
+    def as_terms(self) -> List[Term]:
+        tuples = zip(*self.values)
+        return [Term(self.predicate, *tuple) for tuple in tuples]
+
+    def as_sexpr(self) -> SExpressionTerm:
+        return [t.as_sexpr() for t in self.as_terms()]
+
+
 class Extension(Sentence, ABC):
     """
-    Use this class for framework-specific extensions.
+    Use this abstract class for framework-specific extensions.
 
     An example of this is the `Fact` class which subclasses Extension, and is intended to be
-    subclasses by domain-specific classes representing predicate definitions, whose instances
+    subclassed by domain-specific classes representing predicate definitions, whose instances
     map to terms.
     """
 
@@ -935,6 +1022,10 @@ class Theory:
         """
         if isinstance(sentence, Extension):
             sentence = sentence.to_model_object()
+        if isinstance(sentence, TermBag):
+            for t in sentence.as_terms():
+                self.add(t)
+            return
         if not self.sentence_groups:
             self.sentence_groups = []
         self.sentence_groups.append(SentenceGroup(name="Sentences", sentences=[sentence]))

@@ -1,10 +1,15 @@
 """
-https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules
+Axioms for OWL-Full via RDF bridge.
+
+INCOMPLETE!
+
+Corresponds to [OWL 2 RL Docs](https://www.w3.org/TR/owl2-profiles/#Reasoning_in_OWL_2_RL_and_RDF_Graphs_using_Rules)
 """
 from rdflib import OWL
 
 from typedlogic import And, Not
-from typedlogic.integrations.frameworks.rdflib.rdfs import *
+from typedlogic.decorators import axiom
+from typedlogic.integrations.frameworks.rdflib.rdfs import Triple, Node, RDFS_SUBCLASS_OF, RDF_TYPE
 
 OWL_SAME_AS = OWL.sameAs
 OWL_DIFFERENT_FROM = OWL.differentFrom
@@ -17,6 +22,14 @@ OWL_NOTHING = OWL.Nothing
 
 @axiom
 def eq_ref(s: Node, p: Node, o: Node):
+    """
+    EQ REF axiom
+
+    :param s:
+    :param p:
+    :param o:
+    :return:
+    """
     assert Triple(s, p, o) >> And(
         Triple(s, OWL_SAME_AS, s),
         Triple(p, OWL_SAME_AS, p),

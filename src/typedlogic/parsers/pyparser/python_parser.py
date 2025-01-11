@@ -58,11 +58,21 @@ class PythonParser(Parser):
     """
     A parser for Python modules that contain axioms.
 
+    Example:
+
         >>> parser = PythonParser()
         >>> theory = parser.parse(Path("tests/theorems/mortals.py"))
         >>> assert isinstance(theory, Theory)
         >>> theory.name
         'mortals'
+        >>> [pd.predicate for pd in theory.predicate_definitions]
+        ['Person', 'Mortal', 'AncestorOf']
+        >>> for s in sorted(theory.sentences):
+        ...     print(s)
+        ((AncestorOf(p1, p2)) & (AncestorOf(p2, p3)) -> AncestorOf(p1, p3))
+        ∀x: TreeNodeType, y: TreeNodeType : ~(AncestorOf(?x, ?y)) & (AncestorOf(?y, ?x))
+        ∀x: TreeNodeType, y: TreeNodeType, z: TreeNodeType : ((AncestorOf(?x, ?z)) & (AncestorOf(?z, ?y)) -> AncestorOf(?x, ?y))
+        ∀x: NameType : (Person(?x) -> Mortal(?x))
     """
 
     def transform(self, source: ModuleType, **kwargs) -> Theory:
@@ -107,7 +117,35 @@ class PythonParser(Parser):
         """
         Validate a Python module
 
-        Note that mypy is assumed to be installed
+        Note that mypy is assumed to be installed.
+
+        Example:
+
+            >>> import tests.theorems.animals as animals
+            >>> pp = PythonParser()
+            >>> pp.validate(animals)
+            []
+
+        Next we try with a deliberate error:
+
+            >>> with open(animals.__file__) as f:
+            ...    prog = f.read()
+            >>> print(prog)
+            <BLANKLINE>
+            ...
+            @dataclass
+            class Likes(FactMixin):
+                subject: Thing
+                object: Thing
+            ...
+
+
+            >>> prog += "\\n@axiom\\n"
+            >>> prog += "def bad_axiom(x: Thing, y: int):\\n"
+            >>> prog += "    assert Likes(x, y)\\n"
+            >>> errs = pp.validate(prog)
+            >>> assert errs
+            >>> assert "incompatible type" in errs[0].message
 
         :param source:
         :param file_name:
@@ -117,11 +155,14 @@ class PythonParser(Parser):
         from mypy import api
 
         result: Optional[Tuple] = None
-        if isinstance(source, str):
+        if isinstance(source, ModuleType):
+            result = api.run([str(source.__file__)])
+        elif isinstance(source, str):
             with tempfile.NamedTemporaryFile(mode="w+t", delete=False) as temp_file:
                 temp_file.write(source)
+                temp_file.flush()
                 result = api.run([temp_file.name])
-        if isinstance(source, Path):
+        elif isinstance(source, Path):
             result = api.run([str(source)])
         if result is None:
             raise ValueError(f"Unsupported source type: {type(source)}")
