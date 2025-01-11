@@ -2,7 +2,7 @@
   (name "tests.theorems.barbers") 
   (constants 
     (dict 
-      ((List "typing.List")))) 
+      ())) 
   (type_definitions 
     (dict 
       ((NameType "str")))) 
