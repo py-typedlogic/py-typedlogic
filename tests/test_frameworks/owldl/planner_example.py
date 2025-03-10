@@ -8,17 +8,21 @@ from typedlogic.integrations.frameworks.owldl import IRI, Thing, TopDataProperty
 class FilesystemNode(Thing):
     """An entity in a filesystem with a distinct address."""
 
+
 class Directory(FilesystemNode):
     """A filesystem node that can contain other nodes."""
 
+
 class File(FilesystemNode):
     """A filesystem node that contains data."""
+
 
 class FileContents(TopDataProperty):
     """The data contained in a file."""
 
     domain = File
     range = str
+
 
 class Action(Thing, ABC):
     """An action has pre and post conditions."""
@@ -30,6 +34,7 @@ class Action(Thing, ABC):
     @abstractmethod
     def postconditions(self) -> Sentence:
         pass
+
 
 class CreateFile(Action):
     """Create a file."""
@@ -54,6 +59,7 @@ class DeleteFile(Action):
     def postconditions(self) -> Sentence:
         return ~File(self.node).to_model_object()
 
+
 class CopyFile(Action):
     """Copy a file."""
 
@@ -67,11 +73,4 @@ class CopyFile(Action):
         s = self.source
         t = self.target
         c = Variable("c", "str")
-        return And(
-            term(File, s),
-            term(File, t),
-            term(FileContents, s, c),
-            term(FileContents, t, c)
-        )
-
-
+        return And(term(File, s), term(File, t), term(FileContents, s, c), term(FileContents, t, c))

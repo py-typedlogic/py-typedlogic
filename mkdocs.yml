@@ -58,6 +58,8 @@ nav:
   - Tutorial:
      - 1. First program: tutorial/01-first-program
      - 2. Using the Python Data Model: tutorial/02-using-python-data-model
+     - 3. Probabilistic Logic: tutorial/03-probabilistic-logic
+     - 4. OWL-DL: tutorial/04-owldl
   - Concepts:
       - Core concepts: concepts/index.md
       - Data Model: concepts/datamodel.md
@@ -73,11 +75,13 @@ nav:
       Souffle: integrations/solvers/souffle.md
       Prover9: integrations/solvers/prover9.md
       SnakeLog: integrations/solvers/snakelog.md
+      ProbLog: integrations/solvers/problog.md
       LLM Solver: integrations/solvers/llm.md
   - Compilers:
       - Compiler overview: conversion/compilers/index.md
       - YAML: conversion/compilers/yaml.md
       - Prolog: conversion/compilers/prolog.md
+      - ProbLog: conversion/compilers/problog.md
       - TPTP: conversion/compilers/tptp.md
       - FOL: conversion/compilers/fol.md
       - S-Expression: conversion/compilers/sexpr.md
@@ -95,6 +99,7 @@ nav:
           - Reasoner: integrations/frameworks/owldl/reasoner.md
       - Pydantic: integrations/frameworks/pydantic
       - SQLModel: integrations/frameworks/sqlmodel.md
+      - RDF: integrations/frameworks/rdf/index.md
   - Command Line: cli.md
   - FAQ: faq.md
   - Roadmap: roadmap.md

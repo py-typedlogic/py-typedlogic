@@ -60,12 +60,10 @@ class YAMLParser(Parser):
                 del obj["@type"]
             if not default_predicate:
                 raise ValueError("No predicate found")
-            return Term(default_predicate,  obj)
+            return Term(default_predicate, obj)
         elif isinstance(obj, list):
             if not default_predicate:
                 raise ValueError("No predicate found")
             return Term(default_predicate, *obj)
         else:
             raise ValueError(f"Invalid object type: {type(obj)}")
-
-

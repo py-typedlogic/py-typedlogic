@@ -1,0 +1,4 @@
+path(X, Y, 1) :- link(X, Y).
+path(X, Z, D1 + D2) :- path(X, Y, D1), path(Y, Z, D2).
+query(link(Source, Target)).
+query(path(Source, Target, Hops)).

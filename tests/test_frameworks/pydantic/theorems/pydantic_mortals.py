@@ -7,26 +7,32 @@ from typedlogic.integrations.frameworks.pydantic import FactBaseModel
 
 ID = str
 
-IntOrFloat= Union[int, float]
+IntOrFloat = Union[int, float]
+
 
 class Person(BaseModel, FactMixin):
     name: ID = Field(..., description="unique name")
+
 
 class AncestorOf(FactBaseModel):
     ancestor: ID = Field(..., description="name of ancestor")
     descendant: ID = Field(..., description="name of descendant")
 
+
 class PersonAge(FactBaseModel):
     person: ID = Field(..., description="unique name of person")
     age: int = Field(..., ge=0)
+
 
 class PersonHeight(FactBaseModel):
     person: ID = Field(..., description="unique name of person")
     height: Union[int, float] = Field(..., description="height in cm")
 
+
 class PersonHeight2(FactBaseModel):
     person: ID = Field(..., description="unique name of person")
     height: IntOrFloat = Field(..., description="height in cm")
+
 
 @axiom
 def axioms():

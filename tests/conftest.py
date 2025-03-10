@@ -13,16 +13,20 @@ from tests import tree_edges
 def path_benchmark() -> Benchmark:
     return _path_benchmark(depth=3)
 
+
 @pytest.fixture
 def path_benchmark_d4() -> Benchmark:
     return _path_benchmark(depth=4)
+
 
 @pytest.fixture
 def path_benchmark_d5() -> Benchmark:
     return _path_benchmark(depth=5)
 
+
 def _path_benchmark(depth=3) -> Benchmark:
     from tests.theorems import paths
+
     parser = PythonParser()
     theory = parser.parse(paths)
     print("Parsed theory")
@@ -36,8 +40,9 @@ def _path_benchmark(depth=3) -> Benchmark:
         entities.update({source, target})
     seed.ground_terms = ground_terms
     entities_l = list(entities)
+
     def rand_entity() -> str:
-        return entities_l[randint(0, len(entities_l)-1)]
+        return entities_l[randint(0, len(entities_l) - 1)]
 
     candidate_goals: List[Sentence] = []
     for n in range(0, 20):

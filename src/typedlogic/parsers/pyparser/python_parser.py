@@ -17,6 +17,7 @@ from typedlogic.parsers.pyparser.introspection import (
 
 logger = logging.getLogger(__name__)
 
+
 def compile_python(python_txt: str, name: Optional[str] = None, package_path: Optional[str] = None) -> ModuleType:
     """
     Compile a Python module from a string
@@ -27,10 +28,10 @@ def compile_python(python_txt: str, name: Optional[str] = None, package_path: Op
     """
     if name is None:
         if package_path:
-            name = os.path.basename(package_path).split('.')[0]
+            name = os.path.basename(package_path).split(".")[0]
         else:
-            name = 'test'
-    spec = compile(python_txt, name, 'exec')
+            name = "test"
+    spec = compile(python_txt, name, "exec")
     module = ModuleType(name)
     if package_path:
         package_path_abs = os.path.join(os.getcwd(), package_path)
@@ -44,8 +45,10 @@ def compile_python(python_txt: str, name: Optional[str] = None, package_path: Op
                 break
         else:
             logger.warning(f"There is no established path to {package_path} - compile_python may or may not work")
-            path_from_tests_parent = os.path.relpath(package_path, os.path.join(os.getcwd(), '..'))
-        module.__package__ = os.path.dirname(os.path.relpath(path_from_tests_parent, os.getcwd())).replace(os.path.sep, '.')
+            path_from_tests_parent = os.path.relpath(package_path, os.path.join(os.getcwd(), ".."))
+        module.__package__ = os.path.dirname(os.path.relpath(path_from_tests_parent, os.getcwd())).replace(
+            os.path.sep, "."
+        )
     sys.modules[module.__name__] = module
     exec(spec, module.__dict__)
     return module
@@ -55,11 +58,21 @@ class PythonParser(Parser):
     """
     A parser for Python modules that contain axioms.
 
+    Example:
+
         >>> parser = PythonParser()
         >>> theory = parser.parse(Path("tests/theorems/mortals.py"))
         >>> assert isinstance(theory, Theory)
         >>> theory.name
         'mortals'
+        >>> [pd.predicate for pd in theory.predicate_definitions]
+        ['Person', 'Mortal', 'AncestorOf']
+        >>> for s in sorted(theory.sentences):
+        ...     print(s)
+        ((AncestorOf(p1, p2)) & (AncestorOf(p2, p3)) -> AncestorOf(p1, p3))
+        ∀x: TreeNodeType, y: TreeNodeType : ~(AncestorOf(?x, ?y)) & (AncestorOf(?y, ?x))
+        ∀x: TreeNodeType, y: TreeNodeType, z: TreeNodeType : ((AncestorOf(?x, ?z)) & (AncestorOf(?z, ?y)) -> AncestorOf(?x, ?y))
+        ∀x: NameType : (Person(?x) -> Mortal(?x))
     """
 
     def transform(self, source: ModuleType, **kwargs) -> Theory:
@@ -98,11 +111,41 @@ class PythonParser(Parser):
             return self.parse(lines, file_name=file_name, **kwargs)
         raise ValueError(f"Unsupported source type: {type(source)}")
 
-    def validate_iter(self, source: Union[Path, str, TextIO, ModuleType], file_name: Optional[str] = None, **kwargs) -> Iterator[ValidationMessage]:
+    def validate_iter(
+        self, source: Union[Path, str, TextIO, ModuleType], file_name: Optional[str] = None, **kwargs
+    ) -> Iterator[ValidationMessage]:
         """
         Validate a Python module
 
-        Note that mypy is assumed to be installed
+        Note that mypy is assumed to be installed.
+
+        Example:
+
+            >>> import tests.theorems.animals as animals
+            >>> pp = PythonParser()
+            >>> pp.validate(animals)
+            []
+
+        Next we try with a deliberate error:
+
+            >>> with open(animals.__file__) as f:
+            ...    prog = f.read()
+            >>> print(prog)
+            <BLANKLINE>
+            ...
+            @dataclass
+            class Likes(FactMixin):
+                subject: Thing
+                object: Thing
+            ...
+
+
+            >>> prog += "\\n@axiom\\n"
+            >>> prog += "def bad_axiom(x: Thing, y: int):\\n"
+            >>> prog += "    assert Likes(x, y)\\n"
+            >>> errs = pp.validate(prog)
+            >>> assert errs
+            >>> assert "incompatible type" in errs[0].message
 
         :param source:
         :param file_name:
@@ -110,12 +153,16 @@ class PythonParser(Parser):
         :return:
         """
         from mypy import api
+
         result: Optional[Tuple] = None
-        if isinstance(source, str):
-            with tempfile.NamedTemporaryFile(mode='w+t', delete=False) as temp_file:
+        if isinstance(source, ModuleType):
+            result = api.run([str(source.__file__)])
+        elif isinstance(source, str):
+            with tempfile.NamedTemporaryFile(mode="w+t", delete=False) as temp_file:
                 temp_file.write(source)
+                temp_file.flush()
                 result = api.run([temp_file.name])
-        if isinstance(source, Path):
+        elif isinstance(source, Path):
             result = api.run([str(source)])
         if result is None:
             raise ValueError(f"Unsupported source type: {type(source)}")
@@ -127,6 +174,3 @@ class PythonParser(Parser):
             raise ValueError(f"No output from mypy; ret={exit_code}; stdout={stdout}; stderr={stderr}")
         for line in lines:
             yield ValidationMessage(line)
-
-
-

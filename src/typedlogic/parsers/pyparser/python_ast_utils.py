@@ -20,32 +20,31 @@ from typedlogic.datamodel import (
 logger = logging.getLogger(__name__)
 
 AST_OP_TO_FUN: Mapping[str, Callable] = {
-    'Add': operator.add,
-    'Sub': operator.sub,
-    'Mult': operator.mul,
-    'Div': operator.truediv,
-    'FloorDiv': operator.floordiv,
-    'Mod': operator.mod,
-    'Pow': operator.pow,
-    'LShift': operator.lshift,
-    'RShift': operator.rshift,
-    'BitOr': operator.or_,
-    'BitXor': operator.xor,
-    'BitAnd': operator.and_,
-    'MatMult': operator.matmul,
+    "Add": operator.add,
+    "Sub": operator.sub,
+    "Mult": operator.mul,
+    "Div": operator.truediv,
+    "FloorDiv": operator.floordiv,
+    "Mod": operator.mod,
+    "Pow": operator.pow,
+    "LShift": operator.lshift,
+    "RShift": operator.rshift,
+    "BitOr": operator.or_,
+    "BitXor": operator.xor,
+    "BitAnd": operator.and_,
+    "MatMult": operator.matmul,
     # Comparison operators
-    'Eq': operator.eq,
-    'NotEq': operator.ne,
-    'Lt': operator.lt,
-    'LtE': operator.le,
-    'Gt': operator.gt,
-    'GtE': operator.ge,
-    'Is': operator.is_,
-    'IsNot': operator.is_not,
-    'In': lambda x, y: x in y,
-    'NotIn': lambda x, y: x not in y,
+    "Eq": operator.eq,
+    "NotEq": operator.ne,
+    "Lt": operator.lt,
+    "LtE": operator.le,
+    "Gt": operator.gt,
+    "GtE": operator.ge,
+    "Is": operator.is_,
+    "IsNot": operator.is_not,
+    "In": lambda x, y: x in y,
+    "NotIn": lambda x, y: x not in y,
 }
-
 
 
 def parse_sentence(node: Union[ast.AST, List[ast.stmt]]) -> Sentence:
@@ -61,10 +60,19 @@ def parse_sentence(node: Union[ast.AST, List[ast.stmt]]) -> Sentence:
         >>> negated
         Person(?x)
 
+    Unary predicates:
+
+        >>> tree = ast.parse("if Coin(c): assert Win()")
+        >>> func_def = tree.body[0]
+        >>> sentence = parse_sentence(func_def)
+        >>> str(sentence)
+        '(Coin(?c) -> Win)'
+
     :param node: The AST node to parse
     :type node: Union[ast.AST, List[ast.stmt]]
     :return: A Term instance
     """
+
     def tr_arg_or_kw_value(v: ast.expr) -> Any:
         if isinstance(v, ast.Constant):
             return v.value
@@ -73,7 +81,7 @@ def parse_sentence(node: Union[ast.AST, List[ast.stmt]]) -> Sentence:
         elif isinstance(v, (ast.BinOp, ast.UnaryOp, ast.Call)):
             return parse_sentence(v)
         else:
-            raise ValueError(f"Unsupported argument type: {type(v)}")
+            raise ValueError(f"Unsupported argument type: {type(v)} in {v}")
 
     def parse_sentence_or_variable(v: ast.expr) -> Union[Sentence, Variable, Any]:
         if isinstance(v, ast.Name):
@@ -139,7 +147,9 @@ def parse_sentence(node: Union[ast.AST, List[ast.stmt]]) -> Sentence:
         if orelse:
             raise ValueError("Else clause is not supported")
         return parse_sentence(test) >> parse_sentence(body)
-    elif isinstance(node, ast.Call) and (isinstance(node.func, ast.Name) and node.func.id in ["Implies", "Iff", "Implied"]):
+    elif isinstance(node, ast.Call) and (
+        isinstance(node.func, ast.Name) and node.func.id in ["Implies", "Iff", "Implied"]
+    ):
         if len(node.args) != 2:
             raise ValueError(f"Unsupported number of arguments for {node.func.id}: {len(node.args)}")
         left = parse_sentence(node.args[0])
@@ -181,6 +191,7 @@ def parse_sentence(node: Union[ast.AST, List[ast.stmt]]) -> Sentence:
             else:
                 raise ValueError(f"Unsupported keyword value type: {type(kw.value)}")
             return kw.arg, v
+
         if node.keywords:
             # keyword-based arguments are translated to a dict
             bindings = dict([tr_keyword(kw) for kw in node.keywords])
@@ -190,7 +201,8 @@ def parse_sentence(node: Union[ast.AST, List[ast.stmt]]) -> Sentence:
             pos_args = [tr_arg_or_kw_value(arg) for arg in node.args]
             return Term(predicate, *pos_args)
         else:
-            return Term(predicate, {})
+            return Term(predicate)
+            # return Term(predicate, {})
     elif isinstance(node, ast.Compare):
         left = tr_arg_or_kw_value(node.left)
         if len(node.comparators) != 1:
@@ -264,6 +276,7 @@ def get_func_name(node: ast.expr) -> str:
         return f"{get_func_name(node.value)}.{node.attr}"
     else:
         return ast.unparse(node)
+
 
 def parse_gen_call(node: ast.Call) -> tuple[str, List[str]]:
     """
@@ -348,10 +361,12 @@ def parse_function_def_to_sentence_group(func_def: ast.FunctionDef) -> SentenceG
 
     sentences = []
     for body_node in func_def.body:
+
         def add_sentence(s: Sentence):
             if qvars:
                 s = Forall([v for v in qvars.values()], s)
             sentences.append(s)
+
         if isinstance(body_node, ast.Return):
             if body_node.value:
                 sentence = parse_sentence(body_node.value)

@@ -1,0 +1,116 @@
+type: Theory
+name: tests.theorems.probabilistic.coins2
+constants: {}
+type_definitions: {}
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: Probability
+  arguments:
+    probability: float
+    that: That
+  parents: []
+- type: PredicateDefinition
+  predicate: That
+  arguments:
+    sentence: Sentence
+  parents: []
+- type: PredicateDefinition
+  predicate: Coin
+  arguments:
+    id: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Heads
+  arguments:
+    id: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Tails
+  arguments:
+    id: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Win
+  arguments: {}
+  parents: []
+sentence_groups:
+- type: SentenceGroup
+  name: win
+  group_type: axiom
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - c
+        - str
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - Heads
+        - type: Variable
+          arguments:
+          - c
+      - type: Term
+        arguments:
+        - Win
+- type: SentenceGroup
+  name: probs
+  group_type: axiom
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - c
+        - str
+    - type: Term
+      arguments:
+      - eq
+      - type: Term
+        arguments:
+        - probability
+        - type: Implies
+          arguments:
+          - type: Term
+            arguments:
+            - Coin
+            - type: Variable
+              arguments:
+              - c
+          - type: Term
+            arguments:
+            - Heads
+            - type: Variable
+              arguments:
+              - c
+      - 0.4
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - c
+        - str
+    - type: Term
+      arguments:
+      - eq
+      - type: Term
+        arguments:
+        - probability
+        - type: Implies
+          arguments:
+          - type: Term
+            arguments:
+            - Coin
+            - type: Variable
+              arguments:
+              - c
+          - type: Term
+            arguments:
+            - Tails
+            - type: Variable
+              arguments:
+              - c
+      - 0.6
+ground_terms: []

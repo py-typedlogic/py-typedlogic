@@ -12,6 +12,7 @@ Currently the solvers supported are:
 - [Clingo](../integrations/solvers/clingo)
 - [Prover9](../integrations/solvers/prover9)
 - [Snakelog](../integrations/solvers/snakelog)
+- [ProbLog](../integrations/solvers/problog.md)
 
 With support for more solvers (Vampire, OWL reasoners, etc.) planned.
 
@@ -75,7 +76,7 @@ class OwnsPet(BaseModel, FactMixin):
 ```
 
 Note in many logic frameworks these definitions don't have a direct translation, but in sorted logics, these
-may correspond to [predicate definitions](../datamodel).
+may correspond to [predicate definitions](datamodel).
 
 ## Axioms
 

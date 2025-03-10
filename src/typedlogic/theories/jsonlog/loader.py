@@ -26,6 +26,7 @@ def generate_from_source(source: Union[Path, str, Any]) -> Iterator[Fact]:
         obj = source
     yield from generate_from_object(obj)
 
+
 def generate_from_object(obj: Any, jsonpath: str = "/") -> Iterator[Fact]:
     if isinstance(obj, dict):
         yield NodeIsObject(jsonpath)
@@ -54,5 +55,3 @@ def generate_from_object(obj: Any, jsonpath: str = "/") -> Iterator[Fact]:
             # TODO: other numbers
         else:
             raise ValueError(f"Unexpected object type: {type(obj)}")
-
-

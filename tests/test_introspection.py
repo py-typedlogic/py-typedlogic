@@ -1,4 +1,3 @@
-
 from typedlogic import Implies
 from typedlogic.datamodel import And, Forall, Term, Variable
 from typedlogic.parsers.pyparser.introspection import (
@@ -10,6 +9,7 @@ from typedlogic.parsers.pyparser.introspection import (
 
 def test_introspect_theory():
     import tests.theorems.mortals as mortals
+
     theory = translate_module_to_theory(mortals)
     assert theory
     assert theory.name
@@ -17,6 +17,7 @@ def test_introspect_theory():
 
 def test_introspect():
     import tests.theorems.mortals as mortals
+
     ascs = get_module_sentence_groups(mortals)
     assert len(ascs) == 4
     for asc in ascs:
@@ -52,35 +53,37 @@ def test_introspect():
     assert vars[1].name == "y"
 
 
-
 def test_introspect_classes():
     import tests.theorems.mortals as mortals
+
     preddef_map = get_module_predicate_definitions(mortals)
     for name, pd in preddef_map.items():
         print(f"{name}: {pd}")
         # print(vars(cls))
     assert len(preddef_map) == 3
-    assert 'Mortal' in preddef_map
-    assert 'Person' in preddef_map
-    assert 'AncestorOf' in preddef_map
-    assert len(preddef_map['Mortal'].arguments) == 1
-    assert len(preddef_map['Person'].arguments) == 1
-    assert len(preddef_map['AncestorOf'].arguments) == 2
+    assert "Mortal" in preddef_map
+    assert "Person" in preddef_map
+    assert "AncestorOf" in preddef_map
+    assert len(preddef_map["Mortal"].arguments) == 1
+    assert len(preddef_map["Person"].arguments) == 1
+    assert len(preddef_map["AncestorOf"].arguments) == 2
 
 
 def test_introspect_classes2():
     import tests.theorems.animals as animals
+
     preddef_map = get_module_predicate_definitions(animals)
     for name, pd in preddef_map.items():
         print(f"{name}: {pd}")
         # print(vars(cls))
     assert len(preddef_map) == 3
-    assert len(preddef_map['Person'].arguments) == 1
-    assert len(preddef_map['Likes'].arguments) == 2
+    assert len(preddef_map["Person"].arguments) == 1
+    assert len(preddef_map["Likes"].arguments) == 2
 
 
 def test_introspect_classes3():
     import tests.theorems.numbers as numbers
+
     preddef_map = get_module_predicate_definitions(numbers)
     for name, pd in preddef_map.items():
         print(f"{name}: {pd}")
@@ -92,6 +95,7 @@ def test_introspect_classes3():
 
 def test_introspect_imports():
     import tests.theorems.import_test.ext as ext
+
     preddef_map = get_module_predicate_definitions(ext)
     for name, pd in preddef_map.items():
         print(f"{name}: parents={pd.parents}")
@@ -99,13 +103,14 @@ def test_introspect_imports():
             t = pd.argument_base_type(arg_name)
         # print(vars(cls))
     assert len(preddef_map) == 4
-    assert 'Person' in preddef_map
-    person_pd = preddef_map['Person']
-    assert person_pd.parents == ['NamedThing']
+    assert "Person" in preddef_map
+    person_pd = preddef_map["Person"]
+    assert person_pd.parents == ["NamedThing"]
 
 
 def test_introspect_type_example():
     import tests.theorems.types_example as te
+
     theory = translate_module_to_theory(te)
     assert theory.constants
     print(theory.constants)
@@ -119,6 +124,7 @@ def test_introspect_type_example():
 
 def test_introspect_defined_type_example():
     import tests.theorems.defined_types_example as te
+
     theory = translate_module_to_theory(te)
     assert theory.constants
     for c in theory.constants.values():
@@ -129,7 +135,7 @@ def test_introspect_defined_type_example():
     assert theory.type_definitions
     for td, td_v in theory.type_definitions.items():
         print(f"TD: {td}  = {td_v}")
-    #print(theory.type_definitions)
+    # print(theory.type_definitions)
     assert len(theory.type_definitions) == 5
     assert theory.type_definitions["Thing"] == ["str", "int"]
     assert theory.type_definitions["PosInt"] == "int"
@@ -138,8 +144,9 @@ def test_introspect_defined_type_example():
 
 
 def test_function_term_example():
-    #pytest.skip("Not implemented")
+    # pytest.skip("Not implemented")
     import tests.theorems.paths_with_distance as pwd
+
     theory = translate_module_to_theory(pwd)
     for s in theory.sentences:
         print(s)
@@ -149,11 +156,42 @@ def test_function_term_example():
     z = Variable("z")
     d1 = Variable("d1", "int")
     d2 = Variable("d2", "int")
-    s = Forall([x,y,z,d1,d2],
-                Implies(And(
-                    Term("Path", x, y, d1),
-                              Term("Path", y, z, d2),
-                ),
-                Term("Path", x, z, Term("add", d1, d2))
-                ))
+    s = Forall(
+        [x, y, z, d1, d2],
+        Implies(
+            And(
+                Term("Path", x, y, d1),
+                Term("Path", y, z, d2),
+            ),
+            Term("Path", x, z, Term("add", d1, d2)),
+        ),
+    )
     assert theory.sentences[1] == s
+
+
+def test_unary_predicates():
+    import tests.theorems.unary_predicates as unary_predicates
+
+    theory = translate_module_to_theory(unary_predicates)
+    coin_cls = unary_predicates.Coin
+    assert coin_cls
+    assert list(coin_cls.__annotations__.keys()) == ["id"]
+    win_cls = unary_predicates.Win
+    assert win_cls
+    assert list(win_cls.__annotations__.keys()) == []
+    pd_map = {pd.predicate: pd for pd in theory.predicate_definitions}
+    win_pd = pd_map["Win"]
+    assert win_pd
+    assert win_pd.predicate == "Win"
+    # assert win_pd.arguments == {}
+    found = False
+    for s in theory.sentences:
+        if isinstance(s, Forall):
+            s = s.sentence
+        if isinstance(s, Implies):
+            cons = s.consequent
+            if isinstance(cons, Term):
+                if cons.predicate == "Win":
+                    assert cons.values == ()
+                    found = True
+    assert found

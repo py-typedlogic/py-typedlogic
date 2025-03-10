@@ -2,3 +2,5 @@
 
 ::: typedlogic.transformations
 
+::: typedlogic.transformations.PrologConfig
+

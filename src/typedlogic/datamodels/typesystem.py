@@ -16,6 +16,7 @@ class BaseType(Enum):
     TUPLE = "tuple"
     SET = "set"
 
+
 # Mapping dictionaries
 python_type_mapping: Dict[BaseType, Any] = {
     BaseType.STR: str,
@@ -42,6 +43,7 @@ json_schema_mapping: Dict[BaseType, str] = {
 # Reverse mappings for lookup; prioritize first entry in case of duplicates
 python_type_to_base_type: Dict[Any, BaseType] = {v: k for k, v in reversed(python_type_mapping.items())}
 json_schema_to_base_type: Dict[str, BaseType] = {v: k for k, v in reversed(json_schema_mapping.items())}
+
 
 def get_python_type(base_type: Union[BaseType, str]) -> Optional[Any]:
     """
@@ -77,6 +79,7 @@ def get_python_type(base_type: Union[BaseType, str]) -> Optional[Any]:
             return None
     return python_type_mapping.get(base_type)
 
+
 def get_json_schema_type(base_type: BaseType) -> str:
     """
     Get the corresponding JSON Schema type for a given BaseType.
@@ -104,6 +107,7 @@ def get_json_schema_type(base_type: BaseType) -> str:
 
     """
     return json_schema_mapping[base_type]
+
 
 def from_python_type(py_type: Any) -> BaseType:
     """
@@ -138,6 +142,7 @@ def from_python_type(py_type: Any) -> BaseType:
     if py_type in python_type_to_base_type:
         return python_type_to_base_type[py_type]
     raise ValueError(f"No matching BaseType for Python type: {py_type}")
+
 
 def from_json_schema_type(json_type: str) -> BaseType:
     """

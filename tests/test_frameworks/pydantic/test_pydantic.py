@@ -7,12 +7,13 @@ from tests.test_frameworks.pydantic.theorems.pydantic_mortals import *
 X = Variable("x")
 Y = Variable("y")
 
+
 def test_expressions():
-    t1 = AncestorOf(ancestor='a', descendant='b')
-    t2 = AncestorOf(ancestor='b', descendant='c')
+    t1 = AncestorOf(ancestor="a", descendant="b")
+    t2 = AncestorOf(ancestor="b", descendant="c")
     assert isinstance(t1, Fact)
     assert isinstance(t2, Fact)
-    assert t1.as_sexpr() == ['AncestorOf', 'a', 'b']
+    assert t1.as_sexpr() == ["AncestorOf", "a", "b"]
     assert isinstance(t1 & t2, And)
     assert isinstance(t1 | t2, Or)
     assert isinstance(~t1, Not)
@@ -21,18 +22,21 @@ def test_expressions():
     assert isinstance(t1 ^ t2, Xor)
     assert isinstance(not_provable(t1), NegationAsFailure)
 
+
 def test_positional():
     assert AncestorOf("a", "b") == AncestorOf(ancestor="a", descendant="b")
     assert AncestorOf("a", "b").to_model_object() == Term("AncestorOf", "a", "b")
 
+
 def test_predicate_definitions():
     pp = PythonParser()
     import tests.test_frameworks.pydantic.theorems.pydantic_mortals as pm
+
     theory = pp.parse(pm)
     pd_map = {pd.predicate: pd for pd in theory.predicate_definitions}
     for pd in theory.predicate_definitions:
         print(pd)
-    assert pd_map["PersonAge"].arguments == {'person': 'str', 'age': 'int'}
+    assert pd_map["PersonAge"].arguments == {"person": "str", "age": "int"}
     # TODO:
     # assert pd_map["PersonHeight"].arguments == {'person': 'ID', 'height': ["int", "float"]}
 

@@ -10,13 +10,14 @@ from tests.theorems import animals, numbers, types_example
 
 X = Variable("x")
 
+
 def test_solver():
     solver = Z3Solver()
     parser = PythonParser()
     theory = parser.transform(mortals)
-    #for s in theory.sentences:
+    # for s in theory.sentences:
     #    print(s)
-    #print(theory)
+    # print(theory)
     solver.add(theory)
     assert solver.check().satisfiable
     f1 = mortals.AncestorOf(ancestor="p1", descendant="p1a")
@@ -25,30 +26,31 @@ def test_solver():
     solver.add_fact(f1)
     assert solver.check().satisfiable
     solver.add_fact(f2)
-    #print(solver.wrapped_solver)
+    # print(solver.wrapped_solver)
     assert solver.check().satisfiable
     models = list(solver.models())
     assert models
-    print("MODELS:" , models)
+    print("MODELS:", models)
     model = models[0]
-    #for f in model.facts:
+    # for f in model.facts:
     #    print(f" FACT={f}")
     # cycle
     f3 = mortals.AncestorOf(ancestor="p1aa", descendant="p1")
     solver.add_fact(f3)
     assert not solver.check().satisfiable
-    #print(solver.dump())
-    #print(solver.wrapped_solver.sexpr())
+    # print(solver.dump())
+    # print(solver.wrapped_solver.sexpr())
 
-@pytest.mark.parametrize("axioms,goal,provable", [
-    (Term("p", "a"), Term("p", "a"), True),
-    (Term("p", "a"), Term("p", "b"), False),
-    (Term("n", 1), Term("n", 1), True),
-    (Term("n", 1), Term("n", 2), False),
-    (Forall([X], Term("p", X) >> Term("q", X)),
-     (Term("p", "a") >> Term("p", "a")),
-      True),
-    ]
+
+@pytest.mark.parametrize(
+    "axioms,goal,provable",
+    [
+        (Term("p", "a"), Term("p", "a"), True),
+        (Term("p", "a"), Term("p", "b"), False),
+        (Term("n", 1), Term("n", 1), True),
+        (Term("n", 1), Term("n", 2), False),
+        (Forall([X], Term("p", X) >> Term("q", X)), (Term("p", "a") >> Term("p", "a")), True),
+    ],
 )
 def test_prove(axioms, goal, provable):
     solver = Z3Solver()
@@ -58,7 +60,6 @@ def test_prove(axioms, goal, provable):
     solver.add(axioms)
     assert solver.check().satisfiable
     assert solver.prove(goal) == provable
-
 
 
 def test_prove_goals():
@@ -71,6 +72,7 @@ def test_prove_goals():
     results = list(solver.prove_goals(strict=True))
     assert results
     assert len(results) == 1
+
 
 def test_z3_compiler():
     parser = PythonParser()
@@ -100,11 +102,14 @@ def test_z3_compiler():
     # assert "(age Integer)" in sexpr
 
 
-@pytest.mark.parametrize("t1,t2,inst1,inst2", [
-    ("str", "str", "v1", "v2"),
-    ("str", "int", "v1", 5),
-    ("int", "int", 1, 2),
-])
+@pytest.mark.parametrize(
+    "t1,t2,inst1,inst2",
+    [
+        ("str", "str", "v1", "v2"),
+        ("str", "int", "v1", 5),
+        ("int", "int", 1, 2),
+    ],
+)
 def test_types(t1, t2, inst1, inst2):
     solver = Z3Solver()
     compiler = Z3Compiler()
@@ -126,24 +131,25 @@ def test_types(t1, t2, inst1, inst2):
     sexpr = compiler.compile(theory)
     print(sexpr)
     assert sexpr
+
     def map_type(t):
         if t == "int":
             return "Int"
         if t == "str":
             return "String"
         return t
+
     def map_val(v):
         if isinstance(v, str):
             return f'"{v}"'
         return str(v)
+
     t1m = map_type(t1)
     t2m = map_type(t2)
     assert f"(declare-fun Test ({t1m} {t2m}) Bool)" in sexpr
     inst1m = map_val(inst1)
     inst2m = map_val(inst2)
     assert f"(assert (Test {inst1m} {inst2m}))" in sexpr
-
-
 
 
 def test_animals():

@@ -18,10 +18,12 @@ class InvalidClassSlot(Fact):
     cls: ElementID
     slot: ElementID
 
+
 @dataclass(frozen=True)
 class Disjoint(Fact):
     lhs: ElementID
     rhs: ElementID
+
 
 @axiom
 def disjoint(lhs: ElementID, rhs: ElementID, parent: ElementID):
@@ -41,10 +43,12 @@ def invalid_class_slot(cls: ElementID, slot: ElementID):
     if ClassDefinition(cls) and SlotDefinition(slot) and ~ClassSlot(cls, slot):
         assert InvalidClassSlot(cls, slot)
 
+
 @dataclass(frozen=True)
 class SlotUsageOrAttribute(Fact):
     cls: ElementID
     slot_expression: ElementID
+
 
 @axiom
 def slot_usage_or_attribute(cls: ElementID, slot_expression: ElementID):
@@ -52,6 +56,7 @@ def slot_usage_or_attribute(cls: ElementID, slot_expression: ElementID):
         assert Parent(cls, slot_expression)
     if Attribute(cls, slot_expression):
         assert Parent(cls, slot_expression)
+
 
 @dataclass(frozen=True)
 class Parent(Fact):
@@ -70,9 +75,8 @@ def parent(element: ElementID, parent: ElementID):
     if Mixin(element, parent):
         assert Parent(element, parent)
 
+
 @axiom
 def class_slot(cls: ElementID, slot: ElementID, parent: ElementID):
     if Parent(cls, parent) and ClassSlot(parent, slot):
         assert Parent(cls, slot)
-
-

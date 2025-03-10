@@ -30,6 +30,7 @@ SORT_MAP: Mapping[str, Type[SortRef]] = {
     "float": z3.RealSort,
 }
 
+
 # Return the first "M" models of formula list of formulas F
 def get_models(s: z3.Solver, M: int) -> List[z3.Model]:
     # https://stackoverflow.com/questions/11867611/z3py-checking-all-solutions-for-equation
@@ -46,7 +47,7 @@ def get_models(s: z3.Solver, M: int) -> List[z3.Model]:
             if d.arity() > 0:
                 logger.warning(f"ignoring uninterpreted function {d}")
                 continue
-                #raise z3.Z3Exception(f"uninterpreted functions are not supported; {d}")
+                # raise z3.Z3Exception(f"uninterpreted functions are not supported; {d}")
             # create a constant from declaration
             c = d()
             if z3.is_array(c) or c.sort().kind() == z3.Z3_UNINTERPRETED_SORT:
@@ -55,8 +56,6 @@ def get_models(s: z3.Solver, M: int) -> List[z3.Model]:
         s.add(z3.Or(block))
     s.pop()
     return result
-
-
 
 
 @dataclass
@@ -80,7 +79,9 @@ class Z3Solver(Solver):
     """
 
     _wrapped_solver: Optional[z3.Solver] = None
-    profile: ClassVar[Profile] = MixedProfile(Unrestricted(), SortedLogic(), MultipleModelSemantics(), OpenWorld(), AllowsComparisonTerms())
+    profile: ClassVar[Profile] = MixedProfile(
+        Unrestricted(), SortedLogic(), MultipleModelSemantics(), OpenWorld(), AllowsComparisonTerms()
+    )
     max_models: int = field(default=5)
 
     # TODO: rename this
@@ -105,10 +106,11 @@ class Z3Solver(Solver):
         if not results:
             raise ValueError("Not satisfiable")
         for wmodel in results:
-            rmodel = Model(description=str(wmodel),
-                           source_object=wmodel,
-                           ground_terms=[],
-                           )
+            rmodel = Model(
+                description=str(wmodel),
+                source_object=wmodel,
+                ground_terms=[],
+            )
             yield rmodel
         return
 
@@ -198,7 +200,6 @@ class Z3Solver(Solver):
         z3_expr = self.translate(sentence)
         self.wrapped_solver.add(z3_expr)
 
-
     def add_predicate_definition(self, predicate_definition: PredicateDefinition) -> None:
         """
         Add a predicate definition to the solver.
@@ -235,8 +236,12 @@ class Z3Solver(Solver):
         if isinstance(sentence, tlog.ExactlyOne):
             disj = []
             for a in sentence.operands:
-                disj.append(z3.And(self.translate(a, bindings),
-                                   *[z3.Not(self.translate(b, bindings)) for b in sentence.operands if b != a]))
+                disj.append(
+                    z3.And(
+                        self.translate(a, bindings),
+                        *[z3.Not(self.translate(b, bindings)) for b in sentence.operands if b != a],
+                    )
+                )
             return z3.Or(*disj)
         if isinstance(sentence, tlog.Not):
             return z3.Not(self.translate(sentence.operands[0], bindings))
@@ -271,7 +276,7 @@ class Z3Solver(Solver):
                 return z3.Exists(args, inner_sentence)
             else:
                 return z3.ForAll(args, inner_sentence)
-        if isinstance(sentence, (tlog.Term, typedlogic.pybridge.FactMixin)): # TODO: use Expression
+        if isinstance(sentence, (tlog.Term, typedlogic.pybridge.FactMixin)):  # TODO: use Expression
             if isinstance(sentence, typedlogic.pybridge.FactMixin):
                 sentence = tlog.Term(fact_predicate(sentence), fact_arg_map(sentence))
             if not self.predicate_map or not self.predicate_definitions:
@@ -281,8 +286,10 @@ class Z3Solver(Solver):
             if pf is None and sentence.predicate in NUMERIC_BUILTINS:
                 pf = NUMERIC_BUILTINS[sentence.predicate]
             elif pf is None or pd is None:
-                raise ValueError(f"Predicate {sentence.predicate} not found in {self.predicate_map}\n"
-                                 "Did you remember to declare these as predicates?")
+                raise ValueError(
+                    f"Predicate {sentence.predicate} not found in {self.predicate_map}\n"
+                    "Did you remember to declare these as predicates?"
+                )
             elif sentence.positional:
                 # TODO: more elegant way to do this
                 sentence = copy(sentence)
@@ -328,8 +335,7 @@ class Z3Solver(Solver):
             except Exception as e:
                 raise ValueError(f"Error translating {sentence} args: {pf_args} to Z3 using {pf}:\n{e}")
             return z3_expr
-        raise NotImplementedError(f'Not implemented:{type(sentence)} :: {sentence}')
+        raise NotImplementedError(f"Not implemented:{type(sentence)} :: {sentence}")
 
     def dump(self) -> str:
         return str(self.wrapped_solver)
-

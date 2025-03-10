@@ -1,7 +1,7 @@
 RUN = poetry run
 
 all: test
-test: pytest doctest mypy
+test: pytest doctest mypy codespell
 test-full: test all-nb
 
 pytest:
@@ -9,6 +9,9 @@ pytest:
 
 mypy:
 	$(RUN) mypy src tests
+
+codespell:
+	$(RUN) tox -e codespell
 
 DOCTEST_DIR = src
 doctest:

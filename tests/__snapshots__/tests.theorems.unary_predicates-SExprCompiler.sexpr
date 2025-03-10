@@ -1,0 +1,66 @@
+(Theory 
+  (name "tests.theorems.unary_predicates") 
+  (constants 
+    (dict 
+      ())) 
+  (type_definitions 
+    (dict 
+      ())) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "Coin") 
+        (arguments 
+          (dict 
+            ((id "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Heads") 
+        (arguments 
+          (dict 
+            ((id "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Tails") 
+        (arguments 
+          (dict 
+            ((id "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Win") 
+        (arguments 
+          (dict 
+            ())) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)))) 
+  (sentence_groups 
+    ((SentenceGroup 
+        (name "win_heads") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "c" "str")) 
+              (Implies 
+                (Heads 
+                  (Variable "c")) 
+                (Win))))) 
+        (_annotations null)))) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))

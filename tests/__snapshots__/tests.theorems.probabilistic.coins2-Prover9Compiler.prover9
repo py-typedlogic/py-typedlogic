@@ -1,0 +1,9 @@
+% Problem: tests.theorems.probabilistic.coins2
+formulas(assumptions).
+    all c ((Heads(c) -> Win)).
+    all c (eq(probability((Coin(?c) -> Heads(?c))), rational(2,5))).
+    all c (eq(probability((Coin(?c) -> Tails(?c))), rational(3,5))).
+end_of_list.
+
+formulas(goals).
+end_of_list.

@@ -1,0 +1,99 @@
+type: Theory
+name: tests.theorems.barbers
+constants: {}
+type_definitions:
+  NameType: str
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: Person
+  arguments:
+    name: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Barber
+  arguments:
+    name: str
+  parents:
+  - Person
+- type: PredicateDefinition
+  predicate: Shaves
+  arguments:
+    shaver: str
+    customer: str
+  parents: []
+sentence_groups:
+- type: SentenceGroup
+  name: shaves
+  group_type: axiom
+  docstring: All persons are mortal
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - shaver
+        - NameType
+      - type: Variable
+        arguments:
+        - customer
+        - NameType
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Barber
+          - type: Variable
+            arguments:
+            - shaver
+        - type: Term
+          arguments:
+          - Person
+          - type: Variable
+            arguments:
+            - customer
+        - type: Not
+          arguments:
+          - type: Term
+            arguments:
+            - Shaves
+            - type: Variable
+              arguments:
+              - customer
+            - type: Variable
+              arguments:
+              - customer
+      - type: Term
+        arguments:
+        - Shaves
+        - type: Variable
+          arguments:
+          - shaver
+        - type: Variable
+          arguments:
+          - customer
+- type: SentenceGroup
+  name: Sentences
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - name
+        - str
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - Person
+        - type: Variable
+          arguments:
+          - name
+      - type: Term
+        arguments:
+        - Barber
+        - type: Variable
+          arguments:
+          - name
+ground_terms: []

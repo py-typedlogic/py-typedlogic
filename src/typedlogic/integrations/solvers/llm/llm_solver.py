@@ -39,6 +39,7 @@ Which of the following are entailed:
 Answer:
 """
 
+
 @dataclass
 class LLMSolver(Solver):
     """
@@ -92,10 +93,10 @@ class LLMSolver(Solver):
         enumerated_goals_compiled = {i: compiler.compile_sentence(s) for i, s in enumerated_goals.items()}
         goals = "\n".join([f"{i}: {s}" for i, s in enumerated_goals_compiled.items()])
         prompt = TEMPLATE.format(program=program, goals=goals)
-        #print(f"SYSTEM={SYSTEM}")
-        #print(f"PROMPT={prompt}")
+        # print(f"SYSTEM={SYSTEM}")
+        # print(f"PROMPT={prompt}")
         response = model.prompt(prompt, system=SYSTEM)
-        #print(f"RESPONSE={response.text()}")
+        # print(f"RESPONSE={response.text()}")
         obj = self.parse_response(response.text())
         for i in obj["provable"]:
             yield enumerated_goals[int(i)], True
@@ -108,7 +109,6 @@ class LLMSolver(Solver):
             if text.startswith("yaml"):
                 text = text[5:].strip()
         return yaml.safe_load(text)
-
 
     def check(self) -> Solution:
         return Solution(satisfiable=None)

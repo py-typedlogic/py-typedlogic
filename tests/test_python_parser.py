@@ -14,83 +14,69 @@ PERSON_TERM2 = Term("Person", {"name": X, "age": Y})
 AGENT_TERM = Term("Agent", {"name": X})
 AGENT_TERM2 = Term("Agent", {"name": X, "age": Y})
 
-@pytest.mark.parametrize("text,expr", [
-    ("Person(name=x)", PERSON_TERM),
-    ("Person()", Term("Person", {})),
-    ("Person(x)", Term("Person", X)),
-    ("Person(_)", Term("Person", BLANK)),
-    ("Num(1)", Term("Num", 1)),
-    ("assert Person(name=x)", PERSON_TERM),
-    ("Person(name='x')", Term("Person", {"name": "x"})),
-    ("Person(age=55)", Term("Person", {"age": 55})),
-    ("~Person(name=x)", Not(PERSON_TERM)),
-    ("(~Person(name=x))", Not(PERSON_TERM)),
-    ("((~Person(name=x)))", Not(PERSON_TERM)),
-    ("not Person(name=x)", Not(PERSON_TERM)),
-    ("PersonAge(x, y)", Term("PersonAge", X, Y)),
-    ("PersonAge(x, 5)", Term("PersonAge", X, 5)),
-    ("x == y", Term("eq", X, Y)),
-    ("x < y", Term("lt", X, Y)),
-    ("x != y", Term("ne", X, Y)),
-    ("x + y", Term("add", X, Y)),
-    ("Person(name=x) & Agent(name=x)", And(PERSON_TERM, AGENT_TERM)),
-    ("Person(name=x) | Agent(name=x)", Or(PERSON_TERM, AGENT_TERM)),
-    ("Person(name=x) >> Agent(name=x)", Implies(PERSON_TERM, AGENT_TERM)),
-    ("Person(name=x, age=1, desc='x')", Term("Person", {"name": X, "age": 1, "desc": "x"})),
-    ("all(Agent(name=x) for x in gen1(Name) if Person(name=x))", Forall([X], Implies(PERSON_TERM, AGENT_TERM))),
-    ("any(Agent(name=x) for x in gen1(Name) if Person(name=x))", Exists([X], Implies(PERSON_TERM, AGENT_TERM))),
-    ("not any(Agent(name=x) for x in gen1(Name) if Person(name=x))", Not(Exists([X], Implies(PERSON_TERM, AGENT_TERM)))),
-    ("all(Agent(name=x, age=y) for x, y in gen2(Name, int) if Person(name=x, age=y))",
-     Forall([X, Y], Implies(PERSON_TERM2, AGENT_TERM2))),
-    ("any(Person(name=x) for x in gen1(Name))", Exists([X], PERSON_TERM)),
-    ("if Person(name=x):\n  assert Agent(name=x)", Implies(Term("Person", {"name": X}),
-                                                    Term("Agent", {"name": X}))),
-    ("if Person(name=x):\n  Agent(name=x)", Implies(Term("Person", {"name": X}),
-                                                    Term("Agent", {"name": X}))),
-    #("if A(x):\n  B(x+1)",
-    # Implies(Term('eq', X, 1), Term("B", X))),
-    #("if A(x):\n  y==x+1, B(y)",
-    # Implies(Term('A', X),
-    #         And(Term('eq', Y, Term('add', X, 1))))),
-    ("P(Q(x))", Term("P", Term("Q", X))),
-    ('P(x+"a")', Term("P", Term("add", X, "a"))),
-    ("P(x+1)", Term("P", Term("add", X, 1))),
-    ("if x == 1:\n  B(x)",
-     Implies(Term('eq', X, 1), Term("B", X))),
-    ("if x == CONST:\n  B(x)",
-     Implies(Term('eq', X, Variable("CONST")), Term("B", X))),
-    ("if A(x) & eq(x, CONST):\n  B(x)",
-     Implies(And(Term("A", X),Term("eq", X, Variable("CONST"))), Term("B", X))),
-    ("if A(x) & (x==CONST):\n  B(x)",
-     Implies(And(Term("A", X),Term("eq", X, Variable("CONST"))), Term("B", X))),
-    ("if A(x) and x==CONST:\n  B(x)",
-     Implies(And(Term("A", X),Term("eq", X, Variable("CONST"))), Term("B", X))),
-    ("if A(x) and (x==CONST):\n  B(x)",
-     Implies(And(Term("A", X),Term("eq", X, Variable("CONST"))), Term("B", X))),
-    ("Implies((A() & B()), C())",
-        Implies(And(Term("A", {}), Term("B", {})), Term("C", {}))),
-    ("Implies((A() & (1 == 1)), C())",
-        Implies(And(Term("A", {}), Term("eq", 1, 1)), Term("C", {}))),
-     ("Implies((A(x) & (x=='foo')), B(x))",
-      Implies(
-           And(Term("A", X),
-                     Term("eq", X,"foo")),
-           Term("B", X))
-      ),
-     ("Iff((A(x) and (x=='foo')), B(x))",
-      Iff(
-           And(Term("A", X),
-                     Term("eq", X, "foo")),
-           Term("B", X))
-      ),
-     ("Iff((A(x) & (x==CONST)), B(x))",
-      Iff(
-           And(Term("A", X),
-                     Term("eq", X, Variable("CONST"))),
-           Term("B", X))
-      ),
 
-])
+@pytest.mark.parametrize(
+    "text,expr",
+    [
+        ("Person(name=x)", PERSON_TERM),
+        ("Person()", Term("Person", {})),
+        ("Person(x)", Term("Person", X)),
+        ("Person(_)", Term("Person", BLANK)),
+        ("Num(1)", Term("Num", 1)),
+        ("assert Person(name=x)", PERSON_TERM),
+        ("Person(name='x')", Term("Person", {"name": "x"})),
+        ("Person(age=55)", Term("Person", {"age": 55})),
+        ("~Person(name=x)", Not(PERSON_TERM)),
+        ("(~Person(name=x))", Not(PERSON_TERM)),
+        ("((~Person(name=x)))", Not(PERSON_TERM)),
+        ("not Person(name=x)", Not(PERSON_TERM)),
+        ("PersonAge(x, y)", Term("PersonAge", X, Y)),
+        ("PersonAge(x, 5)", Term("PersonAge", X, 5)),
+        ("x == y", Term("eq", X, Y)),
+        ("x < y", Term("lt", X, Y)),
+        ("x != y", Term("ne", X, Y)),
+        ("x + y", Term("add", X, Y)),
+        ("Person(name=x) & Agent(name=x)", And(PERSON_TERM, AGENT_TERM)),
+        ("Person(name=x) | Agent(name=x)", Or(PERSON_TERM, AGENT_TERM)),
+        ("Person(name=x) >> Agent(name=x)", Implies(PERSON_TERM, AGENT_TERM)),
+        ("Person(name=x, age=1, desc='x')", Term("Person", {"name": X, "age": 1, "desc": "x"})),
+        ("all(Agent(name=x) for x in gen1(Name) if Person(name=x))", Forall([X], Implies(PERSON_TERM, AGENT_TERM))),
+        ("any(Agent(name=x) for x in gen1(Name) if Person(name=x))", Exists([X], Implies(PERSON_TERM, AGENT_TERM))),
+        (
+            "not any(Agent(name=x) for x in gen1(Name) if Person(name=x))",
+            Not(Exists([X], Implies(PERSON_TERM, AGENT_TERM))),
+        ),
+        (
+            "all(Agent(name=x, age=y) for x, y in gen2(Name, int) if Person(name=x, age=y))",
+            Forall([X, Y], Implies(PERSON_TERM2, AGENT_TERM2)),
+        ),
+        ("any(Person(name=x) for x in gen1(Name))", Exists([X], PERSON_TERM)),
+        (
+            "if Person(name=x):\n  assert Agent(name=x)",
+            Implies(Term("Person", {"name": X}), Term("Agent", {"name": X})),
+        ),
+        ("if Person(name=x):\n  Agent(name=x)", Implies(Term("Person", {"name": X}), Term("Agent", {"name": X}))),
+        # ("if A(x):\n  B(x+1)",
+        # Implies(Term('eq', X, 1), Term("B", X))),
+        # ("if A(x):\n  y==x+1, B(y)",
+        # Implies(Term('A', X),
+        #         And(Term('eq', Y, Term('add', X, 1))))),
+        ("P(Q(x))", Term("P", Term("Q", X))),
+        ('P(x+"a")', Term("P", Term("add", X, "a"))),
+        ("P(x+1)", Term("P", Term("add", X, 1))),
+        ("if x == 1:\n  B(x)", Implies(Term("eq", X, 1), Term("B", X))),
+        ("if x == CONST:\n  B(x)", Implies(Term("eq", X, Variable("CONST")), Term("B", X))),
+        ("if A(x) & eq(x, CONST):\n  B(x)", Implies(And(Term("A", X), Term("eq", X, Variable("CONST"))), Term("B", X))),
+        ("if A(x) & (x==CONST):\n  B(x)", Implies(And(Term("A", X), Term("eq", X, Variable("CONST"))), Term("B", X))),
+        ("if A(x) and x==CONST:\n  B(x)", Implies(And(Term("A", X), Term("eq", X, Variable("CONST"))), Term("B", X))),
+        ("if A(x) and (x==CONST):\n  B(x)", Implies(And(Term("A", X), Term("eq", X, Variable("CONST"))), Term("B", X))),
+        ("Implies((A() & B()), C())", Implies(And(Term("A", {}), Term("B", {})), Term("C", {}))),
+        ("Implies((A() & (1 == 1)), C())", Implies(And(Term("A", {}), Term("eq", 1, 1)), Term("C", {}))),
+        ("Implies((A(x) & (x=='foo')), B(x))", Implies(And(Term("A", X), Term("eq", X, "foo")), Term("B", X))),
+        ("Iff((A(x) and (x=='foo')), B(x))", Iff(And(Term("A", X), Term("eq", X, "foo")), Term("B", X))),
+        ("Iff((A(x) & (x==CONST)), B(x))", Iff(And(Term("A", X), Term("eq", X, Variable("CONST"))), Term("B", X))),
+    ],
+)
 def test_parse_sentence(text, expr):
     tree = ast.parse(text)
     func_def = tree.body[0]
@@ -109,6 +95,7 @@ def all_persons_are_mortal_axiom() -> bool:
         for x in gen(NameType)
     )
 """
+
 
 def test_parse_simple_function():
     tree = ast.parse(axiom_func)
@@ -129,6 +116,7 @@ def test_parse_simple_function():
     assert sentence.consequent.predicate == "Mortal"
     assert sentence.consequent.bindings == {"name": X}
 
+
 assert_example = """
 def all_persons_are_mortal_axiom() -> bool:
     assert all(
@@ -136,6 +124,7 @@ def all_persons_are_mortal_axiom() -> bool:
         for x in gen(NameType)
     )
 """
+
 
 def test_assert():
     tree = ast.parse(assert_example)
@@ -151,6 +140,7 @@ def all_persons_are_mortal_axiom(x: NameType):
     if not Mortal(name=x):
         assert not Person(name=x)
 """
+
 
 def test_func_args():
     tree = ast.parse(func_args_example)
@@ -179,8 +169,8 @@ def complex_axiom() -> bool:
     )
 """
 
-def test_complex_axiom():
 
+def test_complex_axiom():
     tree = ast.parse(axiom_func_complex)
     func_def = tree.body[0]
     parsed_axiom = parse_function_def_to_sentence_group(func_def)
@@ -190,13 +180,11 @@ def test_complex_axiom():
         Forall(
             [X],
             Implies(
-                And(Term("Person", {"name": X}),
+                And(
+                    Term("Person", {"name": X}),
                     Term("Human", {"species": "homo sapiens"}),
-                    ),
-                Or(
-                    Term("Mortal", {"name": X}),
-                         Term("Immortal",{"name": X})
                 ),
+                Or(Term("Mortal", {"name": X}), Term("Immortal", {"name": X})),
             ),
         )
     ]
@@ -210,8 +198,8 @@ def negation_axiom() -> bool:
     )
 """
 
-def test_negation():
 
+def test_negation():
     tree = ast.parse(axiom_func_neg)
     func_def = tree.body[0]
     parsed_axiom = parse_function_def_to_sentence_group(func_def)
@@ -232,8 +220,8 @@ def nested_attribute_axiom() -> bool:
     )
 """
 
-def test_nested_attributes():
 
+def test_nested_attributes():
     tree = ast.parse(axiom_func_nested)
     func_def = tree.body[0]
     parsed_axiom = parse_function_def_to_sentence_group(func_def)
@@ -245,7 +233,6 @@ def test_nested_attributes():
     assert qs.sentence.operands[1].predicate == "Result"
 
 
-
 axiom_func_unsupported = """
 def unsupported_node_axiom() -> bool:
     return all(
@@ -254,8 +241,8 @@ def unsupported_node_axiom() -> bool:
     )
 """
 
-def test_unsupported_node_type():
 
+def test_unsupported_node_type():
     tree = ast.parse(axiom_func_unsupported)
     func_def = tree.body[0]
     with pytest.raises(NotImplementedError, match="Unsupported node type"):
