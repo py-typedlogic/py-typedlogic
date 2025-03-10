@@ -92,13 +92,13 @@ class Compiler(ABC):
         likes(X, 'Jie') :- animal(X, 'cat').
         <BLANKLINE>
 
-
+    There are multiple variants of Prolog syntax, the `PrologConfig` object can be used to control the output.
+    Config arguments can be passed as kwargs to the `compile` method.
     """
 
     default_suffix: ClassVar[str] = "txt"
     parser_class: ClassVar[Optional[Type[Parser]]] = None
     strict: Optional[bool] = None
-
 
     @abstractmethod
     def compile(self, theory: Theory, syntax: Optional[Union[str, ModelSyntax]] = None, **kwargs) -> str:
@@ -112,7 +112,13 @@ class Compiler(ABC):
         """
         pass
 
-    def compile_to_target(self, theory: Theory, target: Union[str, Path, TextIO], syntax: Optional[Union[str, ModelSyntax]] = None, **kwargs):
+    def compile_to_target(
+        self,
+        theory: Theory,
+        target: Union[str, Path, TextIO],
+        syntax: Optional[Union[str, ModelSyntax]] = None,
+        **kwargs,
+    ):
         """
         Compile a theory to a file or stream.
 

@@ -33,6 +33,7 @@ D = Variable("D")
 OntologyElementReference = str
 IRI = str
 
+
 @dataclass
 class OntologyElement:
     """
@@ -41,12 +42,13 @@ class OntologyElement:
     Note this is designed to simulate python classes, such that it can be used in place
     of Thing, TopObjectProperty, TopDataProperty, etc.
     """
+
     __name__: OntologyElementReference
     owl_type: Optional[str] = None
     iri: Optional[IRI] = None
 
     def __str__(self):
-        #return f"{self.owl_type}({self.__name__})"
+        # return f"{self.owl_type}({self.__name__})"
         return self.__name__
 
     def __repr__(self):
@@ -63,12 +65,14 @@ def as_list(e) -> List:
         return e
     return [e]
 
+
 def _conjunction(sentences: List[Sentence]) -> Sentence:
     if len(sentences) == 0:
         raise ValueError("Cannot create conjunction of zero sentences")
     if len(sentences) == 1:
         return sentences[0]
     return And(*sentences)
+
 
 def individual_name(e: "Individual") -> str:
     if isinstance(e, str):
@@ -77,6 +81,7 @@ def individual_name(e: "Individual") -> str:
         return e.__name__
     return str(e)
 
+
 def class_name(ce: "Class") -> str:
     if isinstance(ce, str):
         return ce
@@ -84,12 +89,14 @@ def class_name(ce: "Class") -> str:
         return ce.__name__
     return str(ce)
 
+
 def object_property_name(op: "ObjectProperty") -> str:
     if isinstance(op, str):
         return op
     if isinstance(op, OntologyElement):
         return op.__name__
     return str(op)
+
 
 def instance_of(inst_var: Variable, ce: "ClassExpression") -> Sentence:
     if isinstance(ce, AnonymousClassExpression):
@@ -111,10 +118,6 @@ def instance_of_dp(inst_var1: Variable, inst_var2: Variable, dpe: "DataPropertyE
     if isinstance(dpe, str):
         return Term(dpe, inst_var1, inst_var2)
     return Term(dpe.__name__, inst_var1, inst_var2)
-
-
-
-
 
 
 @dataclass(frozen=True)
@@ -219,6 +222,7 @@ class Thing(Fact):
     @classmethod
     def to_sentences(cls) -> List[Sentence]:
         return [a for a in [axiom.as_fol() for axiom in cls.axioms()] if a is not None]
+
 
 @dataclass(frozen=True)
 class TopObjectProperty(Fact):
@@ -345,7 +349,6 @@ class TopObjectProperty(Fact):
         return [a for a in [axiom.as_fol() for axiom in cls.axioms()] if a is not None]
 
 
-
 @dataclass(frozen=True)
 class TopDataProperty(Fact):
     """
@@ -421,11 +424,13 @@ class TopDataProperty(Fact):
     def to_sentences(cls) -> List[Sentence]:
         return [a for a in [axiom.as_fol() for axiom in cls.axioms()] if a is not None]
 
+
 @dataclass
 class AnonymousIndividual(ABC):
     """
     An anonymous individual.
     """
+
     first: str
 
 
@@ -437,6 +442,7 @@ class Literal(ABC):
 
     pass
 
+
 @dataclass
 class SimpleLiteral:
     """
@@ -444,6 +450,7 @@ class SimpleLiteral:
     """
 
     literal: str
+
 
 @dataclass
 class LanguageLiteral:
@@ -457,6 +464,7 @@ class LanguageLiteral:
 
     literal: str
     lang: str
+
 
 @dataclass
 class DatatypeLiteral:
@@ -472,8 +480,6 @@ class DatatypeLiteral:
     datatype_iri: IRI
 
 
-
-
 Class = Union[Type[Thing], OntologyElementReference, OntologyElement]
 DataProperty = Union[Type[TopDataProperty], OntologyElementReference, OntologyElement]
 Datatype = Union[IRI, Type[str], Type[int], Type[float], Type[bool]]
@@ -486,6 +492,7 @@ ObjectPropertyExpression = Union[ObjectProperty, "InverseObjectProperty"]
 DataPropertyExpression = DataProperty
 DataRange = Union[Datatype, "AnonymousDataRange"]
 
+
 @dataclass
 class Axiom(ABC):
     """
@@ -494,12 +501,14 @@ class Axiom(ABC):
     Axioms can be declared implicitly, in "Frame-style" class definitions, or in
     an `__axioms__` module variable
     """
+
     frame_keyword: ClassVar[Optional[str]] = None
     annotations: ClassVar[Optional[Mapping[str, Any]]] = None
 
-    #@abstractmethod
+    # @abstractmethod
     def as_fol(self) -> Optional[Sentence]:
         return None
+
 
 @dataclass
 class SubClassOf(Axiom):
@@ -561,6 +570,7 @@ class SubClassOf(Axiom):
     ```
 
     """
+
     frame_keyword = "subclass_of"
     sub: ClassExpression
     sup: ClassExpression
@@ -570,7 +580,6 @@ class SubClassOf(Axiom):
 
     def __repr__(self) -> str:
         return f"SubClassOf({self.sub}, {self.sup})"
-
 
 
 @dataclass
@@ -604,6 +613,7 @@ class PropertyExpressionChain:
 
     def __init__(self, *chain: ObjectPropertyExpression):
         self.chain = chain
+
 
 @dataclass
 class SubObjectPropertyOf(Axiom):
@@ -654,6 +664,7 @@ class SubObjectPropertyOf(Axiom):
     ```
 
     """
+
     frame_keyword = "subproperty_of"
     sub: Union[ObjectPropertyExpression, PropertyExpressionChain]
     sup: ObjectPropertyExpression
@@ -670,6 +681,7 @@ class SubObjectPropertyOf(Axiom):
             return Forall(inst_vars, Implies(And(*conjs), instance_of_op(inst_vars[0], inst_vars[-1], self.sup)))
         else:
             return Forall([P, I, J], Implies(instance_of_op(I, J, self.sub), instance_of_op(I, J, self.sup)))
+
 
 @dataclass
 class TransitiveObjectProperty(Axiom):
@@ -701,11 +713,19 @@ class TransitiveObjectProperty(Axiom):
     ```
 
     """
+
     frame_keyword = "transitive"
     first: ObjectPropertyExpression
 
     def as_fol(self) -> Optional[Sentence]:
-        return Forall([I, J, K], Implies(And(instance_of_op(I, J, self.first), instance_of_op(J, K, self.first)), instance_of_op(I, K, self.first)))
+        return Forall(
+            [I, J, K],
+            Implies(
+                And(instance_of_op(I, J, self.first), instance_of_op(J, K, self.first)),
+                instance_of_op(I, K, self.first),
+            ),
+        )
+
 
 @dataclass
 class InverseObjectProperties(Axiom):
@@ -747,12 +767,14 @@ class InverseObjectProperties(Axiom):
     InverseObjectProperties --> "1" ObjectPropertyExpression : second
     ```
     """
+
     frame_keyword = "inverse_of"
     first: ObjectPropertyExpression
     second: ObjectPropertyExpression
 
     def as_fol(self) -> Optional[Sentence]:
         return Forall([I, J], Iff(instance_of_op(I, J, self.first), instance_of_op(J, I, self.second)))
+
 
 @dataclass
 class SymmetricObjectProperty(Axiom):
@@ -789,11 +811,13 @@ class SymmetricObjectProperty(Axiom):
     ```
 
     """
+
     frame_keyword = "symmetric"
     first: ObjectPropertyExpression
 
     def as_fol(self) -> Optional[Sentence]:
         return Forall([I, J], Iff(instance_of_op(I, J, self.first), instance_of_op(J, I, self.first)))
+
 
 @dataclass
 class AsymmetricObjectProperty(Axiom):
@@ -830,11 +854,13 @@ class AsymmetricObjectProperty(Axiom):
     ```
 
     """
+
     frame_keyword = "asymmetric"
     first: ObjectPropertyExpression
 
     def as_fol(self) -> Optional[Sentence]:
         return Forall([I, J], Implies(instance_of_op(I, J, self.first), Not(instance_of_op(J, I, self.first))))
+
 
 @dataclass
 class ReflexiveObjectProperty(Axiom):
@@ -873,11 +899,13 @@ class ReflexiveObjectProperty(Axiom):
     ```
 
     """
+
     frame_keyword = "reflexive"
     first: ObjectPropertyExpression
 
     def as_fol(self) -> Optional[Sentence]:
         return Forall([I, C], Implies(instance_of(I, Thing), instance_of_op(I, I, self.first)))
+
 
 @dataclass
 class IrreflexiveObjectProperty(Axiom):
@@ -907,6 +935,7 @@ class IrreflexiveObjectProperty(Axiom):
     ```
 
     """
+
     frame_keyword = "irreflexive"
     first: ObjectPropertyExpression
 
@@ -915,6 +944,7 @@ class IrreflexiveObjectProperty(Axiom):
         if refl_s:
             return Not(Exists([I], refl_s))
         return None
+
 
 @dataclass
 class FunctionalObjectProperty(Axiom):
@@ -952,11 +982,16 @@ class FunctionalObjectProperty(Axiom):
     ```
 
     """
+
     frame_keyword = "functional"
     first: ObjectPropertyExpression
 
     def as_fol(self) -> Optional[Sentence]:
-        return Forall([I, J, K], Implies(And(instance_of_op(I, J, self.first), instance_of_op(I, K, self.first)), Term("eq", J, K)))
+        return Forall(
+            [I, J, K],
+            Implies(And(instance_of_op(I, J, self.first), instance_of_op(I, K, self.first)), Term("eq", J, K)),
+        )
+
 
 @dataclass
 class InverseFunctionalObjectProperty(Axiom):
@@ -993,11 +1028,16 @@ class InverseFunctionalObjectProperty(Axiom):
     InverseFunctionalObjectProperty --> "1" ObjectPropertyExpression : first
     ```
     """
+
     frame_keyword = "inverse_functional"
     first: ObjectPropertyExpression
 
     def as_fol(self) -> Optional[Sentence]:
-        return Forall([I, J, K], Implies(And(instance_of_op(I, J, self.first), instance_of_op(K, J, self.first)), Term("eq", I, K)))
+        return Forall(
+            [I, J, K],
+            Implies(And(instance_of_op(I, J, self.first), instance_of_op(K, J, self.first)), Term("eq", I, K)),
+        )
+
 
 @dataclass
 class FunctionalDataProperty(Axiom):
@@ -1034,11 +1074,16 @@ class FunctionalDataProperty(Axiom):
     ```
 
     """
+
     frame_keyword = "functional"
     first: DataPropertyExpression
 
     def as_fol(self) -> Optional[Sentence]:
-        return Forall([I, J, K], Implies(And(instance_of_dp(I, J, self.first), instance_of_dp(I, K, self.first)), Term("eq", J, K)))
+        return Forall(
+            [I, J, K],
+            Implies(And(instance_of_dp(I, J, self.first), instance_of_dp(I, K, self.first)), Term("eq", J, K)),
+        )
+
 
 @dataclass
 class SubDataPropertyOf(Axiom):
@@ -1085,13 +1130,13 @@ class SubDataPropertyOf(Axiom):
     SubDataPropertyOf --> "*" DataPropertyExpression : sup
     ```
     """
+
     frame_keyword = "subproperty_of"
     sub: DataPropertyExpression
     sup: DataPropertyExpression
 
     def as_fol(self) -> Optional[Sentence]:
         return Forall([P, I, J], Implies(instance_of_dp(I, J, self.sub), instance_of_dp(I, J, self.sup)))
-
 
 
 @dataclass
@@ -1142,6 +1187,7 @@ class EquivalentClasses(Axiom):
             for j in range(i + 1, num_ops):
                 sentences.append(Iff(instance_of(I, self.operands[i]), instance_of(I, self.operands[j])))
         return Forall([I], _conjunction(sentences))
+
 
 @dataclass
 class EquivalentObjectProperties(Axiom):
@@ -1203,6 +1249,7 @@ class EquivalentObjectProperties(Axiom):
                 sentences.append(Iff(instance_of_op(I, J, self.operands[i]), instance_of_op(I, J, self.operands[j])))
         return Forall([I, J], _conjunction(sentences))
 
+
 @dataclass
 class EquivalentDataProperties(Axiom):
     """
@@ -1230,6 +1277,7 @@ class EquivalentDataProperties(Axiom):
                 sentences.append(Iff(instance_of_dp(I, J, self.operands[i]), instance_of_dp(I, J, self.operands[j])))
         return Forall([I, J], _conjunction(sentences))
 
+
 @dataclass
 class DisjointObjectProperties(Axiom):
     """
@@ -1254,8 +1302,11 @@ class DisjointObjectProperties(Axiom):
         sentences: List[Sentence] = []
         for i in range(num_ops - 1):
             for j in range(i + 1, num_ops):
-                sentences.append(Not(And(instance_of_op(I, J, self.operands[i]), instance_of_op(I, J, self.operands[j]))))
+                sentences.append(
+                    Not(And(instance_of_op(I, J, self.operands[i]), instance_of_op(I, J, self.operands[j])))
+                )
         return Not(Exists([I, J], Or(*sentences)))
+
 
 @dataclass
 class DisjointDataProperties(Axiom):
@@ -1281,8 +1332,11 @@ class DisjointDataProperties(Axiom):
         sentences: List[Sentence] = []
         for i in range(num_ops - 1):
             for j in range(i + 1, num_ops):
-                sentences.append(Not(And(instance_of_dp(I, J, self.operands[i]), instance_of_dp(I, J, self.operands[j]))))
+                sentences.append(
+                    Not(And(instance_of_dp(I, J, self.operands[i]), instance_of_dp(I, J, self.operands[j])))
+                )
         return Not(Exists([I, J], Or(*sentences)))
+
 
 @dataclass
 class DisjointClasses(Axiom):
@@ -1336,6 +1390,7 @@ class DisjointClasses(Axiom):
             for j in range(i + 1, num_ops):
                 sentences.append(Not(And(instance_of(I, self.operands[i]), instance_of(I, self.operands[j]))))
         return Not(Exists([I], Or(*sentences)))
+
 
 @dataclass
 class DisjointUnion(Axiom):
@@ -1393,6 +1448,7 @@ class DisjointUnion(Axiom):
                 disj.append(Not(And(instance_of(I, self.operands[i]), instance_of(I, self.operands[j]))))
         return And(eq, Not(Exists([I], Or(*disj))))
 
+
 @dataclass
 class AnonymousClassExpression(ABC):
     """
@@ -1401,6 +1457,7 @@ class AnonymousClassExpression(ABC):
 
     def as_fol(self) -> Optional[Sentence]:
         raise NotImplementedError(f"{self} Must implement as_fol method")
+
 
 @dataclass
 class InverseObjectProperty:
@@ -1434,6 +1491,7 @@ class InverseObjectProperty:
 
     def as_fol(self) -> Optional[Sentence]:
         raise AssertionError("Not to be called directly")
+
 
 @dataclass
 class ObjectIntersectionOf(AnonymousClassExpression):
@@ -1480,6 +1538,7 @@ class ObjectIntersectionOf(AnonymousClassExpression):
     def as_fol(self) -> Sentence:
         return And(*[instance_of(I, op) for op in self.operands])
 
+
 @dataclass
 class ObjectUnionOf(AnonymousClassExpression):
     """
@@ -1524,6 +1583,7 @@ class ObjectUnionOf(AnonymousClassExpression):
     def as_fol(self) -> Optional[Sentence]:
         return Or(*[instance_of(I, op) for op in self.operands])
 
+
 @dataclass
 class ObjectComplementOf(AnonymousClassExpression):
     """
@@ -1564,6 +1624,7 @@ class ObjectComplementOf(AnonymousClassExpression):
 
     def as_fol(self) -> Optional[Sentence]:
         return Not(instance_of(I, self.first))
+
 
 @dataclass
 class ObjectOneOf(AnonymousClassExpression):
@@ -1610,6 +1671,7 @@ class ObjectOneOf(AnonymousClassExpression):
     def as_fol(self) -> Optional[Sentence]:
         return Or(*[Term("eq", I, individual_name(ind)) for ind in self.operands])
 
+
 @dataclass
 class ObjectSomeValuesFrom(AnonymousClassExpression):
     """
@@ -1652,6 +1714,7 @@ class ObjectSomeValuesFrom(AnonymousClassExpression):
 
     def as_fol(self) -> Optional[Sentence]:
         return Exists([J], And(instance_of_op(I, J, self.ope), instance_of(J, self.bce)))
+
 
 @dataclass
 class ObjectAllValuesFrom(AnonymousClassExpression):
@@ -1698,6 +1761,7 @@ class ObjectAllValuesFrom(AnonymousClassExpression):
     def as_fol(self) -> Optional[Sentence]:
         return Forall([J], Implies(instance_of_op(I, J, self.ope), instance_of(J, self.bce)))
 
+
 @dataclass
 class ObjectHasValue(AnonymousClassExpression):
     """
@@ -1737,6 +1801,7 @@ class ObjectHasValue(AnonymousClassExpression):
 
     def as_fol(self) -> Optional[Sentence]:
         return Exists([J], And(instance_of_op(I, J, self.ope), Term("eq", J, self.i)))
+
 
 @dataclass
 class ObjectHasSelf(AnonymousClassExpression):
@@ -1779,6 +1844,7 @@ class ObjectHasSelf(AnonymousClassExpression):
 
     def as_fol(self) -> Optional[Sentence]:
         return instance_of_op(I, I, self.ope)
+
 
 @dataclass
 class ObjectMinCardinality(AnonymousClassExpression):
@@ -1823,8 +1889,9 @@ class ObjectMinCardinality(AnonymousClassExpression):
     bce: ClassExpression
 
     # TODO: Aggregates
-    #def as_fol(self) -> Optional[Sentence]:
+    # def as_fol(self) -> Optional[Sentence]:
     #   return Forall([J], Implies(instance_of_op(I, J, self.ope), instance_of(J, self.bce)))
+
 
 @dataclass
 class ObjectMaxCardinality(AnonymousClassExpression):
@@ -1869,6 +1936,7 @@ class ObjectMaxCardinality(AnonymousClassExpression):
     bce: ClassExpression
 
     # TODO: Aggregates
+
 
 @dataclass
 class ObjectExactCardinality(AnonymousClassExpression):
@@ -1915,7 +1983,6 @@ class ObjectExactCardinality(AnonymousClassExpression):
     # TODO: Aggregates
 
 
-
 @dataclass
 class AnonymousDataRange(ABC):
     """
@@ -1923,6 +1990,7 @@ class AnonymousDataRange(ABC):
     """
 
     pass
+
 
 @dataclass
 class DatatypeDefinition:
@@ -1932,6 +2000,7 @@ class DatatypeDefinition:
 
     dt: Datatype
     dr: DataRange
+
 
 @dataclass
 class DataIntersectionOf(AnonymousDataRange):
@@ -1944,6 +2013,7 @@ class DataIntersectionOf(AnonymousDataRange):
     def __init__(self, *operands: DataRange):
         self.operands = operands
 
+
 @dataclass
 class DataUnionOf(AnonymousDataRange):
     """
@@ -1955,6 +2025,7 @@ class DataUnionOf(AnonymousDataRange):
     def __init__(self, *operands: DataRange):
         self.operands = operands
 
+
 @dataclass
 class DataComplementOf(AnonymousDataRange):
     """
@@ -1962,6 +2033,7 @@ class DataComplementOf(AnonymousDataRange):
     """
 
     first: DataRange
+
 
 @dataclass
 class DataOneOf(AnonymousDataRange):
@@ -1973,6 +2045,7 @@ class DataOneOf(AnonymousDataRange):
 
     def __init__(self, *operands: Literal):
         self.operands = operands
+
 
 @dataclass
 class DataSomeValuesFrom(AnonymousDataRange):
@@ -1996,6 +2069,7 @@ class FacetRestriction:
     def as_fol(self) -> Optional[Sentence]:
         return None
 
+
 @dataclass
 class DatatypeRestriction(AnonymousDataRange):
     """
@@ -2007,6 +2081,7 @@ class DatatypeRestriction(AnonymousDataRange):
 
     def as_fol(self) -> Optional[Sentence]:
         return None
+
 
 @dataclass
 class ObjectPropertyDomain(Axiom):
@@ -2042,6 +2117,7 @@ class ObjectPropertyDomain(Axiom):
     ObjectPropertyDomain --> "1" ClassExpression : ce
     ``
     """
+
     frame_keyword = "domain"
     ope: ObjectPropertyExpression
     ce: ClassExpression
@@ -2084,12 +2160,14 @@ class DataPropertyDomain(Axiom):
     DataPropertyDomain --> "1" ClassExpression : ce
     ``
     """
+
     frame_keyword = "domain"
     dp: DataPropertyExpression
     ce: ClassExpression
 
     def as_fol(self) -> Optional[Sentence]:
         return Forall([I, J], Implies(instance_of_dp(I, J, self.dp), instance_of(I, self.ce)))
+
 
 @dataclass
 class ObjectPropertyRange(Axiom):
@@ -2125,12 +2203,14 @@ class ObjectPropertyRange(Axiom):
     ObjectPropertyRange --> "1" ClassExpression : ce
     ``
     """
+
     frame_keyword = "range"
     ope: ObjectPropertyExpression
     ce: ClassExpression
 
     def as_fol(self) -> Optional[Sentence]:
         return Forall([I, J], Implies(instance_of_op(I, J, self.ope), instance_of(J, self.ce)))
+
 
 @dataclass
 class DataPropertyRange(Axiom):
@@ -2166,12 +2246,13 @@ class DataPropertyRange(Axiom):
     DataPropertyRange --> "1" DataRange : dr
     ``
     """
+
     frame_keyword = "range"
     dp: DataPropertyExpression
     dr: DataRange
 
     # TODO
-    #def as_fol(self) -> Optional[Sentence]:
+    # def as_fol(self) -> Optional[Sentence]:
     #    return Forall([I, J], Implies(instance_of_dp(I, J, self.dp), instance_of(J, self.dr)))
 
 
@@ -2218,6 +2299,7 @@ class ClassAssertion(Axiom):
         if isinstance(self.ce, AnonymousClassExpression):
             return And(instance_of(I, self.ce))
         return Term(class_name(self.ce), individual_name(self.i))
+
 
 @dataclass
 class ObjectPropertyAssertion(Axiom):
@@ -2271,6 +2353,7 @@ class ObjectPropertyAssertion(Axiom):
         j_name = individual_name(self.j)
         return Term(ope, i_name, j_name)
 
+
 @dataclass(frozen=True)
 class Ontology(Fact):
     """
@@ -2303,6 +2386,8 @@ class Ontology(Fact):
 
 
 OWL_AXIOM_REGISTRY = []
+
+
 def owl_axioms(func: Callable) -> Callable:
     @wraps(func)
     def wrapper(*args, **kwargs):

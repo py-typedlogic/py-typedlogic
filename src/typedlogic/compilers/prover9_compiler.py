@@ -9,10 +9,15 @@ from typedlogic.transformations import as_prover9
 
 @dataclass
 class Prover9Compiler(Compiler):
-
     default_suffix: ClassVar[str] = "prover9"
 
-    def compile(self, theory: Theory, syntax: Optional[Union[str, ModelSyntax]] = None, goals: Optional[List[Sentence]] = None, **kwargs) -> str:
+    def compile(
+        self,
+        theory: Theory,
+        syntax: Optional[Union[str, ModelSyntax]] = None,
+        goals: Optional[List[Sentence]] = None,
+        **kwargs,
+    ) -> str:
         lines = [f"% Problem: {theory.name}"]
         # Assumptions (axioms)
         lines.append("formulas(assumptions).")

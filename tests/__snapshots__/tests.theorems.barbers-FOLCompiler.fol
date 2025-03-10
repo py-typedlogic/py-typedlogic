@@ -1,0 +1,2 @@
+∀[shaver:NameType customer:NameType]. Barber(shaver) ∧ Person(customer) ∧ ¬Shaves(customer, customer) → Shaves(shaver, customer)
+∀[name:str]. Person(name) → Barber(name)

@@ -19,15 +19,14 @@ def compute_import_closure(root_module_name):
 
         module = importlib.import_module(module_name)
 
-
         # closure[root_module_name].add(module_name)
 
         for name, _ in module.__dict__.items():
-            if name.startswith('__'):
+            if name.startswith("__"):
                 continue
             try:
                 submodule = getattr(module, name)
-                if hasattr(submodule, '__module__'):
+                if hasattr(submodule, "__module__"):
                     dfs(submodule.__module__)
             except:
                 pass
@@ -46,4 +45,3 @@ def check_class_module_and_closure(c, closure):
 
     print(f"Class {c.__name__} is declared in module: {class_module}")
     print(f"Is {class_module} in the import closure? {is_in_closure}")
-

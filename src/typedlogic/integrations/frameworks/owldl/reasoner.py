@@ -59,7 +59,7 @@ class OWLReasoner:
         Knows(p2, p1)
 
     Note that because we declared the relationship as symmetric, the reasoner inferred the reverse relationship.
-    
+
     By default, the reasoner uses the Clingo solver. This can be changed by setting the `solver_class` attribute.
 
         >>> from typedlogic.integrations.solvers.souffle import SouffleSolver
@@ -93,6 +93,7 @@ class OWLReasoner:
         :return:
         """
         import typedlogic.integrations.frameworks.owldl.owltop as owltop
+
         p = OWLPyParser()
         modules = None
         if classes:
@@ -140,8 +141,7 @@ class OWLReasoner:
         pd = None
         for mc in [Thing, TopObjectProperty, TopDataProperty]:
             if issubclass(cls, mc):
-                pd = PredicateDefinition(cls.__name__,
-                                         pd_map[mc.__name__].arguments)
+                pd = PredicateDefinition(cls.__name__, pd_map[mc.__name__].arguments)
         if not pd:
             raise ValueError(f"Class {cls} is not a recognized OWL-DL class")
         self.theory.predicate_definitions.append(pd)

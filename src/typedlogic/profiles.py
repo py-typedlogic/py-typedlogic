@@ -77,8 +77,11 @@ class MixedProfile(Profile):
         provably_not_impl = any(p.not_impl(profile) for p in self.profiles)
         provable_impl = any(p.impl(profile) for p in self.profiles)
         if provable_impl and provably_not_impl:
-            raise ValueError(f"Inconsistent profiles.md: {self} is both an implementation and not an implementation of {profile}")
+            raise ValueError(
+                f"Inconsistent profiles.md: {self} is both an implementation and not an implementation of {profile}"
+            )
         return provably_not_impl
+
 
 @dataclass
 class ExcludedProfile(Profile):
@@ -115,103 +118,136 @@ class ExcludedProfile(Profile):
             return True
         return super().not_impl(profile)
 
+
 class ComputationalProfile(Profile, ABC):
     """A profile that describes the computational properties of a logic"""
+
 
 class Decidable(ComputationalProfile):
     """The logic is decidable"""
 
+
 class Undecidable(ComputationalProfile):
     """The logic is undecidable"""
+
 
 class LogicalFeature(Profile, ABC):
     """A profile grouping corresponding to a feature of logic"""
 
+
 class NegationLogic(LogicalFeature):
     """The logic has negation"""
+
 
 class DisjunctionLogic(LogicalFeature):
     """The logic has disjunction"""
 
+
 class ConjunctionLogic(LogicalFeature):
     """The logic has conjunction"""
+
 
 class AllowsComparisonTerms(LogicalFeature):
     """The logic allows comparison terms"""
 
+
 class ModelMultiplicitySemantics(Profile, ABC):
     """A profile grouping corresponding to a model semantics"""
+
 
 class SingleModelSemantics(ModelMultiplicitySemantics):
     """The logic has a single model"""
 
+
 class MultipleModelSemantics(ModelMultiplicitySemantics):
     """The logic has multiple models"""
+
 
 class Assumption(Profile, ABC):
     """Category of assumptions"""
 
+
 class OpenWorld(Assumption):
     """The assumption that what is not known to be true is false"""
+
 
 class ClosedWorld(Assumption):
     """The assumption that what is not known to be true is unknown"""
 
     disjoint_profiles = {OpenWorld}
 
+
 class WellFoundedSemantics(ClosedWorld):
     """The assumption that the world is well-founded"""
+
 
 class ClassicPrologNegationAsFailure(ClosedWorld):
     """The assumption that negation is failure"""
 
+
 class TypeSystem(Profile, ABC):
     """Category of type systems"""
+
 
 class UnsortedLogic(TypeSystem):
     """The logic has no type system"""
 
+
 class SortedLogic(TypeSystem):
     """The logic has a type system"""
+
 
 class LogicalFamily(Profile, ABC):
     """A profile grouping corresponding to a family of logics"""
 
+
 class Classical(LogicalFamily):
     """The classical logic family"""
+
 
 class NonClassical(LogicalFamily):
     """The non-classical logic family"""
 
+
 class Modal(LogicalFamily):
     """The modal logic family"""
+
 
 class Temporal(LogicalFamily):
     """The temporal logic family"""
 
+
 class Paraconsistent(LogicalFamily):
     """The paraconsistent logic family"""
+
 
 class Intuitionistic(LogicalFamily):
     """The intuitionistic logic family"""
 
+
 class Probabilistic(LogicalFamily):
     """The probabilistic logic family"""
+
 
 class LogicalSubset(Profile, ABC):
     """A profile grouping corresponding to a subset of logic"""
 
+
 class Unrestricted(LogicalSubset, Undecidable):
     """The an unrestricted logic"""
+
 
 class ClassicDatalog(LogicalSubset, ClosedWorld, SingleModelSemantics):
     """A subset of logic that corresponds to Datalog"""
 
+
 class DisjunctiveDatalog(LogicalSubset, ClosedWorld, MultipleModelSemantics):
     """A subset of logic that corresponds to Datalog"""
 
+
 class DescriptionLogic(LogicalSubset, Decidable):
     """A subset of logic that corresponds to Description Logic"""
+
 
 class OWLProfile(LogicalSubset, ABC):
     """
@@ -220,47 +256,62 @@ class OWLProfile(LogicalSubset, ABC):
     Note al OWL Profile is not necessarily a DL profile
     """
 
+
 class OWL2DL(DescriptionLogic, OWLProfile):
     """The OWL 2 DL subset of Description Logic"""
+
 
 class ModalLogic(LogicalSubset):
     """A subset of logic that corresponds to Modal Logic"""
 
+
 class OrderOfLogic(Profile, ABC):
     """Category of orderings"""
+
 
 class PropositionalLogic(OrderOfLogic):
     """The assumption that all predicates are propositional"""
 
+
 class FirstOrder(OrderOfLogic):
     """The assumption that all predicates are first-order"""
+
 
 class HigherOrder(OrderOfLogic):
     """The assumption that predicates may be higher-order"""
 
+
 class NamedLogic(Profile, ABC):
     """A named logic"""
+
 
 class AnswerSetProgramming(NamedLogic, WellFoundedSemantics, DisjunctiveDatalog):
     """The Answer Set Programming logic"""
 
+
 class ReasoningParadigm(Profile, ABC):
     """A profile grouping corresponding to a reasoning paradigm"""
+
 
 class Inductive(ReasoningParadigm):
     """The inductive reasoning paradigm"""
 
+
 class Deductive(ReasoningParadigm):
     """The deductive reasoning paradigm"""
+
 
 class Abductive(ReasoningParadigm):
     """The abductive reasoning paradigm"""
 
+
 class Monotonic(ReasoningParadigm):
     """The monotonic reasoning paradigm"""
 
+
 class NonMonotonic(ReasoningParadigm):
     """The non-monotonic reasoning paradigm"""
+
 
 class ConstraintSolver(ReasoningParadigm):
     """The constraint solver reasoning paradigm"""

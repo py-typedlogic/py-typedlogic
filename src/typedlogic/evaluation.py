@@ -35,8 +35,9 @@ class BenchmarkResult:
     elapsed: float
 
 
-
-def benchmark_from_seed(seed: BenchmarkSeed, benchmark_solver_class: Optional[Type[Solver]] = None, num_positive=10, num_negative=10) -> Benchmark:
+def benchmark_from_seed(
+    seed: BenchmarkSeed, benchmark_solver_class: Optional[Type[Solver]] = None, num_positive=10, num_negative=10
+) -> Benchmark:
     benchmark = Benchmark(
         theory=seed.theory,
         ground_terms=seed.ground_terms,
@@ -56,13 +57,13 @@ def benchmark_from_seed(seed: BenchmarkSeed, benchmark_solver_class: Optional[Ty
         raise ValueError("No ground terms provided")
     for t in seed.ground_terms:
         solver.add(t)
-    #print(solver.base_theory)
+    # print(solver.base_theory)
     model = solver.model()
     if not model.ground_terms:
         raise ValueError(f"Solver {benchmark_solver_class} model has no ground terms for {predicates}")
     provable = []
     for p in predicates:
-        #print(f"Querying: {p}")
+        # print(f"Querying: {p}")
         for t in model.iter_retrieve(p):
             provable.append(t)
     if not provable:
@@ -112,7 +113,7 @@ def run_benchmark(benchmark: Benchmark, solver_class: Union[Solver, Type[Solver]
         goal_truths[str(repr(g))] = negative
     results = solver.prove_multiple([gp[0] for gp in goal_pairs])
     for g, is_proven in results:
-        #[(_, negative)] = [gp for gp in goal_pairs if gp[0] == g]
+        # [(_, negative)] = [gp for gp in goal_pairs if gp[0] == g]
         negative = goal_truths[str(repr(g))]
         correct = is_proven != negative
         if correct:
@@ -127,7 +128,9 @@ def run_benchmark(benchmark: Benchmark, solver_class: Union[Solver, Type[Solver]
     )
 
 
-def run_benchmark_matrix(benchmarks: List[Benchmark], solver_classes: List[Union[Solver, Type[Solver]]]) -> Iterator[BenchmarkResult]:
+def run_benchmark_matrix(
+    benchmarks: List[Benchmark], solver_classes: List[Union[Solver, Type[Solver]]]
+) -> Iterator[BenchmarkResult]:
     """
     Run a matrix of benchmarks against a matrix of solvers.
 
@@ -149,29 +152,32 @@ def create_random_id_function(prefix: str, max_id=10000) -> Callable[[], str]:
     :return:
     """
     unallocated = set(range(max_id))
+
     def assign(*args):
         nonlocal unallocated
         next_id = random.choice(list(unallocated))
         unallocated.remove(next_id)
         return f"{prefix}{next_id}"
+
     return assign
+
 
 def randomize_entity_names(benchmark: Benchmark, mapping_func: Optional[Callable] = None):
     if mapping_func is None:
-        mapping_func = lambda x: hashlib.md5(str(x).encode('utf-8')).hexdigest()
+        mapping_func = lambda x: hashlib.md5(str(x).encode("utf-8")).hexdigest()
     emap = {}
     if not benchmark.entities:
         raise ValueError
     for e in benchmark.entities:
         emap[e] = mapping_func(e)
+
     def rewire_term(s: Sentence) -> Sentence:
         if isinstance(s, Extension):
             s = s.to_model_object()
         if isinstance(s, Term):
             return Term(s.predicate, *[emap[a] if not isinstance(a, Variable) and a in emap else a for a in s.values])
         return s
+
     benchmark.ground_terms = [transform_sentence(t, rewire_term) for t in benchmark.ground_terms or []]
     benchmark.goals = [transform_sentence(t, rewire_term) for t in benchmark.goals or []]
     benchmark.entity_mapping = emap
-
-

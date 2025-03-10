@@ -14,13 +14,16 @@ clingo = { version="*" , optional = true }
 z3-solver = { version="*" , optional = true }
 pyprover = { version="*" , optional = true }
 snakelog = { version="*" , optional = true }
+problog = { version="*" , optional = true }
 clorm = { version="*" , optional = true }
 rdflib = { version="*" , optional = true }
 sympy = { version="*" , optional = true }
-py-horned-owl = { version="*" , optional = true }
+py-horned-owl = { version="^1.0.0,!=1.0.1", optional = true }  ## https://github.com/ontology-tools/py-horned-owl/issues/34
 llm = { version="*" , optional = true }
 gavel-owl = { version="*" , optional = true }
 ply = { version="*" , optional = true }
+pandas = { version="*" , optional = true }
+pandera = { version="*" , extras = ["mypy"], optional = true }
 typer = "^0.12.5"
 
 [tool.poetry.group.dev.dependencies]
@@ -50,10 +53,13 @@ z3 = ["z3-solver"]
 clingo = ["clingo"]
 pyprover = ["pyprover"]
 snakelog = ["snakelog"]
+problog = ["problog"]
 clorm = ["clorm"]
 rdflib = ["rdflib"]
 owl = ["py-horned-owl"]
 gavel-owl = ["gavel-owl", "ply"]
+pandas = ["pandas"]
+pandera = ["pandera"]
 llm = ["llm"]
 sympy = ["sympy"]
 
@@ -100,10 +106,10 @@ target-version = "py310"
 max-complexity = 10
 
 [tool.codespell]
-skip = "*.po,*.ts,.git,pyproject.toml"
+skip = "*.po,*.ts,.git,pyproject.toml,*.ofn,*.owl,*.ttl"
 count = ""
 quiet-level = 3
-ignore-words-list = "fof,te,disjointness"
+ignore-words-list = "fof,te,disjointness,NotIn"
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
@@ -113,7 +119,6 @@ build-backend = "poetry_dynamic_versioning.backend"
 module = "pyhornedowl.*"
 ignore_errors = true
 follow_imports = "skip"
-
 
 [tool.mypy]
 exclude = "owl"

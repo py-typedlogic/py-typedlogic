@@ -13,7 +13,9 @@ OUTPUT_DIR = TESTS_DIR / "output"
 SNAPSHOTS_DIR = TESTS_DIR / "__snapshots__"
 
 
-def tree_edges(node: str, depth: int, num_children: int = 3, depth_variance = 0, num_children_variance = 0) -> Iterable[Tuple[str, str]]:
+def tree_edges(
+    node: str, depth: int, num_children: int = 3, depth_variance=0, num_children_variance=0
+) -> Iterable[Tuple[str, str]]:
     """
     Generate parent-child tuples for trees of different shapes
 
@@ -29,7 +31,7 @@ def tree_edges(node: str, depth: int, num_children: int = 3, depth_variance = 0,
     for i in range(num_children + randint(-num_children_variance, num_children_variance)):
         child = f"{node}.{i}"
         yield node, child
-        yield from tree_edges(child, depth-1, num_children)
+        yield from tree_edges(child, depth - 1, num_children)
 
 
 def skip_if_extra_not_installed(extra_name):
@@ -41,7 +43,9 @@ def skip_if_extra_not_installed(extra_name):
         except ImportError:
             return pytest.mark.skip(reason=f"Extra '{extra_name}' is not installed")(func)
         return func
+
     return decorator
+
 
 def requires_extra(extra_name):
     def decorator(func):
@@ -52,5 +56,7 @@ def requires_extra(extra_name):
             except ImportError:
                 pytest.skip(f"Test requires the '{extra_name}' extra to be installed")
             return func(*args, **kwargs)
+
         return wrapper
+
     return decorator

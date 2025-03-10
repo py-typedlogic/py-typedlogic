@@ -11,14 +11,17 @@ from tests.theorems import paths
 
 X = Variable("x")
 
-@pytest.mark.parametrize("depth,num_children,expected",
-                         [
-                             (1, 2, 4),
-                             (2, 2, 16),
-                             (5, 2, 320),
-                             (5, 3, 2004),
-                             (7, 3, 24603),
-                         ])
+
+@pytest.mark.parametrize(
+    "depth,num_children,expected",
+    [
+        (1, 2, 4),
+        (2, 2, 16),
+        (5, 2, 320),
+        (5, 3, 2004),
+        (7, 3, 24603),
+    ],
+)
 def test_paths(depth, num_children, expected):
     """
     Test simple transitivity over paths.
@@ -56,8 +59,7 @@ def test_paths(depth, num_children, expected):
     num_facts = len(model.ground_terms)
     print(f"method: clingo, depth: {depth}, num_children: {num_children}, entailed: {num_facts} elapsed: {elapsed:.3f}")
     assert model.ground_terms
-    #for t in model.ground_terms:
+    # for t in model.ground_terms:
     #    print(f"FACT: {t}")
     if expected is not None:
         assert num_facts == expected
-

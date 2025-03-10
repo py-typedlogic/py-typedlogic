@@ -9,6 +9,7 @@ class Person:
     name: str
     age: int
 
+
 @dataclass
 class Animal(FactMixin):
     name: str

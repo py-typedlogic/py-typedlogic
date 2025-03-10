@@ -10,6 +10,8 @@ class OWLCompiler(Compiler):
     """
     Writes theories to OWL files.
 
+    TODO: this is incomplete
+
     Uses py-horned-owl
 
     Example:
@@ -24,12 +26,13 @@ class OWLCompiler(Compiler):
 
 
     """
+
     default_suffix: ClassVar[str] = "owl"
 
     def compile(self, theory: Theory, syntax: Optional[Union[str, ModelSyntax]] = None, **kwargs) -> str:
         pho_ontology = theory_to_py_indexed_ontology(theory)
         with tempfile.NamedTemporaryFile(suffix=".owl", mode="w") as fp:
-            pho_ontology.save_to_file(fp.name,  str(syntax) if syntax else "ofn")
+            pho_ontology.save_to_file(fp.name, str(syntax) if syntax else "ofn")
             fp.flush()
             with open(fp.name) as f_read:
                 return f_read.read()

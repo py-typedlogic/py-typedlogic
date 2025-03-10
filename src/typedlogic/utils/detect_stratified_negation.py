@@ -92,7 +92,9 @@ class Graph:
         return True, None
 
 
-def analyze_datalog_program(rules: List[Tuple[str, List[Tuple[str, bool]]]]) -> Tuple[bool, Optional[Tuple[str, str]], List[List[str]]]:
+def analyze_datalog_program(
+    rules: List[Tuple[str, List[Tuple[str, bool]]]]
+) -> Tuple[bool, Optional[Tuple[str, str]], List[List[str]]]:
     """
     Analyze a Datalog program for stratification using Tarjan's algorithm.
 
@@ -145,4 +147,3 @@ def analyze_datalog_program(rules: List[Tuple[str, List[Tuple[str, bool]]]]) -> 
     is_stratified, causal_edge = g.is_stratified()
 
     return is_stratified, causal_edge, sccs
-

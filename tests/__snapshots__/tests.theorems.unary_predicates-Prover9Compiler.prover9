@@ -1,0 +1,7 @@
+% Problem: tests.theorems.unary_predicates
+formulas(assumptions).
+    all c ((Heads(c) -> Win)).
+end_of_list.
+
+formulas(goals).
+end_of_list.

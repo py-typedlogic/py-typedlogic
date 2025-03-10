@@ -17,7 +17,6 @@ INPUT_DIR = Path(__file__).parent / "input"
 TEST_TTL = str(INPUT_DIR / "test.ttl")
 
 
-
 def test_inference():
     g = Graph()
     g.parse(TEST_TTL, format="ttl")
@@ -28,7 +27,7 @@ def test_inference():
     for sentence in theory.sentences:
         sentence = replace_constants(sentence, theory.constants)
         tr_sentences = simple_prolog_transform(sentence)
-        #for trs in tr_sentences:
+        # for trs in tr_sentences:
         #    print(f"  TR={trs}")
         #    # print(f"     {as_prolog(trs)}")
     for sentence in rdf.generate_sentences(g):
@@ -40,6 +39,7 @@ def test_inference():
     assert Term("Type", str(EX["Fido"]), str(EX.Dog)) in model.ground_terms
     assert Term("Type", str(EX["Fido"]), str(EX.Animal)) in model.ground_terms
     assert Term("Type", str(EX["Fred"]), str(EX.Human)) in model.ground_terms
+
 
 def test_parser():
     parser = RDFParser()
@@ -62,7 +62,6 @@ def test_load():
         print(f"S={s}")
         if isinstance(s, Forall):
             print(f"  INNER: {type(s.sentence)} {s.sentence}")
-
 
 
 def test_check():

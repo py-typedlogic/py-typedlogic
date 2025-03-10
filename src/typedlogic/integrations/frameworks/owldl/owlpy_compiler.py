@@ -3,8 +3,14 @@ from typing import Optional, Union, ClassVar, Dict, List, Any
 
 from typedlogic import Theory
 from typedlogic.compiler import Compiler, ModelSyntax
-from typedlogic.integrations.frameworks.owldl.owltop import OntologyElement, TransitiveObjectProperty, \
-    SymmetricObjectProperty, InverseFunctionalObjectProperty, instance_of, Axiom
+from typedlogic.integrations.frameworks.owldl.owltop import (
+    OntologyElement,
+    TransitiveObjectProperty,
+    SymmetricObjectProperty,
+    InverseFunctionalObjectProperty,
+    instance_of,
+    Axiom,
+)
 
 
 class OWLPyCompiler(Compiler):
@@ -20,7 +26,7 @@ class OWLPyCompiler(Compiler):
         imported_classes = set()
         s = ""
         owl_axioms = []
-        owl_axiom_index : Dict[str, List[Axiom]] = defaultdict(list)
+        owl_axiom_index: Dict[str, List[Axiom]] = defaultdict(list)
         for sentence in theory.sentences:
             if "owl_axiom" in sentence.annotations:
                 axiom = sentence.annotations["owl_axiom"]
@@ -34,7 +40,7 @@ class OWLPyCompiler(Compiler):
                 if axiom not in owl_axiom_index[str(about)]:
                     owl_axiom_index[str(about)].append(axiom)
 
-        #for about, axioms in owl_axiom_index.items():
+        # for about, axioms in owl_axiom_index.items():
         #    s += f"# {about} :: {axioms}\n"
 
         for pd in theory.predicate_definitions:

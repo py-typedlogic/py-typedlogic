@@ -11,6 +11,7 @@ from typedlogic.solver import Model, Solution, Solver
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class Prover9Solver(Solver):
     """
@@ -53,10 +54,10 @@ class Prover9Solver(Solver):
 
     def _run(self, goals: Optional[List[Sentence]] = None) -> bool:
         compiler = Prover9Compiler()
-        #print(f"THEORY; n_sentences: {len(self.base_theory.sentences)}")
+        # print(f"THEORY; n_sentences: {len(self.base_theory.sentences)}")
         program = compiler.compile(self.base_theory, goals=goals)
 
-        #print(program)
+        # print(program)
 
         with tempfile.NamedTemporaryFile(suffix=".prover9", mode="w") as fp:
             fp.write(program)

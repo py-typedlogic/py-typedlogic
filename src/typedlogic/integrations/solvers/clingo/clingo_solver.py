@@ -18,6 +18,7 @@ from typedlogic.transformations import PrologConfig, as_prolog, to_horn_rules
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class ClingoSolver(Solver):
     """
@@ -61,12 +62,17 @@ class ClingoSolver(Solver):
 
     exec_name: str = field(default="clingo")
     profile: ClassVar[Profile] = MixedProfile(AnswerSetProgramming(), AllowsComparisonTerms(), MultipleModelSemantics())
-    ctl : Optional[Control] = None
-
+    ctl: Optional[Control] = None
 
     def _clauses(self) -> Iterator[str]:
         negation_symbol = "not" if self.assume_closed_world else "-"
-        prolog_config = PrologConfig(disjunctive_datalog=True, double_quote_strings=True, negation_symbol=negation_symbol, allow_nesting=False)
+        prolog_config = PrologConfig(
+            disjunctive_datalog=True,
+            double_quote_strings=True,
+            negation_symbol=negation_symbol,
+            allow_nesting=False,
+            double_quote_floats=True,
+        )
         for sentence in self.base_theory.sentences + self.base_theory.ground_terms:
             if not isinstance(sentence, Sentence):
                 raise ValueError(f"Expected Sentence, got {sentence}")
@@ -83,8 +89,6 @@ class ClingoSolver(Solver):
                 except NotInProfileError as e:
                     logger.info(f"Skipping sentence {sentence} due to {e}")
 
-
-
     def models(self) -> Iterator[Model]:
         ctl = Control(["0"])
         predicate_name_map = {pd.predicate.lower(): pd.predicate for pd in self.base_theory.predicate_definitions}
@@ -99,12 +103,14 @@ class ClingoSolver(Solver):
                 facts = []
                 for atom in clingo_model.symbols(shown=True):
                     p = predicate_name_map.get(atom.name, atom.name)
+
                     def _v(sym: clingo.Symbol) -> Any:
                         if sym.type == SymbolType.String:
                             return str(sym.string)
                         if sym.type == SymbolType.Number:
                             return sym.number
                         return sym
+
                     term = Term(p, *[_v(a) for a in atom.arguments])
                     if not atom.positive:
                         term = ~term
@@ -123,4 +129,3 @@ class ClingoSolver(Solver):
         for clause in self._clauses():
             s += f"{clause}\n"
         return s
-

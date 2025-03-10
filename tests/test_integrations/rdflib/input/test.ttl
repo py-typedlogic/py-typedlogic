@@ -8,7 +8,7 @@
 
 ex:hasPet a ex:Property ;
     rdfs:domain ex:Human ;
-    rdfs:range ex:Human .
+    rdfs:range ex:Animal .
 
 ex:Human rdfs:label "Human"@en ;
    rdfs:subClassOf ex:Mammal .

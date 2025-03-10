@@ -1,0 +1,5 @@
+.type Nametype = symbol
+.decl Person(name: symbol)
+.decl Barber(name: symbol)
+.decl Shaves(shaver: symbol, customer: symbol)
+Barber(name) :- Person(name).

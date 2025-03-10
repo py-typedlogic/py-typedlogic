@@ -45,14 +45,15 @@ def sentences_from_predicate_hierarchy(theory: Theory) -> List[Sentence]:
                 vars = [Variable(arg, domain=typ) for arg, typ in pd.arguments.items()]
                 args = [Variable(arg) for arg in pd.arguments]
                 impl = Implies(
-                        antecedent=Term(parent, *args),
-                        consequent=Term(pd.predicate, *args),
-                    )
+                    antecedent=Term(parent, *args),
+                    consequent=Term(pd.predicate, *args),
+                )
                 qs = Forall(vars, impl)
                 if qs not in theory.sentences:
                     new_sentences.append(qs)
 
     return new_sentences
+
 
 def implies_from_parents(theory: Theory) -> Theory:
     """
@@ -95,15 +96,18 @@ def implies_from_parents(theory: Theory) -> Theory:
         sentence_groups=sgs,
     )
 
-def disjunction_as_list(sentence: Sentence) ->List[Sentence]:
+
+def disjunction_as_list(sentence: Sentence) -> List[Sentence]:
     if isinstance(sentence, Or):
         return list(sentence.operands)
     return [sentence]
+
 
 def conjunction_as_list(sentence: Sentence) -> List[Sentence]:
     if isinstance(sentence, And):
         return list(sentence.operands)
     return [sentence]
+
 
 @dataclass
 class PrologConfig:
@@ -112,20 +116,28 @@ class PrologConfig:
     """
 
     use_lowercase_vars: Optional[bool] = False
-    use_uppercase_predicates: Optional[bool]  = False
-    disjunctive_datalog: Optional[bool]  = False
+    use_uppercase_predicates: Optional[bool] = False
+    disjunctive_datalog: Optional[bool] = False
     operator_map: Optional[Mapping[str, str]] = None
-    negation_symbol : str = field(default=r'\+')
-    negation_as_failure_symbol : str = field(default=r'\+')
+    negation_symbol: str = field(default=r"\+")
+    negation_as_failure_symbol: str = field(default=r"\+")
     assume_negation_as_failure: bool = False
     double_quote_strings: bool = False
+    double_quote_floats: bool = False
     include_parens_for_zero_args: bool = False
     allow_function_terms: bool = True
     allow_nesting: bool = True
     null_term: str = "null(_)"
     allow_skolem_terms: bool = False
 
-def as_prolog(sentence: Union[Sentence, List[Sentence]], config: Optional[PrologConfig]=None, depth=0, translate=False, strict=True) -> str:
+
+def as_prolog(
+    sentence: Union[Sentence, List[Sentence]],
+    config: Optional[PrologConfig] = None,
+    depth=0,
+    translate=False,
+    strict=True,
+) -> str:
     """
     Convert a sentence to Prolog syntax.
 
@@ -179,19 +191,28 @@ def as_prolog(sentence: Union[Sentence, List[Sentence]], config: Optional[Prolog
     :param strict:
     :return:
     """
+    if not strict:
+        try:
+            return as_prolog(sentence, config, depth=depth, translate=translate, strict=True)
+        except NotInProfileError:
+            return ""
     if isinstance(sentence, list):
         return "\n".join(as_prolog(s, config, depth=depth) for s in sentence)
     if not config:
         config = PrologConfig()
+
     def _paren(s: str) -> str:
         if config.allow_nesting:
             return f"({s})"
         return s
+
     if translate:
         rules = to_horn_rules(sentence, allow_disjunctions_in_head=config.disjunctive_datalog)
         return "\n".join(as_prolog(s, config, depth=depth) for s in rules)
     if isinstance(sentence, Forall):
         sentence = sentence.sentence
+    if isinstance(sentence, Extension):
+        sentence = sentence.to_model_object()
     if depth == 0 and not isinstance(sentence, (Implies, Term)):
         raise NotInProfileError(f"Top level sentence must be an implication or term {sentence}, got {type(sentence)}")
     if isinstance(sentence, Exists) and depth > 0:
@@ -205,7 +226,7 @@ def as_prolog(sentence: Union[Sentence, List[Sentence]], config: Optional[Prolog
             return "fail"
         return _paren(f"{'; '.join(as_prolog(op, config, depth+1) for op in sentence.operands)}")
     if isinstance(sentence, (Not, NegationAsFailure)):
-        negated_clause = _paren(as_prolog(sentence.negated, config, depth+1))
+        negated_clause = _paren(as_prolog(sentence.negated, config, depth + 1))
         return f"{config.negation_symbol} {negated_clause}"
     if isinstance(sentence, Term):
         if not config.allow_skolem_terms:
@@ -213,6 +234,7 @@ def as_prolog(sentence: Union[Sentence, List[Sentence]], config: Optional[Prolog
                 if isinstance(t, Term) and t.predicate.startswith("sk__"):
                     raise NotInProfileError(f"Skolem term not supported: {sentence}")
         vals = list(sentence.bindings.values())
+
         def _render_arg(v: Any) -> str:
             if v is None:
                 if depth > 0:
@@ -226,11 +248,15 @@ def as_prolog(sentence: Union[Sentence, List[Sentence]], config: Optional[Prolog
             if isinstance(v, Term):
                 if not config.allow_function_terms:
                     raise ValueError(f"Nested term not supported: {v}")
-                return as_prolog(v, config, depth+1)
+                return as_prolog(v, config, depth + 1)
+            if config.double_quote_floats:
+                if isinstance(v, float):
+                    return json.dumps(str(v))
             if config.double_quote_strings:
                 return json.dumps(v)
             else:
                 return repr(v)
+
         p = sentence.predicate
         operator_map = {k: v for k, v in NAME_TO_INFIX_OP.items()}
         if config.operator_map:
@@ -259,8 +285,9 @@ def as_prolog(sentence: Union[Sentence, List[Sentence]], config: Optional[Prolog
         if not config.disjunctive_datalog:
             raise NotInProfileError(f"Disjunctions on LHS not allowed {sentence}")
     if isinstance(sentence.consequent, And):
-        raise NotInProfileError(f"Conjunctions on LHS not allowed {sentence}\n"
-                                "Transform using simplify_prolog_transform first")
+        raise NotInProfileError(
+            f"Conjunctions on LHS not allowed {sentence}\n" "Transform using simplify_prolog_transform first"
+        )
     # check for unbound variables
     body_vars = []
     # eliminate Exists
@@ -281,8 +308,8 @@ def as_prolog(sentence: Union[Sentence, List[Sentence]], config: Optional[Prolog
             if v not in body_vars:
                 raise NotInProfileError(f"Variable {v} in head not in body {sentence}")
 
-    head = as_prolog(sentence.consequent, config, depth+1)
-    body = as_prolog(sentence.antecedent, config, depth+1)
+    head = as_prolog(sentence.consequent, config, depth + 1)
+    body = as_prolog(sentence.antecedent, config, depth + 1)
     if head.startswith("(") and head.endswith(")"):
         head = head[1:-1]
     if body == "true":
@@ -335,9 +362,11 @@ def simple_prolog_transform(sentence: Sentence, strict=False) -> List[Sentence]:
     :param strict:
     :return:
     """
+
     def not_in_profile(s: Sentence) -> None:
         if strict:
             raise NotInProfileError(f"Unsupported sentence {s}")
+
     sentence = transform_sentence(sentence, reduce_singleton)
     sentence = transform_sentence(sentence, eliminate_iff)
     if not isinstance(sentence, Forall):
@@ -385,7 +414,7 @@ def simple_prolog_transform(sentence: Sentence, strict=False) -> List[Sentence]:
     return [Forall(outer.variables, s) for s in new_sentences]
 
 
-def as_fol(sentence, config: Optional[PrologConfig]=None) -> str:
+def as_fol(sentence, config: Optional[PrologConfig] = None) -> str:
     """
     Convert a sentence to first order logic syntax.
 
@@ -428,6 +457,7 @@ def as_fol(sentence, config: Optional[PrologConfig]=None) -> str:
         return f"{as_fol(sentence.left, config)} ↔ {as_fol(sentence.right, config)}"
     if isinstance(sentence, Term):
         vals = list(sentence.bindings.values())
+
         def _render_arg(v: Any) -> str:
             if isinstance(v, Variable):
                 if config.use_lowercase_vars:
@@ -437,6 +467,7 @@ def as_fol(sentence, config: Optional[PrologConfig]=None) -> str:
                 return json.dumps(v)
             else:
                 return repr(v)
+
         p = sentence.predicate
         operator_map = {k: v for k, v in NAME_TO_INFIX_OP.items()}
         if config.operator_map:
@@ -510,7 +541,9 @@ def as_tptp(sentence: Sentence, config: Optional[PrologConfig] = None, depth=0) 
         return f"~{as_tptp(sentence.negated, config, depth + 1)}"
 
     elif isinstance(sentence, Implies):
-        return f"({as_tptp(sentence.antecedent, config, depth + 1)} => {as_tptp(sentence.consequent, config, depth + 1)})"
+        return (
+            f"({as_tptp(sentence.antecedent, config, depth + 1)} => {as_tptp(sentence.consequent, config, depth + 1)})"
+        )
 
     elif isinstance(sentence, Iff):
         return f"({as_tptp(sentence.left, config, depth + 1)} <=> {as_tptp(sentence.right, config, depth + 1)})"
@@ -612,6 +645,7 @@ def as_prover9(sentence: Sentence, config: Optional[PrologConfig] = None, depth=
         elif isinstance(v, float):
             # Prover9 doesn't support floats directly, so we convert to a fraction
             from fractions import Fraction
+
             frac = Fraction(v).limit_denominator()
             return f"rational({frac.numerator},{frac.denominator})"
         elif v is None:
@@ -652,13 +686,13 @@ def as_prover9(sentence: Sentence, config: Optional[PrologConfig] = None, depth=
     elif isinstance(sentence, Iff):
         return f"({as_prover9(sentence.left, config, depth + 1)} <-> {as_prover9(sentence.right, config, depth + 1)})"
 
-
     elif isinstance(sentence, Term):
         predicate = format_predicate(sentence.predicate)
         if not sentence.bindings:
             return predicate
         args = ", ".join(
-            format_var(v) if isinstance(v, Variable) else format_value(v) for v in sentence.bindings.values())
+            format_var(v) if isinstance(v, Variable) else format_value(v) for v in sentence.bindings.values()
+        )
         return f"{predicate}({args})"
 
     else:
@@ -742,7 +776,10 @@ def transform_sentence_chained(sentence: Sentence, rules: Iterable[Callable[[Sen
         sentence = transform_sentence(sentence, rule)
     return sentence
 
-def transform_sentence(sentence: Sentence, rule: Callable[[Sentence], Sentence], varmap: Optional[Dict[str, Variable]] = None) -> Sentence:
+
+def transform_sentence(
+    sentence: Sentence, rule: Callable[[Sentence], Sentence], varmap: Optional[Dict[str, Variable]] = None
+) -> Sentence:
     """
     Transform a sentence recursively using a rule.
 
@@ -787,7 +824,7 @@ def transform_sentence(sentence: Sentence, rule: Callable[[Sentence], Sentence],
         raise ValueError(f"Unknown sentence type {type(sentence)} // {sentence}")
 
 
-def replace_constants(sentence: Sentence, constant_map: Dict[str, Any] ) -> Sentence:
+def replace_constants(sentence: Sentence, constant_map: Dict[str, Any]) -> Sentence:
     """
     Replace constants in a sentence with new values.
 
@@ -812,11 +849,13 @@ def replace_constants(sentence: Sentence, constant_map: Dict[str, Any] ) -> Sent
     elif isinstance(sentence, BooleanSentence):
         return type(sentence)(*[replace_constants(op, constant_map) for op in sentence.operands])
     elif isinstance(sentence, Term):
+
         def _repl(v: Any) -> Any:
             if isinstance(v, Variable):
                 if v.name in constant_map:
                     return constant_map[v.name]
             return v
+
         return Term(sentence.predicate, {k: _repl(v) for k, v in sentence.bindings.items()})
     else:
         raise ValueError(f"Unknown sentence type {sentence}")
@@ -853,6 +892,7 @@ def reduce_singleton(sentence: Sentence) -> Sentence:
     if isinstance(sentence, Or) and len(sentence.operands) == 1:
         return sentence.operands[0]
     return sentence
+
 
 def simplify(sentence: Sentence) -> Sentence:
     """
@@ -899,6 +939,7 @@ def simplify(sentence: Sentence) -> Sentence:
         return Not(negated)
     return sentence
 
+
 def distribute_and_over_or(sentence: Sentence) -> Sentence:
     """
     Distribute AND over OR in a sentence.
@@ -930,6 +971,7 @@ def distribute_and_over_or(sentence: Sentence) -> Sentence:
     # sentence = transform_sentence(sentence, reduce_singleton)
     return sentence
 
+
 def _distribute_sentence(sentence: Sentence, op1: Type[BooleanSentence], op2: Type[BooleanSentence]) -> Sentence:
     # adapted from sympy
     dfunc = lambda t: _distribute_sentence(*t)
@@ -959,6 +1001,7 @@ def _distribute_sentence(sentence: Sentence, op1: Type[BooleanSentence], op2: Ty
             return simplify(op1(*mapped))
     else:
         return sentence
+
 
 def flatten_nested_conjunctions_and_disjunctions(sentence: Sentence) -> Sentence:
     """
@@ -991,8 +1034,11 @@ def flatten_nested_conjunctions_and_disjunctions(sentence: Sentence) -> Sentence
     return sentence
 
 
-
-def skolemize(sentence: Sentence, universal_vars: Optional[List[Variable]] = None, substitution_map: Optional[Dict[str, Term]] = None) -> Sentence:
+def skolemize(
+    sentence: Sentence,
+    universal_vars: Optional[List[Variable]] = None,
+    substitution_map: Optional[Dict[str, Term]] = None,
+) -> Sentence:
     """
     Skolemize a sentence.
 
@@ -1024,7 +1070,9 @@ def skolemize(sentence: Sentence, universal_vars: Optional[List[Variable]] = Non
     if not universal_vars:
         universal_vars = []
     if isinstance(sentence, Forall):
-        return Forall(sentence.variables, skolemize(sentence.sentence, universal_vars + sentence.variables, substitution_map))
+        return Forall(
+            sentence.variables, skolemize(sentence.sentence, universal_vars + sentence.variables, substitution_map)
+        )
     if isinstance(sentence, Exists):
         vars_to_skolemize = [v for v in sentence.variables if v not in universal_vars]
         n = len(substitution_map)
@@ -1036,11 +1084,13 @@ def skolemize(sentence: Sentence, universal_vars: Optional[List[Variable]] = Non
     if isinstance(sentence, BooleanSentence):
         return type(sentence)(*[skolemize(op, universal_vars, substitution_map) for op in sentence.operands])
     elif isinstance(sentence, Term):
-        return Term(sentence.predicate,
-                    {
-                        k: substitution_map[v.name] if isinstance(v, Variable) and v.name in substitution_map else v
-                        for k, v in sentence.bindings.items()
-                    })
+        return Term(
+            sentence.predicate,
+            {
+                k: substitution_map[v.name] if isinstance(v, Variable) and v.name in substitution_map else v
+                for k, v in sentence.bindings.items()
+            },
+        )
     else:
         raise ValueError(f"Unknown sentence type {type(sentence)} // {sentence}")
 
@@ -1098,17 +1148,18 @@ def to_cnf(sentence: Sentence, skip_skolemization=False) -> Sentence:
     # Skolemize
     if not skip_skolemization:
         sentence = skolemize(sentence)
-    #def raise_if_exists(s: Sentence) -> Sentence:
+    # def raise_if_exists(s: Sentence) -> Sentence:
     #    if isinstance(s, Exists):
     #        raise NotInProfileError("Exists not allowed in CNF")
     #    return s
 
-    #transform_sentence(sentence, raise_if_exists)
+    # transform_sentence(sentence, raise_if_exists)
     # Drop universal quantifiers
     sentence = transform_sentence(sentence, lambda s: s.sentence if isinstance(s, Forall) else s)
     # Distribute OR over AND
     sentence = transform_sentence(sentence, distribute_and_over_or)
     return sentence
+
 
 def to_cnf_lol(sentence: Sentence, **kwargs) -> List[List[Sentence]]:
     """
@@ -1141,9 +1192,8 @@ def to_cnf_lol(sentence: Sentence, **kwargs) -> List[List[Sentence]]:
     sentence = simplify(sentence)
     if not isinstance(sentence, And):
         sentence = And(sentence)
-    return [
-        list(op.operands) if isinstance(op, Or) else [op] for op in sentence.operands
-    ]
+    return [list(op.operands) if isinstance(op, Or) else [op] for op in sentence.operands]
+
 
 def to_horn_rules(sentence: Sentence, allow_disjunctions_in_head=False, allow_goal_clauses=None) -> List[Sentence]:
     """
@@ -1179,8 +1229,8 @@ def to_horn_rules(sentence: Sentence, allow_disjunctions_in_head=False, allow_go
     rules: List[Sentence] = []
     for dnf_sentence in cnf_lol:
         # separate into positive and negative literals
-        positive = [] # head
-        negative = [] # body
+        positive = []  # head
+        negative = []  # body
         for lit in dnf_sentence:
             if isinstance(lit, Not):
                 negative.append(lit.negated)
@@ -1200,7 +1250,7 @@ def to_horn_rules(sentence: Sentence, allow_disjunctions_in_head=False, allow_go
             anded = negative + [Not(other) for other in other_pos]
             rules.append(Implies(And(*anded), pos))
             # TODO: uncomment this to generate multiple rules
-            #for pos in positive:
+            # for pos in positive:
             #    other_pos = [p for p in positive if p != pos]
             #    anded = negative + [Not(other) for other in other_pos]
             #    rules.append(Implies(And(*anded), pos))
@@ -1219,6 +1269,7 @@ def to_horn_rules(sentence: Sentence, allow_disjunctions_in_head=False, allow_go
             head = Or(*positive)
             rules.append(Implies(body, head))
     return rules
+
 
 def expand_xor(sentence: Sentence) -> Sentence:
     """
@@ -1253,10 +1304,7 @@ def expand_exactly_one(sentence: Sentence) -> Sentence:
         return operands[0]
     if len(operands) == 2:
         return And(Or(*operands), Not(And(*operands)))
-    return Or(
-        [And(op,
-             Not(Or([op2 for op2 in operands if op2 != op])))
-         for op in operands])
+    return Or([And(op, Not(Or([op2 for op2 in operands if op2 != op]))) for op in operands])
 
 
 def eliminate_all_implications_recursive(sentence: Sentence) -> Sentence:
@@ -1331,6 +1379,7 @@ def eliminate_iff(sentence: Sentence) -> Sentence:
         Implies(sentence.right, sentence.left),
     )
 
+
 def eliminate_implied(sentence: Sentence) -> Sentence:
     """
     Eliminate implied from a sentence.
@@ -1353,6 +1402,7 @@ def eliminate_implied(sentence: Sentence) -> Sentence:
         return sentence
     return Implies(sentence.operands[1], sentence.operands[0])
 
+
 def eliminate_implies(sentence: Sentence) -> Sentence:
     """
     Eliminate implies from a sentence in translation to CNF
@@ -1371,8 +1421,6 @@ def eliminate_implies(sentence: Sentence) -> Sentence:
     if not isinstance(sentence, Implies):
         return sentence
     return Or(Not(sentence.operands[0]), sentence.operands[1])
-
-
 
 
 def apply_demorgans(sentence: Sentence) -> Sentence:
@@ -1403,6 +1451,7 @@ def apply_demorgans(sentence: Sentence) -> Sentence:
         return And(*[Not(op) for op in negated.operands])
     return sentence
 
+
 def apply_quantifier_negation(sentence: Sentence) -> Sentence:
     """
     Apply negation of quantifiers to a sentence.
@@ -1427,6 +1476,7 @@ def apply_quantifier_negation(sentence: Sentence) -> Sentence:
     if isinstance(negated, Exists):
         return Forall(negated.variables, Not(negated.sentence))
     return sentence
+
 
 def force_stratification(horn_rules: List[Sentence]) -> List[Sentence]:
     """
@@ -1490,6 +1540,7 @@ def force_stratification(horn_rules: List[Sentence]) -> List[Sentence]:
         return force_stratification(horn_rules)
     return horn_rules
 
+
 def ensure_terms_positional(theory: Theory):
     """
     Ensure that all terms in a theory have all positions filled and ordered.
@@ -1520,6 +1571,7 @@ def ensure_terms_positional(theory: Theory):
     :param theory:
     :return:
     """
+
     def tr(s: Sentence):
         if isinstance(s, Term):
             pds = [pd for pd in theory.predicate_definitions if pd.predicate == s.predicate]
@@ -1527,12 +1579,8 @@ def ensure_terms_positional(theory: Theory):
                 # could include builtins
                 return
             pd = pds[0]
-            if not s.positional:
+            if s.positional is False:
                 s.bindings = {k: s.bindings.get(k) for k, v in pd.arguments.items()}
+
     for s in theory.sentences:
         transform_sentence(s, tr)
-
-
-
-
-

@@ -1,0 +1,6 @@
+person(Name, Age) :- namedthing(Name, Age).
+likes(Subject, Predicate, Object, Reciprocated) :- relationship(Subject, Predicate, Object, Reciprocated).
+query(namedthing(Name)).
+query(relationship(Subject, Predicate, Object)).
+query(person(Name, Age)).
+query(likes(Subject, Predicate, Object, Reciprocated)).

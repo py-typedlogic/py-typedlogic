@@ -21,9 +21,9 @@ def _render(s: SExpression, position=0, depth=0) -> str:
         return str(s)
     return json.dumps(s)
 
+
 @dataclass
 class SExprCompiler(Compiler):
-
     default_suffix: ClassVar[str] = "sexpr"
 
     def compile(self, theory: Theory, syntax: Optional[Union[str, ModelSyntax]] = None, **kwargs) -> str:

@@ -1,6 +1,8 @@
 """
 Data model for the typed-logic framework.
 
+## Overview
+
 This module defines the core classes and structures used to represent logical
 constructs such as sentences, terms, predicates, and theories. It is based
 on the Common Logic Interchange Format (CLIF) and the Common Logic Standard (CL),
@@ -29,6 +31,8 @@ Here is an example:
         ...                    Term('friend_of', y, x)))
         >>> theory.add(s)
 
+## Classes
+
 """
 import operator
 import types
@@ -41,10 +45,13 @@ SExpressionAtom = Any
 SExpressionTerm = List["SExpression"]
 SExpression = Union[SExpressionTerm, SExpressionAtom]
 
+
 @dataclass
 class PredicateDefinition:
     """
     Defines the name and arguments of a predicate.
+
+    Example:
 
         >>> pdef = PredicateDefinition(predicate='FriendOf',
         ...                            arguments={'x': 'str', 'y': 'str'})
@@ -61,6 +68,8 @@ class PredicateDefinition:
         ...     type_definitions={'Person': 'str'},
         ...     predicate_definitions=[pdef],
         ... )
+
+    Model:
 
     ```mermaid
     classDiagram
@@ -86,6 +95,7 @@ class PredicateDefinition:
         typ = self.arguments[arg]
         try:
             import pydantic
+
             if isinstance(typ, pydantic.fields.FieldInfo):
                 typ = typ.annotation
         except ImportError:
@@ -100,9 +110,10 @@ class PredicateDefinition:
         :param predicate_class:
         :return:
         """
-        return PredicateDefinition(predicate=python_class.__name__,
-                                   arguments={k: v for k, v in python_class.__annotations__.items()},
-                                   )
+        return PredicateDefinition(
+            predicate=python_class.__name__,
+            arguments={k: v for k, v in python_class.__annotations__.items()},
+        )
 
 
 @dataclass
@@ -245,6 +256,7 @@ class Sentence(ABC):
     def arguments(self) -> List[Any]:
         raise NotImplementedError(f"type = {type(self)} // {self}")
 
+
 def as_sexpr(s: Any) -> SExpression:
     if isinstance(s, (Sentence, Variable)):
         return s.as_sexpr()
@@ -261,7 +273,7 @@ def as_sexpr(s: Any) -> SExpression:
         return s.value
     if isinstance(s, (type, types.GenericAlias, _SpecialForm)):
         return str(s)
-    if hasattr(s, '__origin__') and get_origin(s) is not None:
+    if hasattr(s, "__origin__") and get_origin(s) is not None:
         return str(s)
     else:
         return s
@@ -303,7 +315,7 @@ class Term(Sentence):
             bindings = args[0]
             self.positional = False
         else:
-            bindings = {f'arg{i}': arg for i, arg in enumerate(args)}
+            bindings = {f"arg{i}": arg for i, arg in enumerate(args)}
             self.positional = True
         self.bindings = bindings
         self._annotations = kwargs
@@ -351,7 +363,7 @@ class Term(Sentence):
 
     def __repr__(self):
         if not self.bindings:
-            return f'{self.predicate}'
+            return f"{self.predicate}"
         elif self.positional:
             return f'{self.predicate}({", ".join(f"{v}" for v in self.bindings.values())})'
         else:
@@ -368,13 +380,91 @@ class Term(Sentence):
         return [self.predicate] + [as_sexpr(v) for v in self.bindings.values()]
 
 
+class TermBag(Sentence):
+    """
+    A bag of terms.
+
+    Example (using keyword arguments):
+
+        >>> tb = TermBag('Distance', {'start': ['London', 'Paris', 'Tokyo'], 'end': ['Paris', 'Tokyo', 'New York'], 'miles': [344, 9561, 10838]})
+        >>> tb
+        Distance(London, Paris, 344), Distance(Paris, Tokyo, 9561), Distance(Tokyo, New York, 10838)
+
+    Example (using positional arguments):
+
+        >>> tb = TermBag('Distance', ['London', 'Paris', 'Tokyo'], ['Paris', 'Tokyo', 'New York'], [344, 9561, 10838])
+        >>> tb
+        Distance(London, Paris, 344), Distance(Paris, Tokyo, 9561), Distance(Tokyo, New York, 10838)
+
+    """
+
+    def __init__(self, predicate: str, *args, **kwargs):
+        self.predicate = predicate
+        bindings: Dict[str, List[Any]]
+        if not args:
+            self.positional = None
+            bindings = {}
+        elif len(args) == 1 and isinstance(args[0], dict):
+            bindings = args[0]
+            self.positional = False
+        else:
+            bindings = {f"arg{i}": arg for i, arg in enumerate(args)}
+            self.positional = True
+        self.bindings = bindings
+        self._annotations = kwargs
+        self._validate()
+
+    def _validate(self):
+        if not self.predicate:
+            raise ValueError("No predicate provided")
+        if not self.bindings:
+            raise ValueError("No bindings provided")
+        if not all(isinstance(v, List) for v in self.bindings.values()):
+            raise ValueError("All bindings must be collections")
+
+    @property
+    def values(self) -> Tuple[List[Any], ...]:
+        """
+        Representation of the arguments of the term as a fixed-position tuples
+
+        :return:
+        """
+        return tuple([v for v in self.bindings.values()])
+
+    def make_keyword_indexed(self, keywords: List[str]):
+        """
+        Convert positional arguments to keyword arguments
+        """
+        if self.positional:
+            self.bindings = {k: v for k, v in zip(keywords, self.bindings.values(), strict=False)}
+            self.positional = False
+        self._validate()
+
+    def __repr__(self):
+        terms = self.as_terms()
+        return ", ".join(repr(t) for t in terms)
+
+    def __eq__(self, other):
+        # return isinstance(other, Term) and self.predicate == other.predicate and self.bindings == other.bindings
+        return isinstance(other, TermBag) and self.predicate == other.predicate and self.values == other.values
+
+    def __hash__(self):
+        return hash((self.predicate, tuple(self.values)))
+
+    def as_terms(self) -> List[Term]:
+        tuples = zip(*self.values)
+        return [Term(self.predicate, *tuple) for tuple in tuples]
+
+    def as_sexpr(self) -> SExpressionTerm:
+        return [t.as_sexpr() for t in self.as_terms()]
+
 
 class Extension(Sentence, ABC):
     """
-    Use this class for framework-specific extensions.
+    Use this abstract class for framework-specific extensions.
 
     An example of this is the `Fact` class which subclasses Extension, and is intended to be
-    subclasses by domain-specific classes representing predicate definitions, whose instances
+    subclassed by domain-specific classes representing predicate definitions, whose instances
     map to terms.
     """
 
@@ -394,6 +484,7 @@ class Extension(Sentence, ABC):
     def arguments(self) -> List[Any]:
         return self.to_model_object().arguments
 
+
 def term(predicate: Union[str, Type[Extension], Extension], *args, **kwargs) -> Term:
     """
     Create a term object.
@@ -412,6 +503,7 @@ def term(predicate: Union[str, Type[Extension], Extension], *args, **kwargs) -> 
     if isinstance(predicate, type):
         predicate = predicate.__name__
     return Term(predicate, *args, **kwargs)
+
 
 @dataclass
 class BooleanSentence(Sentence, ABC):
@@ -478,12 +570,12 @@ class And(BooleanSentence):
     def __init__(self, *operands, **kwargs):
         super().__init__(*operands, **kwargs)
 
-
     def __str__(self):
         return f'({") & (".join(str(op) for op in self.operands)})'
 
     def __repr__(self):
         return f'And({", ".join(repr(op) for op in self.operands)})'
+
 
 @dataclass
 class Or(BooleanSentence):
@@ -518,6 +610,7 @@ class Or(BooleanSentence):
     def __repr__(self):
         return f'Or({", ".join(repr(op) for op in self.operands)})'
 
+
 @dataclass
 class Not(BooleanSentence):
     """
@@ -544,10 +637,10 @@ class Not(BooleanSentence):
         super().__init__(operand, **kwargs)
 
     def __str__(self):
-        return f'~{self.operands[0]}'
+        return f"~{self.operands[0]}"
 
     def __repr__(self):
-        return f'Not({repr(self.operands[0])})'
+        return f"Not({repr(self.operands[0])})"
 
     @property
     def negated(self) -> Sentence:
@@ -556,6 +649,7 @@ class Not(BooleanSentence):
         :return: Sentence
         """
         return self.operands[0]
+
 
 class Xor(BooleanSentence):
     """
@@ -608,10 +702,11 @@ class Implication(BooleanSentence, ABC):
         raise NotImplementedError
 
     def __str__(self):
-        return f'({self.operands[0]} {self.symbol} {self.operands[1]})'
+        return f"({self.operands[0]} {self.symbol} {self.operands[1]})"
 
     def __repr__(self):
-        return f'{type(self).__name__}({repr(self.operands[0])}, {repr(self.operands[1])})'
+        return f"{type(self).__name__}({repr(self.operands[0])}, {repr(self.operands[1])})"
+
 
 @dataclass
 class Implies(Implication):
@@ -645,10 +740,10 @@ class Implies(Implication):
         return self.operands[1]
 
     def __str__(self):
-        return f'({self.operands[0]} -> {self.operands[1]})'
+        return f"({self.operands[0]} -> {self.operands[1]})"
 
     def __repr__(self):
-        return f'Implies({repr(self.operands[0])}, {repr(self.operands[1])})'
+        return f"Implies({repr(self.operands[0])}, {repr(self.operands[1])})"
 
 
 @dataclass
@@ -674,12 +769,11 @@ class Implied(Implication):
     def consequent(self):
         return self.operands[0]
 
-
     def __str__(self):
-        return f'({self.operands[0]} <- {self.operands[1]})'
+        return f"({self.operands[0]} <- {self.operands[1]})"
 
     def __repr__(self):
-        return f'Implied({repr(self.operands[0])}, {repr(self.operands[1])})'
+        return f"Implied({repr(self.operands[0])}, {repr(self.operands[1])})"
 
 
 @dataclass
@@ -710,10 +804,10 @@ class Iff(Implication):
         return self.operands[1]
 
     def __str__(self):
-        return f'({self.operands[0]} <-> {self.operands[1]})'
+        return f"({self.operands[0]} <-> {self.operands[1]})"
 
     def __repr__(self):
-        return f'Iff({repr(self.operands[0])}, {repr(self.operands[1])})'
+        return f"Iff({repr(self.operands[0])}, {repr(self.operands[1])})"
 
 
 @dataclass
@@ -728,6 +822,7 @@ class NegationAsFailure(BooleanSentence):
     @property
     def negated(self):
         return self.operands[0]
+
 
 # deprecate this?
 def not_provable(predicate):
@@ -771,7 +866,6 @@ class QuantifiedSentence(Sentence, ABC):
         return [self.variables, self.sentence]
 
 
-
 @dataclass
 class Forall(QuantifiedSentence):
     """
@@ -788,10 +882,10 @@ class Forall(QuantifiedSentence):
         return "all"
 
     def __str__(self):
-        return f'∀{self._bindings_str()} : {self.sentence}'
+        return f"∀{self._bindings_str()} : {self.sentence}"
 
     def __repr__(self):
-        return f'Forall([{self._bindings_str()}] : {repr(self.sentence)})'
+        return f"Forall([{self._bindings_str()}] : {repr(self.sentence)})"
 
 
 @dataclass
@@ -810,10 +904,10 @@ class Exists(QuantifiedSentence):
         return "exists"
 
     def __str__(self):
-        return f'∃{self.sentence}'
+        return f"∃{self.sentence}"
 
     def __repr__(self):
-        return f'Exists({self._bindings_str()} : {repr(self.sentence)})'
+        return f"Exists({self._bindings_str()} : {repr(self.sentence)})"
 
     def __hash__(self):
         return hash((self.quantifier, self._bindings_str(), self.sentence))
@@ -822,6 +916,8 @@ class Exists(QuantifiedSentence):
 class SentenceGroupType(str, Enum):
     AXIOM = "axiom"
     GOAL = "goal"
+    # PROBABILISTIC_AXIOM = "probabilistic_axiom"
+
 
 @dataclass
 class SentenceGroup:
@@ -848,8 +944,10 @@ class SentenceGroup:
     sentences: Optional[List[Sentence]] = None
     _annotations: Optional[Dict[str, Any]] = None
 
+
 DefinedType = Union["DefinedUnionType", str]
 DefinedUnionType = List[DefinedType]
+
 
 @dataclass
 class Theory:
@@ -908,7 +1006,12 @@ class Theory:
 
         :return:
         """
-        return [s for sg in self.sentence_groups or [] if sg.group_type == SentenceGroupType.GOAL for s in sg.sentences or []]
+        return [
+            s
+            for sg in self.sentence_groups or []
+            if sg.group_type == SentenceGroupType.GOAL
+            for s in sg.sentences or []
+        ]
 
     def add(self, sentence: Sentence):
         """
@@ -919,6 +1022,10 @@ class Theory:
         """
         if isinstance(sentence, Extension):
             sentence = sentence.to_model_object()
+        if isinstance(sentence, TermBag):
+            for t in sentence.as_terms():
+                self.add(t)
+            return
         if not self.sentence_groups:
             self.sentence_groups = []
         self.sentence_groups.append(SentenceGroup(name="Sentences", sentences=[sentence]))
@@ -971,20 +1078,11 @@ def as_object(self: Any, parent=None) -> Any:
     if isinstance(self, Extension):
         return as_object(self.to_model_object())
     elif isinstance(self, Term):
-        return {
-            "type": type(self).__name__,
-            "arguments": [self.predicate] + [as_object(x) for x in self.values]
-        }
+        return {"type": type(self).__name__, "arguments": [self.predicate] + [as_object(x) for x in self.values]}
     elif isinstance(self, Variable):
-        return {
-            "type": type(self).__name__,
-            "arguments": self.as_sexpr()[1:]
-        }
+        return {"type": type(self).__name__, "arguments": self.as_sexpr()[1:]}
     elif isinstance(self, Sentence):
-        return {
-            "type": type(self).__name__,
-            "arguments": [as_object(x) for x in self.arguments]
-        }
+        return {"type": type(self).__name__, "arguments": [as_object(x) for x in self.arguments]}
     elif isinstance(self, (PredicateDefinition, Theory, SentenceGroup)):
         return {
             "type": type(self).__name__,
@@ -996,6 +1094,7 @@ def as_object(self: Any, parent=None) -> Any:
         return [as_object(x) for x in self]
     else:
         return self
+
 
 def from_object(obj: Any) -> Any:
     if isinstance(obj, dict):
@@ -1010,6 +1109,7 @@ def from_object(obj: Any) -> Any:
     if isinstance(obj, list):
         return [from_object(x) for x in obj]
     return obj
+
 
 class NotInProfileError(ValueError):
     """

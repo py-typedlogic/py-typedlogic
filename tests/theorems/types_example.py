@@ -5,6 +5,7 @@ Thing = str
 
 AGE_THRESHOLD = 18
 
+
 class PersonWithAge(BaseModel, FactMixin):
     name: Thing
     age: int
@@ -23,10 +24,12 @@ class StageAge(BaseModel, FactMixin):
 def facts():
     assert StageAge(stage="Adult", age=AGE_THRESHOLD)
 
+
 @axiom
 def classifications(name: Thing, age: int):
     if age >= AGE_THRESHOLD:
         assert Adult(name=name)
+
 
 @goal
 def goals():
