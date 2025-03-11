@@ -1,4 +1,5 @@
 import pytest
+import shutil
 from typedlogic import And, Exists, Forall, Iff, Or, PredicateDefinition, Term, Theory, Variable, Xor
 from typedlogic.datamodel import ExactlyOne
 from typedlogic.integrations.solvers.clingo.clingo_solver import ClingoSolver
@@ -14,13 +15,23 @@ from typedlogic.profiles import (
     PropositionalLogic,
 )
 
-SOLVERS = [
-    SouffleSolver,
+# Check for external dependencies
+has_prover9 = shutil.which("prover9") is not None
+has_souffle = shutil.which("souffle") is not None
+
+# Define base solvers that should always be available
+BASE_SOLVERS = [
     ClingoSolver,
     Z3Solver,
     SnakeLogSolver,
-    Prover9Solver,
 ]
+
+# Add solvers conditionally
+SOLVERS = BASE_SOLVERS.copy()
+if has_prover9:
+    SOLVERS.append(Prover9Solver)
+if has_souffle:
+    SOLVERS.append(SouffleSolver)
 
 PROP_LOGIC_THEORY = Theory(
     name="Propositional Logic",
@@ -184,6 +195,12 @@ B1y = Term("B1", Y)
 def test_solvers(
     solver_class, theory, asserted_axioms, asserted_ground_terms, expected_num_models, expected_ground_terms, profile
 ):
+    # Skip tests for solvers that aren't available
+    if solver_class == Prover9Solver and not has_prover9:
+        pytest.skip("Prover9 executable not found in PATH")
+    if solver_class == SouffleSolver and not has_souffle:
+        pytest.skip("Souffle executable not found in PATH")
+        
     solver = solver_class()
     if profile == ClosedWorld:
         solver.assume_closed_world = True
@@ -230,7 +247,13 @@ def test_solvers(
             )
 
 
-@pytest.mark.parametrize("solver_class", [SouffleSolver, ClingoSolver])
+# Only include solvers that are available
+available_path_solvers = []
+if has_souffle:
+    available_path_solvers.append(SouffleSolver)
+available_path_solvers.append(ClingoSolver)
+
+@pytest.mark.parametrize("solver_class", available_path_solvers)
 def test_paths_with_distance(solver_class):
     solver = solver_class()
     import tests.theorems.paths_with_distance as pwd
@@ -247,7 +270,12 @@ def test_paths_with_distance(solver_class):
     assert Term("Path", "a", "e", 4) in model.ground_terms
 
 
-@pytest.mark.parametrize("solver_class", [Z3Solver, Prover9Solver, ClingoSolver])
+# Only include solvers that are available
+available_contradiction_solvers = [Z3Solver, ClingoSolver]
+if has_prover9:
+    available_contradiction_solvers.append(Prover9Solver)
+
+@pytest.mark.parametrize("solver_class", available_contradiction_solvers)
 def test_simple_contradiction(solver_class):
     solver = solver_class()
     import tests.theorems.simple_contradiction as sc
