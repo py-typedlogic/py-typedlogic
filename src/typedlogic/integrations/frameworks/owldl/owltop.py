@@ -564,7 +564,7 @@ class SubClassOf(Axiom):
 
     ```mermaid
     classDiagram
-    AnonymousClassExpression <|-- SubClassOf
+    Axiom <|-- SubClassOf
     SubClassOf --> "*" ClassExpression : sub
     SubClassOf --> "*" ClassExpression : sup
     ```
@@ -658,7 +658,7 @@ class SubObjectPropertyOf(Axiom):
 
     ```mermaid
     classDiagram
-    AnonymousClassExpression <|-- SubObjectPropertyOf
+    Axiom <|-- SubObjectPropertyOf
     SubObjectPropertyOf --> "*" ObjectPropertyExpressionOrPropertyExpressionChain : sub
     SubObjectPropertyOf --> "*" ObjectPropertyExpression : sup
     ```
