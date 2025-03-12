@@ -1,3 +1,4 @@
+import shutil
 from random import randint
 from typing import List
 
@@ -7,6 +8,33 @@ from typedlogic.evaluation import Benchmark, BenchmarkSeed, benchmark_from_seed
 from typedlogic.parsers.pyparser import PythonParser
 
 from tests import tree_edges
+
+# Check for external dependencies
+has_prover9 = shutil.which("prover9") is not None
+has_souffle = shutil.which("souffle") is not None
+has_clingo = True  # Assuming Python package is installed via poetry
+
+def pytest_configure(config):
+    """Register custom markers."""
+    config.addinivalue_line("markers", "prover9: mark tests requiring prover9 executable")
+    config.addinivalue_line("markers", "souffle: mark tests requiring souffle executable")
+    config.addinivalue_line("markers", "slow: mark test as slow running")
+
+def pytest_collection_modifyitems(config, items):
+    """Skip tests based on available executables and other markers."""
+    # Skip markers
+    skip_souffle = pytest.mark.skip(reason="Souffle executable not found")
+    skip_prover9 = pytest.mark.skip(reason="Prover9 executable not found")
+    
+    for item in items:
+        # Skip tests requiring external executables if not available
+        if "souffle" in str(item.function.__name__).lower() or "souffle" in str(item.nodeid).lower():
+            if not has_souffle:
+                item.add_marker(skip_souffle)
+                
+        if "prover9" in str(item.function.__name__).lower() or "prover9" in str(item.nodeid).lower():
+            if not has_prover9:
+                item.add_marker(skip_prover9)
 
 
 @pytest.fixture
