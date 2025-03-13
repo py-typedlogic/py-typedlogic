@@ -213,10 +213,27 @@ def test_solve_multiple(theory, data_files, solver_class, expected):
     input_file = Path(__file__).parent / f"theorems/{theory}.py"
     output_path = OUTPUT_DIR / f"theorems/{input_file.stem}.solver.{solver_class}.txt"
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    data_files_input = [str(Path(__file__).parent / f"theorems/{theory}_data" / f) for f in data_files]
-    print(data_files_input)
+    
+    # Ensure the theory_data directory exists in the output directory
+    data_dir = Path(__file__).parent / f"theorems/{theory}_data"
+    output_data_dir = OUTPUT_DIR / f"theorems/{theory}_data"
+    output_data_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Copy data files to output directory to ensure they're accessible
+    for data_file in data_files:
+        src_file = data_dir / data_file
+        dst_file = output_data_dir / data_file
+        with open(src_file, 'r') as src:
+            with open(dst_file, 'w') as dst:
+                dst.write(src.read())
+    
+    # Use data files from the output directory
+    data_files_input = [str(output_data_dir / f) for f in data_files]
+    print(f"Data files: {data_files_input}")
+    
     result = runner.invoke(app, ["solve", str(input_file), "--output-file", str(output_path)] + data_files_input)
     if result.exit_code != 0:
+        print(f"Exit code: {result.exit_code}")
         print(result.stdout)
     assert result.exit_code == 0
     # TODO: test actual output
