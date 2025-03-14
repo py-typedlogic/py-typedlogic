@@ -247,13 +247,16 @@ def test_solvers(
             )
 
 
-# Only include solvers that are available
-available_path_solvers = []
-if has_souffle:
-    available_path_solvers.append(SouffleSolver)
-available_path_solvers.append(ClingoSolver)
+# Add type annotation to make mypy happy
+from typing import Any, List, Type
 
-@pytest.mark.parametrize("solver_class", available_path_solvers)
+# Only include solvers that are available - use proper type annotation
+solver_classes: List[Type[Any]] = []
+solver_classes.append(ClingoSolver)
+if has_souffle:
+    solver_classes.append(SouffleSolver)
+
+@pytest.mark.parametrize("solver_class", solver_classes)
 def test_paths_with_distance(solver_class):
     solver = solver_class()
     import tests.theorems.paths_with_distance as pwd
@@ -271,11 +274,11 @@ def test_paths_with_distance(solver_class):
 
 
 # Only include solvers that are available
-available_contradiction_solvers = [Z3Solver, ClingoSolver]
+contradiction_solvers: List[Type[Any]] = [Z3Solver, ClingoSolver]
 if has_prover9:
-    available_contradiction_solvers.append(Prover9Solver)
+    contradiction_solvers.append(Prover9Solver)
 
-@pytest.mark.parametrize("solver_class", available_contradiction_solvers)
+@pytest.mark.parametrize("solver_class", contradiction_solvers)
 def test_simple_contradiction(solver_class):
     solver = solver_class()
     import tests.theorems.simple_contradiction as sc
