@@ -13,7 +13,11 @@ def pytest_configure(config):
 def pytest_collection_modifyitems(config, items):
     """Skip tests based on available executables."""
     for item in items:
-        if "prover9" in item.keywords and not has_prover9:
-            item.add_marker(pytest.mark.skip(reason="Prover9 executable not found"))
-        if "souffle" in item.keywords and not has_souffle:
-            item.add_marker(pytest.mark.skip(reason="Souffle executable not found"))
+        # Use get_closest_marker for more reliable marker detection
+        if item.get_closest_marker("prover9") or "prover9" in str(item.nodeid).lower():
+            if not has_prover9:
+                item.add_marker(pytest.mark.skip(reason="Prover9 executable not found"))
+                
+        if item.get_closest_marker("souffle") or "souffle" in str(item.nodeid).lower():
+            if not has_souffle:
+                item.add_marker(pytest.mark.skip(reason="Souffle executable not found"))

@@ -25,14 +25,19 @@ def pytest_collection_modifyitems(config, items):
     # Skip markers
     skip_souffle = pytest.mark.skip(reason="Souffle executable not found")
     skip_prover9 = pytest.mark.skip(reason="Prover9 executable not found")
+    skip_slow = pytest.mark.skip(reason="slow test")
     
     for item in items:
+        # Skip slow tests
+        if item.get_closest_marker("slow"):
+            item.add_marker(skip_slow)
+            
         # Skip tests requiring external executables if not available
-        if "souffle" in str(item.function.__name__).lower() or "souffle" in str(item.nodeid).lower():
+        if item.get_closest_marker("souffle") or "souffle" in str(item.nodeid).lower():
             if not has_souffle:
                 item.add_marker(skip_souffle)
                 
-        if "prover9" in str(item.function.__name__).lower() or "prover9" in str(item.nodeid).lower():
+        if item.get_closest_marker("prover9") or "prover9" in str(item.nodeid).lower():
             if not has_prover9:
                 item.add_marker(skip_prover9)
 
