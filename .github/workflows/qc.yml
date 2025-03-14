@@ -33,4 +33,4 @@ jobs:
       #  run: poetry run tox -e lint
 
       - name: Test with pytest and generate coverage file
-        run: poetry run tox -e py
+        run: poetry run pytest -v --durations=10

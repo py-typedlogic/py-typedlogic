@@ -97,3 +97,23 @@ pip install "typedlogic"
 ## Next Steps
 
 - Consult the [main docs](https://py-typedlogic.github.io/py-typedlogic/) for more information
+
+## Contributing
+
+### Testing with External Dependencies
+
+Some tests require external executables (Prover9, Souffle) that may not be available in all environments. 
+The test suite is designed to automatically skip tests that require unavailable dependencies.
+
+When running in CI environments:
+- Tests for external solvers are automatically skipped if the dependency is not available
+- This allows CI to pass while still testing all available functionality
+
+To install optional dependencies for testing:
+- Prover9: Install from your package manager or from source
+- Souffle: Install from your package manager or from source
+
+Run tests with:
+```bash
+poetry run pytest
+```

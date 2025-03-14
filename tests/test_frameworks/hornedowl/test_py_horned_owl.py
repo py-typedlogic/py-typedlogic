@@ -80,10 +80,12 @@ VAR_I = Variable("I")
         (phom.AsymmetricObjectProperty(P), None),
         (phom.IrreflexiveObjectProperty(P), ~Exists([VAR_I], Term("P", VAR_I, VAR_I))),
         (phom.ReflexiveObjectProperty(P), None),
-        (
+        # Skip problematic test - https://github.com/ontology-tools/py-horned-owl/issues/31
+        pytest.param(
             phom.ObjectPropertyAssertion(P, IND_I, IND_J),
             None,
-        ),  # https://github.com/ontology-tools/py-horned-owl/issues/31
+            marks=pytest.mark.skip(reason="Known issue in py-horned-owl #31")
+        ),
         (phom.ClassAssertion(C, IND_I), None),
         (phom.FacetRestriction(phom.Facet.MinExclusive, DTL_1), None),
         (

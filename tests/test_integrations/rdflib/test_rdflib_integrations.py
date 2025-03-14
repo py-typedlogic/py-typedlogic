@@ -1,4 +1,5 @@
 from pathlib import Path
+import pytest
 
 import rdflib
 from rdflib import RDFS, Graph
@@ -9,6 +10,7 @@ from typedlogic.integrations.solvers.souffle import SouffleSolver
 from typedlogic.integrations.solvers.z3 import Z3Solver
 from typedlogic.parsers.pyparser.python_parser import PythonParser
 from typedlogic.transformations import replace_constants, simple_prolog_transform
+from tests.conftest import has_souffle
 
 EX = rdflib.Namespace("http://example.org/ex/")
 
@@ -17,6 +19,7 @@ INPUT_DIR = Path(__file__).parent / "input"
 TEST_TTL = str(INPUT_DIR / "test.ttl")
 
 
+@pytest.mark.skipif(not has_souffle, reason="Souffle executable not found")
 def test_inference():
     g = Graph()
     g.parse(TEST_TTL, format="ttl")
@@ -41,6 +44,7 @@ def test_inference():
     assert Term("Type", str(EX["Fred"]), str(EX.Human)) in model.ground_terms
 
 
+@pytest.mark.skipif(not has_souffle, reason="Souffle executable not found")
 def test_parser():
     parser = RDFParser()
     theory = parser.parse(TEST_TTL)
