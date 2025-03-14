@@ -197,9 +197,9 @@ def test_solvers(
 ):
     # Skip tests for solvers that aren't available
     if solver_class == Prover9Solver and not has_prover9:
-        pytest.skip("Prover9 executable not found in PATH")
+        pytest.skip("External dependency not available: Prover9 executable not found in PATH")
     if solver_class == SouffleSolver and not has_souffle:
-        pytest.skip("Souffle executable not found in PATH")
+        pytest.skip("External dependency not available: Souffle executable not found in PATH")
         
     solver = solver_class()
     if profile == ClosedWorld:
