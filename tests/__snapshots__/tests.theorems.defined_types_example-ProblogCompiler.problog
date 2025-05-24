@@ -1,3 +1,4 @@
+adult(_Name) :- Age >= 18.
 adult("Alice") :- personwithage("Alice", 25).
 query(personwithage(Name, Age)).
 query(adult(Name)).

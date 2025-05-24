@@ -225,6 +225,11 @@ class Sentence(ABC):
 
     def __add__(self, other):
         return Term(operator.add.__name__, self, other)
+    
+    def __rmul__(self, other):
+        # TODO: avoid circular import
+        from typedlogic.extensions.probabilistic import Probability, That
+        return Probability(self, That(other))
 
     @property
     def annotations(self) -> Dict[str, Any]:

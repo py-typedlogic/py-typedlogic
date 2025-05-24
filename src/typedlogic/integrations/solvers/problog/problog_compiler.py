@@ -54,7 +54,7 @@ class ProbLogCompiler(Compiler):
         :param kwargs:
         :return:
         """
-        prolog_config = PrologConfig(disjunctive_datalog=True, double_quote_strings=True, allow_nesting=False)
+        prolog_config = PrologConfig(disjunctive_datalog=True, double_quote_strings=True, allow_nesting=False, allow_ungrounded_vars_in_head=True)
         if not self._predicate_mappings:
             self._predicate_mappings = {}
         for pd in theory.predicate_definitions:

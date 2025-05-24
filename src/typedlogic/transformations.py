@@ -4,7 +4,7 @@ Function for performing transformation and manipulation of Sentences and Theorie
 import json
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional, Tuple, Type, Union
+from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional, Set, Tuple, Type, Union
 
 from typedlogic import (
     BooleanSentence,
@@ -129,6 +129,7 @@ class PrologConfig:
     allow_nesting: bool = True
     null_term: str = "null(_)"
     allow_skolem_terms: bool = False
+    allow_ungrounded_vars_in_head: bool = False
 
 
 def as_prolog(
@@ -137,6 +138,7 @@ def as_prolog(
     depth=0,
     translate=False,
     strict=True,
+    anon_vars: Set[str] = None,
 ) -> str:
     """
     Convert a sentence to Prolog syntax.
@@ -183,6 +185,12 @@ def as_prolog(
 
         >>> print(as_prolog(Implies(And(C, Exists([X], Term("A", X))), D)))
         d :- c, a(X).
+
+        >>> print(as_prolog(Implies(Term("A", X, Y), Term("B", X, Y))))
+        b(X, Y) :- a(X, Y).
+
+        >>> print(as_prolog(Implies(Term("A", X), Term("A", X, Y)), config=PrologConfig(allow_ungrounded_vars_in_head=True)))
+        a(X, _Y) :- a(X).
 
     :param sentence: the sentence to render
     :param config:
@@ -242,9 +250,13 @@ def as_prolog(
                 else:
                     return config.null_term
             if isinstance(v, Variable):
-                if config.use_lowercase_vars:
-                    return v.name
-                return v.name.capitalize()
+                v_name = v.name
+                is_anon = anon_vars and v_name in anon_vars
+                if not config.use_lowercase_vars:
+                    v_name = v_name.capitalize()
+                if is_anon:
+                    v_name = f"_{v_name}"
+                return v_name
             if isinstance(v, Term):
                 if not config.allow_function_terms:
                     raise ValueError(f"Nested term not supported: {v}")
@@ -298,6 +310,7 @@ def as_prolog(
             # raise NotInProfileError(f"Body must be a term {sentence}")
             continue
         body_vars.extend(body_term.variable_names)
+    anon_vars = set()
     for head_term in disjunction_as_list(sentence.consequent):
         if isinstance(head_term, Not):
             continue
@@ -306,9 +319,12 @@ def as_prolog(
         head_vars = head_term.variable_names
         for v in head_vars:
             if v not in body_vars:
-                raise NotInProfileError(f"Variable {v} in head not in body {sentence}")
+                if not config.allow_ungrounded_vars_in_head:
+                    raise NotInProfileError(f"Variable {v} in head not in body {sentence}")
+                anon_vars.add(v)
 
-    head = as_prolog(sentence.consequent, config, depth + 1)
+
+    head = as_prolog(sentence.consequent, config, depth + 1, anon_vars=anon_vars)
     body = as_prolog(sentence.antecedent, config, depth + 1)
     if head.startswith("(") and head.endswith(")"):
         head = head[1:-1]
