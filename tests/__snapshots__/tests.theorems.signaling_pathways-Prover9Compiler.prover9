@@ -1,0 +1,6 @@
+% Problem: tests.theorems.signaling_pathways
+formulas(assumptions).
+end_of_list.
+
+formulas(goals).
+end_of_list.

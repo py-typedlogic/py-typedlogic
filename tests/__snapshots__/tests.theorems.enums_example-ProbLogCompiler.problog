@@ -1,0 +1,7 @@
+personhasagecategory(P, "MIDDLE_AGED") :- person(P, Age, Living_status), Age > 44, Age < 65.
+personhasagecategory(P, "OLD") :- person(P, Age, Living_status), Age > 64.
+personhasagecategory(P, "YOUNG") :- person(P, Age, Living_status), Age < 45.
+isalive(P) :- person(P, Age, "ALIVE").
+query(person(Name, Age, Living_status)).
+query(personhasagecategory(Person, Age_category)).
+query(isalive(Person)).

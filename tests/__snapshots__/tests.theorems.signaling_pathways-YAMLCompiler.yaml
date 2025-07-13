@@ -1,0 +1,100 @@
+type: Theory
+name: tests.theorems.signaling_pathways
+constants: {}
+type_definitions: {}
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: Protein
+  arguments:
+    name: str
+  parents: []
+- type: PredicateDefinition
+  predicate: ModifiedProtein
+  arguments:
+    protein: Protein
+    modification: ModificationType
+    site: Optional
+    active: bool
+  parents: []
+- type: PredicateDefinition
+  predicate: Complex
+  arguments:
+    name: Optional
+  parents: []
+- type: PredicateDefinition
+  predicate: Kinase
+  arguments:
+    protein: Protein
+  parents: []
+- type: PredicateDefinition
+  predicate: Phosphatase
+  arguments:
+    protein: Protein
+  parents: []
+- type: PredicateDefinition
+  predicate: GTPase
+  arguments:
+    protein: Protein
+  parents: []
+- type: PredicateDefinition
+  predicate: GEF
+  arguments:
+    protein: Protein
+    target: Protein
+  parents: []
+- type: PredicateDefinition
+  predicate: GAP
+  arguments:
+    protein: Protein
+    target: Protein
+  parents: []
+- type: PredicateDefinition
+  predicate: Ligand
+  arguments:
+    name: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Receptor
+  arguments:
+    protein: Protein
+  parents: []
+- type: PredicateDefinition
+  predicate: LigandReceptorBinding
+  arguments:
+    ligand: Ligand
+    receptor: Receptor
+    active: bool
+  parents: []
+- type: PredicateDefinition
+  predicate: Activation
+  arguments:
+    upstream: Protein
+    downstream: Protein
+  parents: []
+- type: PredicateDefinition
+  predicate: PhosphorylationEvent
+  arguments:
+    kinase: Protein
+    substrate: Protein
+    site: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Translocation
+  arguments:
+    protein: Protein
+    from_compartment: str
+    to_compartment: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Compartment
+  arguments:
+    name: str
+  parents: []
+- type: PredicateDefinition
+  predicate: ProteinLocation
+  arguments:
+    protein: Protein
+    compartment: Compartment
+  parents: []
+sentence_groups: []
+ground_terms: []

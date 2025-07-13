@@ -1,0 +1,116 @@
+(Theory 
+  (name "tests.theorems.enums_example") 
+  (constants 
+    (dict 
+      ())) 
+  (type_definitions 
+    (dict 
+      ())) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "Person") 
+        (arguments 
+          (dict 
+            ((name "str") 
+              (age "int") 
+              (living_status "LivingStatus")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "PersonHasAgeCategory") 
+        (arguments 
+          (dict 
+            ((person "str") 
+              (age_category "AgeCategory")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "IsAlive") 
+        (arguments 
+          (dict 
+            ((person "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)))) 
+  (sentence_groups 
+    ((SentenceGroup 
+        (name "person_has_age_category") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "p" "str") 
+                (Variable "age" "int") 
+                (Variable "age_category" "AgeCategory") 
+                (Variable "living_status" "LivingStatus")) 
+              (Implies 
+                (And 
+                  (Person 
+                    (Variable "p") 
+                    (Variable "age") 
+                    (Variable "living_status")) 
+                  (gt 
+                    (Variable "age") 44) 
+                  (lt 
+                    (Variable "age") 65)) 
+                (PersonHasAgeCategory 
+                  (Variable "p") "MIDDLE_AGED"))) 
+            (Forall 
+              ((Variable "p" "str") 
+                (Variable "age" "int") 
+                (Variable "age_category" "AgeCategory") 
+                (Variable "living_status" "LivingStatus")) 
+              (Implies 
+                (And 
+                  (Person 
+                    (Variable "p") 
+                    (Variable "age") 
+                    (Variable "living_status")) 
+                  (gt 
+                    (Variable "age") 64)) 
+                (PersonHasAgeCategory 
+                  (Variable "p") "OLD"))) 
+            (Forall 
+              ((Variable "p" "str") 
+                (Variable "age" "int") 
+                (Variable "age_category" "AgeCategory") 
+                (Variable "living_status" "LivingStatus")) 
+              (Implies 
+                (And 
+                  (Person 
+                    (Variable "p") 
+                    (Variable "age") 
+                    (Variable "living_status")) 
+                  (lt 
+                    (Variable "age") 45)) 
+                (PersonHasAgeCategory 
+                  (Variable "p") "YOUNG"))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "is_alive") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "p" "str") 
+                (Variable "age" "int") 
+                (Variable "living_status" "LivingStatus")) 
+              (Implies 
+                (Person 
+                  (Variable "p") 
+                  (Variable "age") "ALIVE") 
+                (IsAlive 
+                  (Variable "p")))))) 
+        (_annotations null)))) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))

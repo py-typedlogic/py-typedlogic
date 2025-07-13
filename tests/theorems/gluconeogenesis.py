@@ -144,37 +144,27 @@ class SimulationContext(BaseModel, FactMixin):
 # --- Axioms ---
 
 @axiom
-def reaction_requires_gene(r: ReactionId):
+def reaction_requires_gene(r: ReactionId, g: GeneId):
     """A reaction is active if at least one of its catalyzing genes is active"""
-    catalyzing_genes = [c.gene_id for c in CatalyzedBy.get_all() if c.reaction_id == r]
-    if any([ActiveGene(id=g) for g in catalyzing_genes]):
+    if CatalyzedBy(reaction_id=r, gene_id=g) and ActiveGene(id=g):
         assert ReactionActive(reaction_id=r)
 
 
 @axiom
-def reaction_requires_substrate(r: ReactionId):
+def reaction_requires_substrate(r: ReactionId, s1: MetaboliteId, s2: MetaboliteId, p: MetaboliteId):
     """A reaction requires all its substrates to be present to be active"""
-    reactions = [rx for rx in Reaction.get_all() if rx.id == r]
-    if not reactions:
-        return  # No such reaction
-    
-    reaction = reactions[0]
-    if all([MetabolitePresent(metabolite_id=s) for s in reaction.substrates]) and ReactionActive(reaction_id=r):
-        # If reaction is active and all substrates are present, products are produced
-        for product in reaction.products:
-            assert MetabolitePresent(metabolite_id=product)
+    if (Reaction(id=r, substrates=[s1, s2], products=[p]) and 
+        ReactionActive(reaction_id=r) and 
+        MetabolitePresent(metabolite_id=s1) and 
+        MetabolitePresent(metabolite_id=s2)):
+        assert MetabolitePresent(metabolite_id=p)
 
 
 @axiom
-def tissue_specific_gene_expression(g: GeneId, t: TissueId):
+def tissue_specific_gene_expression(g: GeneId, t: TissueId, level: float):
     """A gene is active in a tissue only if it's expressed there"""
-    context = [c for c in SimulationContext.get_all()]
-    if context and context[0].tissue_id is not None:
-        tissue = context[0].tissue_id
-        expressions = [e for e in GeneExpression.get_all() 
-                      if e.gene_id == g and e.tissue_id == tissue]
-        
-        if expressions and expressions[0].level >= 0.1:  # Expression threshold
+    if SimulationContext(tissue_id=t) and GeneExpression(gene_id=g, tissue_id=t, level=level):
+        if level >= 0.1:  # Expression threshold
             assert ActiveGene(id=g)
         else:
             assert InactiveGene(id=g)
@@ -299,7 +289,7 @@ def setup_pathway_model():
     return metabolites + reactions + genes + catalysis + gene_expression
 
 
-def simulate_pathway(tissue: Optional[TissueId] = None, knockouts: List[GeneId] = None):
+def simulate_pathway(tissue: Optional[TissueId] = None, knockouts: Optional[List[GeneId]] = None):
     """
     Simulate the pathway with optional tissue context and gene knockouts.
     

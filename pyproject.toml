@@ -9,21 +9,21 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 importlib-metadata = ">=8.2.0"
-pydantic = { version="*" , optional = true }
-clingo = { version="*" , optional = true }
-z3-solver = { version="*" , optional = true }
-pyprover = { version="*" , optional = true }
-snakelog = { version="*" , optional = true }
-problog = { version="*" , optional = true }
-clorm = { version="*" , optional = true }
-rdflib = { version="*" , optional = true }
-sympy = { version="*" , optional = true }
+pydantic = { version="*",  optional = true }
+clingo = { version="*",  optional = true }
+z3-solver = { version="*",  optional = true }
+pyprover = { version="*",  optional = true }
+snakelog = { version="*",  optional = true }
+problog = { version="*",  optional = true }
+clorm = { version="*",  optional = true }
+rdflib = { version="*",  optional = true }
+sympy = { version="*",  optional = true }
 py-horned-owl = { version="^1.0.0,!=1.0.1", optional = true }  ## https://github.com/ontology-tools/py-horned-owl/issues/34
-llm = { version="*" , optional = true }
-gavel-owl = { version="*" , optional = true }
-ply = { version="*" , optional = true }
-pandas = { version="*" , optional = true }
-pandera = { version="*" , extras = ["mypy"], optional = true }
+llm = { version="*",  optional = true }
+gavel-owl = { version="*",  optional = true }
+ply = { version="*",  optional = true }
+pandas = { version="*",  optional = true }
+pandera = { version="*",  extras = ["mypy"], optional = true }
 typer = "^0.12.5"
 
 [tool.poetry.group.dev.dependencies]
@@ -109,7 +109,7 @@ max-complexity = 10
 skip = "*.po,*.ts,.git,pyproject.toml,*.ofn,*.owl,*.ttl"
 count = ""
 quiet-level = 3
-ignore-words-list = "fof,te,disjointness,NotIn"
+ignore-words-list = "fof,te,disjointness,NotIn,EHR"
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]

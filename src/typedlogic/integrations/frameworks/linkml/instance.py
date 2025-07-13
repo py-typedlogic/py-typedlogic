@@ -1,4 +1,17 @@
+"""
+LinkML instance model, layered on top of jsonlog.
+
+Example:
+
+    >>> facts = [
+    ... Instance("/persons/1/"),
+    ... ]
+
+"""
+from typing import Any
+
 from typedlogic import axiom, gen1, gen3
+from typedlogic.datamodel import CardinalityConstraint, Term
 from typedlogic.integrations.frameworks.linkml.meta import *
 from typedlogic.integrations.frameworks.linkml.meta_axioms import Disjoint
 from typedlogic.theories.jsonlog.jsonlog import *
@@ -33,6 +46,12 @@ class InlinedObject(Fact):
 
 @axiom
 def node_classification(n: NodeID):
+    """
+    Axiom that classifies a node as an instance, collection, or inlined object.
+
+    :param n:
+    :return:
+    """
     if Node(n):
         assert CollectionNode(n) ^ Instance(n)
     if CollectionNode(n):
@@ -81,7 +100,6 @@ class InstanceMemberType(Fact):
     underlying tree structure is a terminal or an object
 
         >>> _ = [InstanceMemberType("/persons/1/friends/3", "Person"), InlinedObject("/persons/1/friends/3")]
-
 
     """
 
@@ -154,6 +172,17 @@ def association_from_scalar(
 
 
 @dataclass(frozen=True)
+class InstSlotRequired(Fact):
+    """
+    Holds of Association holds, for any value
+    """
+
+    id: NodeID
+    slot_name: SlotDefinitionID
+
+
+
+@dataclass(frozen=True)
 class NodeIsMultiValued(Fact):
     node: NodeID
 
@@ -176,13 +205,33 @@ def multivalued(n: NodeID):
 @axiom
 def disjoint_instance_check(inst: NodeID, cls: ElementID, left_parent: ElementID, right_parent: ElementID):
     if Disjoint(left_parent, right_parent):
-        assert not InstanceMemberType(inst, left_parent) and InstanceMemberType(inst, right_parent)
+        assert not (InstanceMemberType(inst, left_parent) and InstanceMemberType(inst, right_parent))
 
 
 @axiom
 def types():
     # TODO: move these
     assert TypeDefinition("string")
+    assert TypeDefinition("integer")
+    assert TypeDefinition("float")
+    assert TypeDefinition("boolean")
+    assert Disjoint("string", "integer")
+    assert Disjoint("string", "float")
+    assert Disjoint("string", "boolean")
+    assert Disjoint("integer", "float")
+    assert Disjoint("integer", "boolean")
+    assert Disjoint("float", "boolean")
+
+@axiom
+def literals(n: NodeID, v: Any):
+    if NodeIntValue(n, v):
+        assert InstanceMemberType(n, "integer")
+    if NodeStringValue(n, v):
+        assert InstanceMemberType(n, "string")
+    if NodeFloatValue(n, v):
+        assert InstanceMemberType(n, "float")
+    if NodeBooleanValue(n, v):
+        assert InstanceMemberType(n, "boolean")
 
 
 # @goals

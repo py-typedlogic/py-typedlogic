@@ -6,7 +6,7 @@ such as phosphorylation, with a focus on the MAPK/ERK pathway.
 """
 
 from dataclasses import dataclass
-from typing import Optional, List, Set, Dict, Tuple
+from typing import Optional, List, Set, Dict
 from enum import Enum, auto
 from typedlogic import FactMixin, Term
 from typedlogic.decorators import axiom, goal
@@ -41,7 +41,7 @@ class ModifiedProtein(FactMixin):
 @dataclass
 class Complex(FactMixin):
     """A protein complex formed by multiple proteins"""
-    components: Tuple[Protein, ...]
+    # components: Tuple[Protein, ...]
     name: Optional[str] = None
 
 
@@ -165,14 +165,14 @@ def rtk_activates_grb2_sos(receptor_name: str):
         active=True
     ):
         assert Complex(
-            components=(
-                Protein(name=receptor_name),
-                Protein(name="GRB2"),
-                Protein(name="SOS")
-            ),
-            name=f"{receptor_name}-GRB2-SOS"
-        )
-        assert Activation(
+            # components=(
+            #     Protein(name=receptor_name),
+            #     Protein(name="GRB2"),
+            #     Protein(name="SOS")
+            # ),
+            #name=f"{receptor_name}-GRB2-SOS"
+            name="GRB2-SOS",
+        ) and Activation(
             upstream=Protein(name=receptor_name),
             downstream=Protein(name="SOS")
         )
@@ -663,7 +663,3 @@ def test_mapk_pathway():
     print(f"Transcription factor activation: {tf_activation}")
     
     return model
-
-
-if __name__ == "__main__":
-    test_mapk_pathway()

@@ -1,0 +1,4 @@
+∀[p:str age:int age_category:AgeCategory living_status:LivingStatus]. Person(p, age, living_status) ∧ age > 44 ∧ age < 65 → PersonHasAgeCategory(p, 'MIDDLE_AGED')
+∀[p:str age:int age_category:AgeCategory living_status:LivingStatus]. Person(p, age, living_status) ∧ age > 64 → PersonHasAgeCategory(p, 'OLD')
+∀[p:str age:int age_category:AgeCategory living_status:LivingStatus]. Person(p, age, living_status) ∧ age < 45 → PersonHasAgeCategory(p, 'YOUNG')
+∀[p:str age:int living_status:LivingStatus]. Person(p, age, 'ALIVE') → IsAlive(p)

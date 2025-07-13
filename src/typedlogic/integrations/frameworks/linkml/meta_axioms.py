@@ -1,3 +1,8 @@
+"""
+Axioms for the LinkML metamodel.
+
+Note these are all purely tbox-level
+"""
 from dataclasses import dataclass
 
 from typedlogic import Fact, axiom

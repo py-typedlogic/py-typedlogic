@@ -1,3 +1,8 @@
+"""
+jsonlog is an interpretation of JSON objects as ground terms in a logic theory.
+
+No semantics are assumed -- jsonlog is intended to be used in conjunction with a logic theory.
+"""
 from dataclasses import dataclass
 
 from typedlogic import Fact

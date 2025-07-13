@@ -52,3 +52,4 @@ def animal_preferences(x: Thing, species: Thing):
     # Fred doesn't like dogs
     if Animal(name=x, species="dog"):
         assert ~Likes(subject="Fred", object=x)
+        # assert Likes(subject="Akira", object=x)

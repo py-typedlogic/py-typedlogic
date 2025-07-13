@@ -1,2 +1,2 @@
 ∀[x:ID y:ID]. Link(x, y) → Path(x, y, 1)
-∀[x:ID y:ID z:ID d1:int d2:int]. Path(x, y, d1) ∧ Path(y, z, d2) → Path(x, z, add(?d1, ?d2))
+∀[x:ID y:ID z:ID d1:int d2:int]. Path(x, y, d1) ∧ Path(y, z, d2) → Path(x, z, d1 + d2)

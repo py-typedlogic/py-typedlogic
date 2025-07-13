@@ -1,0 +1,24 @@
+.decl Code(system: symbol, value: symbol)
+.decl Patient(id: symbol, birth_date: symbol, sex: symbol)
+.decl Encounter(id: symbol, patient_id: symbol, date: symbol)
+.decl Diagnosis(encounter_id: symbol, code: symbol)
+.decl LabResult(patient_id: symbol, date: symbol, code: symbol, value: number, unit: symbol)
+.decl Medication(patient_id: symbol, date: symbol, code: symbol, dosage: symbol)
+.decl Phenotype(patient_id: symbol)
+.decl DiabetesT2(patient_id: symbol, confidence: number)
+.decl Hypertension(patient_id: symbol, confidence: number)
+.decl CKD(patient_id: symbol, stage: symbol, confidence: number)
+.decl IsA(child: symbol, parent: symbol)
+DiabetesT2(patient_id, _) :- Patient(patient_id, date(1970, 1, 1), "unknown"), Encounter(encounter_id, patient_id, date(2024, 1, 1)), Diagnosis(encounter_id, Code("ICD10", "E11")).
+DiabetesT2(patient_id, _) :- Patient(patient_id, date(1970, 1, 1), "unknown"), Encounter(encounter_id, patient_id, date(2024, 1, 1)), Diagnosis(encounter_id, Code("ICD10", child_code)), IsA(Code("ICD10", child_code), Code("ICD10", "E11")).
+DiabetesT2(patient_id, 0.9) :- Patient(patient_id, date(1970, 1, 1), "unknown"), LabResult(patient_id, date(2024, 1, 1), Code("LOINC", "4548-4"), v, "%"), v >= 6.5.
+DiabetesT2(patient_id, 0.7) :- Patient(patient_id, date(1970, 1, 1), "unknown"), Medication(patient_id, date(2024, 1, 1), Code("SNOMED", "10370"), _).
+Hypertension(patient_id, _) :- Patient(patient_id, date(1970, 1, 1), "unknown"), Encounter(encounter_id, patient_id, date(2024, 1, 1)), Diagnosis(encounter_id, Code("ICD10", "I10")).
+Hypertension(patient_id, 0.8) :- Patient(patient_id, date(1970, 1, 1), "unknown"), LabResult(patient_id, date(2024, 1, 1), Code("LOINC", "8480-6"), systolic, "mmHg"), LabResult(patient_id, date(2024, 1, 1), Code("LOINC", "8462-4"), diastolic, "mmHg"), systolic >= 140, diastolic >= 90.
+CKD(patient_id, _, _) :- Patient(patient_id, date(1970, 1, 1), "unknown"), Encounter(encounter_id, patient_id, date(2024, 1, 1)), Diagnosis(encounter_id, Code("ICD10", "N18")).
+CKD(patient_id, 1, 0.5) :- value >= 90, Patient(patient_id, date(1970, 1, 1), "unknown"), LabResult(patient_id, date(2024, 1, 1), Code("LOINC", "62238-1"), value, "mL/min/1.73m\u00b2").
+DiabetesT2(patient_id, 1.0) :- DiabetesT2(patient_id, _), Hypertension(patient_id, _).
+Hypertension(patient_id, 1.0) :- DiabetesT2(patient_id, _), Hypertension(patient_id, _).
+Phenotype(patient_id) :- DiabetesT2(patient_id, confidence).
+Phenotype(patient_id) :- Hypertension(patient_id, confidence).
+Phenotype(patient_id) :- CKD(patient_id, stage, confidence).

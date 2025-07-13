@@ -1,0 +1,216 @@
+type: Theory
+name: tests.theorems.enums_example
+constants: {}
+type_definitions: {}
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: Person
+  arguments:
+    name: str
+    age: int
+    living_status: LivingStatus
+  parents: []
+- type: PredicateDefinition
+  predicate: PersonHasAgeCategory
+  arguments:
+    person: str
+    age_category: AgeCategory
+  parents: []
+- type: PredicateDefinition
+  predicate: IsAlive
+  arguments:
+    person: str
+  parents: []
+sentence_groups:
+- type: SentenceGroup
+  name: person_has_age_category
+  group_type: axiom
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - p
+        - str
+      - type: Variable
+        arguments:
+        - age
+        - int
+      - type: Variable
+        arguments:
+        - age_category
+        - AgeCategory
+      - type: Variable
+        arguments:
+        - living_status
+        - LivingStatus
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Person
+          - type: Variable
+            arguments:
+            - p
+          - type: Variable
+            arguments:
+            - age
+          - type: Variable
+            arguments:
+            - living_status
+        - type: Term
+          arguments:
+          - gt
+          - type: Variable
+            arguments:
+            - age
+          - 44
+        - type: Term
+          arguments:
+          - lt
+          - type: Variable
+            arguments:
+            - age
+          - 65
+      - type: Term
+        arguments:
+        - PersonHasAgeCategory
+        - type: Variable
+          arguments:
+          - p
+        - MIDDLE_AGED
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - p
+        - str
+      - type: Variable
+        arguments:
+        - age
+        - int
+      - type: Variable
+        arguments:
+        - age_category
+        - AgeCategory
+      - type: Variable
+        arguments:
+        - living_status
+        - LivingStatus
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Person
+          - type: Variable
+            arguments:
+            - p
+          - type: Variable
+            arguments:
+            - age
+          - type: Variable
+            arguments:
+            - living_status
+        - type: Term
+          arguments:
+          - gt
+          - type: Variable
+            arguments:
+            - age
+          - 64
+      - type: Term
+        arguments:
+        - PersonHasAgeCategory
+        - type: Variable
+          arguments:
+          - p
+        - OLD
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - p
+        - str
+      - type: Variable
+        arguments:
+        - age
+        - int
+      - type: Variable
+        arguments:
+        - age_category
+        - AgeCategory
+      - type: Variable
+        arguments:
+        - living_status
+        - LivingStatus
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Person
+          - type: Variable
+            arguments:
+            - p
+          - type: Variable
+            arguments:
+            - age
+          - type: Variable
+            arguments:
+            - living_status
+        - type: Term
+          arguments:
+          - lt
+          - type: Variable
+            arguments:
+            - age
+          - 45
+      - type: Term
+        arguments:
+        - PersonHasAgeCategory
+        - type: Variable
+          arguments:
+          - p
+        - YOUNG
+- type: SentenceGroup
+  name: is_alive
+  group_type: axiom
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - p
+        - str
+      - type: Variable
+        arguments:
+        - age
+        - int
+      - type: Variable
+        arguments:
+        - living_status
+        - LivingStatus
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - Person
+        - type: Variable
+          arguments:
+          - p
+        - type: Variable
+          arguments:
+          - age
+        - ALIVE
+      - type: Term
+        arguments:
+        - IsAlive
+        - type: Variable
+          arguments:
+          - p
+ground_terms: []

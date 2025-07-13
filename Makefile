@@ -15,7 +15,8 @@ codespell:
 
 DOCTEST_DIR = src
 doctest:
-	find $(DOCTEST_DIR) -type f \( -name "*.rst" -o -name "*.md" -o -name "*.py" \) -print0 | xargs -0 $(RUN) python -m doctest --option ELLIPSIS --option NORMALIZE_WHITESPACE
+	$(RUN) pytest --doctest-modules src
+
 
 # TODO: have a more elegant way of testing a subset using pytest.mark
 pytest-core:

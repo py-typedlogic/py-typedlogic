@@ -113,8 +113,8 @@ class IsA(FactMixin):
 def diabetes_from_diagnosis(patient_id: str, encounter_id: str):
     """Identify T2D from ICD-10 codes (direct match)"""
     if (
-        Patient(id=patient_id) and 
-        Encounter(id=encounter_id, patient_id=patient_id) and
+        Patient(id=patient_id, birth_date=date(1970, 1, 1), sex="unknown") and 
+        Encounter(id=encounter_id, patient_id=patient_id, date=date(2024, 1, 1)) and
         Diagnosis(encounter_id=encounter_id, code=Code(system=CodeSystem.ICD10, value="E11"))
     ):
         assert DiabetesT2(patient_id=patient_id)
@@ -124,8 +124,8 @@ def diabetes_from_diagnosis(patient_id: str, encounter_id: str):
 def diabetes_from_child_codes(patient_id: str, encounter_id: str, child_code: str):
     """Identify T2D from child codes in the ICD hierarchy"""
     if (
-        Patient(id=patient_id) and 
-        Encounter(id=encounter_id, patient_id=patient_id) and
+        Patient(id=patient_id, birth_date=date(1970, 1, 1), sex="unknown") and 
+        Encounter(id=encounter_id, patient_id=patient_id, date=date(2024, 1, 1)) and
         Diagnosis(encounter_id=encounter_id, code=Code(system=CodeSystem.ICD10, value=child_code)) and
         IsA(child=Code(system=CodeSystem.ICD10, value=child_code), 
             parent=Code(system=CodeSystem.ICD10, value="E11"))
@@ -134,14 +134,16 @@ def diabetes_from_child_codes(patient_id: str, encounter_id: str, child_code: st
 
 
 @axiom
-def diabetes_from_lab_values(patient_id: str):
+def diabetes_from_lab_values(patient_id: str, v: float):
     """Identify T2D from elevated HbA1c (≥ 6.5%)"""
     if (
-        Patient(id=patient_id) and
+        Patient(id=patient_id, birth_date=date(1970, 1, 1), sex="unknown") and
         LabResult(
             patient_id=patient_id,
+            date=date(2024, 1, 1),
             code=Code(system=CodeSystem.LOINC, value="4548-4"),  # HbA1c
-            value=v
+            value=v,
+            unit="%"
         ) and v >= 6.5
     ):
         assert DiabetesT2(patient_id=patient_id, confidence=0.9)
@@ -151,9 +153,10 @@ def diabetes_from_lab_values(patient_id: str):
 def diabetes_from_medication(patient_id: str):
     """Identify T2D from diabetes medications (e.g., metformin)"""
     if (
-        Patient(id=patient_id) and
+        Patient(id=patient_id, birth_date=date(1970, 1, 1), sex="unknown") and
         Medication(
             patient_id=patient_id,
+            date=date(2024, 1, 1),
             code=Code(system=CodeSystem.SNOMED, value="10370")  # Metformin
         )
     ):
@@ -164,8 +167,8 @@ def diabetes_from_medication(patient_id: str):
 def hypertension_from_diagnosis(patient_id: str, encounter_id: str):
     """Identify hypertension from ICD-10 codes"""
     if (
-        Patient(id=patient_id) and 
-        Encounter(id=encounter_id, patient_id=patient_id) and
+        Patient(id=patient_id, birth_date=date(1970, 1, 1), sex="unknown") and 
+        Encounter(id=encounter_id, patient_id=patient_id, date=date(2024, 1, 1)) and
         Diagnosis(encounter_id=encounter_id, code=Code(system=CodeSystem.ICD10, value="I10"))
     ):
         assert Hypertension(patient_id=patient_id)
@@ -175,16 +178,20 @@ def hypertension_from_diagnosis(patient_id: str, encounter_id: str):
 def hypertension_from_bp_readings(patient_id: str, systolic: float, diastolic: float):
     """Identify hypertension from elevated blood pressure readings"""
     if (
-        Patient(id=patient_id) and
+        Patient(id=patient_id, birth_date=date(1970, 1, 1), sex="unknown") and
         LabResult(
             patient_id=patient_id,
+            date=date(2024, 1, 1),
             code=Code(system=CodeSystem.LOINC, value="8480-6"),  # Systolic BP
-            value=systolic
+            value=systolic,
+            unit="mmHg"
         ) and
         LabResult(
             patient_id=patient_id,
+            date=date(2024, 1, 1),
             code=Code(system=CodeSystem.LOINC, value="8462-4"),  # Diastolic BP
-            value=diastolic
+            value=diastolic,
+            unit="mmHg"
         ) and
         systolic >= 140 and diastolic >= 90
     ):
@@ -195,8 +202,8 @@ def hypertension_from_bp_readings(patient_id: str, systolic: float, diastolic: f
 def ckd_from_diagnosis(patient_id: str, encounter_id: str):
     """Identify CKD from ICD-10 codes"""
     if (
-        Patient(id=patient_id) and 
-        Encounter(id=encounter_id, patient_id=patient_id) and
+        Patient(id=patient_id, birth_date=date(1970, 1, 1), sex="unknown") and 
+        Encounter(id=encounter_id, patient_id=patient_id, date=date(2024, 1, 1)) and
         Diagnosis(encounter_id=encounter_id, code=Code(system=CodeSystem.ICD10, value="N18"))
     ):
         assert CKD(patient_id=patient_id)
@@ -206,11 +213,13 @@ def ckd_from_diagnosis(patient_id: str, encounter_id: str):
 def ckd_from_egfr(patient_id: str, value: float):
     """Identify CKD stage from eGFR values"""
     if (
-        Patient(id=patient_id) and
+        Patient(id=patient_id, birth_date=date(1970, 1, 1), sex="unknown") and
         LabResult(
             patient_id=patient_id,
+            date=date(2024, 1, 1),
             code=Code(system=CodeSystem.LOINC, value="62238-1"),  # eGFR
-            value=value
+            value=value,
+            unit="mL/min/1.73m²"
         )
     ):
         if value >= 90:

@@ -5,18 +5,18 @@ type_definitions:
   ID: str
 predicate_definitions:
 - type: PredicateDefinition
-  predicate: Link
+  predicate: Path
   arguments:
     source: str
     target: str
   parents: []
 - type: PredicateDefinition
-  predicate: Path
+  predicate: Link
   arguments:
     source: str
     target: str
   parents:
-  - Link
+  - Path
 sentence_groups:
 - type: SentenceGroup
   name: transitivity

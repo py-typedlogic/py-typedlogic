@@ -1,3 +1,7 @@
+"""
+Minimal logical theory for JSONLog, defining parent-child relationships
+
+"""
 from dataclasses import dataclass
 
 from typedlogic import Fact, axiom
@@ -6,6 +10,11 @@ from typedlogic.theories.jsonlog.jsonlog import Key, ListNodeHasMember, Node, No
 
 @dataclass(frozen=True)
 class ParentChildRelationship(Fact):
+    """
+    A parent-child relationship between two nodes in a JSON object tree.
+
+    Entailed for array nodes and object nodes.
+    """
     parent: NodeID
     child: NodeID
 

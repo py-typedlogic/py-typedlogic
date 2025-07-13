@@ -49,6 +49,9 @@ class ProbLogCompiler(Compiler):
             ancestorof("p1a", "p1aa").
             query(ancestorof(Ancestor, Descendant)).
 
+        Note like most compilers, you don't need to use this directly. It is more common to use ProblogSolver, which takes care of
+        compiling the problog program, feeding it to problog, and parsing results.
+
         :param theory:
         :param syntax:
         :param kwargs:

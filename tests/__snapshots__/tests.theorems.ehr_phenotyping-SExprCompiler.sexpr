@@ -1,0 +1,443 @@
+(Theory 
+  (name "tests.theorems.ehr_phenotyping") 
+  (constants 
+    (dict 
+      ((Optional "typing.Optional") 
+        (List "typing.List") 
+        (Dict "typing.Dict") 
+        (Set "typing.Set")))) 
+  (type_definitions 
+    (dict 
+      ())) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "Code") 
+        (arguments 
+          (dict 
+            ((system "CodeSystem") 
+              (value "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Patient") 
+        (arguments 
+          (dict 
+            ((id "str") 
+              (birth_date "date") 
+              (sex "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Encounter") 
+        (arguments 
+          (dict 
+            ((id "str") 
+              (patient_id "str") 
+              (date "date")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Diagnosis") 
+        (arguments 
+          (dict 
+            ((encounter_id "str") 
+              (code "Code")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "LabResult") 
+        (arguments 
+          (dict 
+            ((patient_id "str") 
+              (date "date") 
+              (code "Code") 
+              (value "float") 
+              (unit "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Medication") 
+        (arguments 
+          (dict 
+            ((patient_id "str") 
+              (date "date") 
+              (code "Code") 
+              (dosage "Optional")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Phenotype") 
+        (arguments 
+          (dict 
+            ((patient_id "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "DiabetesT2") 
+        (arguments 
+          (dict 
+            ((patient_id "str") 
+              (confidence "float")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          (Phenotype)) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Hypertension") 
+        (arguments 
+          (dict 
+            ((patient_id "str") 
+              (confidence "float")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          (Phenotype)) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "CKD") 
+        (arguments 
+          (dict 
+            ((patient_id "str") 
+              (stage "Optional") 
+              (confidence "float")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          (Phenotype)) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "IsA") 
+        (arguments 
+          (dict 
+            ((child "Code") 
+              (parent "Code")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)))) 
+  (sentence_groups 
+    ((SentenceGroup 
+        (name "diabetes_from_diagnosis") 
+        (group_type "axiom") 
+        (docstring "Identify T2D from ICD-10 codes (direct match)") 
+        (sentences 
+          ((Forall 
+              ((Variable "patient_id" "str") 
+                (Variable "encounter_id" "str")) 
+              (Implies 
+                (And 
+                  (Patient 
+                    (Variable "patient_id") 
+                    (date 1970 1 1) "unknown") 
+                  (Encounter 
+                    (Variable "encounter_id") 
+                    (Variable "patient_id") 
+                    (date 2024 1 1)) 
+                  (Diagnosis 
+                    (Variable "encounter_id") 
+                    (Code "ICD10" "E11"))) 
+                (DiabetesT2 
+                  (Variable "patient_id") null))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "diabetes_from_child_codes") 
+        (group_type "axiom") 
+        (docstring "Identify T2D from child codes in the ICD hierarchy") 
+        (sentences 
+          ((Forall 
+              ((Variable "patient_id" "str") 
+                (Variable "encounter_id" "str") 
+                (Variable "child_code" "str")) 
+              (Implies 
+                (And 
+                  (Patient 
+                    (Variable "patient_id") 
+                    (date 1970 1 1) "unknown") 
+                  (Encounter 
+                    (Variable "encounter_id") 
+                    (Variable "patient_id") 
+                    (date 2024 1 1)) 
+                  (Diagnosis 
+                    (Variable "encounter_id") 
+                    (Code "ICD10" 
+                      (Variable "child_code"))) 
+                  (IsA 
+                    (Code "ICD10" 
+                      (Variable "child_code")) 
+                    (Code "ICD10" "E11"))) 
+                (DiabetesT2 
+                  (Variable "patient_id") null))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "diabetes_from_lab_values") 
+        (group_type "axiom") 
+        (docstring "Identify T2D from elevated HbA1c (\u2265 6.5%)") 
+        (sentences 
+          ((Forall 
+              ((Variable "patient_id" "str") 
+                (Variable "v" "float")) 
+              (Implies 
+                (And 
+                  (Patient 
+                    (Variable "patient_id") 
+                    (date 1970 1 1) "unknown") 
+                  (LabResult 
+                    (Variable "patient_id") 
+                    (date 2024 1 1) 
+                    (Code "LOINC" "4548-4") 
+                    (Variable "v") "%") 
+                  (ge 
+                    (Variable "v") 6.5)) 
+                (DiabetesT2 
+                  (Variable "patient_id") 0.9))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "diabetes_from_medication") 
+        (group_type "axiom") 
+        (docstring "Identify T2D from diabetes medications (e.g., metformin)") 
+        (sentences 
+          ((Forall 
+              ((Variable "patient_id" "str")) 
+              (Implies 
+                (And 
+                  (Patient 
+                    (Variable "patient_id") 
+                    (date 1970 1 1) "unknown") 
+                  (Medication 
+                    (Variable "patient_id") 
+                    (date 2024 1 1) 
+                    (Code "SNOMED" "10370") null)) 
+                (DiabetesT2 
+                  (Variable "patient_id") 0.7))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "hypertension_from_diagnosis") 
+        (group_type "axiom") 
+        (docstring "Identify hypertension from ICD-10 codes") 
+        (sentences 
+          ((Forall 
+              ((Variable "patient_id" "str") 
+                (Variable "encounter_id" "str")) 
+              (Implies 
+                (And 
+                  (Patient 
+                    (Variable "patient_id") 
+                    (date 1970 1 1) "unknown") 
+                  (Encounter 
+                    (Variable "encounter_id") 
+                    (Variable "patient_id") 
+                    (date 2024 1 1)) 
+                  (Diagnosis 
+                    (Variable "encounter_id") 
+                    (Code "ICD10" "I10"))) 
+                (Hypertension 
+                  (Variable "patient_id") null))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "hypertension_from_bp_readings") 
+        (group_type "axiom") 
+        (docstring "Identify hypertension from elevated blood pressure readings") 
+        (sentences 
+          ((Forall 
+              ((Variable "patient_id" "str") 
+                (Variable "systolic" "float") 
+                (Variable "diastolic" "float")) 
+              (Implies 
+                (And 
+                  (Patient 
+                    (Variable "patient_id") 
+                    (date 1970 1 1) "unknown") 
+                  (LabResult 
+                    (Variable "patient_id") 
+                    (date 2024 1 1) 
+                    (Code "LOINC" "8480-6") 
+                    (Variable "systolic") "mmHg") 
+                  (LabResult 
+                    (Variable "patient_id") 
+                    (date 2024 1 1) 
+                    (Code "LOINC" "8462-4") 
+                    (Variable "diastolic") "mmHg") 
+                  (ge 
+                    (Variable "systolic") 140) 
+                  (ge 
+                    (Variable "diastolic") 90)) 
+                (Hypertension 
+                  (Variable "patient_id") 0.8))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "ckd_from_diagnosis") 
+        (group_type "axiom") 
+        (docstring "Identify CKD from ICD-10 codes") 
+        (sentences 
+          ((Forall 
+              ((Variable "patient_id" "str") 
+                (Variable "encounter_id" "str")) 
+              (Implies 
+                (And 
+                  (Patient 
+                    (Variable "patient_id") 
+                    (date 1970 1 1) "unknown") 
+                  (Encounter 
+                    (Variable "encounter_id") 
+                    (Variable "patient_id") 
+                    (date 2024 1 1)) 
+                  (Diagnosis 
+                    (Variable "encounter_id") 
+                    (Code "ICD10" "N18"))) 
+                (CKD 
+                  (Variable "patient_id") null null))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "ckd_from_egfr") 
+        (group_type "axiom") 
+        (docstring "Identify CKD stage from eGFR values") 
+        (sentences 
+          ((Forall 
+              ((Variable "patient_id" "str") 
+                (Variable "value" "float")) 
+              (Implies 
+                (And 
+                  (Patient 
+                    (Variable "patient_id") 
+                    (date 1970 1 1) "unknown") 
+                  (LabResult 
+                    (Variable "patient_id") 
+                    (date 2024 1 1) 
+                    (Code "LOINC" "62238-1") 
+                    (Variable "value") "mL/min/1.73m\u00b2")) 
+                (And 
+                  (Implies 
+                    (ge 
+                      (Variable "value") 90) 
+                    (CKD 
+                      (Variable "patient_id") 1 0.5)) 
+                  (Implies 
+                    (Not 
+                      (ge 
+                        (Variable "value") 90)) 
+                    (And 
+                      (Implies 
+                        (ge 
+                          (Variable "value") 60) 
+                        (CKD 
+                          (Variable "patient_id") 2 0.7)) 
+                      (Implies 
+                        (Not 
+                          (ge 
+                            (Variable "value") 60)) 
+                        (And 
+                          (Implies 
+                            (ge 
+                              (Variable "value") 30) 
+                            (CKD 
+                              (Variable "patient_id") 3 0.9)) 
+                          (Implies 
+                            (Not 
+                              (ge 
+                                (Variable "value") 30)) 
+                            (And 
+                              (Implies 
+                                (ge 
+                                  (Variable "value") 15) 
+                                (CKD 
+                                  (Variable "patient_id") 4 0.95)) 
+                              (Implies 
+                                (Not 
+                                  (ge 
+                                    (Variable "value") 15)) 
+                                (CKD 
+                                  (Variable "patient_id") 5 0.99))))))))))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "comorbidity_diabetes_hypertension") 
+        (group_type "axiom") 
+        (docstring "Identify patients with both T2D and hypertension") 
+        (sentences 
+          ((Forall 
+              ((Variable "patient_id" "str")) 
+              (Implies 
+                (And 
+                  (DiabetesT2 
+                    (Variable "patient_id") null) 
+                  (Hypertension 
+                    (Variable "patient_id") null)) 
+                (And 
+                  (DiabetesT2 
+                    (Variable "patient_id") 1.0) 
+                  (Hypertension 
+                    (Variable "patient_id") 1.0)))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "Sentences") 
+        (group_type null) 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "patient_id" "str") 
+                (Variable "confidence" "float")) 
+              (Implies 
+                (DiabetesT2 
+                  (Variable "patient_id") 
+                  (Variable "confidence")) 
+                (Phenotype 
+                  (Variable "patient_id")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "Sentences") 
+        (group_type null) 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "patient_id" "str") 
+                (Variable "confidence" "float")) 
+              (Implies 
+                (Hypertension 
+                  (Variable "patient_id") 
+                  (Variable "confidence")) 
+                (Phenotype 
+                  (Variable "patient_id")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "Sentences") 
+        (group_type null) 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "patient_id" "str") 
+                (Variable "stage" "Optional") 
+                (Variable "confidence" "float")) 
+              (Implies 
+                (CKD 
+                  (Variable "patient_id") 
+                  (Variable "stage") 
+                  (Variable "confidence")) 
+                (Phenotype 
+                  (Variable "patient_id")))))) 
+        (_annotations null)))) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))

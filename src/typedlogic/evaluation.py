@@ -13,6 +13,9 @@ from typedlogic.transformations import transform_sentence
 
 @dataclass
 class Benchmark:
+    """
+    A benchmark is a theory with a list of ground terms and a list of candidate goals.
+    """
     theory: Optional[Theory] = None
     ground_terms: Optional[List[Sentence]] = None
     goals: Optional[List[Sentence]] = None
@@ -38,6 +41,14 @@ class BenchmarkResult:
 def benchmark_from_seed(
     seed: BenchmarkSeed, benchmark_solver_class: Optional[Type[Solver]] = None, num_positive=10, num_negative=10
 ) -> Benchmark:
+    """
+    Create a benchmark from a seed.
+
+    :param seed: A benchmark seed.
+    :param benchmark_solver_class: The solver class to use for the benchmark.
+    :param num_positive: The number of positive goals to generate.
+    :param num_negative: The number of negative goals to generate.
+    """
     benchmark = Benchmark(
         theory=seed.theory,
         ground_terms=seed.ground_terms,
@@ -86,6 +97,13 @@ def benchmark_from_seed(
 
 
 def run_benchmark(benchmark: Benchmark, solver_class: Union[Solver, Type[Solver]]) -> BenchmarkResult:
+    """
+    Run a benchmark.
+
+    :param benchmark: A benchmark.
+    :param solver_class: A solver class.
+    :return: A benchmark result.
+    """
     if isinstance(solver_class, Solver):
         solver: Solver = solver_class
         solver_class = type(solver)
@@ -163,6 +181,12 @@ def create_random_id_function(prefix: str, max_id=10000) -> Callable[[], str]:
 
 
 def randomize_entity_names(benchmark: Benchmark, mapping_func: Optional[Callable] = None):
+    """
+    Randomize the names of the entities in a benchmark.
+
+    :param benchmark: A benchmark.
+    :param mapping_func: A function to map the entities to new names.
+    """
     if mapping_func is None:
         mapping_func = lambda x: hashlib.md5(str(x).encode("utf-8")).hexdigest()
     emap = {}

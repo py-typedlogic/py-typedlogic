@@ -1,0 +1,907 @@
+type: Theory
+name: tests.theorems.ehr_phenotyping
+constants: {}
+type_definitions: {}
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: Code
+  arguments:
+    system: CodeSystem
+    value: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Patient
+  arguments:
+    id: str
+    birth_date: date
+    sex: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Encounter
+  arguments:
+    id: str
+    patient_id: str
+    date: date
+  parents: []
+- type: PredicateDefinition
+  predicate: Diagnosis
+  arguments:
+    encounter_id: str
+    code: Code
+  parents: []
+- type: PredicateDefinition
+  predicate: LabResult
+  arguments:
+    patient_id: str
+    date: date
+    code: Code
+    value: float
+    unit: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Medication
+  arguments:
+    patient_id: str
+    date: date
+    code: Code
+    dosage: Optional
+  parents: []
+- type: PredicateDefinition
+  predicate: Phenotype
+  arguments:
+    patient_id: str
+  parents: []
+- type: PredicateDefinition
+  predicate: DiabetesT2
+  arguments:
+    patient_id: str
+    confidence: float
+  parents:
+  - Phenotype
+- type: PredicateDefinition
+  predicate: Hypertension
+  arguments:
+    patient_id: str
+    confidence: float
+  parents:
+  - Phenotype
+- type: PredicateDefinition
+  predicate: CKD
+  arguments:
+    patient_id: str
+    stage: Optional
+    confidence: float
+  parents:
+  - Phenotype
+- type: PredicateDefinition
+  predicate: IsA
+  arguments:
+    child: Code
+    parent: Code
+  parents: []
+sentence_groups:
+- type: SentenceGroup
+  name: diabetes_from_diagnosis
+  group_type: axiom
+  docstring: Identify T2D from ICD-10 codes (direct match)
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - patient_id
+        - str
+      - type: Variable
+        arguments:
+        - encounter_id
+        - str
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Patient
+          - type: Variable
+            arguments:
+            - patient_id
+          - type: Term
+            arguments:
+            - date
+            - 1970
+            - 1
+            - 1
+          - unknown
+        - type: Term
+          arguments:
+          - Encounter
+          - type: Variable
+            arguments:
+            - encounter_id
+          - type: Variable
+            arguments:
+            - patient_id
+          - type: Term
+            arguments:
+            - date
+            - 2024
+            - 1
+            - 1
+        - type: Term
+          arguments:
+          - Diagnosis
+          - type: Variable
+            arguments:
+            - encounter_id
+          - type: Term
+            arguments:
+            - Code
+            - ICD10
+            - E11
+      - type: Term
+        arguments:
+        - DiabetesT2
+        - type: Variable
+          arguments:
+          - patient_id
+        - null
+- type: SentenceGroup
+  name: diabetes_from_child_codes
+  group_type: axiom
+  docstring: Identify T2D from child codes in the ICD hierarchy
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - patient_id
+        - str
+      - type: Variable
+        arguments:
+        - encounter_id
+        - str
+      - type: Variable
+        arguments:
+        - child_code
+        - str
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Patient
+          - type: Variable
+            arguments:
+            - patient_id
+          - type: Term
+            arguments:
+            - date
+            - 1970
+            - 1
+            - 1
+          - unknown
+        - type: Term
+          arguments:
+          - Encounter
+          - type: Variable
+            arguments:
+            - encounter_id
+          - type: Variable
+            arguments:
+            - patient_id
+          - type: Term
+            arguments:
+            - date
+            - 2024
+            - 1
+            - 1
+        - type: Term
+          arguments:
+          - Diagnosis
+          - type: Variable
+            arguments:
+            - encounter_id
+          - type: Term
+            arguments:
+            - Code
+            - ICD10
+            - type: Variable
+              arguments:
+              - child_code
+        - type: Term
+          arguments:
+          - IsA
+          - type: Term
+            arguments:
+            - Code
+            - ICD10
+            - type: Variable
+              arguments:
+              - child_code
+          - type: Term
+            arguments:
+            - Code
+            - ICD10
+            - E11
+      - type: Term
+        arguments:
+        - DiabetesT2
+        - type: Variable
+          arguments:
+          - patient_id
+        - null
+- type: SentenceGroup
+  name: diabetes_from_lab_values
+  group_type: axiom
+  docstring: "Identify T2D from elevated HbA1c (\u2265 6.5%)"
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - patient_id
+        - str
+      - type: Variable
+        arguments:
+        - v
+        - float
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Patient
+          - type: Variable
+            arguments:
+            - patient_id
+          - type: Term
+            arguments:
+            - date
+            - 1970
+            - 1
+            - 1
+          - unknown
+        - type: Term
+          arguments:
+          - LabResult
+          - type: Variable
+            arguments:
+            - patient_id
+          - type: Term
+            arguments:
+            - date
+            - 2024
+            - 1
+            - 1
+          - type: Term
+            arguments:
+            - Code
+            - LOINC
+            - 4548-4
+          - type: Variable
+            arguments:
+            - v
+          - '%'
+        - type: Term
+          arguments:
+          - ge
+          - type: Variable
+            arguments:
+            - v
+          - 6.5
+      - type: Term
+        arguments:
+        - DiabetesT2
+        - type: Variable
+          arguments:
+          - patient_id
+        - 0.9
+- type: SentenceGroup
+  name: diabetes_from_medication
+  group_type: axiom
+  docstring: Identify T2D from diabetes medications (e.g., metformin)
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - patient_id
+        - str
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Patient
+          - type: Variable
+            arguments:
+            - patient_id
+          - type: Term
+            arguments:
+            - date
+            - 1970
+            - 1
+            - 1
+          - unknown
+        - type: Term
+          arguments:
+          - Medication
+          - type: Variable
+            arguments:
+            - patient_id
+          - type: Term
+            arguments:
+            - date
+            - 2024
+            - 1
+            - 1
+          - type: Term
+            arguments:
+            - Code
+            - SNOMED
+            - '10370'
+          - null
+      - type: Term
+        arguments:
+        - DiabetesT2
+        - type: Variable
+          arguments:
+          - patient_id
+        - 0.7
+- type: SentenceGroup
+  name: hypertension_from_diagnosis
+  group_type: axiom
+  docstring: Identify hypertension from ICD-10 codes
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - patient_id
+        - str
+      - type: Variable
+        arguments:
+        - encounter_id
+        - str
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Patient
+          - type: Variable
+            arguments:
+            - patient_id
+          - type: Term
+            arguments:
+            - date
+            - 1970
+            - 1
+            - 1
+          - unknown
+        - type: Term
+          arguments:
+          - Encounter
+          - type: Variable
+            arguments:
+            - encounter_id
+          - type: Variable
+            arguments:
+            - patient_id
+          - type: Term
+            arguments:
+            - date
+            - 2024
+            - 1
+            - 1
+        - type: Term
+          arguments:
+          - Diagnosis
+          - type: Variable
+            arguments:
+            - encounter_id
+          - type: Term
+            arguments:
+            - Code
+            - ICD10
+            - I10
+      - type: Term
+        arguments:
+        - Hypertension
+        - type: Variable
+          arguments:
+          - patient_id
+        - null
+- type: SentenceGroup
+  name: hypertension_from_bp_readings
+  group_type: axiom
+  docstring: Identify hypertension from elevated blood pressure readings
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - patient_id
+        - str
+      - type: Variable
+        arguments:
+        - systolic
+        - float
+      - type: Variable
+        arguments:
+        - diastolic
+        - float
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Patient
+          - type: Variable
+            arguments:
+            - patient_id
+          - type: Term
+            arguments:
+            - date
+            - 1970
+            - 1
+            - 1
+          - unknown
+        - type: Term
+          arguments:
+          - LabResult
+          - type: Variable
+            arguments:
+            - patient_id
+          - type: Term
+            arguments:
+            - date
+            - 2024
+            - 1
+            - 1
+          - type: Term
+            arguments:
+            - Code
+            - LOINC
+            - 8480-6
+          - type: Variable
+            arguments:
+            - systolic
+          - mmHg
+        - type: Term
+          arguments:
+          - LabResult
+          - type: Variable
+            arguments:
+            - patient_id
+          - type: Term
+            arguments:
+            - date
+            - 2024
+            - 1
+            - 1
+          - type: Term
+            arguments:
+            - Code
+            - LOINC
+            - 8462-4
+          - type: Variable
+            arguments:
+            - diastolic
+          - mmHg
+        - type: Term
+          arguments:
+          - ge
+          - type: Variable
+            arguments:
+            - systolic
+          - 140
+        - type: Term
+          arguments:
+          - ge
+          - type: Variable
+            arguments:
+            - diastolic
+          - 90
+      - type: Term
+        arguments:
+        - Hypertension
+        - type: Variable
+          arguments:
+          - patient_id
+        - 0.8
+- type: SentenceGroup
+  name: ckd_from_diagnosis
+  group_type: axiom
+  docstring: Identify CKD from ICD-10 codes
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - patient_id
+        - str
+      - type: Variable
+        arguments:
+        - encounter_id
+        - str
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Patient
+          - type: Variable
+            arguments:
+            - patient_id
+          - type: Term
+            arguments:
+            - date
+            - 1970
+            - 1
+            - 1
+          - unknown
+        - type: Term
+          arguments:
+          - Encounter
+          - type: Variable
+            arguments:
+            - encounter_id
+          - type: Variable
+            arguments:
+            - patient_id
+          - type: Term
+            arguments:
+            - date
+            - 2024
+            - 1
+            - 1
+        - type: Term
+          arguments:
+          - Diagnosis
+          - type: Variable
+            arguments:
+            - encounter_id
+          - type: Term
+            arguments:
+            - Code
+            - ICD10
+            - N18
+      - type: Term
+        arguments:
+        - CKD
+        - type: Variable
+          arguments:
+          - patient_id
+        - null
+        - null
+- type: SentenceGroup
+  name: ckd_from_egfr
+  group_type: axiom
+  docstring: Identify CKD stage from eGFR values
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - patient_id
+        - str
+      - type: Variable
+        arguments:
+        - value
+        - float
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Patient
+          - type: Variable
+            arguments:
+            - patient_id
+          - type: Term
+            arguments:
+            - date
+            - 1970
+            - 1
+            - 1
+          - unknown
+        - type: Term
+          arguments:
+          - LabResult
+          - type: Variable
+            arguments:
+            - patient_id
+          - type: Term
+            arguments:
+            - date
+            - 2024
+            - 1
+            - 1
+          - type: Term
+            arguments:
+            - Code
+            - LOINC
+            - 62238-1
+          - type: Variable
+            arguments:
+            - value
+          - "mL/min/1.73m\xB2"
+      - type: And
+        arguments:
+        - type: Implies
+          arguments:
+          - type: Term
+            arguments:
+            - ge
+            - type: Variable
+              arguments:
+              - value
+            - 90
+          - type: Term
+            arguments:
+            - CKD
+            - type: Variable
+              arguments:
+              - patient_id
+            - 1
+            - 0.5
+        - type: Implies
+          arguments:
+          - type: Not
+            arguments:
+            - type: Term
+              arguments:
+              - ge
+              - type: Variable
+                arguments:
+                - value
+              - 90
+          - type: And
+            arguments:
+            - type: Implies
+              arguments:
+              - type: Term
+                arguments:
+                - ge
+                - type: Variable
+                  arguments:
+                  - value
+                - 60
+              - type: Term
+                arguments:
+                - CKD
+                - type: Variable
+                  arguments:
+                  - patient_id
+                - 2
+                - 0.7
+            - type: Implies
+              arguments:
+              - type: Not
+                arguments:
+                - type: Term
+                  arguments:
+                  - ge
+                  - type: Variable
+                    arguments:
+                    - value
+                  - 60
+              - type: And
+                arguments:
+                - type: Implies
+                  arguments:
+                  - type: Term
+                    arguments:
+                    - ge
+                    - type: Variable
+                      arguments:
+                      - value
+                    - 30
+                  - type: Term
+                    arguments:
+                    - CKD
+                    - type: Variable
+                      arguments:
+                      - patient_id
+                    - 3
+                    - 0.9
+                - type: Implies
+                  arguments:
+                  - type: Not
+                    arguments:
+                    - type: Term
+                      arguments:
+                      - ge
+                      - type: Variable
+                        arguments:
+                        - value
+                      - 30
+                  - type: And
+                    arguments:
+                    - type: Implies
+                      arguments:
+                      - type: Term
+                        arguments:
+                        - ge
+                        - type: Variable
+                          arguments:
+                          - value
+                        - 15
+                      - type: Term
+                        arguments:
+                        - CKD
+                        - type: Variable
+                          arguments:
+                          - patient_id
+                        - 4
+                        - 0.95
+                    - type: Implies
+                      arguments:
+                      - type: Not
+                        arguments:
+                        - type: Term
+                          arguments:
+                          - ge
+                          - type: Variable
+                            arguments:
+                            - value
+                          - 15
+                      - type: Term
+                        arguments:
+                        - CKD
+                        - type: Variable
+                          arguments:
+                          - patient_id
+                        - 5
+                        - 0.99
+- type: SentenceGroup
+  name: comorbidity_diabetes_hypertension
+  group_type: axiom
+  docstring: Identify patients with both T2D and hypertension
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - patient_id
+        - str
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - DiabetesT2
+          - type: Variable
+            arguments:
+            - patient_id
+          - null
+        - type: Term
+          arguments:
+          - Hypertension
+          - type: Variable
+            arguments:
+            - patient_id
+          - null
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - DiabetesT2
+          - type: Variable
+            arguments:
+            - patient_id
+          - 1.0
+        - type: Term
+          arguments:
+          - Hypertension
+          - type: Variable
+            arguments:
+            - patient_id
+          - 1.0
+- type: SentenceGroup
+  name: Sentences
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - patient_id
+        - str
+      - type: Variable
+        arguments:
+        - confidence
+        - float
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - DiabetesT2
+        - type: Variable
+          arguments:
+          - patient_id
+        - type: Variable
+          arguments:
+          - confidence
+      - type: Term
+        arguments:
+        - Phenotype
+        - type: Variable
+          arguments:
+          - patient_id
+- type: SentenceGroup
+  name: Sentences
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - patient_id
+        - str
+      - type: Variable
+        arguments:
+        - confidence
+        - float
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - Hypertension
+        - type: Variable
+          arguments:
+          - patient_id
+        - type: Variable
+          arguments:
+          - confidence
+      - type: Term
+        arguments:
+        - Phenotype
+        - type: Variable
+          arguments:
+          - patient_id
+- type: SentenceGroup
+  name: Sentences
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - patient_id
+        - str
+      - type: Variable
+        arguments:
+        - stage
+        - Optional
+      - type: Variable
+        arguments:
+        - confidence
+        - float
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - CKD
+        - type: Variable
+          arguments:
+          - patient_id
+        - type: Variable
+          arguments:
+          - stage
+        - type: Variable
+          arguments:
+          - confidence
+      - type: Term
+        arguments:
+        - Phenotype
+        - type: Variable
+          arguments:
+          - patient_id
+ground_terms: []
