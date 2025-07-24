@@ -239,9 +239,10 @@ def test_reasoning(solver, facts, expected, abox, coherent):
         assert "develops" not in str(s)
     for f in facts:
         reasoner.add(f)
+        print(f)
     if solver != SouffleSolver:
         # print("COHERENT=", reasoner.coherent())
-        # print(reasoner.solver.dump())
+        # print(solver.dump())
         assert reasoner.coherent() == coherent, f"Expected {coherent} for {facts}"
     if solver == Z3Solver:
         pytest.skip("TODO: models from Z3")

@@ -314,8 +314,10 @@ class Z3Solver(Solver):
                         pf_args.append(args[0] + args[1])
                     elif p == "gt":
                         pf_args.append(args[0] > args[1])
+                    elif p == "date":
+                        pf_args.append(args[0] == args[1])
                     else:
-                        raise NotImplementedError(f"Term not implemented: {var}")
+                        raise NotImplementedError(f"Term not implemented: p: {p} {type(var)} v: {var}")
                 elif var is None:
                     pf_args.append(z3.StringVal("None"))
                 else:

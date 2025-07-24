@@ -94,6 +94,8 @@ def constraints(person: PersonID, pet: PetID):
         assert Person(name=person) and Pet(name=pet)
 ```
 
+Note that the Python code in the function definition is **never executed**. The code must be in a [subset of python](../conversion/parsers/python/) that is translated to logic statements.
+
 You can also derive new facts from axioms:
 
 ```python
@@ -127,9 +129,9 @@ See [Generators](generators) for more information.
 
 ## Solvers
 
-TypedLogic supports multiple solvers, including Z3 and Souffle. Solvers are responsible for reasoning over the facts and axioms to derive new information or check for consistency.
+TypedLogic supports multiple [solvers](../integrations/solvers/), including Z3 and Souffle. Solvers are responsible for reasoning over the facts and axioms to derive new information or check for consistency.
 
-Example (using Z3 solver):
+Example (using the [Z3 solver](../integrations/solvers/z3.md) ):
 
 ```python
 from typedlogic.integrations.solvers.z3 import Z3Solver
@@ -141,7 +143,7 @@ result = solver.check()
 
 ## Theories
 
-A Theory in TypedLogic is a collection of predicate definitions, facts, and axioms. It represents a complete knowledge base that can be reasoned over.
+A [Theory](datamodel/#typedlogic.datamodel.Theory) in TypedLogic is a collection of predicate definitions, facts, and axioms. It represents a complete knowledge base that can be reasoned over.
 
 Example:
 

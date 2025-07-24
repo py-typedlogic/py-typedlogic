@@ -70,6 +70,7 @@ class ClingoSolver(Solver):
             disjunctive_datalog=True,
             double_quote_strings=True,
             negation_symbol=negation_symbol,
+            negation_as_failure_symbol="not",
             allow_nesting=False,
             double_quote_floats=True,
         )

@@ -1,4 +1,4 @@
 path(X, Z) :- path(X, Y), path(Y, Z).
 path(Source, Target) :- link(Source, Target).
-query(link(Source, Target)).
 query(path(Source, Target)).
+query(link(Source, Target)).

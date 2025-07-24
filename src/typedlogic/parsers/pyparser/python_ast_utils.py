@@ -70,7 +70,7 @@ def parse_sentence(node: Union[ast.AST, List[ast.stmt]]) -> Sentence:
 
     :param node: The AST node to parse
     :type node: Union[ast.AST, List[ast.stmt]]
-    :return: A Term instance
+    :return: A Sentence instance
     """
 
     def tr_arg_or_kw_value(v: ast.expr) -> Any:
@@ -78,6 +78,9 @@ def parse_sentence(node: Union[ast.AST, List[ast.stmt]]) -> Sentence:
             return v.value
         elif isinstance(v, ast.Name):
             return Variable(v.id)
+        elif isinstance(v, ast.Attribute):
+            # TODO: for enums, this returns the enum member name, e.g. "ALIVE", not the enum member value, e.g. 1 or "alive"
+            return v.attr
         elif isinstance(v, (ast.BinOp, ast.UnaryOp, ast.Call)):
             return parse_sentence(v)
         else:
@@ -96,7 +99,7 @@ def parse_sentence(node: Union[ast.AST, List[ast.stmt]]) -> Sentence:
         if len(sentences) == 1:
             return sentences[0]
         else:
-            return And(sentences)
+            return And(*sentences)
     if isinstance(node, ast.Expr):
         return parse_sentence(node.value)
     if isinstance(node, ast.Assert):
@@ -143,10 +146,17 @@ def parse_sentence(node: Union[ast.AST, List[ast.stmt]]) -> Sentence:
         # if COND: BODY
         test = node.test
         body = node.body
+        parsed_body = parse_sentence(body)
+        parsed_antecedent = parse_sentence(test)
+        if not isinstance(parsed_antecedent, Sentence):
+            raise ValueError(f"Unsupported head type: {type(test)} .. {type(parsed_antecedent)} // {ast.dump(test)}")
+        if not isinstance(parsed_body, Sentence):
+            raise ValueError(f"Unsupported body type: {type(body)} .. {type(parsed_body)} // {ast.dump(body)}")
         orelse = node.orelse
         if orelse:
-            raise ValueError("Else clause is not supported")
-        return parse_sentence(test) >> parse_sentence(body)
+            parsed_orelse = parse_sentence(orelse)
+            return And(parsed_antecedent >> parsed_body, ~parsed_antecedent >> parsed_orelse)
+        return parsed_antecedent >> parsed_body
     elif isinstance(node, ast.Call) and (
         isinstance(node.func, ast.Name) and node.func.id in ["Implies", "Iff", "Implied"]
     ):
@@ -183,13 +193,15 @@ def parse_sentence(node: Union[ast.AST, List[ast.stmt]]) -> Sentence:
                 v = kw.value.value
             elif isinstance(kw.value, ast.Name):
                 v = Variable(kw.value.id)
+            elif isinstance(kw.value, ast.Attribute):
+                v = kw.value.attr
             elif isinstance(kw.value, (ast.BinOp, ast.UnaryOp, ast.Call)):
                 kw_val_ast = kw.value
                 if not isinstance(kw_val_ast, ast.AST):
                     raise AssertionError
                 v = parse_sentence(kw_val_ast)
             else:
-                raise ValueError(f"Unsupported keyword value type: {type(kw.value)}")
+                raise ValueError(f"Unsupported keyword value type: {type(kw.value)} in {ast.dump(kw.value)}")
             return kw.arg, v
 
         if node.keywords:

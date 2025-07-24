@@ -63,12 +63,11 @@
               ((Variable "name" "str") 
                 (Variable "age" "int")) 
               (Implies 
-                (NamedThing 
-                  (Variable "name") 
-                  (Variable "age")) 
                 (Person 
                   (Variable "name") 
-                  (Variable "age")))))) 
+                  (Variable "age")) 
+                (NamedThing 
+                  (Variable "name")))))) 
         (_annotations null)) 
       (SentenceGroup 
         (name "Sentences") 
@@ -81,16 +80,15 @@
                 (Variable "object" "str") 
                 (Variable "reciprocated" "boolean")) 
               (Implies 
-                (Relationship 
-                  (Variable "subject") 
-                  (Variable "predicate") 
-                  (Variable "object") 
-                  (Variable "reciprocated")) 
                 (Likes 
                   (Variable "subject") 
                   (Variable "predicate") 
                   (Variable "object") 
-                  (Variable "reciprocated")))))) 
+                  (Variable "reciprocated")) 
+                (Relationship 
+                  (Variable "subject") 
+                  (Variable "predicate") 
+                  (Variable "object")))))) 
         (_annotations null)))) 
   (ground_terms 
     ()) 

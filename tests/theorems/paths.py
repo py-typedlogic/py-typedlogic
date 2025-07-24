@@ -5,12 +5,12 @@ from typedlogic.decorators import axiom
 ID = str
 
 
-class Link(BaseModel, FactMixin):
+class Path(BaseModel, FactMixin):
     source: ID
     target: ID
 
 
-class Path(Link):
+class Link(Path):
     pass
 
 

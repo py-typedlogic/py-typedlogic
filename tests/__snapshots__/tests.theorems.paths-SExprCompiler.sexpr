@@ -8,7 +8,7 @@
       ((ID "str")))) 
   (predicate_definitions 
     ((PredicateDefinition 
-        (predicate "Link") 
+        (predicate "Path") 
         (arguments 
           (dict 
             ((source "str") 
@@ -19,7 +19,7 @@
           ()) 
         (python_class null)) 
       (PredicateDefinition 
-        (predicate "Path") 
+        (predicate "Link") 
         (arguments 
           (dict 
             ((source "str") 
@@ -27,7 +27,7 @@
         (description null) 
         (metadata null) 
         (parents 
-          (Link)) 
+          (Path)) 
         (python_class null)))) 
   (sentence_groups 
     ((SentenceGroup 

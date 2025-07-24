@@ -86,13 +86,13 @@ sentence_groups:
       arguments:
       - type: Term
         arguments:
-        - Person
+        - Barber
         - type: Variable
           arguments:
           - name
       - type: Term
         arguments:
-        - Barber
+        - Person
         - type: Variable
           arguments:
           - name

@@ -1,6 +1,6 @@
 import logging
 from dataclasses import dataclass, field
-from typing import ClassVar, Iterator
+from typing import Any, ClassVar, Dict, Iterator, Optional
 
 from problog import get_evaluatable
 from problog.program import PrologString
@@ -18,6 +18,10 @@ from typedlogic.profiles import (
 from typedlogic.solver import Solution, Solver
 
 logger = logging.getLogger(__name__)
+
+DEFAULT_PROBLOG_ARGS = {
+    'propagate_evidence': False,
+}
 
 
 @dataclass
@@ -49,13 +53,21 @@ class ProbLogSolver(Solver):
 
     exec_name: str = field(default="problog")
     profile: ClassVar[Profile] = MixedProfile(Probabilistic(), AllowsComparisonTerms(), MultipleModelSemantics())
+    problog_args: Optional[Dict[str, Any]] = None
 
-    def models(self) -> Iterator[ProbabilisticModel]:
+    def models(self, **kwargs) -> Iterator[ProbabilisticModel]:
         compiler = ProbLogCompiler()
         program = compiler.compile(self.base_theory)
         p = PrologString(program)
         ev = get_evaluatable()
-        result = ev.create_from(p).evaluate()
+        for k, v in DEFAULT_PROBLOG_ARGS.items():
+            if k not in kwargs:
+                kwargs[k] = v
+        if self.problog_args:
+            for k, v in self.problog_args.items():
+                if k not in kwargs:
+                    kwargs[k] = v
+        result = ev.create_from(p, **kwargs).evaluate()
         m = ProbabilisticModel()
         for term, prob in result.items():
             plt_term = compiler.decompile_term(term)

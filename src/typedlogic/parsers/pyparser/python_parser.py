@@ -73,6 +73,22 @@ class PythonParser(Parser):
         ∀x: TreeNodeType, y: TreeNodeType : ~(AncestorOf(?x, ?y)) & (AncestorOf(?y, ?x))
         ∀x: TreeNodeType, y: TreeNodeType, z: TreeNodeType : ((AncestorOf(?x, ?z)) & (AncestorOf(?z, ?y)) -> AncestorOf(?x, ?y))
         ∀x: NameType : (Person(?x) -> Mortal(?x))
+
+    Inheritance:
+
+        >>> theory = parser.parse(Path("tests/theorems/class_inheritance.py"))
+        >>> theory.name
+        'class_inheritance'
+        >>> [(pd.predicate, pd.parents) for pd in theory.predicate_definitions]
+        [('Thing', []), ('Place', ['Thing']), ('Person', ['Thing'])]
+        >>> from typedlogic.transformations import implies_from_parents
+        >>> # TODO - consider making this default
+        >>> theory = implies_from_parents(theory)
+        >>> for s in sorted(theory.sentences):
+        ...     print(s)
+        ∀name: str, age: int : (Person(?name, ?age) -> Thing(?name))
+        ∀name: str : (Place(?name) -> Thing(?name))
+
     """
 
     def transform(self, source: ModuleType, **kwargs) -> Theory:

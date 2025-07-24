@@ -39,7 +39,7 @@ import types
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Mapping, Optional, Tuple, Type, Union, _SpecialForm, get_origin
+from typing import Any, Dict, List, Mapping, Optional, Tuple, Type, Union, _SpecialForm, get_origin, Iterable
 
 SExpressionAtom = Any
 SExpressionTerm = List["SExpression"]
@@ -225,6 +225,11 @@ class Sentence(ABC):
 
     def __add__(self, other):
         return Term(operator.add.__name__, self, other)
+    
+    def __rmul__(self, other):
+        # TODO: avoid circular import
+        from typedlogic.extensions.probabilistic import Probability, That
+        return Probability(self, That(other))
 
     @property
     def annotations(self) -> Dict[str, Any]:
@@ -819,6 +824,12 @@ class NegationAsFailure(BooleanSentence):
     def __init__(self, operand, **kwargs):
         super().__init__(operand, **kwargs)
 
+    def __str__(self):
+        return f"NegationAsFailure{self.operands[0]}"
+
+    def __repr__(self):
+        return f"NegationAsFailure({repr(self.operands[0])})"
+
     @property
     def negated(self):
         return self.operands[0]
@@ -911,6 +922,59 @@ class Exists(QuantifiedSentence):
 
     def __hash__(self):
         return hash((self.quantifier, self._bindings_str(), self.sentence))
+
+
+@dataclass
+class CardinalityConstraint(Term):
+    """
+    A constraint on the cardinality of a set of terms.
+
+    """
+
+    def __init__(self, template: Sentence, conditions: Sentence, minimum_number: Optional[int] = None, maximum_number: Optional[int] = None):
+        """
+        Initialize a CardinalityConstraint.
+
+        :param template: The template sentence that defines the terms.
+        :param conditions: The conditions that the terms must satisfy.
+        :param minimum_number: The minimum number of terms that must satisfy the conditions.
+        :param maximum_number: The maximum number of terms that can satisfy the conditions.
+        """
+        super().__init__("CardinalityConstraint",
+                         dict(template=template, conditions=conditions,
+                              minimum_number=minimum_number, maximum_number=maximum_number))
+
+    # TODO: decide on general strategy for extending Terms
+
+    #template: Sentence
+    #conditions: Sentence
+    #minimum_number: Optional[int] = None
+    #maximum_number: Optional[int] = None
+
+    @property
+    def template(self):
+        return self.bindings.get("template")
+
+    @property
+    def conditions(self):
+        return self.bindings.get("conditions")
+
+    @property
+    def minimum_number(self) -> Optional[int]:
+        return self.bindings.get("minimum_number")
+
+    @property
+    def maximum_number(self) -> Optional[int]:
+        return self.bindings.get("maximum_number")
+
+    def __str__(self):
+        return f"{self.minimum_number} <= {{ {self.template} : {self.conditions} }} <= {self.maximum_number}"
+
+    def __repr__(self):
+        return f"CardinalityConstraint({self.template}, {self.conditions}, {self.minimum_number}, {self.maximum_number})"
+
+    def __hash__(self):
+        return hash((self.template, self.conditions, str(self.maximum_number), str(self.minimum_number)))
 
 
 class SentenceGroupType(str, Enum):
@@ -1029,6 +1093,16 @@ class Theory:
         if not self.sentence_groups:
             self.sentence_groups = []
         self.sentence_groups.append(SentenceGroup(name="Sentences", sentences=[sentence]))
+
+    def extend(self, sentences: Iterable[Sentence]):
+        """
+        Add a list of sentences to the theory
+
+        :param sentences:
+        :return:
+        """
+        for s in sentences:
+            self.add(s)
 
     def remove(self, sentence: Sentence, strict=False):
         """

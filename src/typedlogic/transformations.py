@@ -4,7 +4,9 @@ Function for performing transformation and manipulation of Sentences and Theorie
 import json
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional, Tuple, Type, Union
+from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional, Set, Tuple, Type, Union
+
+from pandas.core.roperator import rtruediv
 
 from typedlogic import (
     BooleanSentence,
@@ -29,7 +31,7 @@ from typedlogic.datamodel import (
     NotInProfileError,
     Or,
     QuantifiedSentence,
-    Xor,
+    Xor, CardinalityConstraint,
 )
 from typedlogic.utils.detect_stratified_negation import analyze_datalog_program
 
@@ -41,12 +43,14 @@ def sentences_from_predicate_hierarchy(theory: Theory) -> List[Sentence]:
     for pd in theory.predicate_definitions:
         if pd.parents:
             for parent in pd.parents:
+                parent_pred = theory.predicate_definition_map[parent]
                 # bindings = {arg: Variable(arg, domain=typ) for arg, typ in pd.arguments.items()}
                 vars = [Variable(arg, domain=typ) for arg, typ in pd.arguments.items()]
                 args = [Variable(arg) for arg in pd.arguments]
+                parent_args = [Variable(arg) for arg in parent_pred.arguments]
                 impl = Implies(
-                    antecedent=Term(parent, *args),
-                    consequent=Term(pd.predicate, *args),
+                    antecedent=Term(pd.predicate, *args),
+                    consequent=Term(parent, *parent_args),
                 )
                 qs = Forall(vars, impl)
                 if qs not in theory.sentences:
@@ -82,7 +86,7 @@ def implies_from_parents(theory: Theory) -> Theory:
         >>> theory2 = implies_from_parents(theory)
         >>> new_sentences = theory2.sentence_groups[0].sentences
         >>> new_sentences
-        [Forall([name: str] : Implies(Thing(?name), Person(?name)))]
+        [Forall([name: str] : Implies(Person(?name), Thing(?name)))]
 
     :param theory: The theory to generate implications for
     :return: A new theory with implications
@@ -118,6 +122,7 @@ class PrologConfig:
     use_lowercase_vars: Optional[bool] = False
     use_uppercase_predicates: Optional[bool] = False
     disjunctive_datalog: Optional[bool] = False
+    existentials_to_constraints: Optional[bool] = False
     operator_map: Optional[Mapping[str, str]] = None
     negation_symbol: str = field(default=r"\+")
     negation_as_failure_symbol: str = field(default=r"\+")
@@ -129,6 +134,7 @@ class PrologConfig:
     allow_nesting: bool = True
     null_term: str = "null(_)"
     allow_skolem_terms: bool = False
+    allow_ungrounded_vars_in_head: bool = False
 
 
 def as_prolog(
@@ -137,6 +143,7 @@ def as_prolog(
     depth=0,
     translate=False,
     strict=True,
+    anon_vars: Optional[Set[str]] = None,
 ) -> str:
     """
     Convert a sentence to Prolog syntax.
@@ -184,6 +191,27 @@ def as_prolog(
         >>> print(as_prolog(Implies(And(C, Exists([X], Term("A", X))), D)))
         d :- c, a(X).
 
+        >>> print(as_prolog(Implies(Term("A", X, Y), Term("B", X, Y))))
+        b(X, Y) :- a(X, Y).
+
+        >>> print(as_prolog(Implies(Term("A", X), Term("A", X, Y)), config=PrologConfig(allow_ungrounded_vars_in_head=True)))
+        a(X, _Y) :- a(X).
+
+        >>> print(as_prolog(C >> (D | E), config=PrologConfig(disjunctive_datalog=True)))
+        d; e :- c.
+
+        Experimental: cardinality constraints:
+
+        >>> x = Variable("X")
+        >>> y = Variable("Y")
+        >>> thing = Term("Thing", x)
+        >>> hp = Term("HasPart", x, y)
+        >>> wing = Term("Wing", y)
+        >>> cc = CardinalityConstraint(hp, wing, 0, 0)
+        >>> rule = And(thing, cc) >> Term("Wingless", x)
+        >>> print(as_prolog(rule))
+        wingless(X) :- thing(X), (0 <= {haspart(X, Y) : wing(Y)} <= 0).
+
     :param sentence: the sentence to render
     :param config:
     :param depth:
@@ -206,6 +234,9 @@ def as_prolog(
             return f"({s})"
         return s
 
+    if config.existentials_to_constraints:
+        sentence = existentials_to_constraints(sentence)
+
     if translate:
         rules = to_horn_rules(sentence, allow_disjunctions_in_head=config.disjunctive_datalog)
         return "\n".join(as_prolog(s, config, depth=depth) for s in rules)
@@ -227,7 +258,18 @@ def as_prolog(
         return _paren(f"{'; '.join(as_prolog(op, config, depth+1) for op in sentence.operands)}")
     if isinstance(sentence, (Not, NegationAsFailure)):
         negated_clause = _paren(as_prolog(sentence.negated, config, depth + 1))
-        return f"{config.negation_symbol} {negated_clause}"
+        neg_symbol = config.negation_symbol if isinstance(sentence, Not) else config.negation_as_failure_symbol
+        return f"{neg_symbol} {negated_clause}"
+    if isinstance(sentence, CardinalityConstraint):
+        # TODO: assume clingo syntax for now.
+        template_pro = as_prolog(sentence.template, config, depth + 1)
+        conditions_pro = as_prolog(sentence.conditions, config, depth + 1)
+        inner = "{" + template_pro + " : " + conditions_pro + "}"
+        if sentence.minimum_number is not None:
+            inner = f"{sentence.minimum_number} <= {inner}"
+        if sentence.maximum_number is not None:
+            inner += f" <= {sentence.maximum_number}"
+        return _paren(inner)
     if isinstance(sentence, Term):
         if not config.allow_skolem_terms:
             for t in sentence.values:
@@ -242,9 +284,20 @@ def as_prolog(
                 else:
                     return config.null_term
             if isinstance(v, Variable):
-                if config.use_lowercase_vars:
-                    return v.name
-                return v.name.capitalize()
+                v_name = v.name
+                is_anon = anon_vars and v_name in anon_vars
+                if not config.use_lowercase_vars:
+                    import re
+                    # check for match of /(_+)(.*)/
+                    match = re.match(r"(_+)(.*)", v_name)
+                    if match:
+                        prefix, suffix = match.groups()
+                        v_name = f"{prefix}{suffix.capitalize()}"
+                    else:
+                        v_name = v_name.capitalize()
+                if is_anon:
+                    v_name = f"_{v_name}"
+                return v_name
             if isinstance(v, Term):
                 if not config.allow_function_terms:
                     raise ValueError(f"Nested term not supported: {v}")
@@ -298,6 +351,7 @@ def as_prolog(
             # raise NotInProfileError(f"Body must be a term {sentence}")
             continue
         body_vars.extend(body_term.variable_names)
+    anon_vars = set()
     for head_term in disjunction_as_list(sentence.consequent):
         if isinstance(head_term, Not):
             continue
@@ -306,9 +360,12 @@ def as_prolog(
         head_vars = head_term.variable_names
         for v in head_vars:
             if v not in body_vars:
-                raise NotInProfileError(f"Variable {v} in head not in body {sentence}")
+                if not config.allow_ungrounded_vars_in_head:
+                    raise NotInProfileError(f"Variable {v} in head not in body {sentence}")
+                anon_vars.add(v)
 
-    head = as_prolog(sentence.consequent, config, depth + 1)
+
+    head = as_prolog(sentence.consequent, config, depth + 1, anon_vars=anon_vars)
     body = as_prolog(sentence.antecedent, config, depth + 1)
     if head.startswith("(") and head.endswith(")"):
         head = head[1:-1]
@@ -463,6 +520,8 @@ def as_fol(sentence, config: Optional[PrologConfig] = None) -> str:
                 if config.use_lowercase_vars:
                     return v.name
                 return v.name.capitalize()
+            if isinstance(v, Term):
+                return as_fol(v, config)
             if config.double_quote_strings:
                 return json.dumps(v)
             else:
@@ -816,7 +875,7 @@ def transform_sentence(
         return type(sentence)(sentence.variables, transform_sentence(sentence.sentence, rule, varmap))
     elif isinstance(sentence, BooleanSentence):
         return type(sentence)(*[transform_sentence(op, rule, varmap) for op in sentence.operands])
-    elif isinstance(sentence, Term):
+    elif isinstance(sentence, (Term, CardinalityConstraint)):
         return sentence
     elif isinstance(sentence, Extension):
         return sentence.to_model_object()
@@ -892,6 +951,58 @@ def reduce_singleton(sentence: Sentence) -> Sentence:
     if isinstance(sentence, Or) and len(sentence.operands) == 1:
         return sentence.operands[0]
     return sentence
+
+
+def map_variables(sentence: Sentence, varmap: Dict[str, Variable]) -> Sentence:
+    """
+    Map variables in a sentence using a variable map.
+
+        >>> from typedlogic import And, Or, Variable, Term, Forall
+        >>> X1 = Variable("X1", "str")
+        >>> Y1 = Variable("Y1", "str")
+        >>> X2 = Variable("X2", "str")
+        >>> Y2 = Variable("Y2", "str")
+        >>> A = Term("A", X1)
+        >>> B = Term("B", Y1)
+        >>> varmap = {"X1": X2, "Y1": Y2}
+        >>> map_variables(A & B, varmap)
+        And(A(?X2), B(?Y2))
+
+    :param sentence:
+    :param varmap:
+    :return:
+    """
+    def rewire(s: Sentence) -> Sentence:
+        if isinstance(s, Term):
+            new_bindings = {k: varmap.get(v.name, v) if isinstance(v, Variable) else v for k, v in s.bindings.items()}
+            return Term(s.predicate, new_bindings)
+        if isinstance(s, (Exists, Forall)):
+            new_vars = [varmap.get(v.name, v) for v in s.variables]
+            return type(s)(new_vars, map_variables(s.sentence, varmap))
+        return s
+    return transform_sentence(sentence, rewire)
+
+def anonymize_existential(sentence: Exists) -> Exists:
+    """
+    Anonymize the variables in an existential quantifier.
+
+    This replaces the variable names with a generic name to avoid conflicts.
+
+        >>> from typedlogic import Exists, Variable, Term
+        >>> X = Variable("X", "str")
+        >>> A = Term("A", X)
+        >>> exists_sentence = Exists([X], A)
+        >>> anonymize_existential(exists_sentence)
+        Exists(_X: str : A(?_X))
+
+    :param sentence: The existential sentence to anonymize.
+    :return: An anonymized existential sentence.
+    """
+    vmap = {v.name: Variable(f"_{v.name}", v.domain) for v in sentence.variables}
+    mapped = map_variables(sentence, vmap)
+    if not isinstance(mapped, Exists):
+        raise ValueError(f"Expected an Exists sentence, got {type(mapped)}")
+    return mapped
 
 
 def simplify(sentence: Sentence) -> Sentence:
@@ -1183,6 +1294,12 @@ def to_cnf_lol(sentence: Sentence, **kwargs) -> List[List[Sentence]]:
         >>> to_cnf_lol(And(Term("P"), Term("Q")))
         [[P], [Q]]
 
+        >>> to_cnf_lol(Exists([X], Term("Q", X)))
+        [[Q(sk__1)]]
+
+        >>> to_cnf_lol(Exists([X], Term("Q", X)), skip_skolemization=True)
+        [[Exists(X: str : Q(?X))]]
+
     :param sentence:
     :param kwargs:
     :return:
@@ -1194,6 +1311,58 @@ def to_cnf_lol(sentence: Sentence, **kwargs) -> List[List[Sentence]]:
         sentence = And(sentence)
     return [list(op.operands) if isinstance(op, Or) else [op] for op in sentence.operands]
 
+
+def existentials_to_constraints(sentence: Sentence) -> Sentence:
+    """
+    Unwinds existentials into constraints
+
+    Examples:
+
+        >>> from typedlogic import And, Or, Variable, Term, Forall
+        >>> X = Variable("X", "str")
+        >>> Y = Variable("Y", "str")
+        >>> Z = Variable("Z", "str")
+        >>> existentials_to_constraints(Implies(Term("Q", X), Exists([Y], Term("R", X, Y))))
+        Implies(And(Q(?X), NegationAsFailure(R(?X, ?_Y))), Or())
+
+
+    :param sentence:
+    :return:
+    """
+    if isinstance(sentence, And):
+        return And(*[existentials_to_constraints(op) for op in sentence.operands])
+    if isinstance(sentence, Or):
+        return Or(*[existentials_to_constraints(op) for op in sentence.operands])
+    if isinstance(sentence, Forall):
+        return Forall(
+            sentence.variables, existentials_to_constraints(sentence.sentence)
+        )
+    if isinstance(sentence, Iff):
+        return And(
+            existentials_to_constraints(Implies(sentence.left, sentence.right)),
+            existentials_to_constraints(Implies(sentence.right, sentence.left)),
+        )
+    if isinstance(sentence, Implied):
+        return Implies(existentials_to_constraints(sentence.antecedent),
+                       existentials_to_constraints(sentence.consequent))
+    if isinstance(sentence, Implies):
+        consequent = sentence.consequent
+        if isinstance(consequent, Exists):
+            consequent = And(consequent)
+        if isinstance(consequent, And):
+            existentials = [anonymize_existential(op) for op in consequent.operands if isinstance(op, Exists)]
+            if existentials:
+                remains = [op for op in consequent.operands if not isinstance(op, Exists)]
+                # TODO: rename_variables to anonymize
+                constraints = [Implies(And(sentence.antecedent, NegationAsFailure(x.sentence)), Or()) for x in existentials]
+                # Return the modified implication
+                if remains:
+                    rewritten = And(Implies(sentence.antecedent, And(*remains)),
+                                   *constraints)
+                else:
+                    rewritten = And(*constraints)
+                return simplify(rewritten)
+    return sentence
 
 def to_horn_rules(sentence: Sentence, allow_disjunctions_in_head=False, allow_goal_clauses=None) -> List[Sentence]:
     """
@@ -1212,8 +1381,14 @@ def to_horn_rules(sentence: Sentence, allow_disjunctions_in_head=False, allow_go
         >>> print(as_prolog(to_horn_rules(R >> (Q & P))))
         q :- r.
         p :- r.
+        >>> print(as_prolog(to_horn_rules((R >> Q) & (R >> P))))
+        q :- r.
+        p :- r.
         >>> print(as_prolog(to_horn_rules((R & S) >> P)))
         p :- r, s.
+
+        >>> print(as_prolog(to_horn_rules(Not(P), allow_goal_clauses=True)))
+        :- p.
 
     :param sentence:
     :param allow_disjunctions_in_head:

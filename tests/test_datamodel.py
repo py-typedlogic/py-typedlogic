@@ -9,7 +9,7 @@ from typedlogic.datamodel import (
     Term,
     Theory,
     as_object,
-    from_object,
+    from_object, CardinalityConstraint,
 )
 
 
@@ -110,6 +110,25 @@ def test_that():
     prop = Forall([Variable("y")], Implies(Term("Believer", "y"), Term("Believes", "y", that)))
     assert str(prop) == "∀y: None : (Believer(y) -> Believes(y, that(∃Alien(x))))"
 
+def test_cardinality():
+    x = Variable("X")
+    y = Variable("Y")
+    thing = Term("Thing", x)
+    hp = Term("HasPart", x, y)
+    wing = Term("Wing", y)
+    cc = CardinalityConstraint(hp, wing, 0, 0)
+    print(cc)
+    assert str(cc) == "0 <= { HasPart(?X, ?Y) : Wing(?Y) } <= 0"
+    rule = Implies(
+        And(
+            thing,
+            cc,
+        ),
+        # Term("CardinalityConstraint", hp, wing, 0, 0),
+        Term("Wingless", x)
+    )
+    print(rule)
+    assert str(rule) == "((Thing(?X)) & (0 <= { HasPart(?X, ?Y) : Wing(?Y) } <= 0) -> Wingless(?X))"
 
 def test_unary():
     t = Term("p")

@@ -1,3 +1,5 @@
+stageage("Adult", _Age_threshold).
+adult(_Name) :- Age >= Age_threshold.
 adult("Alice") :- personwithage("Alice", 25).
 query(personwithage(Name, Age)).
 query(adult(Name)).

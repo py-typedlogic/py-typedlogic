@@ -3,4 +3,4 @@
                     Person(customer),
                     Not(Shaves(customer, customer))),
                 Shaves(shaver, customer))),
- ForAll(name, Implies(Person(name), Barber(name)))]
+ ForAll(name, Implies(Barber(name), Person(name)))]

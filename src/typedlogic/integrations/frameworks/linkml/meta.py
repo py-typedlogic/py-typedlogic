@@ -1,3 +1,21 @@
+"""
+LinkML predicate-based metamodel
+
+Note that this differs from the official LinkML metamodel, in that this
+is a predicate/relational model representation.
+
+Example:
+
+    >>> facts = [
+    ... SlotDefinition("id"),
+    ... Required("id"),
+    ... Identifier("Person", "id"),
+    ... SlotDefinition("name"),
+    ... ClassDefinition("Person"),
+    ... ClassSlot("Person", "id"),
+    ... ClassSlot("Person", "name"),
+    ... ]
+"""
 from dataclasses import dataclass
 
 from typedlogic import Fact

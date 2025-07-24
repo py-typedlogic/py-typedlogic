@@ -195,6 +195,17 @@ B1y = Term("B1", Y)
 def test_solvers(
     solver_class, theory, asserted_axioms, asserted_ground_terms, expected_num_models, expected_ground_terms, profile
 ):
+    """
+    Tests combinations of solvers, theories, axioms, and ground terms.
+
+    :param solver_class: The solver class to use.
+    :param theory: The theory to test.
+    :param asserted_axioms: The axioms to assert on top of the theory.
+    :param asserted_ground_terms: The ground terms to assert on top of the theory.
+    :param expected_num_models: The expected number of models entailed by the axioms and asserted ground terms.
+    :param expected_ground_terms: The expected ground terms entailed by the axioms and asserted ground terms.
+    :param profile: The profile of the theory, used to filter out solvers that don't support the profile.
+    """
     # Skip tests for solvers that aren't available
     if solver_class == Prover9Solver and not has_prover9:
         pytest.skip("External dependency not available: Prover9 executable not found in PATH")
@@ -285,3 +296,46 @@ def test_simple_contradiction(solver_class):
 
     solver.load(sc)
     assert solver.check().satisfiable is False
+
+from tests.theorems import enums_example as enums_example_module
+from tests.theorems import types_example as types_example_module
+from tests.theorems import animals as animals_example_module
+from tests.theorems import defined_types_example as defined_types_example_module
+from tests.theorems import signaling_pathways as signaling_pathways_example_module
+@pytest.mark.parametrize("solver_class", SOLVERS)
+@pytest.mark.parametrize("example_module", [enums_example_module, types_example_module, animals_example_module, defined_types_example_module])
+def test_solvers_on_examples(solver_class, example_module):
+    if solver_class in [Prover9Solver]:
+        pytest.skip("TODO Prover9")
+    if solver_class in [SnakeLogSolver]:
+        if example_module not in [animals_example_module]:
+            pytest.skip("SnakeLog do not support various features")
+    if solver_class in [Z3Solver] and example_module == defined_types_example_module:
+        pytest.skip("Z3Solver does not support defined types")
+    solver = solver_class()
+    solver.load(example_module)
+    model = solver.model()
+    print(model.ground_terms)
+    chk = solver.check()
+    print(chk)
+
+@pytest.mark.parametrize("solver_class", [ClingoSolver])
+def test_solvers_on_enums(solver_class):
+    import tests.theorems.enums_example as enums_example_module
+    amy = enums_example_module.Person("Amy", 22, enums_example_module.LivingStatus.ALIVE)
+    zardoz = enums_example_module.Person("Zardoz", 88, enums_example_module.LivingStatus.ALIVE)
+    assert type(amy.living_status) == enums_example_module.LivingStatus
+    assert enums_example_module.LivingStatus.ALIVE.name == "ALIVE"
+    # assert amy == enums_example_module.Person("Amy", 22, "alive")
+    solver = solver_class()
+    solver.load(enums_example_module)
+    solver.add(amy)
+    solver.add(zardoz)
+    assert solver.check().satisfiable is not False
+    #assert chk
+    model = solver.model()
+    print(model.ground_terms)
+    assert model.ground_terms
+    if False:
+        assert enums_example_module.PersonHasAgeCategory("Amy", enums_example_module.AgeCategory.YOUNG) in model.ground_terms
+        assert enums_example_module.PersonHasAgeCategory("Zardoz", enums_example_module.AgeCategory.OLD) in model.ground_terms

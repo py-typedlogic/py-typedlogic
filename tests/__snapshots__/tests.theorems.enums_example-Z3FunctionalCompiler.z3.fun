@@ -1,0 +1,13 @@
+[ForAll([p, age, age_category, living_status],
+        Implies(And(Person(p, age, living_status),
+                    44 < age,
+                    65 > age),
+                PersonHasAgeCategory(p, "MIDDLE_AGED"))),
+ ForAll([p, age, age_category, living_status],
+        Implies(And(Person(p, age, living_status), 64 < age),
+                PersonHasAgeCategory(p, "OLD"))),
+ ForAll([p, age, age_category, living_status],
+        Implies(And(Person(p, age, living_status), 45 > age),
+                PersonHasAgeCategory(p, "YOUNG"))),
+ ForAll([p, age, living_status],
+        Implies(Person(p, age, "ALIVE"), IsAlive(p)))]

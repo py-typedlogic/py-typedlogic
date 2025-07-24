@@ -7,6 +7,13 @@ from typedlogic.datamodels.typesystem import get_python_type
 def make_terms(rows: List[List[str]], pd: PredicateDefinition) -> List[Term]:
     """
     Make terms from a list of rows
+
+    Example:
+    
+        >>> pd = PredicateDefinition("FriendOf", {"person": "str", "friend": "str"})
+        >>> make_terms([["Amy", "Zardoz"], ["Zardoz", "John"]], pd)
+        [FriendOf(Amy, Zardoz), FriendOf(Zardoz, John)]
+
     """
     terms = []
     for i, pd_arg in enumerate(pd.arguments.values()):

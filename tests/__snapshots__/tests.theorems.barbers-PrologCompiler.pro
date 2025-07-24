@@ -9,4 +9,4 @@ shaves(Shaver, Customer) :- barber(Shaver), person(Customer), \+ (shaves(Custome
 
 %% Sentences
 
-barber(Name) :- person(Name).
+person(Name) :- barber(Name).

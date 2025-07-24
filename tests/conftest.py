@@ -58,6 +58,12 @@ def path_benchmark_d5() -> Benchmark:
 
 
 def _path_benchmark(depth=3) -> Benchmark:
+    """
+    Create a benchmark for the paths theorem.
+
+    :param depth: The depth of the paths theorem.
+    :return: A benchmark for the paths theorem.
+    """
     from tests.theorems import paths
 
     parser = PythonParser()

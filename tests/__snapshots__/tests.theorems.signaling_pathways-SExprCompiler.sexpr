@@ -1,0 +1,191 @@
+(Theory 
+  (name "tests.theorems.signaling_pathways") 
+  (constants 
+    (dict 
+      ((Optional "typing.Optional") 
+        (List "typing.List") 
+        (Set "typing.Set") 
+        (Dict "typing.Dict")))) 
+  (type_definitions 
+    (dict 
+      ())) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "Protein") 
+        (arguments 
+          (dict 
+            ((name "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "ModifiedProtein") 
+        (arguments 
+          (dict 
+            ((protein "Protein") 
+              (modification "ModificationType") 
+              (site "Optional") 
+              (active "bool")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Complex") 
+        (arguments 
+          (dict 
+            ((name "Optional")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Kinase") 
+        (arguments 
+          (dict 
+            ((protein "Protein")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Phosphatase") 
+        (arguments 
+          (dict 
+            ((protein "Protein")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "GTPase") 
+        (arguments 
+          (dict 
+            ((protein "Protein")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "GEF") 
+        (arguments 
+          (dict 
+            ((protein "Protein") 
+              (target "Protein")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "GAP") 
+        (arguments 
+          (dict 
+            ((protein "Protein") 
+              (target "Protein")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Ligand") 
+        (arguments 
+          (dict 
+            ((name "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Receptor") 
+        (arguments 
+          (dict 
+            ((protein "Protein")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "LigandReceptorBinding") 
+        (arguments 
+          (dict 
+            ((ligand "Ligand") 
+              (receptor "Receptor") 
+              (active "bool")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Activation") 
+        (arguments 
+          (dict 
+            ((upstream "Protein") 
+              (downstream "Protein")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "PhosphorylationEvent") 
+        (arguments 
+          (dict 
+            ((kinase "Protein") 
+              (substrate "Protein") 
+              (site "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Translocation") 
+        (arguments 
+          (dict 
+            ((protein "Protein") 
+              (from_compartment "str") 
+              (to_compartment "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Compartment") 
+        (arguments 
+          (dict 
+            ((name "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "ProteinLocation") 
+        (arguments 
+          (dict 
+            ((protein "Protein") 
+              (compartment "Compartment")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)))) 
+  (sentence_groups 
+    ()) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))

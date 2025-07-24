@@ -6,8 +6,8 @@
 
 %% Sentences
 
-person(Name, Age) :- namedthing(Name, Age).
+namedthing(Name) :- person(Name, Age).
 
 %% Sentences
 
-likes(Subject, Predicate, Object, Reciprocated) :- relationship(Subject, Predicate, Object, Reciprocated).
+relationship(Subject, Predicate, Object) :- likes(Subject, Predicate, Object, Reciprocated).

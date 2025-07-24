@@ -4,4 +4,4 @@
 (assert (forall ((shaver String) (customer String))
   (=> (and (Barber shaver) (Person customer) (not (Shaves customer customer)))
       (Shaves shaver customer))))
-(assert (forall ((name String)) (=> (Person name) (Barber name))))
+(assert (forall ((name String)) (=> (Barber name) (Person name))))

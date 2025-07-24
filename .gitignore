@@ -1,5 +1,6 @@
 souffle.db
 tests/output
+tests/*/*/output
 .idea
 
 # Byte-compiled / optimized / DLL files

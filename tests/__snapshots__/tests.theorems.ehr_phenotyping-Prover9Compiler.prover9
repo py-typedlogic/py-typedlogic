@@ -1,0 +1,18 @@
+% Problem: tests.theorems.ehr_phenotyping
+formulas(assumptions).
+    all patient_id encounter_id (((Patient(patient_id, date(1970, 1, 1), s_unknown) & Encounter(encounter_id, patient_id, date(2024, 1, 1)) & Diagnosis(encounter_id, Code(ICD10, E11))) -> DiabetesT2(patient_id, null))).
+    all patient_id encounter_id child_code (((Patient(patient_id, date(1970, 1, 1), s_unknown) & Encounter(encounter_id, patient_id, date(2024, 1, 1)) & Diagnosis(encounter_id, Code(ICD10, ?child_code)) & IsA(Code(ICD10, ?child_code), Code(ICD10, E11))) -> DiabetesT2(patient_id, null))).
+    all patient_id v (((Patient(patient_id, date(1970, 1, 1), s_unknown) & LabResult(patient_id, date(2024, 1, 1), Code(LOINC, 4548-4), v, s_%) & ge(v, rational(13,2))) -> DiabetesT2(patient_id, rational(9,10)))).
+    all patient_id (((Patient(patient_id, date(1970, 1, 1), s_unknown) & Medication(patient_id, date(2024, 1, 1), Code(SNOMED, 10370), null)) -> DiabetesT2(patient_id, rational(7,10)))).
+    all patient_id encounter_id (((Patient(patient_id, date(1970, 1, 1), s_unknown) & Encounter(encounter_id, patient_id, date(2024, 1, 1)) & Diagnosis(encounter_id, Code(ICD10, I10))) -> Hypertension(patient_id, null))).
+    all patient_id systolic diastolic (((Patient(patient_id, date(1970, 1, 1), s_unknown) & LabResult(patient_id, date(2024, 1, 1), Code(LOINC, 8480-6), systolic, s_mmHg) & LabResult(patient_id, date(2024, 1, 1), Code(LOINC, 8462-4), diastolic, s_mmHg) & ge(systolic, 140) & ge(diastolic, 90)) -> Hypertension(patient_id, rational(4,5)))).
+    all patient_id encounter_id (((Patient(patient_id, date(1970, 1, 1), s_unknown) & Encounter(encounter_id, patient_id, date(2024, 1, 1)) & Diagnosis(encounter_id, Code(ICD10, N18))) -> CKD(patient_id, null, null))).
+    all patient_id value (((Patient(patient_id, date(1970, 1, 1), s_unknown) & LabResult(patient_id, date(2024, 1, 1), Code(LOINC, 62238-1), value, s_mL/min/1.73m²)) -> ((ge(value, 90) -> CKD(patient_id, 1, rational(1,2))) & (- ( ge(value, 90) ) -> ((ge(value, 60) -> CKD(patient_id, 2, rational(7,10))) & (- ( ge(value, 60) ) -> ((ge(value, 30) -> CKD(patient_id, 3, rational(9,10))) & (- ( ge(value, 30) ) -> ((ge(value, 15) -> CKD(patient_id, 4, rational(19,20))) & (- ( ge(value, 15) ) -> CKD(patient_id, 5, rational(99,100)))))))))))).
+    all patient_id (((DiabetesT2(patient_id, null) & Hypertension(patient_id, null)) -> (DiabetesT2(patient_id, rational(1,1)) & Hypertension(patient_id, rational(1,1))))).
+    all patient_id confidence ((DiabetesT2(patient_id, confidence) -> Phenotype(patient_id))).
+    all patient_id confidence ((Hypertension(patient_id, confidence) -> Phenotype(patient_id))).
+    all patient_id stage confidence ((CKD(patient_id, stage, confidence) -> Phenotype(patient_id))).
+end_of_list.
+
+formulas(goals).
+end_of_list.

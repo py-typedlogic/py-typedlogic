@@ -1,0 +1,16 @@
+query(protein(Name)).
+query(modifiedprotein(Protein, Modification, Site, Active)).
+query(complex(Name)).
+query(kinase(Protein)).
+query(phosphatase(Protein)).
+query(gtpase(Protein)).
+query(gef(Protein, Target)).
+query(gap(Protein, Target)).
+query(ligand(Name)).
+query(receptor(Protein)).
+query(ligandreceptorbinding(Ligand, Receptor, Active)).
+query(activation(Upstream, Downstream)).
+query(phosphorylationevent(Kinase, Substrate, Site)).
+query(translocation(Protein, From_compartment, To_compartment)).
+query(compartment(Name)).
+query(proteinlocation(Protein, Compartment)).

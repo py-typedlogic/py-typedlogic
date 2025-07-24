@@ -1,8 +1,8 @@
 [ForAll([name, age],
-        Implies(NamedThing(name), Person(name, age))),
+        Implies(Person(name, age), NamedThing(name))),
  ForAll([subject, predicate, object, reciprocated],
-        Implies(Relationship(subject, predicate, object),
-                Likes(subject,
+        Implies(Likes(subject,
                       predicate,
                       object,
-                      reciprocated)))]
+                      reciprocated),
+                Relationship(subject, predicate, object)))]

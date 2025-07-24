@@ -49,12 +49,15 @@ class ProbLogCompiler(Compiler):
             ancestorof("p1a", "p1aa").
             query(ancestorof(Ancestor, Descendant)).
 
+        Note like most compilers, you don't need to use this directly. It is more common to use ProblogSolver, which takes care of
+        compiling the problog program, feeding it to problog, and parsing results.
+
         :param theory:
         :param syntax:
         :param kwargs:
         :return:
         """
-        prolog_config = PrologConfig(disjunctive_datalog=True, double_quote_strings=True, allow_nesting=False)
+        prolog_config = PrologConfig(disjunctive_datalog=True, double_quote_strings=True, allow_nesting=False, allow_ungrounded_vars_in_head=True)
         if not self._predicate_mappings:
             self._predicate_mappings = {}
         for pd in theory.predicate_definitions:

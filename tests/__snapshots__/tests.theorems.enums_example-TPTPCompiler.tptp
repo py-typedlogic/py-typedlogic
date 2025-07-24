@@ -1,0 +1,5 @@
+% Problem: tests.theorems.enums_example
+fof(axiom1, axiom, ! [P, Age, Age_category, Living_status] : ((person(P, Age, Living_status) & gt(Age, 44) & lt(Age, 65)) => personhasagecategory(P, 'MIDDLE_AGED'))).
+fof(axiom2, axiom, ! [P, Age, Age_category, Living_status] : ((person(P, Age, Living_status) & gt(Age, 64)) => personhasagecategory(P, 'OLD'))).
+fof(axiom3, axiom, ! [P, Age, Age_category, Living_status] : ((person(P, Age, Living_status) & lt(Age, 45)) => personhasagecategory(P, 'YOUNG'))).
+fof(axiom4, axiom, ! [P, Age, Living_status] : (person(P, Age, 'ALIVE') => isalive(P))).

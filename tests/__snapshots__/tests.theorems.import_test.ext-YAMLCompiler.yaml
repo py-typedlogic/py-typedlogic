@@ -49,7 +49,7 @@ sentence_groups:
       arguments:
       - type: Term
         arguments:
-        - NamedThing
+        - Person
         - type: Variable
           arguments:
           - name
@@ -58,13 +58,10 @@ sentence_groups:
           - age
       - type: Term
         arguments:
-        - Person
+        - NamedThing
         - type: Variable
           arguments:
           - name
-        - type: Variable
-          arguments:
-          - age
 - type: SentenceGroup
   name: Sentences
   sentences:
@@ -90,7 +87,7 @@ sentence_groups:
       arguments:
       - type: Term
         arguments:
-        - Relationship
+        - Likes
         - type: Variable
           arguments:
           - subject
@@ -105,7 +102,7 @@ sentence_groups:
           - reciprocated
       - type: Term
         arguments:
-        - Likes
+        - Relationship
         - type: Variable
           arguments:
           - subject
@@ -115,7 +112,4 @@ sentence_groups:
         - type: Variable
           arguments:
           - object
-        - type: Variable
-          arguments:
-          - reciprocated
 ground_terms: []

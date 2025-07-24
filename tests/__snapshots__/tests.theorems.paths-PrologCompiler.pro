@@ -1,6 +1,6 @@
 %% Predicate Definitions
-% Link(source: str, target: str)
 % Path(source: str, target: str)
+% Link(source: str, target: str)
 
 %% transitivity
 

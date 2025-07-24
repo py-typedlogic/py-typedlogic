@@ -1,0 +1,10 @@
+% Problem: tests.theorems.enums_example
+formulas(assumptions).
+    all p age age_category living_status (((Person(p, age, living_status) & gt(age, 44) & lt(age, 65)) -> PersonHasAgeCategory(p, s_MIDDLE_AGED))).
+    all p age age_category living_status (((Person(p, age, living_status) & gt(age, 64)) -> PersonHasAgeCategory(p, s_OLD))).
+    all p age age_category living_status (((Person(p, age, living_status) & lt(age, 45)) -> PersonHasAgeCategory(p, s_YOUNG))).
+    all p age living_status ((Person(p, age, s_ALIVE) -> IsAlive(p))).
+end_of_list.
+
+formulas(goals).
+end_of_list.

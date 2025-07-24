@@ -1,0 +1,7 @@
+.decl Person(name: symbol, age: number, living_status: symbol)
+.decl PersonHasAgeCategory(person: symbol, age_category: symbol)
+.decl IsAlive(person: symbol)
+PersonHasAgeCategory(p, "MIDDLE_AGED") :- Person(p, age, living_status), age > 44, age < 65.
+PersonHasAgeCategory(p, "OLD") :- Person(p, age, living_status), age > 64.
+PersonHasAgeCategory(p, "YOUNG") :- Person(p, age, living_status), age < 45.
+IsAlive(p) :- Person(p, age, "ALIVE").
