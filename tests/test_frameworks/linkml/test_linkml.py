@@ -185,7 +185,8 @@ def test_basic_types(typ: str, val: Any, valid: bool, use_subclass: bool, use_at
     """
     Test basic types
     """
-    schema = {
+    from typing import Dict, Any
+    schema: Dict[str, Any] = {
         "slots": {
             "s": {
                 "range": typ,
