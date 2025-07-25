@@ -28,12 +28,13 @@ Example:
 
 from io import StringIO, TextIOWrapper
 from pathlib import Path
+from types import ModuleType
 from typing import List, Optional, TextIO, Union
 
 try:
     import pandas as pd
 except ImportError:
-    pd = None
+    pd = None  # type: ignore
 
 from typedlogic import Term, Theory
 from typedlogic.integrations.frameworks.pandas.pandas_utils import dataframe_to_terms
@@ -196,7 +197,7 @@ class DataFrameParser(Parser):
             # Default to CSV reader for unknown extensions
             return pd.read_csv(path, **kwargs)
     
-    def validate_iter(self, source: Union[Path, str, TextIO], **kwargs):
+    def validate_iter(self, source: Union[Path, str, TextIO, ModuleType], **kwargs):
         """
         Validate the tabular data file.
         
@@ -210,6 +211,14 @@ class DataFrameParser(Parser):
             ValidationMessage objects for any validation issues
         """
         from typedlogic.parser import ValidationMessage
+        
+        # Handle ModuleType - not applicable for DataFrame parser
+        if isinstance(source, ModuleType):
+            yield ValidationMessage(
+                message="DataFrame parser does not support Python modules",
+                level="error"
+            )
+            return
         
         try:
             df = self._read_dataframe(source, **kwargs)

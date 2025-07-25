@@ -21,6 +21,7 @@ class JsonLogParser(Parser):
             source = source.open()
         if not isinstance(source, (str, TextIOWrapper)):
             raise ValueError(f"Invalid source type: {type(source)}")
+        source = str(source)
         obj = json.loads(source)
         theory = Theory()
         theory.extend(jsonlog_loader.generate_from_object(obj))
