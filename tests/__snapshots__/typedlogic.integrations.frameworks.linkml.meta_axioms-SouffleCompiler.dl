@@ -1,0 +1,19 @@
+.type Elementid = symbol
+.decl Attribute(cls: symbol, slot_expression: symbol)
+.decl ClassDefinition(id: symbol)
+.decl ClassSlot(cls: symbol, slot: symbol)
+.decl IsA(element: symbol, parent: symbol)
+.decl Mixin(element: symbol, parent: symbol)
+.decl SlotDefinition(id: symbol)
+.decl SlotUsage(cls: symbol, slot_expression: symbol)
+.decl InvalidClassSlot(cls: symbol, slot: symbol)
+.decl Disjoint(lhs: symbol, rhs: symbol)
+.decl SlotUsageOrAttribute(cls: symbol, slot_expression: symbol)
+.decl Parent(cls: symbol, parent: symbol)
+Disjoint(lhs, rhs) :- Parent(lhs, parent), Parent(rhs, parent), lhs != rhs.
+InvalidClassSlot(cls, slot) :- ClassDefinition(cls), SlotDefinition(slot), ! (ClassSlot(cls, slot)).
+Parent(cls, slot_expression) :- SlotUsage(cls, slot_expression).
+Parent(cls, slot_expression) :- Attribute(cls, slot_expression).
+Parent(element, parent) :- IsA(element, parent).
+Parent(element, parent) :- Mixin(element, parent).
+Parent(cls, slot) :- Parent(cls, parent), ClassSlot(parent, slot).

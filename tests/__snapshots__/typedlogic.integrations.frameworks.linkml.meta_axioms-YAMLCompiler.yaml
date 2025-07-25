@@ -1,0 +1,366 @@
+type: Theory
+name: typedlogic.integrations.frameworks.linkml.meta_axioms
+constants: {}
+type_definitions:
+  ElementID: str
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: Attribute
+  arguments:
+    cls: str
+    slot_expression: str
+  parents: []
+- type: PredicateDefinition
+  predicate: ClassDefinition
+  arguments:
+    id: str
+  parents: []
+- type: PredicateDefinition
+  predicate: ClassSlot
+  arguments:
+    cls: str
+    slot: str
+  parents: []
+- type: PredicateDefinition
+  predicate: IsA
+  arguments:
+    element: str
+    parent: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Mixin
+  arguments:
+    element: str
+    parent: str
+  parents: []
+- type: PredicateDefinition
+  predicate: SlotDefinition
+  arguments:
+    id: str
+  parents: []
+- type: PredicateDefinition
+  predicate: SlotUsage
+  arguments:
+    cls: str
+    slot_expression: str
+  parents: []
+- type: PredicateDefinition
+  predicate: InvalidClassSlot
+  arguments:
+    cls: str
+    slot: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Disjoint
+  arguments:
+    lhs: str
+    rhs: str
+  parents: []
+- type: PredicateDefinition
+  predicate: SlotUsageOrAttribute
+  arguments:
+    cls: str
+    slot_expression: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Parent
+  arguments:
+    cls: str
+    parent: str
+  parents: []
+sentence_groups:
+- type: SentenceGroup
+  name: disjoint
+  group_type: axiom
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - lhs
+        - ElementID
+      - type: Variable
+        arguments:
+        - rhs
+        - ElementID
+      - type: Variable
+        arguments:
+        - parent
+        - ElementID
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Parent
+          - type: Variable
+            arguments:
+            - lhs
+          - type: Variable
+            arguments:
+            - parent
+        - type: Term
+          arguments:
+          - Parent
+          - type: Variable
+            arguments:
+            - rhs
+          - type: Variable
+            arguments:
+            - parent
+        - type: Term
+          arguments:
+          - ne
+          - type: Variable
+            arguments:
+            - lhs
+          - type: Variable
+            arguments:
+            - rhs
+      - type: Term
+        arguments:
+        - Disjoint
+        - type: Variable
+          arguments:
+          - lhs
+        - type: Variable
+          arguments:
+          - rhs
+- type: SentenceGroup
+  name: invalid_class_slot
+  group_type: axiom
+  docstring: 'Closed world assumption rule for marking slots that are not allowed
+    for a class
+
+
+    :param cls:
+
+    :param slot:
+
+    :return:'
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - cls
+        - ElementID
+      - type: Variable
+        arguments:
+        - slot
+        - ElementID
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - ClassDefinition
+          - type: Variable
+            arguments:
+            - cls
+        - type: Term
+          arguments:
+          - SlotDefinition
+          - type: Variable
+            arguments:
+            - slot
+        - type: Not
+          arguments:
+          - type: Term
+            arguments:
+            - ClassSlot
+            - type: Variable
+              arguments:
+              - cls
+            - type: Variable
+              arguments:
+              - slot
+      - type: Term
+        arguments:
+        - InvalidClassSlot
+        - type: Variable
+          arguments:
+          - cls
+        - type: Variable
+          arguments:
+          - slot
+- type: SentenceGroup
+  name: slot_usage_or_attribute
+  group_type: axiom
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - cls
+        - ElementID
+      - type: Variable
+        arguments:
+        - slot_expression
+        - ElementID
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - SlotUsage
+        - type: Variable
+          arguments:
+          - cls
+        - type: Variable
+          arguments:
+          - slot_expression
+      - type: Term
+        arguments:
+        - Parent
+        - type: Variable
+          arguments:
+          - cls
+        - type: Variable
+          arguments:
+          - slot_expression
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - cls
+        - ElementID
+      - type: Variable
+        arguments:
+        - slot_expression
+        - ElementID
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - Attribute
+        - type: Variable
+          arguments:
+          - cls
+        - type: Variable
+          arguments:
+          - slot_expression
+      - type: Term
+        arguments:
+        - Parent
+        - type: Variable
+          arguments:
+          - cls
+        - type: Variable
+          arguments:
+          - slot_expression
+- type: SentenceGroup
+  name: parent
+  group_type: axiom
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - element
+        - ElementID
+      - type: Variable
+        arguments:
+        - parent
+        - ElementID
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - IsA
+        - type: Variable
+          arguments:
+          - element
+        - type: Variable
+          arguments:
+          - parent
+      - type: Term
+        arguments:
+        - Parent
+        - type: Variable
+          arguments:
+          - element
+        - type: Variable
+          arguments:
+          - parent
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - element
+        - ElementID
+      - type: Variable
+        arguments:
+        - parent
+        - ElementID
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - Mixin
+        - type: Variable
+          arguments:
+          - element
+        - type: Variable
+          arguments:
+          - parent
+      - type: Term
+        arguments:
+        - Parent
+        - type: Variable
+          arguments:
+          - element
+        - type: Variable
+          arguments:
+          - parent
+- type: SentenceGroup
+  name: class_slot
+  group_type: axiom
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - cls
+        - ElementID
+      - type: Variable
+        arguments:
+        - slot
+        - ElementID
+      - type: Variable
+        arguments:
+        - parent
+        - ElementID
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Parent
+          - type: Variable
+            arguments:
+            - cls
+          - type: Variable
+            arguments:
+            - parent
+        - type: Term
+          arguments:
+          - ClassSlot
+          - type: Variable
+            arguments:
+            - parent
+          - type: Variable
+            arguments:
+            - slot
+      - type: Term
+        arguments:
+        - Parent
+        - type: Variable
+          arguments:
+          - cls
+        - type: Variable
+          arguments:
+          - slot
+ground_terms: []

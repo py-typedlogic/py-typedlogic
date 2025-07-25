@@ -1,0 +1,11 @@
+% Problem: typedlogic.integrations.frameworks.linkml.meta
+formulas(assumptions).
+    all id ((ClassDefinition(id) -> Element(id))).
+    all id ((TypeDefinition(id) -> Element(id))).
+    all id ((EnumDefinition(id) -> Element(id))).
+    all id ((SlotDefinition(id) -> Element(id))).
+    all id ((SchemaDefinition(id) -> Element(id))).
+end_of_list.
+
+formulas(goals).
+end_of_list.

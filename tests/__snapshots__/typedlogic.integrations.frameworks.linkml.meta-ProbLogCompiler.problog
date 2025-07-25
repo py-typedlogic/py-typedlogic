@@ -1,0 +1,20 @@
+element(Id) :- classdefinition(Id).
+element(Id) :- typedefinition(Id).
+element(Id) :- enumdefinition(Id).
+element(Id) :- slotdefinition(Id).
+element(Id) :- schemadefinition(Id).
+query(element(Id)).
+query(classdefinition(Id)).
+query(typedefinition(Id)).
+query(enumdefinition(Id)).
+query(slotdefinition(Id)).
+query(schemadefinition(Id)).
+query(treeroot(Cls)).
+query(classslot(Cls, Slot)).
+query(identifier(Cls, Slot_expression)).
+query(multivalued(Slot_expression)).
+query(required(Slot_expression)).
+query(isa(Element, Parent)).
+query(mixin(Element, Parent)).
+query(attribute(Cls, Slot_expression)).
+query(slotusage(Cls, Slot_expression)).

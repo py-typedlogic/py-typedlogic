@@ -1,0 +1,18 @@
+disjoint(Lhs, Rhs) :- parent(Lhs, Parent), parent(Rhs, Parent), Lhs != Rhs.
+classslot(Cls, Slot); invalidclassslot(Cls, Slot) :- classdefinition(Cls), slotdefinition(Slot).
+parent(Cls, Slot_expression) :- slotusage(Cls, Slot_expression).
+parent(Cls, Slot_expression) :- attribute(Cls, Slot_expression).
+parent(Element, Parent) :- isa(Element, Parent).
+parent(Element, Parent) :- mixin(Element, Parent).
+parent(Cls, Slot) :- parent(Cls, Parent), classslot(Parent, Slot).
+query(attribute(Cls, Slot_expression)).
+query(classdefinition(Id)).
+query(classslot(Cls, Slot)).
+query(isa(Element, Parent)).
+query(mixin(Element, Parent)).
+query(slotdefinition(Id)).
+query(slotusage(Cls, Slot_expression)).
+query(invalidclassslot(Cls, Slot)).
+query(disjoint(Lhs, Rhs)).
+query(slotusageorattribute(Cls, Slot_expression)).
+query(parent(Cls, Parent)).

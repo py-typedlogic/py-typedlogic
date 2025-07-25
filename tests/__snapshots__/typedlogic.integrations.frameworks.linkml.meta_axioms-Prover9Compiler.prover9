@@ -1,0 +1,13 @@
+% Problem: typedlogic.integrations.frameworks.linkml.meta_axioms
+formulas(assumptions).
+    all lhs rhs parent (((Parent(lhs, parent) & Parent(rhs, parent) & ne(lhs, rhs)) -> Disjoint(lhs, rhs))).
+    all cls slot (((ClassDefinition(cls) & SlotDefinition(slot) & - ( ClassSlot(cls, slot) )) -> InvalidClassSlot(cls, slot))).
+    all cls slot_expression ((SlotUsage(cls, slot_expression) -> Parent(cls, slot_expression))).
+    all cls slot_expression ((Attribute(cls, slot_expression) -> Parent(cls, slot_expression))).
+    all element parent ((IsA(element, parent) -> Parent(element, parent))).
+    all element parent ((Mixin(element, parent) -> Parent(element, parent))).
+    all cls slot parent (((Parent(cls, parent) & ClassSlot(parent, slot)) -> Parent(cls, slot))).
+end_of_list.
+
+formulas(goals).
+end_of_list.
