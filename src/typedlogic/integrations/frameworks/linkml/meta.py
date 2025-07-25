@@ -100,12 +100,18 @@ class Mixin(Fact):
 
 @dataclass(frozen=True)
 class Attribute(Fact):
+    """
+    A relationship between a class and an anonymous slot expression, representing a linkml attribute.
+    """
     cls: ElementID
     slot_expression: ElementID
 
 
 @dataclass(frozen=True)
 class SlotUsage(Fact):
+    """
+    A relationship between a class and a slot expression, representing a linkml slot_usage constraint.
+    """
     # instead make specific?
     cls: ElementID
     slot_expression: ElementID

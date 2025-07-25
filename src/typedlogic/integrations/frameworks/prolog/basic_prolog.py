@@ -62,6 +62,22 @@ class Disjunction:
 
 
 @dataclass
+class Negation:
+    """
+    Represents a negation in Prolog (e.g., \+ atom).
+
+    >>> neg = Negation(Atom("foo", ["bar"]))
+    >>> str(neg)
+    '\\\+ foo(bar)'
+    """
+
+    atom: Atom
+
+    def __str__(self):
+        return f"\\+ {self.atom}"
+
+
+@dataclass
 class Rule:
     """
     Represents a Prolog rule with a head and a disjunctive body.
@@ -100,6 +116,21 @@ class Query:
     def __str__(self):
         return f"?- {self.body}"
 
+@dataclass
+class Comment:
+    """
+    Represents a comment in Prolog code.
+
+    >>> comment = Comment("This is a comment")
+    >>> str(comment)
+    '% This is a comment'
+    """
+
+    text: str
+
+    def __str__(self):
+        return f"% {self.text}"
+
 
 class BasicPrologParser:
     """
@@ -108,6 +139,9 @@ class BasicPrologParser:
     Basic fact:
     >>> parser = BasicPrologParser()
     >>> parser.parse("parent(john, mary).")
+    Rule(head=Atom(predicate='parent', terms=['john', 'mary']), body=None)
+
+    >>> parser.parse("parent('john', 'mary').")
     Rule(head=Atom(predicate='parent', terms=['john', 'mary']), body=None)
 
     Simple disjunctive rule:
@@ -125,6 +159,11 @@ class BasicPrologParser:
     Query with conjunction:
     >>> print(parser.parse("?- parent(X, Y), ancestor(Y, Z)."))
     ?- (parent(X, Y), ancestor(Y, Z))
+
+    Nesting:
+    >>> print(parser.parse("a :- (((b)))."))
+    a :- b
+
     """
 
     def __init__(self):
@@ -136,6 +175,7 @@ class BasicPrologParser:
             ("RP", r"\)"),
             ("COMMA", r","),
             ("SEMI", r";"),
+            ("NOT", r"\\\+"),
             ("DOT", r"\."),
             ("IF", r":-"),
             ("QUERY", r"\?-"),
@@ -143,6 +183,7 @@ class BasicPrologParser:
         ]
         self.token_regex = "|".join(f"(?P<{name}>{pattern})" for name, pattern in self.token_patterns)
         self.token_re = re.compile(self.token_regex)
+        self.quote_chars = ["'", '"']
 
     def tokenize(self, text: str) -> List[tuple]:
         """
@@ -151,13 +192,44 @@ class BasicPrologParser:
         >>> parser = BasicPrologParser()
         >>> parser.tokenize("a(X) :- b(X); (c(X), d(X)).")
         [('ATOM', 'a'), ('LP', '('), ('VAR', 'X'), ('RP', ')'), ('IF', ':-'), ('ATOM', 'b'), ('LP', '('), ('VAR', 'X'), ('RP', ')'), ('SEMI', ';'), ('LP', '('), ('ATOM', 'c'), ('LP', '('), ('VAR', 'X'), ('RP', ')'), ('COMMA', ','), ('ATOM', 'd'), ('LP', '('), ('VAR', 'X'), ('RP', ')'), ('RP', ')'), ('DOT', '.')]
+
+        >>> parser.tokenize("foo('abc(def)') :- bar('xyz').")
+        [('ATOM', 'foo'), ('LP', '('), ('ATOM', 'abc(def)'), ('RP', ')'), ('IF', ':-'), ('ATOM', 'bar'), ('LP', '('), ('ATOM', 'xyz'), ('RP', ')'), ('DOT', '.')]
+
+        >>> parser.tokenize("\\+ foo.")
+        [('NOT', '\\\+'), ('ATOM', 'foo'), ('DOT', '.')]
+
+        >>> parser.tokenize("a. b.c")
+        [('ATOM', 'a'), ('DOT', '.'), ('ATOM', 'b'), ('DOT', '.'), ('ATOM', 'c')]
+
+        >>> parser.tokenize("% foo(x)")
+        [('COMMENT', '% foo(x)')]
         """
         pos = 0
         tokens = []
         while pos < len(text):
+            if text[pos:pos+1] == "%":
+                # Skip comments
+                end_comment = text.find("\n", pos)
+                if end_comment == -1:
+                    end_comment = len(text)
+                tokens.append(("COMMENT", text[pos:end_comment]))
+                pos = end_comment + 1
+                continue
+            if text[pos:pos+1] in self.quote_chars:
+                # Handle quoted strings
+                quote_char = text[pos]
+                end_quote = text.find(quote_char, pos + 1)
+                if end_quote == -1:
+                    raise SyntaxError(f"Unmatched quote at position {pos}")
+                token_value = text[pos+1:end_quote]
+                tokens.append(("ATOM", token_value))
+                pos = end_quote + 1
+                continue
+
             match = self.token_re.match(text, pos)
             if match is None:
-                raise SyntaxError(f"Invalid token at position {pos}")
+                raise SyntaxError(f"Invalid token at position {pos}: {text[pos:pos+100]}")
 
             token_type = match.lastgroup
             token_value = match.group()
@@ -181,6 +253,7 @@ class BasicPrologParser:
 
     def parse_atom(self, tokens: List[tuple], pos: int) -> tuple[Atom, int]:
         """Parse a predicate with its arguments."""
+
         if pos >= len(tokens):
             raise SyntaxError("Unexpected end of input while parsing atom")
 
@@ -303,6 +376,10 @@ class BasicPrologParser:
         tokens = self.tokenize(text)
         if not tokens:
             raise SyntaxError("Empty input")
+        return self.parse_tokens(tokens)
+
+    def parse_tokens(self, tokens: List[tuple]) -> Union[Rule, Query]:
+        """ Parse a list of tokens into a Rule or Query."""
 
         result: Union[Rule, Query]
         if tokens[0][0] == "QUERY":
@@ -311,6 +388,47 @@ class BasicPrologParser:
             result, pos = self.parse_rule(tokens, 0)
 
         if pos < len(tokens):
-            raise SyntaxError("Unexpected tokens after parsing")
+            raise SyntaxError(f"Unexpected tokens after parsing: {tokens[pos:]}")
 
         return result
+
+    def parse_program(self, text: str) -> List[Union[Rule, Query, Comment]]:
+        """
+        Parse a Prolog program consisting of multiple rules and queries.
+
+        Example:
+
+            >>> parser = BasicPrologParser()
+            >>> parser.parse_program("parent(john, mary). ancestor(X, Y) :- parent(X, Y). ?- parent(X, Y).")
+            [Rule(head=Atom(predicate='parent', terms=['john', 'mary']), body=None),
+             Rule(head=Atom(predicate='ancestor', terms=['X', 'Y']),
+             body=Disjunction(conjunctions=[Conjunction(atoms=[Atom(predicate='parent', terms=['X', 'Y'])])])),
+             Query(body=Conjunction(atoms=[Atom(predicate='parent', terms=['X', 'Y'])]))]
+
+        Empty programs are allowed:
+
+            >>> parser.parse_program("")
+            []
+
+        :param text: The Prolog source code as a string.
+        :return: A list of parsed rules and queries.
+        """
+        tokens = self.tokenize(text)
+        clauses: List[Union[Rule, Query, Comment]] = []
+        next_tokens = []
+        while tokens:
+            next_token = tokens[0]
+            tokens = tokens[1:]
+            next_tokens.append(next_token)
+            if next_token[0] == 'COMMENT':
+                clauses.append(Comment(next_tokens[0][1]))
+                next_tokens = []
+            elif next_token[0] == 'DOT':
+                if next_tokens:
+                    clauses.append(self.parse_tokens(next_tokens))
+                    next_tokens = []
+        if next_tokens:
+            raise SyntaxError(f"Incomplete clause at end of input: {next_tokens}")
+        return clauses
+
+

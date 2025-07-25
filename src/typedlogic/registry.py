@@ -19,6 +19,10 @@ Extendable = Union[Compiler, Parser, Solver]
 
 @dataclass
 class Registry:
+    """
+    Class registry for plugins.
+
+    """
     implementation_classes: Dict[Type, Dict[str, Type]] = field(default_factory=dict)
 
     def register(self, name: str, category: Type, impl_class: Type[Extendable]):
@@ -114,3 +118,53 @@ def get_parser(handle: str, **kwargs) -> Parser:
     <class 'typedlogic.parsers.pyparser.python_parser.PythonParser'>
     """
     return registry.create_instance(Parser, handle, **kwargs)
+
+
+def all_parser_classes(**kwargs) -> dict[str, Type]:
+    """
+    Get all parser classes
+
+    >>> p_dict = all_parser_classes()
+    >>> assert 'yaml' in p_dict
+    >>> p_dict['yaml']
+    <class 'typedlogic.parsers.yaml_parser.YAMLParser'>
+
+    :param kwargs:
+    :return:
+    """
+    p_dict = registry.implementation_classes[Parser]
+    return p_dict
+
+
+def all_compiler_classes(**kwargs) -> dict[str, Type]:
+    """
+    Get all compiler classes
+
+    >>> p_dict = all_compiler_classes()
+    >>> assert 'yaml' in p_dict
+    >>> p_dict['yaml']
+    <class 'typedlogic.compilers.yaml_compiler.YAMLCompiler'>
+
+    :param kwargs:
+    :return:
+    """
+    p_dict = registry.implementation_classes[Compiler]
+    return p_dict
+
+
+def all_solver_classes(**kwargs) -> dict[str, Type]:
+    """
+    Get all solver classes
+
+    >>> p_dict = all_solver_classes()
+    >>> assert 'clingo' in p_dict
+    >>> p_dict['clingo']
+    <class 'typedlogic.integrations.solvers.clingo.clingo_solver.ClingoSolver'>
+
+    :param kwargs:
+    :return:
+    """
+    p_dict = registry.implementation_classes[Solver]
+    return p_dict
+
+

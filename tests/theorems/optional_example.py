@@ -9,6 +9,17 @@ Person = str
 
 @dataclass
 class FriendOf(FactMixin):
+    """
+    Predicate linking two friends.
+
+    Demonstrates the use of optional fields
+
+        >>> fact1 = FriendOf("x", "y", 2020, 2021)
+        >>> fact2 = FriendOf("x", "y")
+
+    fact1 entails fact2
+
+    """
     subject: Person
     object: Person
     start_year: Optional[int] = None

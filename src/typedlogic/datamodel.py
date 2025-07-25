@@ -929,6 +929,13 @@ class CardinalityConstraint(Term):
     """
     A constraint on the cardinality of a set of terms.
 
+    Example:
+
+        >>> h = Variable("h")
+        >>> f = Variable("f")
+        >>> hp = Term("has_part", h, f)
+        >>> s = Forall([h], CardinalityConstraint(Term("has_part", h, f), Term("has_part", h, f), 5, 5))
+
     """
 
     def __init__(self, template: Sentence, conditions: Sentence, minimum_number: Optional[int] = None, maximum_number: Optional[int] = None):
