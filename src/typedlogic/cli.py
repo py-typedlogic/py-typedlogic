@@ -304,8 +304,11 @@ def solve(
     if solution.satisfiable is False:
         click.echo("UNSATISFIABLE: The theory has no valid models.")
         result += "No models exist.\n"
-    elif solution.satisfiable is True:
-        click.echo("SATISFIABLE: The theory has valid models.")
+    else:
+        if solution.satisfiable is True:
+            click.echo("SATISFIABLE: The theory has valid models.")
+        else:
+            click.echo("UNKNOWN: Satisfiability could not be determined.")
         if not check_only:
             click.echo("Enumerating all models...")
             model_count = 0
@@ -322,9 +325,7 @@ def solve(
                 result += "No models generated (solver may not support model enumeration).\n"
             else:
                 result += f"\nTotal models found: {model_count}\n"
-    else:
-        click.echo("UNKNOWN: Satisfiability could not be determined.")
-        result += "Satisfiability unknown.\n"
+
 
     # Output results
     if output_file:

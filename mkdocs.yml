@@ -60,6 +60,7 @@ nav:
      - 2. Using the Python Data Model: tutorial/02-using-python-data-model
      - 3. Probabilistic Logic: tutorial/03-probabilistic-logic
      - 4. OWL-DL: tutorial/04-owldl
+     - 5. Command Line: tutorial/05-cli
   - Concepts:
       - Core concepts: concepts/index.md
       - Data Model: concepts/datamodel.md
