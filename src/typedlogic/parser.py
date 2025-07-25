@@ -39,6 +39,13 @@ class Parser(ABC):
     auto_validate: Optional[bool] = None
 
     def parse_file(self, source: Union[Path, str, TextIO], **kwargs) -> Theory:
+        """
+        Parse a file or a file-like object and return a Theory object.
+
+        :param source:
+        :param kwargs:
+        :return:
+        """
         if isinstance(source, str):
             source = Path(source)
         return self.parse(source, **kwargs)

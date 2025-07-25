@@ -1,0 +1,23 @@
+.type Elementid = symbol
+.type Classdefinitionid = symbol
+.type Slotdefinitionid = symbol
+.decl Element(id: symbol)
+.decl ClassDefinition(id: symbol)
+.decl TypeDefinition(id: symbol)
+.decl EnumDefinition(id: symbol)
+.decl SlotDefinition(id: symbol)
+.decl SchemaDefinition(id: symbol)
+.decl TreeRoot(cls: symbol)
+.decl ClassSlot(cls: symbol, slot: symbol)
+.decl Identifier(cls: symbol, slot_expression: symbol)
+.decl Multivalued(slot_expression: symbol)
+.decl Required(slot_expression: symbol)
+.decl IsA(element: symbol, parent: symbol)
+.decl Mixin(element: symbol, parent: symbol)
+.decl Attribute(cls: symbol, slot_expression: symbol)
+.decl SlotUsage(cls: symbol, slot_expression: symbol)
+Element(id) :- ClassDefinition(id).
+Element(id) :- TypeDefinition(id).
+Element(id) :- EnumDefinition(id).
+Element(id) :- SlotDefinition(id).
+Element(id) :- SchemaDefinition(id).

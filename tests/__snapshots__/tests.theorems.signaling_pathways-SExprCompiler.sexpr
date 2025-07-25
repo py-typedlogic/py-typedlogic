@@ -184,7 +184,339 @@
           ()) 
         (python_class null)))) 
   (sentence_groups 
-    ()) 
+    ((SentenceGroup 
+        (name "receptor_activation_by_ligand") 
+        (group_type "axiom") 
+        (docstring "When a ligand binds to its receptor, the receptor becomes activated") 
+        (sentences 
+          ((Forall 
+              ((Variable "ligand_name" "str") 
+                (Variable "receptor_name" "str")) 
+              (Implies 
+                (And 
+                  (Ligand 
+                    (Variable "ligand_name")) 
+                  (Receptor 
+                    (Protein 
+                      (Variable "receptor_name"))) 
+                  (LigandReceptorBinding 
+                    (Ligand 
+                      (Variable "ligand_name")) 
+                    (Receptor 
+                      (Protein 
+                        (Variable "receptor_name"))) true)) 
+                (ModifiedProtein 
+                  (Protein 
+                    (Variable "receptor_name")) "PHOSPHORYLATION" null true))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "rtk_activates_grb2_sos") 
+        (group_type "axiom") 
+        (docstring "Activated receptor tyrosine kinases (RTKs) recruit GRB2-SOS complex") 
+        (sentences 
+          ((Forall 
+              ((Variable "receptor_name" "str")) 
+              (Implies 
+                (ModifiedProtein 
+                  (Protein 
+                    (Variable "receptor_name")) "PHOSPHORYLATION" null true) 
+                (And 
+                  (Complex "GRB2-SOS") 
+                  (Activation 
+                    (Protein 
+                      (Variable "receptor_name")) 
+                    (Protein "SOS"))))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "sos_activates_ras") 
+        (group_type "axiom") 
+        (docstring "SOS is a GEF that activates Ras by promoting GDP/GTP exchange") 
+        (sentences 
+          ((Forall 
+              ((Variable "sos_active" "bool")) 
+              (Implies 
+                (And 
+                  (Protein "SOS") 
+                  (Protein "RAS") 
+                  (GEF 
+                    (Protein "SOS") 
+                    (Protein "RAS")) 
+                  (Activation 
+                    (Protein "SOS") 
+                    (Protein "RAS"))) 
+                (ModifiedProtein 
+                  (Protein "RAS") "GTP_BOUND" null true))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "ras_activates_raf") 
+        (group_type "axiom") 
+        (docstring "Active (GTP-bound) Ras activates Raf kinase") 
+        (sentences 
+          ((Forall 
+              ((Variable "ras_active" "bool")) 
+              (Implies 
+                (ModifiedProtein 
+                  (Protein "RAS") "GTP_BOUND" null true) 
+                (And 
+                  (ModifiedProtein 
+                    (Protein "RAF") "PHOSPHORYLATION" "S338" true) 
+                  (Activation 
+                    (Protein "RAS") 
+                    (Protein "RAF"))))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "raf_phosphorylates_mek") 
+        (group_type "axiom") 
+        (docstring "Active Raf phosphorylates MEK at specific serine residues") 
+        (sentences 
+          ((Forall 
+              ((Variable "raf_name" "str") 
+                (Variable "mek_name" "str")) 
+              (Implies 
+                (And 
+                  (ModifiedProtein 
+                    (Protein 
+                      (Variable "raf_name")) "PHOSPHORYLATION" null true) 
+                  (Kinase 
+                    (Protein 
+                      (Variable "raf_name"))) 
+                  (Protein 
+                    (Variable "mek_name"))) 
+                (And 
+                  (PhosphorylationEvent 
+                    (Protein 
+                      (Variable "raf_name")) 
+                    (Protein 
+                      (Variable "mek_name")) "S218") 
+                  (PhosphorylationEvent 
+                    (Protein 
+                      (Variable "raf_name")) 
+                    (Protein 
+                      (Variable "mek_name")) "S222") 
+                  (ModifiedProtein 
+                    (Protein 
+                      (Variable "mek_name")) "PHOSPHORYLATION" "S218" true) 
+                  (ModifiedProtein 
+                    (Protein 
+                      (Variable "mek_name")) "PHOSPHORYLATION" "S222" true) 
+                  (Activation 
+                    (Protein 
+                      (Variable "raf_name")) 
+                    (Protein 
+                      (Variable "mek_name")))))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "mek_phosphorylates_erk") 
+        (group_type "axiom") 
+        (docstring "Active MEK phosphorylates ERK at threonine and tyrosine residues") 
+        (sentences 
+          ((Forall 
+              ((Variable "mek_name" "str") 
+                (Variable "erk_name" "str")) 
+              (Implies 
+                (And 
+                  (And 
+                    (ModifiedProtein 
+                      (Protein 
+                        (Variable "mek_name")) "PHOSPHORYLATION" "S218" true) 
+                    (ModifiedProtein 
+                      (Protein 
+                        (Variable "mek_name")) "PHOSPHORYLATION" "S222" true)) 
+                  (Kinase 
+                    (Protein 
+                      (Variable "mek_name"))) 
+                  (Protein 
+                    (Variable "erk_name"))) 
+                (And 
+                  (PhosphorylationEvent 
+                    (Protein 
+                      (Variable "mek_name")) 
+                    (Protein 
+                      (Variable "erk_name")) "T185") 
+                  (PhosphorylationEvent 
+                    (Protein 
+                      (Variable "mek_name")) 
+                    (Protein 
+                      (Variable "erk_name")) "Y187") 
+                  (ModifiedProtein 
+                    (Protein 
+                      (Variable "erk_name")) "PHOSPHORYLATION" "T185" true) 
+                  (ModifiedProtein 
+                    (Protein 
+                      (Variable "erk_name")) "PHOSPHORYLATION" "Y187" true) 
+                  (Activation 
+                    (Protein 
+                      (Variable "mek_name")) 
+                    (Protein 
+                      (Variable "erk_name")))))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "erk_nuclear_translocation") 
+        (group_type "axiom") 
+        (docstring "Activated ERK translocates from cytoplasm to nucleus") 
+        (sentences 
+          ((Forall 
+              ((Variable "erk_name" "str")) 
+              (Implies 
+                (And 
+                  (ModifiedProtein 
+                    (Protein 
+                      (Variable "erk_name")) "PHOSPHORYLATION" "T185" true) 
+                  (ModifiedProtein 
+                    (Protein 
+                      (Variable "erk_name")) "PHOSPHORYLATION" "Y187" true) 
+                  (ProteinLocation 
+                    (Protein 
+                      (Variable "erk_name")) 
+                    (Compartment "cytoplasm"))) 
+                (And 
+                  (Translocation 
+                    (Protein 
+                      (Variable "erk_name")) "cytoplasm" "nucleus") 
+                  (ProteinLocation 
+                    (Protein 
+                      (Variable "erk_name")) 
+                    (Compartment "nucleus"))))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "gap_inactivates_ras") 
+        (group_type "axiom") 
+        (docstring "GAPs accelerate the GTPase activity of Ras, converting it to inactive GDP-bound form") 
+        (sentences 
+          ((Forall 
+              ((Variable "gap_name" "str")) 
+              (Implies 
+                (And 
+                  (ModifiedProtein 
+                    (Protein "RAS") "GTP_BOUND" null true) 
+                  (GAP 
+                    (Protein 
+                      (Variable "gap_name")) 
+                    (Protein "RAS"))) 
+                (Not 
+                  (ModifiedProtein 
+                    (Protein "RAS") "GTP_BOUND" null true)))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "phosphatase_inactivates_protein") 
+        (group_type "axiom") 
+        (docstring "Phosphatases remove phosphate groups from proteins, often inactivating them") 
+        (sentences 
+          ((Forall 
+              ((Variable "phosphatase_name" "str") 
+                (Variable "protein_name" "str") 
+                (Variable "site" "str")) 
+              (Implies 
+                (And 
+                  (ModifiedProtein 
+                    (Protein 
+                      (Variable "protein_name")) "PHOSPHORYLATION" 
+                    (Variable "site") true) 
+                  (Phosphatase 
+                    (Protein 
+                      (Variable "phosphatase_name")))) 
+                (Not 
+                  (ModifiedProtein 
+                    (Protein 
+                      (Variable "protein_name")) "PHOSPHORYLATION" 
+                    (Variable "site") true)))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "pi3k_pathway_crosstalk") 
+        (group_type "axiom") 
+        (docstring "Activated RTKs can also initiate the PI3K-AKT pathway") 
+        (sentences 
+          ((Forall 
+              ((Variable "receptor_name" "str")) 
+              (Implies 
+                (ModifiedProtein 
+                  (Protein 
+                    (Variable "receptor_name")) "PHOSPHORYLATION" null true) 
+                (And 
+                  (Activation 
+                    (Protein 
+                      (Variable "receptor_name")) 
+                    (Protein "PI3K")) 
+                  (ModifiedProtein 
+                    (Protein "PI3K") "PHOSPHORYLATION" null true)))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "pi3k_activates_akt") 
+        (group_type "axiom") 
+        (docstring "Active PI3K leads to PIP3 production, which activates AKT") 
+        (sentences 
+          ((Forall 
+              ((Variable "pi3k_active" "bool")) 
+              (Implies 
+                (ModifiedProtein 
+                  (Protein "PI3K") "PHOSPHORYLATION" null true) 
+                (And 
+                  (Activation 
+                    (Protein "PI3K") 
+                    (Protein "AKT")) 
+                  (ModifiedProtein 
+                    (Protein "AKT") "PHOSPHORYLATION" "T308" true)))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "erk_negative_feedback") 
+        (group_type "axiom") 
+        (docstring "Active ERK can phosphorylate SOS, creating a negative feedback loop") 
+        (sentences 
+          ((Forall 
+              ((Variable "erk_name" "str")) 
+              (Implies 
+                (And 
+                  (ModifiedProtein 
+                    (Protein 
+                      (Variable "erk_name")) "PHOSPHORYLATION" "T185" true) 
+                  (ModifiedProtein 
+                    (Protein 
+                      (Variable "erk_name")) "PHOSPHORYLATION" "Y187" true)) 
+                (And 
+                  (PhosphorylationEvent 
+                    (Protein 
+                      (Variable "erk_name")) 
+                    (Protein "SOS") "S1132") 
+                  (ModifiedProtein 
+                    (Protein "SOS") "PHOSPHORYLATION" "S1132" false)))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "erk_activates_transcription_factors") 
+        (group_type "axiom") 
+        (docstring "Activated ERK in the nucleus phosphorylates various transcription factors") 
+        (sentences 
+          ((Forall 
+              ((Variable "erk_name" "str") 
+                (Variable "tf_name" "str")) 
+              (Implies 
+                (And 
+                  (ModifiedProtein 
+                    (Protein 
+                      (Variable "erk_name")) "PHOSPHORYLATION" "T185" true) 
+                  (ModifiedProtein 
+                    (Protein 
+                      (Variable "erk_name")) "PHOSPHORYLATION" "Y187" true) 
+                  (ProteinLocation 
+                    (Protein 
+                      (Variable "erk_name")) 
+                    (Compartment "nucleus")) 
+                  (Protein 
+                    (Variable "tf_name"))) 
+                (And 
+                  (PhosphorylationEvent 
+                    (Protein 
+                      (Variable "erk_name")) 
+                    (Protein 
+                      (Variable "tf_name")) "S") 
+                  (ModifiedProtein 
+                    (Protein 
+                      (Variable "tf_name")) "PHOSPHORYLATION" "S" true) 
+                  (Activation 
+                    (Protein 
+                      (Variable "erk_name")) 
+                    (Protein 
+                      (Variable "tf_name")))))))) 
+        (_annotations null)))) 
   (ground_terms 
     ()) 
   (_annotations null) 

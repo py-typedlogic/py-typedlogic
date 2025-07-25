@@ -1,0 +1,6 @@
+% Problem: typedlogic.integrations.frameworks.linkml.meta
+fof(axiom1, axiom, ! [Id] : (classdefinition(Id) => element(Id))).
+fof(axiom2, axiom, ! [Id] : (typedefinition(Id) => element(Id))).
+fof(axiom3, axiom, ! [Id] : (enumdefinition(Id) => element(Id))).
+fof(axiom4, axiom, ! [Id] : (slotdefinition(Id) => element(Id))).
+fof(axiom5, axiom, ! [Id] : (schemadefinition(Id) => element(Id))).

@@ -23,20 +23,24 @@ class PrologParser(Parser):
         :return:
         """
         bpp = BasicPrologParser()
-        if isinstance(source, (Path, str)):
+        if isinstance(source, Path):
             with open(source, "r") as f:
                 source = f.read()
+        elif isinstance(source, str):
+            pass
         else:
             source = source.read()
-        clauses = source.split(".")
+        clauses = bpp.parse_program(source)
         theory = Theory()
         for clause in clauses:
-            rule = bpp.parse(clause + ".")
-            if isinstance(rule, pl.Rule):
-                sentence = self.rule_to_sentence(rule)
+            if isinstance(clause, pl.Rule):
+                sentence = self.rule_to_sentence(clause)
+                theory.add(sentence)
+            elif isinstance(clause, pl.Comment):
+                pass
             else:
-                raise ValueError(f"Expected Rule, got {rule}")
-            theory.add(sentence)
+                raise ValueError(f"Expected Rule, got {clause}")
+
         return theory
 
     def rule_to_sentence(self, rule: pl.Rule) -> Sentence:

@@ -1,0 +1,211 @@
+type: Theory
+name: typedlogic.integrations.frameworks.linkml.meta
+constants: {}
+type_definitions:
+  ElementID: str
+  ClassDefinitionID: str
+  SlotDefinitionID: str
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: Element
+  arguments:
+    id: str
+  parents: []
+- type: PredicateDefinition
+  predicate: ClassDefinition
+  arguments:
+    id: str
+  parents:
+  - Element
+- type: PredicateDefinition
+  predicate: TypeDefinition
+  arguments:
+    id: str
+  parents:
+  - Element
+- type: PredicateDefinition
+  predicate: EnumDefinition
+  arguments:
+    id: str
+  parents:
+  - Element
+- type: PredicateDefinition
+  predicate: SlotDefinition
+  arguments:
+    id: str
+  parents:
+  - Element
+- type: PredicateDefinition
+  predicate: SchemaDefinition
+  arguments:
+    id: str
+  parents:
+  - Element
+- type: PredicateDefinition
+  predicate: TreeRoot
+  arguments:
+    cls: str
+  parents: []
+- type: PredicateDefinition
+  predicate: ClassSlot
+  arguments:
+    cls: str
+    slot: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Identifier
+  arguments:
+    cls: str
+    slot_expression: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Multivalued
+  arguments:
+    slot_expression: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Required
+  arguments:
+    slot_expression: str
+  parents: []
+- type: PredicateDefinition
+  predicate: IsA
+  arguments:
+    element: str
+    parent: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Mixin
+  arguments:
+    element: str
+    parent: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Attribute
+  arguments:
+    cls: str
+    slot_expression: str
+  parents: []
+- type: PredicateDefinition
+  predicate: SlotUsage
+  arguments:
+    cls: str
+    slot_expression: str
+  parents: []
+sentence_groups:
+- type: SentenceGroup
+  name: Sentences
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - id
+        - str
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - ClassDefinition
+        - type: Variable
+          arguments:
+          - id
+      - type: Term
+        arguments:
+        - Element
+        - type: Variable
+          arguments:
+          - id
+- type: SentenceGroup
+  name: Sentences
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - id
+        - str
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - TypeDefinition
+        - type: Variable
+          arguments:
+          - id
+      - type: Term
+        arguments:
+        - Element
+        - type: Variable
+          arguments:
+          - id
+- type: SentenceGroup
+  name: Sentences
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - id
+        - str
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - EnumDefinition
+        - type: Variable
+          arguments:
+          - id
+      - type: Term
+        arguments:
+        - Element
+        - type: Variable
+          arguments:
+          - id
+- type: SentenceGroup
+  name: Sentences
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - id
+        - str
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - SlotDefinition
+        - type: Variable
+          arguments:
+          - id
+      - type: Term
+        arguments:
+        - Element
+        - type: Variable
+          arguments:
+          - id
+- type: SentenceGroup
+  name: Sentences
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - id
+        - str
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - SchemaDefinition
+        - type: Variable
+          arguments:
+          - id
+      - type: Term
+        arguments:
+        - Element
+        - type: Variable
+          arguments:
+          - id
+ground_terms: []

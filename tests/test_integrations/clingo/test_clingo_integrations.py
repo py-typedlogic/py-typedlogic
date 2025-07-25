@@ -148,18 +148,20 @@ def test_constraints5():
     assert not solver.check().satisfiable
 
 
-@pytest.mark.parametrize("min", [0, None])
-def test_cardinality(min: Optional[int]):
+@pytest.mark.parametrize("min_count", [0, None])
+def test_cardinality_zero(min_count: int):
     theory = Theory()
     x = Variable("X")
     y = Variable("Y")
     thing = Term("Thing", x)
     hp = Term("HasPart", x, y)
     wing = Term("Wing", y)
+    # note that min_count is implicitly zero, so it should not matter if
+    # we explicitly set it or leave it as null
     rule = Implies(
             And(
             thing,
-                CardinalityConstraint(hp, wing, min, 0)
+                CardinalityConstraint(hp, wing, min_count, 0)
             ),
             #Term("CardinalityConstraint", hp, wing, 0, 0),
             Term("Wingless", x)
@@ -190,7 +192,18 @@ def test_cardinality(min: Optional[int]):
                 n += 1
     assert n == 1, f"Expected 1 Wingless, got {n}"
 
-def test_cardinality2():
+def test_cardinality_existence_check():
+    """
+    Alternate way of doing an existence check
+
+    fly1 has no asserted wings
+    fly2 has one asserted wing
+
+    if fly2 is asserted to have a wing, then consistent
+    if fly1 is asserted not to have a wing, then inconsistent
+
+    :return:
+    """
     theory = Theory()
     x = Variable("X")
     y = Variable("Y")
@@ -230,3 +243,42 @@ def test_cardinality2():
     solver.add(Term("ExpectedHasPart", "fly1"))
     assert not solver.check().satisfiable
 
+@pytest.mark.parametrize("actual_count", [0, 1, 2, 3, 4])
+@pytest.mark.parametrize("max_count", [None, 0, 1, 2, 3])
+@pytest.mark.parametrize("min_count", [None, 0, 1, 2, 3])
+def test_cardinality_nary(min_count: int, max_count: int, actual_count: int):
+    pytest.skip("TODO")
+    theory = Theory()
+    x = Variable("X")
+    y = Variable("Y")
+    thing = Term("Thing", x)
+    hp = Term("HasPart", x, y)
+    part = Term("Part", y)
+    rule = Implies(
+            thing,
+            CardinalityConstraint(hp, part, min_count, max_count)
+        )
+    print(rule)
+    print(to_horn_rules(rule))
+    print(simplify(rule))
+    print(as_prolog(rule))
+    theory.add(
+        rule
+    )
+    solver = ClingoSolver()
+    solver.add(theory)
+    print("THEORY:")
+    print(solver.dump())
+    solver.add(Term("Thing", "t1"))
+    for part_num in range(0, actual_count):
+        p = f"p{part_num}"
+        solver.add(Term("Part", p))
+        solver.add(Term("HasPart", "f1", p))
+    print("ALL:")
+    print(solver.dump())
+    is_sat = True
+    if min_count is not None and actual_count < min_count:
+        is_sat = False
+    if max_count is not None and actual_count > max_count:
+        is_sat = False
+    assert solver.check().satisfiable == is_sat

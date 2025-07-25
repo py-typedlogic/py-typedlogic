@@ -1,0 +1,252 @@
+(Theory 
+  (name "typedlogic.integrations.frameworks.linkml.meta_axioms") 
+  (constants 
+    (dict 
+      ())) 
+  (type_definitions 
+    (dict 
+      ((ElementID "str")))) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "Attribute") 
+        (arguments 
+          (dict 
+            ((cls "str") 
+              (slot_expression "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "ClassDefinition") 
+        (arguments 
+          (dict 
+            ((id "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "ClassSlot") 
+        (arguments 
+          (dict 
+            ((cls "str") 
+              (slot "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "IsA") 
+        (arguments 
+          (dict 
+            ((element "str") 
+              (parent "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Mixin") 
+        (arguments 
+          (dict 
+            ((element "str") 
+              (parent "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "SlotDefinition") 
+        (arguments 
+          (dict 
+            ((id "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "SlotUsage") 
+        (arguments 
+          (dict 
+            ((cls "str") 
+              (slot_expression "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "InvalidClassSlot") 
+        (arguments 
+          (dict 
+            ((cls "str") 
+              (slot "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Disjoint") 
+        (arguments 
+          (dict 
+            ((lhs "str") 
+              (rhs "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "SlotUsageOrAttribute") 
+        (arguments 
+          (dict 
+            ((cls "str") 
+              (slot_expression "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Parent") 
+        (arguments 
+          (dict 
+            ((cls "str") 
+              (parent "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)))) 
+  (sentence_groups 
+    ((SentenceGroup 
+        (name "disjoint") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "lhs" "ElementID") 
+                (Variable "rhs" "ElementID") 
+                (Variable "parent" "ElementID")) 
+              (Implies 
+                (And 
+                  (Parent 
+                    (Variable "lhs") 
+                    (Variable "parent")) 
+                  (Parent 
+                    (Variable "rhs") 
+                    (Variable "parent")) 
+                  (ne 
+                    (Variable "lhs") 
+                    (Variable "rhs"))) 
+                (Disjoint 
+                  (Variable "lhs") 
+                  (Variable "rhs")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "invalid_class_slot") 
+        (group_type "axiom") 
+        (docstring "Closed world assumption rule for marking slots that are not allowed for a class\n\n:param cls:\n:param slot:\n:return:") 
+        (sentences 
+          ((Forall 
+              ((Variable "cls" "ElementID") 
+                (Variable "slot" "ElementID")) 
+              (Implies 
+                (And 
+                  (ClassDefinition 
+                    (Variable "cls")) 
+                  (SlotDefinition 
+                    (Variable "slot")) 
+                  (Not 
+                    (ClassSlot 
+                      (Variable "cls") 
+                      (Variable "slot")))) 
+                (InvalidClassSlot 
+                  (Variable "cls") 
+                  (Variable "slot")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "slot_usage_or_attribute") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "cls" "ElementID") 
+                (Variable "slot_expression" "ElementID")) 
+              (Implies 
+                (SlotUsage 
+                  (Variable "cls") 
+                  (Variable "slot_expression")) 
+                (Parent 
+                  (Variable "cls") 
+                  (Variable "slot_expression")))) 
+            (Forall 
+              ((Variable "cls" "ElementID") 
+                (Variable "slot_expression" "ElementID")) 
+              (Implies 
+                (Attribute 
+                  (Variable "cls") 
+                  (Variable "slot_expression")) 
+                (Parent 
+                  (Variable "cls") 
+                  (Variable "slot_expression")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "parent") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "element" "ElementID") 
+                (Variable "parent" "ElementID")) 
+              (Implies 
+                (IsA 
+                  (Variable "element") 
+                  (Variable "parent")) 
+                (Parent 
+                  (Variable "element") 
+                  (Variable "parent")))) 
+            (Forall 
+              ((Variable "element" "ElementID") 
+                (Variable "parent" "ElementID")) 
+              (Implies 
+                (Mixin 
+                  (Variable "element") 
+                  (Variable "parent")) 
+                (Parent 
+                  (Variable "element") 
+                  (Variable "parent")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "class_slot") 
+        (group_type "axiom") 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "cls" "ElementID") 
+                (Variable "slot" "ElementID") 
+                (Variable "parent" "ElementID")) 
+              (Implies 
+                (And 
+                  (Parent 
+                    (Variable "cls") 
+                    (Variable "parent")) 
+                  (ClassSlot 
+                    (Variable "parent") 
+                    (Variable "slot"))) 
+                (Parent 
+                  (Variable "cls") 
+                  (Variable "slot")))))) 
+        (_annotations null)))) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))

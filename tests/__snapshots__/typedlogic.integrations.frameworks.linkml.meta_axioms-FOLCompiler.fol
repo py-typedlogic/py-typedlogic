@@ -1,0 +1,7 @@
+∀[lhs:ElementID rhs:ElementID parent:ElementID]. Parent(lhs, parent) ∧ Parent(rhs, parent) ∧ lhs != rhs → Disjoint(lhs, rhs)
+∀[cls:ElementID slot:ElementID]. ClassDefinition(cls) ∧ SlotDefinition(slot) ∧ ¬ClassSlot(cls, slot) → InvalidClassSlot(cls, slot)
+∀[cls:ElementID slot_expression:ElementID]. SlotUsage(cls, slot_expression) → Parent(cls, slot_expression)
+∀[cls:ElementID slot_expression:ElementID]. Attribute(cls, slot_expression) → Parent(cls, slot_expression)
+∀[element:ElementID parent:ElementID]. IsA(element, parent) → Parent(element, parent)
+∀[element:ElementID parent:ElementID]. Mixin(element, parent) → Parent(element, parent)
+∀[cls:ElementID slot:ElementID parent:ElementID]. Parent(cls, parent) ∧ ClassSlot(parent, slot) → Parent(cls, slot)

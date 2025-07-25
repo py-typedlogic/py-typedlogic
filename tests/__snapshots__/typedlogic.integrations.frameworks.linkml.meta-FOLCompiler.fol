@@ -1,0 +1,5 @@
+∀[id:str]. ClassDefinition(id) → Element(id)
+∀[id:str]. TypeDefinition(id) → Element(id)
+∀[id:str]. EnumDefinition(id) → Element(id)
+∀[id:str]. SlotDefinition(id) → Element(id)
+∀[id:str]. SchemaDefinition(id) → Element(id)

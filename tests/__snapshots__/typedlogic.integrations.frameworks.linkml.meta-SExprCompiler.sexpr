@@ -1,0 +1,237 @@
+(Theory 
+  (name "typedlogic.integrations.frameworks.linkml.meta") 
+  (constants 
+    (dict 
+      ())) 
+  (type_definitions 
+    (dict 
+      ((ElementID "str") 
+        (ClassDefinitionID "str") 
+        (SlotDefinitionID "str")))) 
+  (predicate_definitions 
+    ((PredicateDefinition 
+        (predicate "Element") 
+        (arguments 
+          (dict 
+            ((id "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "ClassDefinition") 
+        (arguments 
+          (dict 
+            ((id "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          (Element)) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "TypeDefinition") 
+        (arguments 
+          (dict 
+            ((id "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          (Element)) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "EnumDefinition") 
+        (arguments 
+          (dict 
+            ((id "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          (Element)) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "SlotDefinition") 
+        (arguments 
+          (dict 
+            ((id "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          (Element)) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "SchemaDefinition") 
+        (arguments 
+          (dict 
+            ((id "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          (Element)) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "TreeRoot") 
+        (arguments 
+          (dict 
+            ((cls "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "ClassSlot") 
+        (arguments 
+          (dict 
+            ((cls "str") 
+              (slot "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Identifier") 
+        (arguments 
+          (dict 
+            ((cls "str") 
+              (slot_expression "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Multivalued") 
+        (arguments 
+          (dict 
+            ((slot_expression "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Required") 
+        (arguments 
+          (dict 
+            ((slot_expression "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "IsA") 
+        (arguments 
+          (dict 
+            ((element "str") 
+              (parent "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Mixin") 
+        (arguments 
+          (dict 
+            ((element "str") 
+              (parent "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "Attribute") 
+        (arguments 
+          (dict 
+            ((cls "str") 
+              (slot_expression "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)) 
+      (PredicateDefinition 
+        (predicate "SlotUsage") 
+        (arguments 
+          (dict 
+            ((cls "str") 
+              (slot_expression "str")))) 
+        (description null) 
+        (metadata null) 
+        (parents 
+          ()) 
+        (python_class null)))) 
+  (sentence_groups 
+    ((SentenceGroup 
+        (name "Sentences") 
+        (group_type null) 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "id" "str")) 
+              (Implies 
+                (ClassDefinition 
+                  (Variable "id")) 
+                (Element 
+                  (Variable "id")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "Sentences") 
+        (group_type null) 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "id" "str")) 
+              (Implies 
+                (TypeDefinition 
+                  (Variable "id")) 
+                (Element 
+                  (Variable "id")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "Sentences") 
+        (group_type null) 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "id" "str")) 
+              (Implies 
+                (EnumDefinition 
+                  (Variable "id")) 
+                (Element 
+                  (Variable "id")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "Sentences") 
+        (group_type null) 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "id" "str")) 
+              (Implies 
+                (SlotDefinition 
+                  (Variable "id")) 
+                (Element 
+                  (Variable "id")))))) 
+        (_annotations null)) 
+      (SentenceGroup 
+        (name "Sentences") 
+        (group_type null) 
+        (docstring null) 
+        (sentences 
+          ((Forall 
+              ((Variable "id" "str")) 
+              (Implies 
+                (SchemaDefinition 
+                  (Variable "id")) 
+                (Element 
+                  (Variable "id")))))) 
+        (_annotations null)))) 
+  (ground_terms 
+    ()) 
+  (_annotations null) 
+  (source_module_name null))

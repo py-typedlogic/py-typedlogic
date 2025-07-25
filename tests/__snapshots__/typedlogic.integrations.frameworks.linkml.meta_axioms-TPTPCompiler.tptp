@@ -1,0 +1,8 @@
+% Problem: typedlogic.integrations.frameworks.linkml.meta_axioms
+fof(axiom1, axiom, ! [Lhs, Rhs, Parent] : ((parent(Lhs, Parent) & parent(Rhs, Parent) & ne(Lhs, Rhs)) => disjoint(Lhs, Rhs))).
+fof(axiom2, axiom, ! [Cls, Slot] : ((classdefinition(Cls) & slotdefinition(Slot) & ~classslot(Cls, Slot)) => invalidclassslot(Cls, Slot))).
+fof(axiom3, axiom, ! [Cls, Slot_expression] : (slotusage(Cls, Slot_expression) => parent(Cls, Slot_expression))).
+fof(axiom4, axiom, ! [Cls, Slot_expression] : (attribute(Cls, Slot_expression) => parent(Cls, Slot_expression))).
+fof(axiom5, axiom, ! [Element, Parent] : (isa(Element, Parent) => parent(Element, Parent))).
+fof(axiom6, axiom, ! [Element, Parent] : (mixin(Element, Parent) => parent(Element, Parent))).
+fof(axiom7, axiom, ! [Cls, Slot, Parent] : ((parent(Cls, Parent) & classslot(Parent, Slot)) => parent(Cls, Slot))).
