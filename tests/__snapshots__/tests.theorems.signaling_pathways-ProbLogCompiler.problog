@@ -1,3 +1,32 @@
+modifiedprotein(protein(Receptor_name), "PHOSPHORYLATION", _, true) :- ligand(Ligand_name), receptor(protein(Receptor_name)), ligandreceptorbinding(ligand(Ligand_name), receptor(protein(Receptor_name)), true).
+complex("GRB2-SOS") :- modifiedprotein(protein(Receptor_name), "PHOSPHORYLATION", _, true).
+activation(protein(Receptor_name), protein("SOS")) :- modifiedprotein(protein(Receptor_name), "PHOSPHORYLATION", _, true).
+modifiedprotein(protein("RAS"), "GTP_BOUND", _, true) :- protein("SOS"), protein("RAS"), gef(protein("SOS"), protein("RAS")), activation(protein("SOS"), protein("RAS")).
+modifiedprotein(protein("RAF"), "PHOSPHORYLATION", "S338", true) :- modifiedprotein(protein("RAS"), "GTP_BOUND", _, true).
+activation(protein("RAS"), protein("RAF")) :- modifiedprotein(protein("RAS"), "GTP_BOUND", _, true).
+phosphorylationevent(protein(Raf_name), protein(Mek_name), "S218") :- modifiedprotein(protein(Raf_name), "PHOSPHORYLATION", _, true), kinase(protein(Raf_name)), protein(Mek_name).
+phosphorylationevent(protein(Raf_name), protein(Mek_name), "S222") :- modifiedprotein(protein(Raf_name), "PHOSPHORYLATION", _, true), kinase(protein(Raf_name)), protein(Mek_name).
+modifiedprotein(protein(Mek_name), "PHOSPHORYLATION", "S218", true) :- modifiedprotein(protein(Raf_name), "PHOSPHORYLATION", _, true), kinase(protein(Raf_name)), protein(Mek_name).
+modifiedprotein(protein(Mek_name), "PHOSPHORYLATION", "S222", true) :- modifiedprotein(protein(Raf_name), "PHOSPHORYLATION", _, true), kinase(protein(Raf_name)), protein(Mek_name).
+activation(protein(Raf_name), protein(Mek_name)) :- modifiedprotein(protein(Raf_name), "PHOSPHORYLATION", _, true), kinase(protein(Raf_name)), protein(Mek_name).
+phosphorylationevent(protein(Mek_name), protein(Erk_name), "T185") :- modifiedprotein(protein(Mek_name), "PHOSPHORYLATION", "S218", true), modifiedprotein(protein(Mek_name), "PHOSPHORYLATION", "S222", true), kinase(protein(Mek_name)), protein(Erk_name).
+phosphorylationevent(protein(Mek_name), protein(Erk_name), "Y187") :- modifiedprotein(protein(Mek_name), "PHOSPHORYLATION", "S218", true), modifiedprotein(protein(Mek_name), "PHOSPHORYLATION", "S222", true), kinase(protein(Mek_name)), protein(Erk_name).
+modifiedprotein(protein(Erk_name), "PHOSPHORYLATION", "T185", true) :- modifiedprotein(protein(Mek_name), "PHOSPHORYLATION", "S218", true), modifiedprotein(protein(Mek_name), "PHOSPHORYLATION", "S222", true), kinase(protein(Mek_name)), protein(Erk_name).
+modifiedprotein(protein(Erk_name), "PHOSPHORYLATION", "Y187", true) :- modifiedprotein(protein(Mek_name), "PHOSPHORYLATION", "S218", true), modifiedprotein(protein(Mek_name), "PHOSPHORYLATION", "S222", true), kinase(protein(Mek_name)), protein(Erk_name).
+activation(protein(Mek_name), protein(Erk_name)) :- modifiedprotein(protein(Mek_name), "PHOSPHORYLATION", "S218", true), modifiedprotein(protein(Mek_name), "PHOSPHORYLATION", "S222", true), kinase(protein(Mek_name)), protein(Erk_name).
+translocation(protein(Erk_name), "cytoplasm", "nucleus") :- modifiedprotein(protein(Erk_name), "PHOSPHORYLATION", "T185", true), modifiedprotein(protein(Erk_name), "PHOSPHORYLATION", "Y187", true), proteinlocation(protein(Erk_name), compartment("cytoplasm")).
+proteinlocation(protein(Erk_name), compartment("nucleus")) :- modifiedprotein(protein(Erk_name), "PHOSPHORYLATION", "T185", true), modifiedprotein(protein(Erk_name), "PHOSPHORYLATION", "Y187", true), proteinlocation(protein(Erk_name), compartment("cytoplasm")).
+:- modifiedprotein(protein("RAS"), "GTP_BOUND", _, true), gap(protein(Gap_name), protein("RAS")), modifiedprotein(protein("RAS"), "GTP_BOUND", _, true).
+:- modifiedprotein(protein(Protein_name), "PHOSPHORYLATION", Site, true), phosphatase(protein(Phosphatase_name)), modifiedprotein(protein(Protein_name), "PHOSPHORYLATION", Site, true).
+activation(protein(Receptor_name), protein("PI3K")) :- modifiedprotein(protein(Receptor_name), "PHOSPHORYLATION", _, true).
+modifiedprotein(protein("PI3K"), "PHOSPHORYLATION", _, true) :- modifiedprotein(protein(Receptor_name), "PHOSPHORYLATION", _, true).
+activation(protein("PI3K"), protein("AKT")) :- modifiedprotein(protein("PI3K"), "PHOSPHORYLATION", _, true).
+modifiedprotein(protein("AKT"), "PHOSPHORYLATION", "T308", true) :- modifiedprotein(protein("PI3K"), "PHOSPHORYLATION", _, true).
+phosphorylationevent(protein(Erk_name), protein("SOS"), "S1132") :- modifiedprotein(protein(Erk_name), "PHOSPHORYLATION", "T185", true), modifiedprotein(protein(Erk_name), "PHOSPHORYLATION", "Y187", true).
+modifiedprotein(protein("SOS"), "PHOSPHORYLATION", "S1132", false) :- modifiedprotein(protein(Erk_name), "PHOSPHORYLATION", "T185", true), modifiedprotein(protein(Erk_name), "PHOSPHORYLATION", "Y187", true).
+phosphorylationevent(protein(Erk_name), protein(Tf_name), "S") :- modifiedprotein(protein(Erk_name), "PHOSPHORYLATION", "T185", true), modifiedprotein(protein(Erk_name), "PHOSPHORYLATION", "Y187", true), proteinlocation(protein(Erk_name), compartment("nucleus")), protein(Tf_name).
+modifiedprotein(protein(Tf_name), "PHOSPHORYLATION", "S", true) :- modifiedprotein(protein(Erk_name), "PHOSPHORYLATION", "T185", true), modifiedprotein(protein(Erk_name), "PHOSPHORYLATION", "Y187", true), proteinlocation(protein(Erk_name), compartment("nucleus")), protein(Tf_name).
+activation(protein(Erk_name), protein(Tf_name)) :- modifiedprotein(protein(Erk_name), "PHOSPHORYLATION", "T185", true), modifiedprotein(protein(Erk_name), "PHOSPHORYLATION", "Y187", true), proteinlocation(protein(Erk_name), compartment("nucleus")), protein(Tf_name).
 query(protein(Name)).
 query(modifiedprotein(Protein, Modification, Site, Active)).
 query(complex(Name)).

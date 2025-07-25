@@ -159,6 +159,11 @@ def test_instance_data_model():
     cd = ClassDefinition("Person")
 
 
+
+@pytest.mark.parametrize("solver_class", [ClingoSolver])
+@pytest.mark.parametrize("required", [False, True])
+@pytest.mark.parametrize("use_attributes", [False, True])
+@pytest.mark.parametrize("use_subclass", [False, True])
 @pytest.mark.parametrize(
     "typ,val,valid",
     [
@@ -176,11 +181,7 @@ def test_instance_data_model():
     ],
 )
 # TODO
-#@pytest.mark.parametrize("use_attributes", [False, True])
-@pytest.mark.parametrize("use_attributes", [True])
-@pytest.mark.parametrize("required", [False, True])
-@pytest.mark.parametrize("solver_class", [ClingoSolver])
-def test_basic_types(typ: str, val: Any, valid: bool, use_attributes: bool, required: bool, solver_class):
+def test_basic_types(typ: str, val: Any, valid: bool, use_subclass: bool, use_attributes: bool, required: bool, solver_class):
     """
     Test basic types
     """
@@ -210,8 +211,14 @@ def test_basic_types(typ: str, val: Any, valid: bool, use_attributes: bool, requ
                 }
             },
         }
+    if use_subclass:
+        schema["classes"]["D"] = {
+            "is_a": "C",
+            "slots": ["s2"],
+        }
     data = {"s": val} if val is not None else {}
     if required and val is None:
         valid = False
-    result = validate_data(schema, data, "C", solver_class)
+    inst_class = "D" if use_subclass else "C"
+    result = validate_data(schema, data, inst_class, solver_class)
     assert result == valid, f"Expected {valid} but got {result} for {typ} with value {val}, req: {required}"

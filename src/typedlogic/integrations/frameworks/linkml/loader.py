@@ -113,13 +113,33 @@ def generate_from_object(obj: SchemaDict) -> Iterator[Sentence]:
     return
 
 def generate_slot_definition(slot_name: str, slot_defn: Dict) -> Iterator[Sentence]:
+    """
+    Maps an individual LinkML slot definition to a set of sentences.
+
+        >>> from typedlogic.compiler import write_sentences
+        >>> inst_var = Variable("I")
+        >>> slot_name = "age"
+        >>> write_sentences(generate_slot_definition(slot_name, {"required": True}))
+        ∀[I C]. ClassSlot(C, 'age') ∧ InstanceMemberType(I, C) → InstSlotRequired(I, 'age')
+
+    :param slot_name:
+    :param slot_defn:
+    :return:
+    """
     inst_var = Variable("I")
     class_name = Variable("C")
     conjs = []
     for conj in conjunctions_from_slot_expression(inst_var, slot_name, slot_defn):
         conjs.append(conj)
     if conjs:
-        yield Forall([inst_var, class_name], Implies(Term(InstanceMemberType.__name__, inst_var, class_name), And(*conjs)))
+        yield Forall(
+            [inst_var, class_name],
+            Implies(
+                And(
+                    Term(ClassSlot.__name__, class_name, slot_name),
+                    Term(InstanceMemberType.__name__, inst_var, class_name),
+                ),
+                And(*conjs)))
 
 
 
@@ -152,25 +172,35 @@ def generate_class_definition(class_name: str, class_defn: Dict) -> Iterator[Sen
         ClassDefinition('C')
         ∀[I]. InstanceMemberType(I, 'C') → InstSlotRequired(I, 'a1')
 
-        >>> write_sentences(generate_class_definition("C", {"attributes": {"a1": {"required": True, "range": "string"}}}))
-        ClassDefinition('C')
-        ∀[I]. InstanceMemberType(I, 'C') → InstSlotRequired(I, 'a1') ∧ ∀[v]. Association(I, 'a1', v) → InstanceMemberType(v, 'string')
-
-        >>> write_sentences(generate_class_definition("C", {"attributes": {"a1": {"any_of": [{"required": True}, {"range": "string"}]}}}))
-        ClassDefinition('C')
-        ∀[I]. InstanceMemberType(I, 'C') → (InstSlotRequired(I, 'a1') ∨ ∀[v]. Association(I, 'a1', v) → InstanceMemberType(v, 'string'))
-
     Ranges:
 
         >>> write_sentences(generate_class_definition("C", {"attributes": {"a1": {"range": "integer"}}}))
         ClassDefinition('C')
         ∀[I]. InstanceMemberType(I, 'C') → ∀[v]. Association(I, 'a1', v) → InstanceMemberType(v, 'integer')
 
+    Combinations:
+
+        >>> write_sentences(generate_class_definition("C", {"attributes": {"a1": {"required": True, "range": "string"}}}))
+        ClassDefinition('C')
+        ∀[I]. InstanceMemberType(I, 'C') → InstSlotRequired(I, 'a1') ∧ ∀[v]. Association(I, 'a1', v) → InstanceMemberType(v, 'string')
+
+    Booleans:
+
+        >>> write_sentences(generate_class_definition("C", {"attributes": {"a1": {"any_of": [{"required": True}, {"range": "string"}]}}}))
+        ClassDefinition('C')
+        ∀[I]. InstanceMemberType(I, 'C') → (InstSlotRequired(I, 'a1') ∨ ∀[v]. Association(I, 'a1', v) → InstanceMemberType(v, 'string'))
+
     Cardinality:
 
         >>> write_sentences(generate_class_definition("C", {"attributes": {"a1": {"multivalued": False}}}))
         ClassDefinition('C')
         ∀[I]. InstanceMemberType(I, 'C') → ∀[v]. ObjectNodeLookup(I, 'a1', v) → NodeIsSingleValued(v)
+
+    Allowed slots:
+
+        >>> write_sentences(generate_class_definition("C", {"slots": ["s1"]}))
+        ClassDefinition('C')
+        ClassSlot('C', 's1')
 
 
     :param class_name:
@@ -283,10 +313,13 @@ def conjunctions_from_slot_expression(inst_var: Variable, slot_name: str, slot_e
         >>> from typedlogic.compiler import write_sentences
         >>> inst_var = Variable("I")
         >>> slot_name = "age"
-        >>> slot_expr = {"required": True}
-        >>> write_sentences(conjunctions_from_slot_expression(inst_var, slot_name, slot_expr))
+        >>> write_sentences(conjunctions_from_slot_expression(inst_var, slot_name, {"required": True}))
         InstSlotRequired(I, 'age')
-
+        >>> write_sentences(conjunctions_from_slot_expression(inst_var, slot_name, {"range": "string"}))
+        ∀[v]. Association(I, 'age', v) → InstanceMemberType(v, 'string')
+        >>> any_of = {"any_of": [{"range": "string"}, {"range": "integer"}]}
+        >>> write_sentences(conjunctions_from_slot_expression(inst_var, slot_name, any_of))
+        (∀[v]. Association(I, 'age', v) → InstanceMemberType(v, 'string') ∨ ∀[v]. Association(I, 'age', v) → InstanceMemberType(v, 'integer'))
 
     :param inst_var:
     :param slot_name:

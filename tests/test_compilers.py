@@ -9,6 +9,8 @@ from typedlogic.integrations.solvers.problog.problog_compiler import ProbLogComp
 from typedlogic.integrations.solvers.souffle.souffle_compiler import SouffleCompiler
 from typedlogic.integrations.solvers.z3.z3_compiler import Z3Compiler, Z3FunctionalCompiler, Z3SExprCompiler
 from typedlogic.parsers.pyparser.introspection import translate_module_to_theory
+import typedlogic.integrations.frameworks.linkml.meta as linkml_meta
+import typedlogic.integrations.frameworks.linkml.meta_axioms as linkml_meta_axioms
 
 import tests.theorems.animals as animals
 import tests.theorems.defined_types_example as defined_types_example
@@ -63,6 +65,8 @@ from tests.theorems import barbers, unary_predicates
         simple_contradiction,
         unary_predicates,
         types_example,
+        linkml_meta,
+        linkml_meta_axioms,
     ],
 )
 def test_compiler(compiler_class, theory_module):

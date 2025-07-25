@@ -96,5 +96,927 @@ predicate_definitions:
     protein: Protein
     compartment: Compartment
   parents: []
-sentence_groups: []
+sentence_groups:
+- type: SentenceGroup
+  name: receptor_activation_by_ligand
+  group_type: axiom
+  docstring: When a ligand binds to its receptor, the receptor becomes activated
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - ligand_name
+        - str
+      - type: Variable
+        arguments:
+        - receptor_name
+        - str
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Ligand
+          - type: Variable
+            arguments:
+            - ligand_name
+        - type: Term
+          arguments:
+          - Receptor
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - receptor_name
+        - type: Term
+          arguments:
+          - LigandReceptorBinding
+          - type: Term
+            arguments:
+            - Ligand
+            - type: Variable
+              arguments:
+              - ligand_name
+          - type: Term
+            arguments:
+            - Receptor
+            - type: Term
+              arguments:
+              - Protein
+              - type: Variable
+                arguments:
+                - receptor_name
+          - true
+      - type: Term
+        arguments:
+        - ModifiedProtein
+        - type: Term
+          arguments:
+          - Protein
+          - type: Variable
+            arguments:
+            - receptor_name
+        - PHOSPHORYLATION
+        - null
+        - true
+- type: SentenceGroup
+  name: rtk_activates_grb2_sos
+  group_type: axiom
+  docstring: Activated receptor tyrosine kinases (RTKs) recruit GRB2-SOS complex
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - receptor_name
+        - str
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - ModifiedProtein
+        - type: Term
+          arguments:
+          - Protein
+          - type: Variable
+            arguments:
+            - receptor_name
+        - PHOSPHORYLATION
+        - null
+        - true
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Complex
+          - GRB2-SOS
+        - type: Term
+          arguments:
+          - Activation
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - receptor_name
+          - type: Term
+            arguments:
+            - Protein
+            - SOS
+- type: SentenceGroup
+  name: sos_activates_ras
+  group_type: axiom
+  docstring: SOS is a GEF that activates Ras by promoting GDP/GTP exchange
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - sos_active
+        - bool
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Protein
+          - SOS
+        - type: Term
+          arguments:
+          - Protein
+          - RAS
+        - type: Term
+          arguments:
+          - GEF
+          - type: Term
+            arguments:
+            - Protein
+            - SOS
+          - type: Term
+            arguments:
+            - Protein
+            - RAS
+        - type: Term
+          arguments:
+          - Activation
+          - type: Term
+            arguments:
+            - Protein
+            - SOS
+          - type: Term
+            arguments:
+            - Protein
+            - RAS
+      - type: Term
+        arguments:
+        - ModifiedProtein
+        - type: Term
+          arguments:
+          - Protein
+          - RAS
+        - GTP_BOUND
+        - null
+        - true
+- type: SentenceGroup
+  name: ras_activates_raf
+  group_type: axiom
+  docstring: Active (GTP-bound) Ras activates Raf kinase
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - ras_active
+        - bool
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - ModifiedProtein
+        - type: Term
+          arguments:
+          - Protein
+          - RAS
+        - GTP_BOUND
+        - null
+        - true
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - RAF
+          - PHOSPHORYLATION
+          - S338
+          - true
+        - type: Term
+          arguments:
+          - Activation
+          - type: Term
+            arguments:
+            - Protein
+            - RAS
+          - type: Term
+            arguments:
+            - Protein
+            - RAF
+- type: SentenceGroup
+  name: raf_phosphorylates_mek
+  group_type: axiom
+  docstring: Active Raf phosphorylates MEK at specific serine residues
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - raf_name
+        - str
+      - type: Variable
+        arguments:
+        - mek_name
+        - str
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - raf_name
+          - PHOSPHORYLATION
+          - null
+          - true
+        - type: Term
+          arguments:
+          - Kinase
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - raf_name
+        - type: Term
+          arguments:
+          - Protein
+          - type: Variable
+            arguments:
+            - mek_name
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - PhosphorylationEvent
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - raf_name
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - mek_name
+          - S218
+        - type: Term
+          arguments:
+          - PhosphorylationEvent
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - raf_name
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - mek_name
+          - S222
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - mek_name
+          - PHOSPHORYLATION
+          - S218
+          - true
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - mek_name
+          - PHOSPHORYLATION
+          - S222
+          - true
+        - type: Term
+          arguments:
+          - Activation
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - raf_name
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - mek_name
+- type: SentenceGroup
+  name: mek_phosphorylates_erk
+  group_type: axiom
+  docstring: Active MEK phosphorylates ERK at threonine and tyrosine residues
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - mek_name
+        - str
+      - type: Variable
+        arguments:
+        - erk_name
+        - str
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: And
+          arguments:
+          - type: Term
+            arguments:
+            - ModifiedProtein
+            - type: Term
+              arguments:
+              - Protein
+              - type: Variable
+                arguments:
+                - mek_name
+            - PHOSPHORYLATION
+            - S218
+            - true
+          - type: Term
+            arguments:
+            - ModifiedProtein
+            - type: Term
+              arguments:
+              - Protein
+              - type: Variable
+                arguments:
+                - mek_name
+            - PHOSPHORYLATION
+            - S222
+            - true
+        - type: Term
+          arguments:
+          - Kinase
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - mek_name
+        - type: Term
+          arguments:
+          - Protein
+          - type: Variable
+            arguments:
+            - erk_name
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - PhosphorylationEvent
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - mek_name
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+          - T185
+        - type: Term
+          arguments:
+          - PhosphorylationEvent
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - mek_name
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+          - Y187
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+          - PHOSPHORYLATION
+          - T185
+          - true
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+          - PHOSPHORYLATION
+          - Y187
+          - true
+        - type: Term
+          arguments:
+          - Activation
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - mek_name
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+- type: SentenceGroup
+  name: erk_nuclear_translocation
+  group_type: axiom
+  docstring: Activated ERK translocates from cytoplasm to nucleus
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - erk_name
+        - str
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+          - PHOSPHORYLATION
+          - T185
+          - true
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+          - PHOSPHORYLATION
+          - Y187
+          - true
+        - type: Term
+          arguments:
+          - ProteinLocation
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+          - type: Term
+            arguments:
+            - Compartment
+            - cytoplasm
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Translocation
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+          - cytoplasm
+          - nucleus
+        - type: Term
+          arguments:
+          - ProteinLocation
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+          - type: Term
+            arguments:
+            - Compartment
+            - nucleus
+- type: SentenceGroup
+  name: gap_inactivates_ras
+  group_type: axiom
+  docstring: GAPs accelerate the GTPase activity of Ras, converting it to inactive
+    GDP-bound form
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - gap_name
+        - str
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - RAS
+          - GTP_BOUND
+          - null
+          - true
+        - type: Term
+          arguments:
+          - GAP
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - gap_name
+          - type: Term
+            arguments:
+            - Protein
+            - RAS
+      - type: Not
+        arguments:
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - RAS
+          - GTP_BOUND
+          - null
+          - true
+- type: SentenceGroup
+  name: phosphatase_inactivates_protein
+  group_type: axiom
+  docstring: Phosphatases remove phosphate groups from proteins, often inactivating
+    them
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - phosphatase_name
+        - str
+      - type: Variable
+        arguments:
+        - protein_name
+        - str
+      - type: Variable
+        arguments:
+        - site
+        - str
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - protein_name
+          - PHOSPHORYLATION
+          - type: Variable
+            arguments:
+            - site
+          - true
+        - type: Term
+          arguments:
+          - Phosphatase
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - phosphatase_name
+      - type: Not
+        arguments:
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - protein_name
+          - PHOSPHORYLATION
+          - type: Variable
+            arguments:
+            - site
+          - true
+- type: SentenceGroup
+  name: pi3k_pathway_crosstalk
+  group_type: axiom
+  docstring: Activated RTKs can also initiate the PI3K-AKT pathway
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - receptor_name
+        - str
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - ModifiedProtein
+        - type: Term
+          arguments:
+          - Protein
+          - type: Variable
+            arguments:
+            - receptor_name
+        - PHOSPHORYLATION
+        - null
+        - true
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Activation
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - receptor_name
+          - type: Term
+            arguments:
+            - Protein
+            - PI3K
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - PI3K
+          - PHOSPHORYLATION
+          - null
+          - true
+- type: SentenceGroup
+  name: pi3k_activates_akt
+  group_type: axiom
+  docstring: Active PI3K leads to PIP3 production, which activates AKT
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - pi3k_active
+        - bool
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - ModifiedProtein
+        - type: Term
+          arguments:
+          - Protein
+          - PI3K
+        - PHOSPHORYLATION
+        - null
+        - true
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Activation
+          - type: Term
+            arguments:
+            - Protein
+            - PI3K
+          - type: Term
+            arguments:
+            - Protein
+            - AKT
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - AKT
+          - PHOSPHORYLATION
+          - T308
+          - true
+- type: SentenceGroup
+  name: erk_negative_feedback
+  group_type: axiom
+  docstring: Active ERK can phosphorylate SOS, creating a negative feedback loop
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - erk_name
+        - str
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+          - PHOSPHORYLATION
+          - T185
+          - true
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+          - PHOSPHORYLATION
+          - Y187
+          - true
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - PhosphorylationEvent
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+          - type: Term
+            arguments:
+            - Protein
+            - SOS
+          - S1132
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - SOS
+          - PHOSPHORYLATION
+          - S1132
+          - false
+- type: SentenceGroup
+  name: erk_activates_transcription_factors
+  group_type: axiom
+  docstring: Activated ERK in the nucleus phosphorylates various transcription factors
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - erk_name
+        - str
+      - type: Variable
+        arguments:
+        - tf_name
+        - str
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+          - PHOSPHORYLATION
+          - T185
+          - true
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+          - PHOSPHORYLATION
+          - Y187
+          - true
+        - type: Term
+          arguments:
+          - ProteinLocation
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+          - type: Term
+            arguments:
+            - Compartment
+            - nucleus
+        - type: Term
+          arguments:
+          - Protein
+          - type: Variable
+            arguments:
+            - tf_name
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - PhosphorylationEvent
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - tf_name
+          - S
+        - type: Term
+          arguments:
+          - ModifiedProtein
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - tf_name
+          - PHOSPHORYLATION
+          - S
+          - true
+        - type: Term
+          arguments:
+          - Activation
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - erk_name
+          - type: Term
+            arguments:
+            - Protein
+            - type: Variable
+              arguments:
+              - tf_name
 ground_terms: []
