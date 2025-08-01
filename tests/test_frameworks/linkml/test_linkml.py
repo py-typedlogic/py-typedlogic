@@ -19,6 +19,14 @@ from typedlogic.theories.jsonlog.jsonlog import NodeIsList
 from tests import OUTPUT_DIR
 
 def validate_data(schema: dict, data: dict, target_class: Optional[str] = None, solver_class: Type[Solver] = ClingoSolver) -> bool:
+    solver = solve_data(schema=schema, data=data, target_class=target_class, solver_class=solver_class)
+    sat = solver.check().satisfiable
+    if sat:
+        print(f"ENTAILED:")
+        write_sentences(solver.model().ground_terms)
+    return sat is None or sat
+
+def solve_data(schema: dict, data: dict, target_class: Optional[str] = None, solver_class: Type[Solver] = ClingoSolver) -> Solver:
     """
     Validate a JSON object against a LinkML schema using a specified solver.
 
@@ -40,11 +48,7 @@ def validate_data(schema: dict, data: dict, target_class: Optional[str] = None, 
     solver = solver_class()
     solver.add(theory)
     print(solver.dump())
-    sat = solver.check().satisfiable
-    if sat:
-        print(f"ENTAILED:")
-        write_sentences(solver.model().ground_terms)
-    return sat is None or sat
+    return solver
 
 DEFAULT_TYPES: Mapping[str, Dict[str, Any]] = {
     "string": {},
@@ -223,3 +227,54 @@ def test_basic_types(typ: str, val: Any, valid: bool, use_subclass: bool, use_at
     inst_class = "D" if use_subclass else "C"
     result = validate_data(schema, data, inst_class, solver_class)
     assert result == valid, f"Expected {valid} but got {result} for {typ} with value {val}, req: {required}"
+
+
+
+@pytest.mark.parametrize("solver_class", [ClingoSolver])
+@pytest.mark.parametrize("transitive", [False, True])
+def test_transitive(transitive: bool, solver_class):
+    """
+    Test linkml transitive properties:
+
+    If a slot s is transitive, and we have instances i s j, j s k, then we should be able to infer that i s k.
+
+    TODO: this requires references to work...
+    """
+    from typing import Dict, Any
+    schema: Dict[str, Any] = {
+        "slots": {
+            "id": {
+                "identifier": True,
+                "range": "string",
+            },
+            "s": {
+                "range": "C",
+                "transitive": transitive,
+            }
+        },
+        "classes": {
+            "Dataset": {
+                "attributes": {
+                    "objects": {
+                        "range": "C",
+                        "multivalued": True,
+                    },
+                },
+            },
+            "C": {
+                "slots": ["id", "s"],
+            }
+        },
+    }
+    dataset = {
+        "objects": [
+            {"id": "i", "s": "j"},
+            {"id": "j", "s": "k"},
+            {"id": "k"},
+        ]
+    }
+    solver = solve_data(schema, dataset, "Dataset", solver_class)
+    for model in solver.models():
+        print(model)
+        for gt in model.iter_retrieve("Association"):
+            print(f"Ground term: {gt}")

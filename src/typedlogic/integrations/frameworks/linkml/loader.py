@@ -41,7 +41,7 @@ from typedlogic.integrations.frameworks.linkml.meta import (
     TreeRoot,
     TypeDefinition,
 )
-from typedlogic.theories.jsonlog.jsonlog import NodeIsList, ObjectNodeLookup
+from typedlogic.theories.jsonlog.jsonlog import NodeIsList, ObjectPointerHasProperty
 
 Result = Union[Sentence, PredicateDefinition]
 
@@ -87,7 +87,6 @@ def generate_from_object(obj: SchemaDict) -> Iterator[Sentence]:
     :return:
     """
     obj = remove_empty_kvs(obj)
-    print(obj)
     for k, v in obj.items():
         if k == "classes":
             for class_name, class_defn in v.items():
@@ -194,7 +193,7 @@ def generate_class_definition(class_name: str, class_defn: Dict) -> Iterator[Sen
 
         >>> write_sentences(generate_class_definition("C", {"attributes": {"a1": {"multivalued": False}}}))
         ClassDefinition('C')
-        ∀[I]. InstanceMemberType(I, 'C') → ∀[v]. ObjectNodeLookup(I, 'a1', v) → NodeIsSingleValued(v)
+        ∀[I]. InstanceMemberType(I, 'C') → ∀[v]. ObjectPointerHasProperty(I, 'a1', v) → NodeIsSingleValued(v)
 
     Allowed slots:
 
@@ -374,19 +373,19 @@ def conjunctions_from_slot_expression(inst_var: Variable, slot_name: str, slot_e
             else:
                 pred = NodeIsSingleValued.__name__
             yield Forall(
-                [val_var], Implies(Term(ObjectNodeLookup.__name__, inst_var, slot_name, val_var), Term(pred, val_var))
+                [val_var], Implies(Term(ObjectPointerHasProperty.__name__, inst_var, slot_name, val_var), Term(pred, val_var))
             )
         elif k == "inlined_as_list" and v is True:
             yield Forall(
                 [val_var],
                 Implies(
-                    Term(ObjectNodeLookup.__name__, inst_var, slot_name, val_var), Term(NodeIsList.__name__, val_var)
+                    Term(ObjectPointerHasProperty.__name__, inst_var, slot_name, val_var), Term(NodeIsList.__name__, val_var)
                 ),
             )
             yield Forall(
                 [val_var],
                 Implies(
-                    Term(ObjectNodeLookup.__name__, inst_var, slot_name, val_var),
+                    Term(ObjectPointerHasProperty.__name__, inst_var, slot_name, val_var),
                     Term(InlinedObject.__name__, val_var, v),
                 ),
             )
@@ -394,7 +393,19 @@ def conjunctions_from_slot_expression(inst_var: Variable, slot_name: str, slot_e
             yield Forall(
                 [val_var],
                 Implies(
-                    Term(ObjectNodeLookup.__name__, inst_var, slot_name, val_var),
+                    Term(ObjectPointerHasProperty.__name__, inst_var, slot_name, val_var),
                     Term(InlinedObject.__name__, val_var, v),
+                ),
+            )
+        elif k == "transitive" and v is True:
+            val_var2 = Variable("v2")
+            yield Forall(
+                [val_var, val_var2],
+                Implies(
+                    And(
+                        Term(Association.__name__, inst_var, slot_name, val_var),
+                        Term(Association.__name__, val_var, slot_name, val_var2),
+                    ),
+                    Term(Association.__name__, inst_var, slot_name, val_var2),
                 ),
             )

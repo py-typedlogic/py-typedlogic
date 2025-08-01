@@ -1,0 +1,13 @@
+{
+  "facts": [
+    ["@type", "Organization", {
+      "id": "org:invalid1",
+      "name": "Invalid Org Type",
+      "type": "invalid_type_not_in_enum"
+    }],
+    ["@type", "Organization", {
+      "id": "org:invalid2",
+      "name": "Missing Required Name"
+    }]
+  ]
+}

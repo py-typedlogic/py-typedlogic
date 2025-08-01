@@ -232,3 +232,238 @@ def test_solve_multiple(theory, data_files, solver_class, expected):
         pytest.skip(f"CLI command failed with exit code {result.exit_code}: {result.exception}")
     else:
         assert result.exit_code == 0
+
+
+class TestCLIWithValidation:
+    """Test CLI commands with LinkML schema validation scenarios."""
+    
+    @pytest.fixture
+    def fixtures_dir(self) -> Path:
+        """Get path to CLI test fixtures directory."""
+        return Path(__file__).parent / "test_cli" / "fixtures"
+    
+    def run_cli_command(self, args, expect_success: bool = True):
+        """Run a typedlogic CLI command and return the result."""
+        result = runner.invoke(app, args)
+        
+        if expect_success and result.exit_code != 0:
+            stderr_msg = "N/A"
+            try:
+                stderr_msg = result.stderr
+            except (ValueError, AttributeError):
+                pass
+            pytest.fail(f"Command failed unexpectedly: {' '.join(args)}\\n"
+                       f"STDOUT: {result.stdout}\\n"
+                       f"STDERR: {stderr_msg}")
+        
+        return result
+    
+    def test_valid_csv_data_dump(self, fixtures_dir: Path):
+        """Test dumping a valid CSV dataset with catalog."""
+        catalog_path = fixtures_dir / "catalogs" / "csv_only_test.catalog.yaml"
+        
+        result = self.run_cli_command([
+            "dump", str(catalog_path), "-t", "yaml"
+        ])
+        
+        # Should succeed
+        assert result.exit_code == 0
+        
+        # Check output contains expected elements
+        output = result.stdout
+        assert "name: CSV Only Test" in output  # Catalog metadata
+        assert "simple_links" in output  # Data predicates
+        assert "simple_people" in output
+        assert "ground_terms:" in output  # Data elements
+        
+        # Should not have resource errors since all data is valid
+        assert "resource_errors" not in output
+    
+    def test_valid_csv_data_theory_loading(self, fixtures_dir: Path):
+        """Test that CSV data loads properly as ground terms."""
+        catalog_path = fixtures_dir / "catalogs" / "csv_only_test.catalog.yaml"
+        
+        result = self.run_cli_command([
+            "dump", str(catalog_path), "-t", "yaml"
+        ])
+        
+        # Should succeed and contain facts from both CSV files
+        assert result.exit_code == 0
+        assert "simple_links" in result.stdout
+        assert "simple_people" in result.stdout
+        # Should have concrete facts from the CSV data
+        assert "- A" in result.stdout  # From links
+        assert "- Alice" in result.stdout  # From people
+        assert "ground_terms:" in result.stdout
+    
+    def test_valid_csv_data_convert_formats(self, fixtures_dir: Path):
+        """Test converting valid CSV data to different formats."""
+        catalog_path = fixtures_dir / "catalogs" / "csv_only_test.catalog.yaml"
+        
+        # Test YAML format
+        result = self.run_cli_command([
+            "dump", str(catalog_path), "-t", "yaml"
+        ])
+        assert result.exit_code == 0
+        assert "ground_terms:" in result.stdout
+        
+        # Test Prolog format should succeed even if minimal  
+        result = self.run_cli_command([
+            "dump", str(catalog_path), "-t", "prolog"
+        ])
+        assert result.exit_code == 0
+        assert "%" in result.stdout  # Should have comment header
+    
+    def test_invalid_resource_handling(self, fixtures_dir: Path):
+        """Test catalog with some invalid resources."""
+        catalog_path = fixtures_dir / "catalogs" / "invalid_simple.catalog.yaml"
+        
+        # Dump should work but collect errors
+        result = self.run_cli_command([
+            "dump", str(catalog_path), "-t", "yaml"
+        ])
+        
+        # Should succeed (fail_fast=False by default)
+        assert result.exit_code == 0
+        
+        # But should have resource errors in annotations
+        output = result.stdout
+        assert "resource_errors" in output
+        assert "nonexistent_file.csv" in output
+    
+    def test_mixed_valid_invalid_data(self, fixtures_dir: Path):
+        """Test catalog mixing valid and invalid data files."""
+        catalog_path = fixtures_dir / "catalogs" / "invalid_simple.catalog.yaml"
+        
+        result = self.run_cli_command([
+            "dump", str(catalog_path), "-t", "yaml"
+        ])
+        
+        # Should succeed (partial success)
+        assert result.exit_code == 0
+        
+        output = result.stdout
+        
+        # Should have both valid data and error reports
+        assert "ground_terms:" in output  # Valid data was parsed
+        assert "resource_errors" in output  # Invalid data caused errors
+        
+        # Should have some valid ground terms from successful resources
+        assert "simple_links" in output
+    
+    def test_catalog_metadata_preservation(self, fixtures_dir: Path):
+        """Test that catalog metadata is preserved in output."""
+        catalog_path = fixtures_dir / "catalogs" / "csv_only_test.catalog.yaml"
+        
+        result = self.run_cli_command([
+            "dump", str(catalog_path), "-t", "yaml"
+        ])
+        
+        assert result.exit_code == 0
+        
+        output = result.stdout
+        
+        # Check metadata preservation
+        assert "_annotations:" in output
+        assert "CSV Only Test" in output
+        assert "Test catalog with CSV data files that we know work" in output
+    
+    def test_multiple_csv_files_parsing(self, fixtures_dir: Path):
+        """Test parsing multiple CSV files together."""
+        # Test individual CSV files directly (not via catalog)
+        links_path = fixtures_dir / "data" / "simple_links.csv"
+        people_path = fixtures_dir / "data" / "simple_people.csv"
+        
+        result = self.run_cli_command([
+            "dump", str(links_path), str(people_path), "-t", "yaml"
+        ])
+        
+        assert result.exit_code == 0
+        
+        output = result.stdout
+        
+        # Should contain facts from both files
+        assert "simple_links" in output
+        assert "simple_people" in output
+        # Should have data from both files
+        assert "- A" in output  # From links
+        assert "- Alice" in output  # From people
+        assert "ground_terms:" in output
+    
+    def test_list_parsers_includes_catalog(self):
+        """Test that catalog parser is listed in available parsers."""
+        result = self.run_cli_command(["list-parsers"])
+        
+        assert result.exit_code == 0
+        assert "catalog" in result.stdout
+        assert "CatalogParser" in result.stdout
+    
+    def test_help_commands(self):
+        """Test that help commands work properly."""
+        # Test main help
+        result = self.run_cli_command(["--help"])
+        assert result.exit_code == 0
+        assert "dump" in result.stdout
+        assert "solve" in result.stdout
+        
+        # Test dump help
+        result = self.run_cli_command(["dump", "--help"])
+        assert result.exit_code == 0
+        assert "catalog" in result.stdout.lower() or "multiple input files" in result.stdout
+        
+        # Test solve help
+        result = self.run_cli_command(["solve", "--help"])
+        assert result.exit_code == 0
+        assert "solver" in result.stdout
+    
+    def test_output_to_file_with_catalog(self, fixtures_dir: Path):
+        """Test outputting catalog results to files."""
+        catalog_path = fixtures_dir / "catalogs" / "csv_only_test.catalog.yaml"
+        
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
+            output_file = Path(f.name)
+        
+        try:
+            result = self.run_cli_command([
+                "dump", str(catalog_path), "-t", "yaml", "-o", str(output_file)
+            ])
+            
+            assert result.exit_code == 0
+            assert "exported to" in result.stdout or "written to" in result.stdout
+            
+            # Check file was created and has content
+            assert output_file.exists()
+            content = output_file.read_text()
+            assert len(content) > 0
+            assert "simple_links" in content or "simple_people" in content
+            
+        finally:
+            if output_file.exists():
+                output_file.unlink()
+
+
+class TestCLIErrorHandling:
+    """Test CLI error handling scenarios."""
+    
+    def test_nonexistent_catalog_file(self):
+        """Test behavior with non-existent catalog file."""
+        result = runner.invoke(app, ["dump", "nonexistent.catalog.yaml"])
+        
+        # Should fail gracefully
+        assert result.exit_code != 0
+        assert ("not found" in result.stdout.lower() or 
+                "no such file" in result.stdout.lower() or
+                "error" in result.stdout.lower())
+    
+    def test_invalid_output_format(self):
+        """Test behavior with invalid output format.""" 
+        fixtures_dir = Path(__file__).parent / "test_cli" / "fixtures"
+        catalog_path = fixtures_dir / "catalogs" / "csv_only_test.catalog.yaml"
+        
+        result = runner.invoke(app, ["dump", str(catalog_path), "-t", "nonexistent_format"])
+        
+        # Should fail with helpful error
+        assert result.exit_code != 0
+        assert ("unknown" in result.stdout.lower() or 
+                "not found" in result.stdout.lower() or
+                "invalid" in result.stdout.lower())

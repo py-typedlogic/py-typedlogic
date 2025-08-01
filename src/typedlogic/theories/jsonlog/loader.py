@@ -4,7 +4,7 @@ from typing import Any, Iterator, Union
 
 from typedlogic import Fact
 from typedlogic.theories.jsonlog.jsonlog import (
-    ListNodeHasMember,
+    ArrayPointerHasMember,
     NodeBooleanValue,
     NodeFloatValue,
     NodeIntValue,
@@ -13,14 +13,14 @@ from typedlogic.theories.jsonlog.jsonlog import (
     NodeIsObject,
     NodeNullValue,
     NodeStringValue,
-    ObjectNodeLookup,
+    ObjectPointerHasProperty,
 )
 
 
 def generate_from_source(source: Union[Path, str, Any]) -> Iterator[Fact]:
     """
     Generates ground logical sentences from a JSON source, conforming to the JSONLog schema
-    (NodeIsObject/1, ObjectNodeLookup/3, NodeIsLiteral/1, NodeIntValue/2, etc.).
+    (NodeIsObject/1, ObjectPointerHasProperty/3, NodeIsLiteral/1, NodeIntValue/2, etc.).
 
         >>> from typedlogic.compiler import write_sentences
         >>> write_sentences(generate_from_source('''
@@ -30,20 +30,20 @@ def generate_from_source(source: Union[Path, str, Any]) -> Iterator[Fact]:
         ... }
         ... '''))
         NodeIsObject('/')
-        ObjectNodeLookup('/', 'id', '/id/')
+        ObjectPointerHasProperty('/', 'id', '/id/')
         NodeIsLiteral('/id/')
         NodeIntValue('/id/', 1)
-        ObjectNodeLookup('/', 'name', '/name/')
+        ObjectPointerHasProperty('/', 'name', '/name/')
         NodeIsLiteral('/name/')
         NodeStringValue('/name/', 'a')
-        ObjectNodeLookup('/', 'children', '/children/')
+        ObjectPointerHasProperty('/', 'children', '/children/')
         NodeIsList('/children/')
-        ListNodeHasMember('/children/', 0, '/children/[0]')
+        ArrayPointerHasMember('/children/', 0, '/children/[0]')
         NodeIsObject('/children/[0]')
-        ObjectNodeLookup('/children/[0]', 'id', '/children/[0]id/')
+        ObjectPointerHasProperty('/children/[0]', 'id', '/children/[0]id/')
         NodeIsLiteral('/children/[0]id/')
         NodeIntValue('/children/[0]id/', 2)
-        ObjectNodeLookup('/children/[0]', 'name', '/children/[0]name/')
+        ObjectPointerHasProperty('/children/[0]', 'name', '/children/[0]name/')
         NodeIsLiteral('/children/[0]name/')
         NodeStringValue('/children/[0]name/', 'b')
 
@@ -85,11 +85,11 @@ def generate_from_object(obj: Any, jsonpath: str = "/") -> Iterator[Fact]:
         NodeIsObject('/')
 
     A simple object generates two nodes (one object, one literal); the first is connected to the second
-    voa ObjectNodeLookup/2, and the second is connected to a literal via NodeIntValue/2:
+    voa ObjectPointerHasProperty/2, and the second is connected to a literal via NodeIntValue/2:
 
         >>> write_sentences(generate_from_object({"a": 1}))
         NodeIsObject('/')
-        ObjectNodeLookup('/', 'a', '/a/')
+        ObjectPointerHasProperty('/', 'a', '/a/')
         NodeIsLiteral('/a/')
         NodeIntValue('/a/', 1)
 
@@ -98,11 +98,11 @@ def generate_from_object(obj: Any, jsonpath: str = "/") -> Iterator[Fact]:
         >>> write_sentences(generate_from_object([]))
         NodeIsList('/')
 
-    ListNodeHasMember/3 is used to provide an index for each member of the list:
+    ArrayPointerHasMember/3 is used to provide an index for each member of the list:
 
         >>> write_sentences(generate_from_object([1]))
         NodeIsList('/')
-        ListNodeHasMember('/', 0, '/[0]')
+        ArrayPointerHasMember('/', 0, '/[0]')
         NodeIsLiteral('/[0]')
         NodeIntValue('/[0]', 1)
 
@@ -114,13 +114,13 @@ def generate_from_object(obj: Any, jsonpath: str = "/") -> Iterator[Fact]:
         yield NodeIsObject(jsonpath)
         for k, v in obj.items():
             child = jsonpath + k + "/"
-            yield ObjectNodeLookup(jsonpath, k, child)
+            yield ObjectPointerHasProperty(jsonpath, k, child)
             yield from generate_from_object(v, child)
     elif isinstance(obj, list):
         yield NodeIsList(jsonpath)
         for i, v in enumerate(obj):
             child = jsonpath + f"[{i}]"
-            yield ListNodeHasMember(jsonpath, i, child)
+            yield ArrayPointerHasMember(jsonpath, i, child)
             yield from generate_from_object(v, child)
     else:
         yield NodeIsLiteral(jsonpath)

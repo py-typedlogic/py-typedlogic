@@ -14,6 +14,17 @@ import typedlogic.theories.jsonlog.loader as jsonlog_loader
 class JsonLogParser(Parser):
     """
     A parser for JsonLog JSON files.
+
+    Example:
+
+        >>> parser = JsonLogParser()
+        >>> theory = parser.parse("[1]")
+        >>> for s in sorted(theory.sentences):
+        ...    print(s)
+        NodeIntValue(/[0], 1)
+        NodeIsLiteral(/[0])
+        ArrayPointerHasMember(/, 0, /[0])
+        NodeIsList(/)
     """
 
     def parse(self, source: Union[Path, str, TextIO], **kwargs) -> Theory:

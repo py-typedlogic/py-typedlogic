@@ -1,0 +1,26 @@
+metadata:
+  name: "Valid Research Data"
+  description: "Complete valid dataset conforming to research schema"
+  version: "1.0"
+  use_case: "validation_success"
+
+resources:
+  - path: "../schemas/research_schema.yaml"
+    format: "linkml"
+    type: "schema"
+    description: "Research domain schema"
+    
+  - path: "../data/valid_authors.json"
+    format: "jsonlog" 
+    type: "data"
+    description: "Valid author records"
+    
+  - path: "../data/valid_organizations.json"
+    format: "jsonlog"
+    type: "data"
+    description: "Valid organization records"
+    
+  - path: "../data/valid_publications.json"
+    format: "jsonlog"
+    type: "data"
+    description: "Valid publication records"

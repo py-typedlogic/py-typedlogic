@@ -1,0 +1,15 @@
+metadata:
+  name: "Invalid Simple Test"
+  description: "Test catalog with some valid and some invalid resources"
+  version: "1.0"
+
+resources:
+  - path: "../data/simple_links.csv"
+    format: "dataframe"
+    type: "data"
+    description: "Valid CSV data"
+    
+  - path: "../data/nonexistent_file.csv"
+    format: "dataframe"
+    type: "data"
+    description: "This file doesn't exist"

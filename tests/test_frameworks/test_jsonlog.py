@@ -4,13 +4,13 @@ from typedlogic.integrations.solvers.souffle import SouffleSolver
 from typedlogic.integrations.solvers.z3 import Z3Solver
 from typedlogic.theories.jsonlog import jsonlog
 from typedlogic.theories.jsonlog.jsonlog import (
-    ListNodeHasMember,
+    ArrayPointerHasMember,
     NodeIntValue,
     NodeIsList,
     NodeIsLiteral,
     NodeIsObject,
     NodeStringValue,
-    ObjectNodeLookup,
+    ObjectPointerHasProperty,
 )
 from typedlogic.theories.jsonlog.loader import generate_from_object
 
@@ -23,20 +23,20 @@ from typedlogic.theories.jsonlog.loader import generate_from_object
         (1, {NodeIsLiteral("/"), NodeIntValue("/", 1)}),
         (
             {"k": 1},
-            {NodeIsObject("/"), ObjectNodeLookup("/", "k", "/k/"), NodeIntValue("/k/", 1), NodeIsLiteral("/k/")},
+            {NodeIsObject("/"), ObjectPointerHasProperty("/", "k", "/k/"), NodeIntValue("/k/", 1), NodeIsLiteral("/k/")},
         ),
         (
             ["x"],
-            {NodeIsList("/"), ListNodeHasMember("/", 0, "/[0]"), NodeStringValue("/[0]", "x"), NodeIsLiteral("/[0]")},
+            {NodeIsList("/"), ArrayPointerHasMember("/", 0, "/[0]"), NodeStringValue("/[0]", "x"), NodeIsLiteral("/[0]")},
         ),
         (
             ["x", 1],
             {
                 NodeIsList("/"),
-                ListNodeHasMember("/", 0, "/[0]"),
+                ArrayPointerHasMember("/", 0, "/[0]"),
                 NodeStringValue("/[0]", "x"),
                 NodeIsLiteral("/[0]"),
-                ListNodeHasMember("/", 1, "/[1]"),
+                ArrayPointerHasMember("/", 1, "/[1]"),
                 NodeIntValue("/[1]", 1),
                 NodeIsLiteral("/[1]"),
             },
@@ -45,12 +45,12 @@ from typedlogic.theories.jsonlog.loader import generate_from_object
             {"k": ["x", 1]},
             {
                 NodeIsObject("/"),
-                ObjectNodeLookup("/", "k", "/k/"),
+                ObjectPointerHasProperty("/", "k", "/k/"),
                 NodeIsList("/k/"),
-                ListNodeHasMember("/k/", 0, "/k/[0]"),
+                ArrayPointerHasMember("/k/", 0, "/k/[0]"),
                 NodeStringValue("/k/[0]", "x"),
                 NodeIsLiteral("/k/[0]"),
-                ListNodeHasMember("/k/", 1, "/k/[1]"),
+                ArrayPointerHasMember("/k/", 1, "/k/[1]"),
                 NodeIntValue("/k/[1]", 1),
                 NodeIsLiteral("/k/[1]"),
             },

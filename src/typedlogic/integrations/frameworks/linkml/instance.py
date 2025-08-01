@@ -9,6 +9,7 @@ Example:
 
 """
 from typing import Any
+from dataclasses import dataclass
 
 from typedlogic import axiom, gen1, gen3
 from typedlogic.datamodel import CardinalityConstraint, Term
@@ -39,19 +40,24 @@ class CollectionNode(Fact):
     id: NodeID
 
 
+
 @dataclass(frozen=True)
 class InlinedObject(Fact):
+    """
+    An instance of a ClassDefinition that is inlined.
+    """
     id: NodeID
 
 
 @axiom
-def node_classification(n: NodeID):
+def node_classification_axiom(n: NodeID):
     """
     Axiom that classifies a node as an instance, collection, or inlined object.
 
     :param n:
     :return:
     """
+    # note: '^' is exclusive or, so this is true if exactly one of the two is true
     if Node(n):
         assert CollectionNode(n) ^ Instance(n)
     if CollectionNode(n):
@@ -67,16 +73,16 @@ class InstanceMember(Fact):
 
 
 @axiom
-def instance_member():
+def instance_member_axiom():
     assert all(
         InstanceMember(i, m)
         for i, ix, m in gen3(NodeID, int, NodeID)
-        if ListNodeHasMember(i, ix, m) and NodeIsMultiValued(i)
+        if ArrayPointerHasMember(i, ix, m) and NodeIsMultiValued(i)
     )
     assert all(
         InstanceMember(i, m)
         for i, ix, m in gen3(NodeID, Key, NodeID)
-        if ObjectNodeLookup(i, ix, m) and NodeIsMultiValued(i)
+        if ObjectPointerHasProperty(i, ix, m) and NodeIsMultiValued(i)
     )
     assert all(InstanceMember(i, i) for i in gen1(NodeID) if NodeIsSingleValued(i))
 
@@ -137,7 +143,7 @@ class Association(Fact):
 
         >>> _ = NodeStringValue("/persons/1/name/", "John Doe")
 
-    The association never points to a collection, only memmbers of a collection.
+    The association never points to a collection, only members of a collection.
 
         >>> _ = Association("/", "persons", "/persons/1/")
         >>> _ = Association("/", "persons", "/persons/2/")
@@ -151,13 +157,13 @@ class Association(Fact):
 
 @axiom
 def association_from_list(i: NodeID, a: ElementID, j: NodeID, m: NodeID, ix: int):
-    if ObjectNodeLookup(i, a, m) and NodeIsMultiValued(m) and ListNodeHasMember(m, ix, j):
+    if ObjectPointerHasProperty(i, a, m) and NodeIsMultiValued(m) and ArrayPointerHasMember(m, ix, j):
         assert Association(i, a, j)
 
 
 @axiom
 def association_from_object(i: NodeID, a: ElementID, j: NodeID, m: NodeID, k: Key):
-    if ObjectNodeLookup(i, a, m) and NodeIsMultiValued(m) and ObjectNodeLookup(m, k, j):
+    if ObjectPointerHasProperty(i, a, m) and NodeIsMultiValued(m) and ObjectPointerHasProperty(m, k, j):
         assert Association(i, a, j)
 
 
@@ -167,7 +173,7 @@ def association_from_scalar(
     a: ElementID,
     j: NodeID,
 ):
-    if ObjectNodeLookup(i, a, j) and NodeIsSingleValued(j):
+    if ObjectPointerHasProperty(i, a, j) and NodeIsSingleValued(j):
         assert Association(i, a, j)
 
 

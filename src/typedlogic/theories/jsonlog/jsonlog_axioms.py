@@ -5,7 +5,7 @@ Minimal logical theory for JSONLog, defining parent-child relationships
 from dataclasses import dataclass
 
 from typedlogic import Fact, axiom
-from typedlogic.theories.jsonlog.jsonlog import Key, ListNodeHasMember, Node, NodeID, ObjectNodeLookup
+from typedlogic.theories.jsonlog.jsonlog import Key, ArrayPointerHasMember, Node, NodeID, ObjectPointerHasProperty
 
 
 @dataclass(frozen=True)
@@ -21,13 +21,13 @@ class ParentChildRelationship(Fact):
 
 @axiom
 def list_parent_child(p: NodeID, c: NodeID, ix: int):
-    if ListNodeHasMember(p, ix, c):
+    if ArrayPointerHasMember(p, ix, c):
         assert ParentChildRelationship(p, c)
 
 
 @axiom
 def dict_parent_child(p: NodeID, c: NodeID, k: Key):
-    if ObjectNodeLookup(p, k, c):
+    if ObjectPointerHasProperty(p, k, c):
         assert ParentChildRelationship(p, c)
 
 

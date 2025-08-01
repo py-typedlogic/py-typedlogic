@@ -1,0 +1,13 @@
+{
+  "facts": [
+    ["@type", "Person", {
+      "id": "person:invalid1",
+      "email": "invalid@example.com"
+      // Missing required "name" field
+    }],
+    ["@type", "Person", {
+      "name": "Dr. No ID"
+      // Missing required "id" field  
+    }]
+  ]
+}

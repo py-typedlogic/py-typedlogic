@@ -1,0 +1,15 @@
+metadata:
+  name: "Invalid Data - Constraint Violations"
+  description: "Dataset violating numeric and list constraints"
+  version: "1.0"
+  use_case: "validation_failure_constraints"
+
+resources:
+  - path: "../schemas/research_schema.yaml"
+    format: "linkml"
+    type: "schema"
+    
+  - path: "../data/invalid_publications_constraints.json"
+    format: "jsonlog"
+    type: "data"
+    description: "Publications with invalid year ranges and negative citations"

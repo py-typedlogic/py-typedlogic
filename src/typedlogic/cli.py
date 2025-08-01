@@ -123,6 +123,10 @@ def convert(
 
 
 def _guess_format(data_file: Path) -> str:
+    # Check for catalog files first
+    if data_file.name.endswith('.catalog.yaml') or data_file.name.endswith('.catalog.yml'):
+        return "catalog"
+    
     suffix = data_file.suffix[1:]
     if suffix == "py":
         return "python"

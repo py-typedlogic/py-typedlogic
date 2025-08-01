@@ -1178,13 +1178,29 @@ def as_object(self: Any, parent=None) -> Any:
 
 
 def from_object(obj: Any) -> Any:
+    """
+    Convert a dictionary representation of a sentence or theory back to the original object.
+
+    Example:
+
+        >>> from_object({"type": "Term", "arguments": ["FriendOf", "Alice", "Bob"]})
+        FriendOf(Alice, Bob)
+
+    :param obj:
+    :return:
+    """
     if isinstance(obj, dict):
+        # type designation
         if "type" in obj:
             cls = globals()[obj["type"]]
             if cls in (PredicateDefinition, Theory, SentenceGroup):
                 return cls(**{k: from_object(v) for k, v in obj.items() if k != "type"})
             else:
-                return cls(*[from_object(x) for x in obj["arguments"]])
+                args = obj.get("arguments", [])
+                if issubclass(cls, Term) and cls != Term:
+                    args = args[1:]  # skip the predicate name for Term subclasses
+                args_tr = [from_object(x) for x in args]
+                return cls(*args_tr)
         else:
             return obj
     if isinstance(obj, list):

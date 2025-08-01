@@ -90,6 +90,8 @@ nav:
       - Parser overview: conversion/parsers/index.md
       - Python: conversion/parsers/python.md
       - YAML: conversion/parsers/yaml.md
+      - DataFrame: conversion/parsers/dataframe.md
+      - Catalog: conversion/parsers/catalog.md
       - OWLPy: conversion/parsers/owlpy.md
       - RDF: conversion/parsers/rdf.md
   - Frameworks:

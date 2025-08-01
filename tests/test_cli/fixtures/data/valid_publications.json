@@ -1,0 +1,24 @@
+{
+  "facts": [
+    ["@type", "Publication", {
+      "id": "doi:10.1038/nature12373",
+      "title": "Machine Learning in Genomics",
+      "abstract": "This paper explores the application of machine learning techniques to genomic data analysis.",
+      "year": 2023,
+      "journal": "Nature",
+      "authors": ["person:alice_smith", "person:bob_jones"],
+      "keywords": ["machine learning", "genomics", "bioinformatics"],
+      "citation_count": 42
+    }],
+    ["@type", "Publication", {
+      "id": "doi:10.1126/science.abc123", 
+      "title": "Advances in Protein Folding Prediction",
+      "abstract": "Novel approaches to predicting protein structure using deep learning.",
+      "year": 2022,
+      "journal": "Science",
+      "authors": ["person:carol_wilson"],
+      "keywords": ["protein folding", "deep learning", "structural biology"],
+      "citation_count": 156
+    }]
+  ]
+}

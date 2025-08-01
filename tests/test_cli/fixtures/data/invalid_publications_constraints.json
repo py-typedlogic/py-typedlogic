@@ -1,0 +1,18 @@
+{
+  "facts": [
+    ["@type", "Publication", {
+      "id": "doi:invalid1",
+      "title": "Paper from the Future",
+      "year": 2050,
+      "authors": [],
+      "citation_count": -5
+    }],
+    ["@type", "Publication", {
+      "id": "doi:invalid2", 
+      "title": "Ancient Paper",
+      "year": 1800,
+      "journal": "Prehistoric Science",
+      "authors": ["person:nonexistent_author"]
+    }]
+  ]
+}

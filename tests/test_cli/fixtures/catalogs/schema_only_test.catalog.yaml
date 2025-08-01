@@ -1,0 +1,10 @@
+metadata:
+  name: "Schema Only Test"
+  description: "Test catalog with just a working LinkML schema"
+  version: "1.0"
+
+resources:
+  - path: "../../test_parsers/fixtures/schemas/person.yaml"
+    format: "linkml"
+    type: "schema"
+    description: "Person schema that we know works"

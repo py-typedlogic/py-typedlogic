@@ -1,0 +1,30 @@
+metadata:
+  name: "Mixed Valid and Invalid Data"
+  description: "Dataset combining valid and invalid records to test error collection"
+  version: "1.0"
+  use_case: "partial_validation"
+
+resources:
+  - path: "../schemas/research_schema.yaml"
+    format: "linkml"
+    type: "schema"
+    
+  - path: "../data/valid_authors.json"
+    format: "jsonlog"
+    type: "data"
+    description: "Valid authors (should succeed)"
+    
+  - path: "../data/valid_organizations.json"
+    format: "jsonlog"
+    type: "data"
+    description: "Valid organizations (should succeed)"
+    
+  - path: "../data/invalid_authors_bad_patterns.json"
+    format: "jsonlog" 
+    type: "data"
+    description: "Invalid authors (should fail)"
+    
+  - path: "../data/invalid_organizations_enum.json"
+    format: "jsonlog"
+    type: "data"
+    description: "Invalid organizations (should fail)"
