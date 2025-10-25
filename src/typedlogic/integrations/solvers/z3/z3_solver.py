@@ -61,20 +61,52 @@ def get_models(s: z3.Solver, M: int) -> List[z3.Model]:
 @dataclass
 class Z3Solver(Solver):
     """
-    A solver that uses Z3.
+    A solver that uses Z3 for type checking and constraint validation.
 
-        >>> from typedlogic.integrations.frameworks.pydantic import FactBaseModel
-        >>> class AncestorOf(FactBaseModel):
-        ...     ancestor: str
-        ...     descendant: str
+    Z3 excels at verifying type constraints, detecting inconsistencies in typed systems,
+    and proving properties through logical inference. While useful for entailment, Z3's
+    real strength is in checking that constraints and type invariants are satisfied.
+
+    Example: Detecting type violations in a categorization system:
+
+        >>> from typedlogic import Term, Variable, Forall, Not
+        >>> # Define predicates for a categorization system
         >>> solver = Z3Solver()
-        >>> solver.add_predicate_definition(PredicateDefinition(predicate="AncestorOf", arguments={'ancestor': "str", 'descendant': "str"}))
-        >>> solver.add_fact(AncestorOf(ancestor='p1', descendant='p1a'))
-        >>> solver.add_fact(AncestorOf(ancestor='p1a', descendant='p1aa'))
-        >>> from typedlogic import SentenceGroup, PredicateDefinition
-        >>> aa = SentenceGroup(name="transitivity-of-ancestor-of")
-        >>> solver.add_sentence_group(aa)
+        >>> solver.add_predicate_definition(PredicateDefinition(
+        ...     predicate="IsPositive", arguments={'x': "int"}
+        ... ))
+        >>> solver.add_predicate_definition(PredicateDefinition(
+        ...     predicate="IsNegative", arguments={'x': "int"}
+        ... ))
+        >>> # Type constraint: nothing can be both positive and negative
+        >>> x = Variable("x", "int")
+        >>> mutual_exclusion = Forall([x], Not(
+        ...     Term("IsPositive", {"x": x}) & Term("IsNegative", {"x": x})
+        ... ))
+        >>> solver.add_sentence(mutual_exclusion)
+        >>> # Valid: separate classifications
+        >>> solver.add_fact(Term("IsPositive", {"x": 5}))
+        >>> solver.add_fact(Term("IsNegative", {"x": -3}))
         >>> soln = solver.check()
+        >>> soln.satisfiable
+        True
+        >>> # Invalid: contradictory classification of same value
+        >>> solver2 = Z3Solver()
+        >>> solver2.add_predicate_definition(PredicateDefinition(
+        ...     predicate="IsPositive", arguments={'x': "int"}
+        ... ))
+        >>> solver2.add_predicate_definition(PredicateDefinition(
+        ...     predicate="IsNegative", arguments={'x': "int"}
+        ... ))
+        >>> solver2.add_sentence(mutual_exclusion)
+        >>> solver2.add_fact(Term("IsPositive", {"x": 7}))
+        >>> solver2.add_fact(Term("IsNegative", {"x": 7}))  # Contradiction!
+        >>> soln2 = solver2.check()
+        >>> soln2.satisfiable
+        False
+
+    Z3 can also verify class hierarchies, check inheritance constraints, and prove
+    complex logical entailments from axiom systems.
 
     """
 
