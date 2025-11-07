@@ -1,0 +1,24 @@
+{
+  "facts": [
+    ["@type", "Person", {
+      "id": "person:alice_smith", 
+      "name": "Dr. Alice Smith",
+      "email": "alice.smith@university.edu",
+      "orcid": "0000-0002-1825-0097",
+      "affiliation": "org:stanford"
+    }],
+    ["@type", "Person", {
+      "id": "person:bob_jones",
+      "name": "Prof. Bob Jones", 
+      "email": "bob.jones@research.org",
+      "orcid": "0000-0001-5109-3700",
+      "affiliation": "org:mit"
+    }],
+    ["@type", "Person", {
+      "id": "person:carol_wilson",
+      "name": "Dr. Carol Wilson",
+      "email": "carol@biotech.com",
+      "affiliation": "org:biotech_corp"
+    }]
+  ]
+}

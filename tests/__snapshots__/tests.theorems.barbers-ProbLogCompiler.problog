@@ -1,4 +1,4 @@
-shaves(Customer, Customer); shaves(Shaver, Customer) :- barber(Shaver), person(Customer).
+shaves(Shaver, Customer) :- barber(Shaver), person(Customer), \+ shaves(Customer, Customer).
 person(Name) :- barber(Name).
 query(person(Name)).
 query(barber(Name)).

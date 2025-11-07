@@ -1,0 +1,15 @@
+metadata:
+  name: "CSV Only Test"
+  description: "Test catalog with CSV data files that we know work"
+  version: "1.0"
+
+resources:
+  - path: "../data/simple_links.csv"
+    format: "dataframe"
+    type: "data"
+    description: "Link data"
+    
+  - path: "../data/simple_people.csv"
+    format: "dataframe"
+    type: "data" 
+    description: "Person data"

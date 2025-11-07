@@ -1,3 +1,57 @@
+[project]
+name = "typedlogic"
+version = "0.0.0"
+description = "typedlogic"
+authors = [
+    {name = "Author 1", email = "author@org.org"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "importlib-metadata>=8.2.0",
+    "typer>=0.12.5",
+]
+
+[project.optional-dependencies]
+pydantic = ["pydantic"]
+clingo = ["clingo"]
+z3 = ["z3-solver"]
+pyprover = ["pyprover"]
+snakelog = ["snakelog"]
+problog = ["problog"]
+clorm = ["clorm"]
+rdflib = ["rdflib"]
+sympy = ["sympy"]
+owl = ["py-horned-owl>=1.0.0,!=1.0.1"]
+gavel-owl = ["gavel-owl", "ply"]
+llm = ["llm"]
+pandas = ["pandas"]
+pandera = ["pandera[mypy]"]
+tests = ["black", "ruff"]
+dev = [
+    "pytest>=8.3.2",
+    "tox>=4.16.0",
+    "mypy",
+    "types-PyYAML",
+    "jupyter",
+    "papermill",
+    "nbdime",
+    "nbformat",
+    "pre-commit>=3.3.3",
+    "mkdocs",
+    "mkdocs-mermaid2-plugin",
+    "mkdocstrings[crystal,python]",
+    "mknotebooks>=0.8.0",
+    "mkdocs-windmill",
+    "mkdocs-material",
+    "mkdocs-click",
+    "mkdocs-with-pdf",
+]
+
+[project.scripts]
+typedlogic = "typedlogic.cli:app"
+
 [tool.poetry]
 name = "typedlogic"
 version = "0.0.0"

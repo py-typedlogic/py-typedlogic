@@ -1,8 +1,8 @@
 # Example usage
-from typing import List
+from typing import List, Iterator
 
 from pydantic import BaseModel
-from typedlogic import Fact, FactMixin, axiom, gen1, gen3, goal
+from typedlogic import Fact, FactMixin, axiom, gen1, gen3, goal, Variable
 
 NameType = str
 
@@ -13,13 +13,6 @@ class Person(BaseModel, FactMixin):
 
 class Mortal(BaseModel, Fact):
     name: NameType
-
-    @classmethod
-    def axioms(cls) -> List[Fact]:
-        """
-        TODO: this is not yet used
-        """
-        return [Person(name=x) >> Mortal(name=x) for x in gen1(NameType)]
 
 
 TreeNodeType = str

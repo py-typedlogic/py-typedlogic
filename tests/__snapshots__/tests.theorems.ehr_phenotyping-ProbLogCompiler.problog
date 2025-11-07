@@ -6,10 +6,10 @@ hypertension(Patient_id, _) :- patient(Patient_id, date(1970, 1, 1), "unknown"),
 hypertension(Patient_id, 0.8) :- patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "8480-6"), Systolic, "mmHg"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "8462-4"), Diastolic, "mmHg"), Systolic >= 140, Diastolic >= 90.
 ckd(Patient_id, _, _) :- patient(Patient_id, date(1970, 1, 1), "unknown"), encounter(Encounter_id, Patient_id, date(2024, 1, 1)), diagnosis(Encounter_id, code("ICD10", "N18")).
 ckd(Patient_id, 1, 0.5) :- Value >= 90, patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2").
-ckd(Patient_id, 2, 0.7); Value >= 90 :- Value >= 60, patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2").
-ckd(Patient_id, 3, 0.9); Value >= 60; Value >= 90 :- Value >= 30, patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2").
-ckd(Patient_id, 4, 0.95); Value >= 30; Value >= 60; Value >= 90 :- Value >= 15, patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2").
-Value >= 15; ckd(Patient_id, 5, 0.99); Value >= 30; Value >= 60; Value >= 90 :- patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2").
+Value >= 90 :- Value >= 60, patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2"), \+ ckd(Patient_id, 2, 0.7).
+Value >= 90 :- Value >= 30, patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2"), \+ ckd(Patient_id, 3, 0.9), \+ Value >= 60.
+Value >= 90 :- Value >= 15, patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2"), \+ ckd(Patient_id, 4, 0.95), \+ Value >= 30, \+ Value >= 60.
+Value >= 90 :- patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2"), \+ Value >= 15, \+ ckd(Patient_id, 5, 0.99), \+ Value >= 30, \+ Value >= 60.
 diabetest2(Patient_id, 1.0) :- diabetest2(Patient_id, _), hypertension(Patient_id, _).
 hypertension(Patient_id, 1.0) :- diabetest2(Patient_id, _), hypertension(Patient_id, _).
 phenotype(Patient_id) :- diabetest2(Patient_id, Confidence).

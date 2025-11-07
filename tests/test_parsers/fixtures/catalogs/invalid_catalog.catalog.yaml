@@ -1,0 +1,14 @@
+metadata:
+  name: "Invalid Catalog Test"
+  
+resources:
+  - path: "nonexistent.csv"
+    format: "dataframe"
+    
+  - path: "../csv/simple.csv"
+    format: "unknown_format"
+    
+  - url: "invalid-url"
+    format: "yaml"
+    
+  - invalid_resource_spec: "missing required fields"

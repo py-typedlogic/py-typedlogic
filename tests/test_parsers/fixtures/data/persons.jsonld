@@ -1,0 +1,6 @@
+{
+  "facts": [
+    ["@type", "Person", {"id": "person:001", "name": "Alice Smith", "age": 25, "email": "alice@example.com"}],
+    ["@type", "Person", {"id": "person:002", "name": "Bob Jones", "age": 30, "email": "bob@example.com"}]
+  ]
+}

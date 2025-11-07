@@ -4,23 +4,23 @@ from typing import Any, Iterator, Union
 
 from typedlogic import Fact
 from typedlogic.theories.jsonlog.jsonlog import (
-    ListNodeHasMember,
-    NodeBooleanValue,
-    NodeFloatValue,
-    NodeIntValue,
-    NodeIsList,
-    NodeIsLiteral,
-    NodeIsObject,
-    NodeNullValue,
-    NodeStringValue,
-    ObjectNodeLookup,
+    ArrayPointerHasMember,
+    PointerBooleanValue,
+    PointerFloatValue,
+    PointerIntValue,
+    PointerIsArray,
+    PointerIsLiteral,
+    PointerIsObject,
+    PointerNullValue,
+    PointerStringValue,
+    ObjectPointerHasProperty,
 )
 
 
 def generate_from_source(source: Union[Path, str, Any]) -> Iterator[Fact]:
     """
     Generates ground logical sentences from a JSON source, conforming to the JSONLog schema
-    (NodeIsObject/1, ObjectNodeLookup/3, NodeIsLiteral/1, NodeIntValue/2, etc.).
+    (PointerIsObject/1, ObjectPointerHasProperty/3, PointerIsLiteral/1, PointerIntValue/2, etc.).
 
         >>> from typedlogic.compiler import write_sentences
         >>> write_sentences(generate_from_source('''
@@ -29,23 +29,23 @@ def generate_from_source(source: Union[Path, str, Any]) -> Iterator[Fact]:
         ... "children": [{"id": 2, "name": "b"}]
         ... }
         ... '''))
-        NodeIsObject('/')
-        ObjectNodeLookup('/', 'id', '/id/')
-        NodeIsLiteral('/id/')
-        NodeIntValue('/id/', 1)
-        ObjectNodeLookup('/', 'name', '/name/')
-        NodeIsLiteral('/name/')
-        NodeStringValue('/name/', 'a')
-        ObjectNodeLookup('/', 'children', '/children/')
-        NodeIsList('/children/')
-        ListNodeHasMember('/children/', 0, '/children/[0]')
-        NodeIsObject('/children/[0]')
-        ObjectNodeLookup('/children/[0]', 'id', '/children/[0]id/')
-        NodeIsLiteral('/children/[0]id/')
-        NodeIntValue('/children/[0]id/', 2)
-        ObjectNodeLookup('/children/[0]', 'name', '/children/[0]name/')
-        NodeIsLiteral('/children/[0]name/')
-        NodeStringValue('/children/[0]name/', 'b')
+        PointerIsObject('/')
+        ObjectPointerHasProperty('/', 'id', '/id/')
+        PointerIsLiteral('/id/')
+        PointerIntValue('/id/', 1)
+        ObjectPointerHasProperty('/', 'name', '/name/')
+        PointerIsLiteral('/name/')
+        PointerStringValue('/name/', 'a')
+        ObjectPointerHasProperty('/', 'children', '/children/')
+        PointerIsArray('/children/')
+        ArrayPointerHasMember('/children/', 0, '/children/[0]')
+        PointerIsObject('/children/[0]')
+        ObjectPointerHasProperty('/children/[0]', 'id', '/children/[0]id/')
+        PointerIsLiteral('/children/[0]id/')
+        PointerIntValue('/children/[0]id/', 2)
+        ObjectPointerHasProperty('/children/[0]', 'name', '/children/[0]name/')
+        PointerIsLiteral('/children/[0]name/')
+        PointerStringValue('/children/[0]name/', 'b')
 
 
     :param source:
@@ -68,11 +68,11 @@ def generate_from_object(obj: Any, jsonpath: str = "/") -> Iterator[Fact]:
 
         >>> from typedlogic.compiler import write_sentences
         >>> write_sentences(generate_from_object(5))
-        NodeIsLiteral('/')
-        NodeIntValue('/', 5)
+        PointerIsLiteral('/')
+        PointerIntValue('/', 5)
         >>> write_sentences(generate_from_object("a"))
-        NodeIsLiteral('/')
-        NodeStringValue('/', 'a')
+        PointerIsLiteral('/')
+        PointerStringValue('/', 'a')
 
     Note that each node gets a jsonpath ID corresponding to its location in the JSON structure.
 
@@ -82,58 +82,58 @@ def generate_from_object(obj: Any, jsonpath: str = "/") -> Iterator[Fact]:
 
         >>> from typedlogic.compiler import write_sentences
         >>> write_sentences(generate_from_object({}))
-        NodeIsObject('/')
+        PointerIsObject('/')
 
     A simple object generates two nodes (one object, one literal); the first is connected to the second
-    voa ObjectNodeLookup/2, and the second is connected to a literal via NodeIntValue/2:
+    voa ObjectPointerHasProperty/2, and the second is connected to a literal via PointerIntValue/2:
 
         >>> write_sentences(generate_from_object({"a": 1}))
-        NodeIsObject('/')
-        ObjectNodeLookup('/', 'a', '/a/')
-        NodeIsLiteral('/a/')
-        NodeIntValue('/a/', 1)
+        PointerIsObject('/')
+        ObjectPointerHasProperty('/', 'a', '/a/')
+        PointerIsLiteral('/a/')
+        PointerIntValue('/a/', 1)
 
     Arrays
 
         >>> write_sentences(generate_from_object([]))
-        NodeIsList('/')
+        PointerIsArray('/')
 
-    ListNodeHasMember/3 is used to provide an index for each member of the list:
+    ArrayPointerHasMember/3 is used to provide an index for each member of the list:
 
         >>> write_sentences(generate_from_object([1]))
-        NodeIsList('/')
-        ListNodeHasMember('/', 0, '/[0]')
-        NodeIsLiteral('/[0]')
-        NodeIntValue('/[0]', 1)
+        PointerIsArray('/')
+        ArrayPointerHasMember('/', 0, '/[0]')
+        PointerIsLiteral('/[0]')
+        PointerIntValue('/[0]', 1)
 
     :param obj:
     :param jsonpath:
     :return:
     """
     if isinstance(obj, dict):
-        yield NodeIsObject(jsonpath)
+        yield PointerIsObject(jsonpath)
         for k, v in obj.items():
             child = jsonpath + k + "/"
-            yield ObjectNodeLookup(jsonpath, k, child)
+            yield ObjectPointerHasProperty(jsonpath, k, child)
             yield from generate_from_object(v, child)
     elif isinstance(obj, list):
-        yield NodeIsList(jsonpath)
+        yield PointerIsArray(jsonpath)
         for i, v in enumerate(obj):
             child = jsonpath + f"[{i}]"
-            yield ListNodeHasMember(jsonpath, i, child)
+            yield ArrayPointerHasMember(jsonpath, i, child)
             yield from generate_from_object(v, child)
     else:
-        yield NodeIsLiteral(jsonpath)
+        yield PointerIsLiteral(jsonpath)
         if obj is None:
-            yield NodeNullValue(jsonpath)
+            yield PointerNullValue(jsonpath)
         elif isinstance(obj, str):
-            yield NodeStringValue(jsonpath, obj)
+            yield PointerStringValue(jsonpath, obj)
         elif isinstance(obj, bool):
-            yield NodeBooleanValue(jsonpath, obj)
+            yield PointerBooleanValue(jsonpath, obj)
         elif isinstance(obj, int):
-            yield NodeIntValue(jsonpath, obj)
+            yield PointerIntValue(jsonpath, obj)
         elif isinstance(obj, float):
-            yield NodeFloatValue(jsonpath, obj)
+            yield PointerFloatValue(jsonpath, obj)
             # TODO: other numbers
         else:
             raise ValueError(f"Unexpected object type: {type(obj)}")

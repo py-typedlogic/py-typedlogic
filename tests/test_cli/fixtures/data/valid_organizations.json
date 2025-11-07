@@ -1,0 +1,22 @@
+{
+  "facts": [
+    ["@type", "Organization", {
+      "id": "org:stanford",
+      "name": "Stanford University",
+      "country": "USA",
+      "type": "university"
+    }],
+    ["@type", "Organization", {
+      "id": "org:mit", 
+      "name": "Massachusetts Institute of Technology",
+      "country": "USA",
+      "type": "university"
+    }],
+    ["@type", "Organization", {
+      "id": "org:biotech_corp",
+      "name": "BioTech Research Corp",
+      "country": "USA", 
+      "type": "company"
+    }]
+  ]
+}

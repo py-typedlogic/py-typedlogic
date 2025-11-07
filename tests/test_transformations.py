@@ -48,6 +48,7 @@ Q1xy = Term("Q1", X, Y)
         ((P | Q) >> R, "r :- p. r :- q.", False),
         # ((P ^ Q) >> R, "r :- p. r :- q.", False),
         # ((P & ~Q) >> R, r"r :- p, \+ (q). q :- p, \+ (r).", False), # stratified negation
+        ((~P) >> R, r"r :- \+ (p).", False),
         ((P & ~Q) >> R, r"r :- p, \+ (q).", False),
         (Term("P", Term("Q", 1)), "p(q(1)).", False),
         (Term("P", Term("eq", X, Y)), "p(X == Y).", False),

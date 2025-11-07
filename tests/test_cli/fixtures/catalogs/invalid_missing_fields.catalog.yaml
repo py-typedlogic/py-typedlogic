@@ -1,0 +1,16 @@
+metadata:
+  name: "Invalid Data - Missing Required Fields"
+  description: "Dataset with missing required fields"
+  version: "1.0"
+  use_case: "validation_failure_missing_fields"
+
+resources:
+  - path: "../schemas/research_schema.yaml"
+    format: "linkml"
+    type: "schema"
+    description: "Research domain schema"
+    
+  - path: "../data/invalid_authors_missing_required.json"
+    format: "jsonlog"
+    type: "data"
+    description: "Authors missing required fields"

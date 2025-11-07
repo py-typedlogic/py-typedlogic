@@ -4,13 +4,13 @@ from typedlogic.integrations.solvers.souffle import SouffleSolver
 from typedlogic.integrations.solvers.z3 import Z3Solver
 from typedlogic.theories.jsonlog import jsonlog
 from typedlogic.theories.jsonlog.jsonlog import (
-    ListNodeHasMember,
-    NodeIntValue,
-    NodeIsList,
-    NodeIsLiteral,
-    NodeIsObject,
-    NodeStringValue,
-    ObjectNodeLookup,
+    ArrayPointerHasMember,
+    PointerIntValue,
+    PointerIsArray,
+    PointerIsLiteral,
+    PointerIsObject,
+    PointerStringValue,
+    ObjectPointerHasProperty,
 )
 from typedlogic.theories.jsonlog.loader import generate_from_object
 
@@ -18,41 +18,41 @@ from typedlogic.theories.jsonlog.loader import generate_from_object
 @pytest.mark.parametrize(
     "source,expected",
     [
-        ({}, {NodeIsObject("/")}),
-        ("x", {NodeIsLiteral("/"), NodeStringValue("/", "x")}),
-        (1, {NodeIsLiteral("/"), NodeIntValue("/", 1)}),
+        ({}, {PointerIsObject("/")}),
+        ("x", {PointerIsLiteral("/"), PointerStringValue("/", "x")}),
+        (1, {PointerIsLiteral("/"), PointerIntValue("/", 1)}),
         (
             {"k": 1},
-            {NodeIsObject("/"), ObjectNodeLookup("/", "k", "/k/"), NodeIntValue("/k/", 1), NodeIsLiteral("/k/")},
+            {PointerIsObject("/"), ObjectPointerHasProperty("/", "k", "/k/"), PointerIntValue("/k/", 1), PointerIsLiteral("/k/")},
         ),
         (
             ["x"],
-            {NodeIsList("/"), ListNodeHasMember("/", 0, "/[0]"), NodeStringValue("/[0]", "x"), NodeIsLiteral("/[0]")},
+            {PointerIsArray("/"), ArrayPointerHasMember("/", 0, "/[0]"), PointerStringValue("/[0]", "x"), PointerIsLiteral("/[0]")},
         ),
         (
             ["x", 1],
             {
-                NodeIsList("/"),
-                ListNodeHasMember("/", 0, "/[0]"),
-                NodeStringValue("/[0]", "x"),
-                NodeIsLiteral("/[0]"),
-                ListNodeHasMember("/", 1, "/[1]"),
-                NodeIntValue("/[1]", 1),
-                NodeIsLiteral("/[1]"),
+                PointerIsArray("/"),
+                ArrayPointerHasMember("/", 0, "/[0]"),
+                PointerStringValue("/[0]", "x"),
+                PointerIsLiteral("/[0]"),
+                ArrayPointerHasMember("/", 1, "/[1]"),
+                PointerIntValue("/[1]", 1),
+                PointerIsLiteral("/[1]"),
             },
         ),
         (
             {"k": ["x", 1]},
             {
-                NodeIsObject("/"),
-                ObjectNodeLookup("/", "k", "/k/"),
-                NodeIsList("/k/"),
-                ListNodeHasMember("/k/", 0, "/k/[0]"),
-                NodeStringValue("/k/[0]", "x"),
-                NodeIsLiteral("/k/[0]"),
-                ListNodeHasMember("/k/", 1, "/k/[1]"),
-                NodeIntValue("/k/[1]", 1),
-                NodeIsLiteral("/k/[1]"),
+                PointerIsObject("/"),
+                ObjectPointerHasProperty("/", "k", "/k/"),
+                PointerIsArray("/k/"),
+                ArrayPointerHasMember("/k/", 0, "/k/[0]"),
+                PointerStringValue("/k/[0]", "x"),
+                PointerIsLiteral("/k/[0]"),
+                ArrayPointerHasMember("/k/", 1, "/k/[1]"),
+                PointerIntValue("/k/[1]", 1),
+                PointerIsLiteral("/k/[1]"),
             },
         ),
     ],

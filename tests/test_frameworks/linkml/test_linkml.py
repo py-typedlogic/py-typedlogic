@@ -7,18 +7,26 @@ import typedlogic.theories.jsonlog.loader as jsonlog_loader
 from typedlogic import Fact, Theory
 from typedlogic.compiler import write_sentences
 from typedlogic.integrations.frameworks.linkml import ClassDefinition
-from typedlogic.integrations.frameworks.linkml.instance import InstanceMemberType
+from typedlogic.integrations.frameworks.linkml.instance import PointerType
 from typedlogic.integrations.solvers.clingo.clingo_solver import ClingoSolver
 from typedlogic.integrations.solvers.prover9 import Prover9Solver
 from typedlogic.integrations.solvers.souffle import SouffleSolver
 from typedlogic.integrations.solvers.z3 import Z3Solver
 from typedlogic.parsers.pyparser.python_parser import PythonParser
 from typedlogic.solver import Solver
-from typedlogic.theories.jsonlog.jsonlog import NodeIsList
+from typedlogic.theories.jsonlog.jsonlog import PointerIsArray
 
 from tests import OUTPUT_DIR
 
 def validate_data(schema: dict, data: dict, target_class: Optional[str] = None, solver_class: Type[Solver] = ClingoSolver) -> bool:
+    solver = solve_data(schema=schema, data=data, target_class=target_class, solver_class=solver_class)
+    sat = solver.check().satisfiable
+    if sat:
+        print(f"ENTAILED:")
+        write_sentences(solver.model().ground_terms)
+    return sat is None or sat
+
+def solve_data(schema: dict, data: dict, target_class: Optional[str] = None, solver_class: Type[Solver] = ClingoSolver) -> Solver:
     """
     Validate a JSON object against a LinkML schema using a specified solver.
 
@@ -33,18 +41,14 @@ def validate_data(schema: dict, data: dict, target_class: Optional[str] = None, 
     theory.extend(linkml_loader.generate_from_object(schema))
     theory.extend(jsonlog_loader.generate_from_object(data))
     if target_class:
-        theory.add(inst.InstanceMemberType("/", target_class))
+        theory.add(inst.PointerType("/", target_class))
     write_sentences(theory.sentences)
     print("PROLOG:")
     write_sentences(theory.sentences, "prolog")
     solver = solver_class()
     solver.add(theory)
     print(solver.dump())
-    sat = solver.check().satisfiable
-    if sat:
-        print(f"ENTAILED:")
-        write_sentences(solver.model().ground_terms)
-    return sat is None or sat
+    return solver
 
 DEFAULT_TYPES: Mapping[str, Dict[str, Any]] = {
     "string": {},
@@ -93,13 +97,13 @@ SCHEMA1 = {
             {"name": "Bob"},
             True,
             [
-                inst.InstanceMemberType("/", "Thing"),
-                inst.InstanceMemberType("/", "Person"),
-                inst.NodeIsSingleValued("/name/"),
-                inst.Association("/", "name", "/name/"),
-                # inst.InstanceMemberType("/name/", "string"),
-                (inst.InstanceMemberType("/name/", "string"), {Z3Solver}),  # todo: unroll nested foralls
-                # inst.InstanceSlotToValueNode("/", "name", "Bob"),
+                inst.PointerType("/", "Thing"),
+                inst.PointerType("/", "Person"),
+                inst.PointerIsScalar("/name/"),
+                inst.ObjectPointerHasPropertyScalarized("/", "name", "/name/"),
+                # inst.PointerType("/name/", "string"),
+                (inst.PointerType("/name/", "string"), {Z3Solver}),  # todo: unroll nested foralls
+                # inst.InstanceSlotToValuePointer("/", "name", "Bob"),
             ],
         ),
         (
@@ -153,9 +157,9 @@ def test_validate(solver_class, schema, data, valid, expected, request):
 
 
 def test_instance_data_model():
-    it = InstanceMemberType("P1", "Person")
+    it = PointerType("P1", "Person")
     assert isinstance(it, Fact)
-    l = NodeIsList("P1")
+    l = PointerIsArray("P1")
     cd = ClassDefinition("Person")
 
 
@@ -223,3 +227,54 @@ def test_basic_types(typ: str, val: Any, valid: bool, use_subclass: bool, use_at
     inst_class = "D" if use_subclass else "C"
     result = validate_data(schema, data, inst_class, solver_class)
     assert result == valid, f"Expected {valid} but got {result} for {typ} with value {val}, req: {required}"
+
+
+
+@pytest.mark.parametrize("solver_class", [ClingoSolver])
+@pytest.mark.parametrize("transitive", [False, True])
+def test_transitive(transitive: bool, solver_class):
+    """
+    Test linkml transitive properties:
+
+    If a slot s is transitive, and we have instances i s j, j s k, then we should be able to infer that i s k.
+
+    TODO: this requires references to work...
+    """
+    from typing import Dict, Any
+    schema: Dict[str, Any] = {
+        "slots": {
+            "id": {
+                "identifier": True,
+                "range": "string",
+            },
+            "s": {
+                "range": "C",
+                "transitive": transitive,
+            }
+        },
+        "classes": {
+            "Dataset": {
+                "attributes": {
+                    "objects": {
+                        "range": "C",
+                        "multivalued": True,
+                    },
+                },
+            },
+            "C": {
+                "slots": ["id", "s"],
+            }
+        },
+    }
+    dataset = {
+        "objects": [
+            {"id": "i", "s": "j"},
+            {"id": "j", "s": "k"},
+            {"id": "k"},
+        ]
+    }
+    solver = solve_data(schema, dataset, "Dataset", solver_class)
+    for model in solver.models():
+        print(model)
+        for gt in model.iter_retrieve("Association"):
+            print(f"Ground term: {gt}")

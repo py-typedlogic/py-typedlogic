@@ -1,0 +1,108 @@
+id: https://w3id.org/typedlogic/examples/research
+name: research_schema
+description: Schema for research publications and authors
+version: 1.0.0
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  schema: http://schema.org/
+  research: https://w3id.org/typedlogic/examples/research/
+
+default_prefix: research
+imports:
+  - linkml:types
+
+classes:
+  Person:
+    description: A person who can be an author
+    attributes:
+      id:
+        identifier: true
+        range: string
+        required: true
+        description: Unique identifier for the person
+      name:
+        range: string
+        required: true
+        description: Full name of the person
+      email:
+        range: string
+        pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+        description: Email address
+      orcid:
+        range: string
+        pattern: "^\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$"
+        description: ORCID identifier
+      affiliation:
+        range: Organization
+        description: Primary institutional affiliation
+
+  Organization:
+    description: An institution or organization
+    attributes:
+      id:
+        identifier: true
+        range: string
+        required: true
+      name:
+        range: string
+        required: true
+        description: Name of the organization
+      country:
+        range: string
+        description: Country where organization is located
+      type:
+        range: OrganizationType
+        description: Type of organization
+
+  Publication:
+    description: A research publication
+    attributes:
+      id:
+        identifier: true
+        range: string
+        required: true
+        description: Unique identifier (DOI, PMID, etc.)
+      title:
+        range: string
+        required: true
+        description: Title of the publication
+      abstract:
+        range: string
+        description: Abstract text
+      year:
+        range: integer
+        minimum_value: 1900
+        maximum_value: 2030
+        required: true
+        description: Publication year
+      journal:
+        range: string
+        description: Journal name
+      authors:
+        range: Person
+        multivalued: true
+        required: true
+        description: List of authors
+      keywords:
+        range: string
+        multivalued: true
+        description: Keywords or topics
+      citation_count:
+        range: integer
+        minimum_value: 0
+        description: Number of citations
+
+enums:
+  OrganizationType:
+    permissible_values:
+      university:
+        description: Academic university
+      research_institute:
+        description: Research institution
+      company:
+        description: Commercial company
+      government:
+        description: Government organization
+      nonprofit:
+        description: Non-profit organization

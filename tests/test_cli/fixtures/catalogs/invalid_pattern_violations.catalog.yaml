@@ -1,0 +1,15 @@
+metadata:
+  name: "Invalid Data - Pattern Violations"
+  description: "Dataset with invalid email and ORCID patterns"
+  version: "1.0"
+  use_case: "validation_failure_patterns"
+
+resources:
+  - path: "../schemas/research_schema.yaml"
+    format: "linkml"
+    type: "schema"
+    
+  - path: "../data/invalid_authors_bad_patterns.json"
+    format: "jsonlog"
+    type: "data"
+    description: "Authors with invalid email/ORCID patterns"

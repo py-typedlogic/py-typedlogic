@@ -7,6 +7,7 @@ import yaml
 from typedlogic import Theory
 from typedlogic.parser import Parser
 import typedlogic.integrations.frameworks.linkml.loader as linkml_loader
+from typedlogic.parsers.pyparser import PythonParser
 
 
 class LinkMLParser(Parser):
@@ -20,6 +21,8 @@ class LinkMLParser(Parser):
         if not isinstance(source, (str, TextIOWrapper)):
             raise ValueError(f"Invalid source type: {type(source)}")
         obj = yaml.safe_load(source)
-        theory = Theory()
+        python_parser = PythonParser()
+        theory = python_parser.parse(linkml_loader)
+        # theory = Theory()
         theory.extend(linkml_loader.generate_from_object(obj))
         return theory

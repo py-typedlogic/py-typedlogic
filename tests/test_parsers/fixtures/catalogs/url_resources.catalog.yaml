@@ -1,0 +1,20 @@
+metadata:
+  name: "URL Resources Test"
+  description: "Catalog with remote URL resources"
+  version: "1.0"
+
+resources:
+  - path: "../csv/simple.csv"
+    format: "dataframe"
+    type: "local_data"
+    
+  - url: "https://raw.githubusercontent.com/linkml/linkml/main/examples/PersonSchema/personinfo.yaml"
+    format: "linkml"
+    type: "remote_schema"
+    description: "Remote LinkML schema"
+    
+  - url: "https://httpbin.org/json"
+    format: "jsonlog"
+    type: "remote_data"
+    headers:
+      User-Agent: "TypedLogic-CatalogParser/1.0"

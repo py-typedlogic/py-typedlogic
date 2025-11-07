@@ -197,8 +197,26 @@ def as_prolog(
         >>> print(as_prolog(Implies(Term("A", X), Term("A", X, Y)), config=PrologConfig(allow_ungrounded_vars_in_head=True)))
         a(X, _Y) :- a(X).
 
+    Default is to use single quotes for atoms
+
+        >>> print(as_prolog(Term("p", "a")))
+        p('a')
+
+        >>> print(as_prolog(Term("p", "A")))
+        p('A')
+
+    Some prolog syntaxes (e.g. problog) use double quotes for strings:
+
+        >>> print(as_prolog(Term("p", "A"), config=PrologConfig(double_quote_strings=True)))
+        p("A")
+
+    Disjunctive datalog allows disjunctions in the head of implications:
+
         >>> print(as_prolog(C >> (D | E), config=PrologConfig(disjunctive_datalog=True)))
         d; e :- c.
+
+        >>> print(as_prolog(~C >> D, config=PrologConfig(disjunctive_datalog=True)))
+        d :- \+ (c).
 
         Experimental: cardinality constraints:
 
@@ -1087,6 +1105,7 @@ def _distribute_sentence(sentence: Sentence, op1: Type[BooleanSentence], op2: Ty
     # adapted from sympy
     dfunc = lambda t: _distribute_sentence(*t)
     sentence = simplify(sentence)
+    tups: List[Tuple[Union[Sentence, Type[Sentence]], ...]]
 
     if isinstance(sentence, op2):
         for arg in sentence.operands:
@@ -1135,10 +1154,14 @@ def flatten_nested_conjunctions_and_disjunctions(sentence: Sentence) -> Sentence
     :return:
     """
     if isinstance(sentence, (And, Or)):
-        new_ops = []
+        # new_ops = []
+        new_ops: List[Sentence] = []
         for op in sentence.operands:
             if isinstance(op, type(sentence)):
-                new_ops.extend(op.operands)
+                if not isinstance(sentence, BooleanSentence):
+                    raise AssertionError(f"Expected {sentence} to be a BooleanSentence, got {type(sentence)}")
+                if isinstance(op, BooleanSentence):
+                    new_ops.extend(op.operands)
             else:
                 new_ops.append(op)
         return type(sentence)(*new_ops)
@@ -1389,6 +1412,15 @@ def to_horn_rules(sentence: Sentence, allow_disjunctions_in_head=False, allow_go
 
         >>> print(as_prolog(to_horn_rules(Not(P), allow_goal_clauses=True)))
         :- p.
+
+        >>> print(as_prolog(to_horn_rules(~P >> Q)))
+        q :- \+ (p).
+
+        >>> print(to_horn_rules(~P >> Q, allow_disjunctions_in_head=False, allow_goal_clauses=True))
+        [Implies(And(Not(P)), Q)]
+
+        >>> print(to_horn_rules(~P >> Q, allow_disjunctions_in_head=True, allow_goal_clauses=True))
+        [Implies(And(), Or(P, Q))]
 
     :param sentence:
     :param allow_disjunctions_in_head:

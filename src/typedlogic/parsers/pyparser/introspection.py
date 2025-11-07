@@ -26,6 +26,7 @@ def translate_module_to_theory(module: ModuleType) -> Theory:
     :return:
     """
     sgs = get_module_sentence_groups(module)
+    sgs.extend(get_module_class_level_sentence_groups(module))
     pds = get_module_predicate_definitions(module)
     constants, tds = get_module_constants_and_types(module)
     # get the python module name
@@ -58,6 +59,28 @@ def get_module_sentence_groups(module: Union[ModuleType, str]) -> List[SentenceG
     """
     Get the AST nodes of all axiom functions in a module.
 
+    This function looks for functions decorated with axiom decorators (e.g., @axiom, @gen1, @gen3)
+    and returns a list of SentenceGroup objects representing those functions.
+
+    Example usage:
+
+        >>> import tests.theorems.mortals as mortals
+        >>> sgs = get_module_sentence_groups(mortals)
+        >>> for sg in sgs:
+        ...     print(sg.name)
+        ...     for s in sg.sentences:
+        ...         print(" ", s)
+        all_persons_are_mortal_axiom
+          ∀x: NameType : (Person(?x) -> Mortal(?x))
+        ancestor_transitivity_axiom
+          ∀x: TreeNodeType, y: TreeNodeType, z: TreeNodeType : ((AncestorOf(?x, ?z)) & (AncestorOf(?z, ?y)) -> AncestorOf(?x, ?y))
+        acyclicity_axiom
+          ∀x: TreeNodeType, y: TreeNodeType : ~(AncestorOf(?x, ?y)) & (AncestorOf(?y, ?x))
+        check_transitivity
+          ((AncestorOf(p1, p2)) & (AncestorOf(p2, p3)) -> AncestorOf(p1, p3))
+
+
+
     :param module: The module to introspect
     :return: A list of AST FunctionDef nodes for axiom functions
     """
@@ -81,9 +104,55 @@ def get_module_sentence_groups(module: Union[ModuleType, str]) -> List[SentenceG
     return sgs
 
 
+def get_module_class_level_sentence_groups(module: ModuleType) -> List[SentenceGroup]:
+    """
+    Get all class-level sentence groups from a module.
+
+
+        >>> import tests.theorems.mortals2 as mortals2
+        >>> sgs = get_module_class_level_sentence_groups(mortals2)
+        >>> for sg in sgs:
+        ...     print(sg.name)
+        ...     for s in sg.sentences:
+        ...         print(" ", s)
+         Mortal
+          (Person -> Mortal)
+        AncestorOf
+          ∀x: None, y: None, z: None : ((AncestorOf) & (AncestorOf) -> AncestorOf)
+          ~AncestorOf
+
+
+    :param module:
+    :return:
+    """
+    sgs = []
+    for cls in get_module_predicate_classes(module).values():
+        # If the class has an `rules` method, we can call (not introspect) it:
+        if hasattr(cls, "rules") and callable(cls.rules):
+            # This is a class with rules, so we can introspect it
+            sentences = list(cls.rules())
+            if sentences:
+                sg = SentenceGroup(
+                    name=cls.__name__,
+                    group_type=SentenceGroupType.AXIOM,
+                    sentences=sentences,
+                )
+                sgs.append(sg)
+    return sgs
+
+
+
 def get_module_predicate_classes(module: ModuleType) -> Dict[str, Type]:
     """
     Get all classes defined in a module.
+
+        >>> import tests.theorems.mortals as mortals
+        >>> predict_classes = get_module_predicate_classes(mortals)
+        >>> for predicate, typ in predict_classes.items():
+        ...     print(predicate, typ)
+        Person <class 'tests.theorems.mortals.Person'>
+        Mortal <class 'tests.theorems.mortals.Mortal'>
+        AncestorOf <class 'tests.theorems.mortals.AncestorOf'>
 
     :param module: The module to introspect
     :return: A dictionary of class names to class types

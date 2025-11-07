@@ -12,7 +12,7 @@ from typedlogic.parser import Parser, ValidationMessage
 from typedlogic.parsers.pyparser.introspection import (
     get_module_predicate_definitions,
     get_module_sentence_groups,
-    translate_module_to_theory,
+    translate_module_to_theory, get_module_class_level_sentence_groups,
 )
 
 logger = logging.getLogger(__name__)
@@ -102,6 +102,14 @@ class PythonParser(Parser):
         return translate_module_to_theory(source)
 
     def parse(self, source: Union[Path, str, TextIO, ModuleType], file_name: Optional[str] = None, **kwargs) -> Theory:
+        """
+        Parse a Python module or source code into a Theory.
+
+        :param source:
+        :param file_name:
+        :param kwargs:
+        :return:
+        """
         if isinstance(source, ModuleType):
             return translate_module_to_theory(source)
         if self.auto_validate:
@@ -114,6 +122,7 @@ class PythonParser(Parser):
         if isinstance(source, str):
             module = compile_python(source, name=None, package_path=file_name)
             sgs = get_module_sentence_groups(source)
+            sgs.extend(get_module_class_level_sentence_groups(module))
             pds = get_module_predicate_definitions(module)
             # get the python module name
             return Theory(
