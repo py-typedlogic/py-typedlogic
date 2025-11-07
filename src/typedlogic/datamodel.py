@@ -39,7 +39,7 @@ import types
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Mapping, Optional, Tuple, Type, Union, _SpecialForm, get_origin, Iterable
+from typing import Any, Dict, List, Mapping, Optional, Tuple, Type, Union, _SpecialForm, get_origin, Iterable, Iterator
 
 SExpressionAtom = Any
 SExpressionTerm = List["SExpression"]
@@ -163,6 +163,10 @@ class Variable:
             return sexpr + [self.domain]
         else:
             return sexpr
+
+    @staticmethod
+    def create(names: str) -> tuple['Variable', ...]:
+        return tuple(Variable(name.strip()) for name in names.split())
 
 
 class Sentence(ABC):
@@ -533,10 +537,18 @@ class BooleanSentence(Sentence, ABC):
 
     """
 
-    operands: Tuple = field(default_factory=tuple)
+    operands: Tuple[Sentence, ...] = field(default_factory=tuple)
+    # operands: Tuple[Union[Sentence, bool], ...] = field(default_factory=tuple)
 
     def __init__(self, *operands, **kwargs):
-        self.operands = operands
+        def _as_sentence(s: Union[Sentence, bool]) -> Sentence:
+            if isinstance(s, Sentence):
+                return s
+            elif isinstance(s, bool):
+                return And() if s else Or()
+            else:
+                raise TypeError(f"Expected Sentence or bool, got {type(s)}")
+        self.operands = tuple([_as_sentence(s) for s in operands])
         self._annotations = kwargs
 
     def __eq__(self, other):
@@ -938,7 +950,7 @@ class CardinalityConstraint(Term):
 
     """
 
-    def __init__(self, template: Sentence, conditions: Sentence, minimum_number: Optional[int] = None, maximum_number: Optional[int] = None):
+    def __init__(self, template: Optional[Sentence], conditions: Sentence, minimum_number: Optional[int] = None, maximum_number: Optional[int] = None):
         """
         Initialize a CardinalityConstraint.
 
@@ -947,6 +959,8 @@ class CardinalityConstraint(Term):
         :param minimum_number: The minimum number of terms that must satisfy the conditions.
         :param maximum_number: The maximum number of terms that can satisfy the conditions.
         """
+        if not template:
+            template = conditions
         super().__init__("CardinalityConstraint",
                          dict(template=template, conditions=conditions,
                               minimum_number=minimum_number, maximum_number=maximum_number))

@@ -1,0 +1,15 @@
+metadata:
+  name: "Basic Test Catalog"
+  description: "Simple catalog for testing basic functionality"
+  version: "1.0"
+
+resources:
+  - path: "../csv/simple.csv"
+    format: "dataframe"
+    type: "data"
+    description: "Simple CSV data"
+    
+  - path: "../yaml/simple.yaml"
+    format: "yaml"
+    type: "facts"
+    description: "YAML facts"

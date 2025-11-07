@@ -1,0 +1,16 @@
+metadata:
+  name: "LinkML Schema with Data"
+  description: "Primary use case: LinkML schema with JSON-LD data validation"
+  version: "1.0"
+  author: "TypedLogic Team"
+
+resources:
+  - path: "../schemas/person.yaml"
+    format: "linkml" 
+    type: "schema"
+    description: "Person schema definitions"
+    
+  - path: "../data/persons.jsonld"
+    format: "jsonlog"
+    type: "data" 
+    description: "Person instance data"

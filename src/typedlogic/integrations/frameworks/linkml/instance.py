@@ -8,11 +8,11 @@ Example:
     ... ]
 
 """
-from typing import Any
+from typing import Any, Iterator
 from dataclasses import dataclass
 
 from typedlogic import axiom, gen1, gen3
-from typedlogic.datamodel import CardinalityConstraint, Term
+from typedlogic.datamodel import CardinalityConstraint, Term, Sentence, Variable
 from typedlogic.integrations.frameworks.linkml.meta import *
 from typedlogic.integrations.frameworks.linkml.meta_axioms import Disjoint
 from typedlogic.theories.jsonlog.jsonlog import *
@@ -26,18 +26,18 @@ class Instance(Fact):
 
     __alias__ = "I"
 
-    id: NodeID
+    id: PointerID
 
 
 @dataclass(frozen=True)
-class CollectionNode(Fact):
+class CollectionPointer(Fact):
     """
     An instance of a list or dict collection
     """
 
     __alias__ = "I"
 
-    id: NodeID
+    id: PointerID
 
 
 
@@ -46,172 +46,186 @@ class InlinedObject(Fact):
     """
     An instance of a ClassDefinition that is inlined.
     """
-    id: NodeID
+    id: PointerID
 
 
 @axiom
-def node_classification_axiom(n: NodeID):
+def node_classification_axiom(n: PointerID):
     """
     Axiom that classifies a node as an instance, collection, or inlined object.
+
+    TODO: check if necessary
 
     :param n:
     :return:
     """
     # note: '^' is exclusive or, so this is true if exactly one of the two is true
-    if Node(n):
-        assert CollectionNode(n) ^ Instance(n)
-    if CollectionNode(n):
-        assert NodeIsList(n) ^ NodeIsObject(n)
+    if Pointer(n):
+        assert CollectionPointer(n) ^ Instance(n)
+    if CollectionPointer(n):
+        assert PointerIsArray(n) ^ PointerIsObject(n)
 
 
 @dataclass(frozen=True)
-class InstanceMember(Fact):
-    __alias__ = "I"
-
-    id: NodeID
-    member: NodeID
-
-
-@axiom
-def instance_member_axiom():
-    assert all(
-        InstanceMember(i, m)
-        for i, ix, m in gen3(NodeID, int, NodeID)
-        if ArrayPointerHasMember(i, ix, m) and NodeIsMultiValued(i)
-    )
-    assert all(
-        InstanceMember(i, m)
-        for i, ix, m in gen3(NodeID, Key, NodeID)
-        if ObjectPointerHasProperty(i, ix, m) and NodeIsMultiValued(i)
-    )
-    assert all(InstanceMember(i, i) for i in gen1(NodeID) if NodeIsSingleValued(i))
-
-
-@dataclass(frozen=True)
-class InstanceMemberType(Fact):
+class PointerType(Fact):
     """
     Maps an instance to a name of a ClassDefinition, TypeDefinition, EnumDefinition
 
     Examples
     --------
-        >>> _ = InstanceMemberType("/persons/1/", "Person")
-        >>> _ = InstanceMemberType("/persons/1/name/", "string")
-        >>> _ = InstanceMemberType("/persons/1/vital_status/", "VitalStatusEnum")
+        >>> _ = PointerType("/persons/1/", "Person")
+        >>> _ = PointerType("/persons/1/name/", "string")
+        >>> _ = PointerType("/persons/1/vital_status/", "VitalStatusEnum")
 
     Distributes over members; if persons is a list, then this is true if true for all members
 
-        >>> _ = InstanceMemberType("/persons/", "Person")
+        >>> _ = PointerType("/persons/", "Person")
 
     This refers to the logical type; use in combination with InlinedObject to check whether the
     underlying tree structure is a terminal or an object
 
-        >>> _ = [InstanceMemberType("/persons/1/friends/3", "Person"), InlinedObject("/persons/1/friends/3")]
+        >>> _ = [PointerType("/persons/1/friends/3", "Person"), InlinedObject("/persons/1/friends/3")]
 
     """
 
     __alias__ = "T"
 
-    id: NodeID
+    id: PointerID
     element: ElementID
 
 
 @axiom
-def instance_disjoints(i: NodeID, e: ElementID):
+def instance_disjoints(i: PointerID, e: ElementID):
     assert TypeDefinition("string")
-    if InstanceMemberType(i, e) and ClassDefinition(e):
+    if PointerType(i, e) and ClassDefinition(e):
         assert not TypeDefinition(e)
 
 
 @axiom
-def instance_type_entails_instance(i: NodeID, c: ElementID):
-    if InstanceMemberType(i, c):
+def instance_type_entails_instance(i: PointerID, c: ElementID):
+    if PointerType(i, c):
         assert Instance(i)
-    # if InstanceMemberType(i, c):
-    #    assert ExactlyOne(ClassDefinition(c), TypeDefinition(c), EnumDefinition(c), NodeIsLiteral(c))
+    # if PointerType(i, c):
+    #    assert ExactlyOne(ClassDefinition(c), TypeDefinition(c), EnumDefinition(c), PointerIsLiteral(c))
 
 
 @dataclass(frozen=True)
-class Association(Fact):
+class ObjectPointerHasIdentifier(Fact):
+    id: PointerID
+    identifier_value: str
+
+
+@dataclass(frozen=True)
+class LiteralPointerIdentifierReference(Fact):
+    id: PointerID
+    identifier_value: str
+
+@dataclass(frozen=True)
+class ObjectPointerHasPropertyScalarized(Fact):
     """
     Maps an instance to a slot and a value instance
 
     Examples
     --------
-        >>> _ = Association("/persons/1/", "name", "/persons/1/name/")
+        >>> _ = ObjectPointerHasPropertyScalarized("/persons/1/", "name", "/persons/1/name/")
 
     Note the last argument is a *reference*, which can be dereferenced to get the value.
 
-        >>> _ = NodeStringValue("/persons/1/name/", "John Doe")
+        >>> _ = PointerStringValue("/persons/1/name/", "John Doe")
 
     The association never points to a collection, only members of a collection.
 
-        >>> _ = Association("/", "persons", "/persons/1/")
-        >>> _ = Association("/", "persons", "/persons/2/")
+        >>> _ = ObjectPointerHasPropertyScalarized("/", "persons", "/persons/1/")
+        >>> _ = ObjectPointerHasPropertyScalarized("/", "persons", "/persons/2/")
+
 
     """
 
-    id: NodeID
+    id: PointerID
     slot_name: SlotDefinitionID
-    value_instance: NodeID
+    value_pointer: PointerID
 
 
 @axiom
-def association_from_list(i: NodeID, a: ElementID, j: NodeID, m: NodeID, ix: int):
-    if ObjectPointerHasProperty(i, a, m) and NodeIsMultiValued(m) and ArrayPointerHasMember(m, ix, j):
-        assert Association(i, a, j)
+def scalarized_from_list(i: PointerID, a: ElementID, j: PointerID, m: PointerID, ix: int):
+    if ObjectPointerHasProperty(i, a, m) and PointerIsCollection(m) and ArrayPointerHasMember(m, ix, j):
+        assert ObjectPointerHasPropertyScalarized(i, a, j)
 
 
 @axiom
-def association_from_object(i: NodeID, a: ElementID, j: NodeID, m: NodeID, k: Key):
-    if ObjectPointerHasProperty(i, a, m) and NodeIsMultiValued(m) and ObjectPointerHasProperty(m, k, j):
-        assert Association(i, a, j)
+def scalarized_from_dictionary(i: PointerID, a: ElementID, j: PointerID, m: PointerID, k: Property):
+    # TODO: lookup identifiers.
+    if ObjectPointerHasProperty(i, a, m) and PointerIsCollection(m) and ObjectPointerHasProperty(m, k, j):
+        assert ObjectPointerHasPropertyScalarized(i, a, j)
 
 
 @axiom
-def association_from_scalar(
-    i: NodeID,
+def scalarized_from_scalar(
+    i: PointerID,
     a: ElementID,
-    j: NodeID,
+    j: PointerID,
 ):
-    if ObjectPointerHasProperty(i, a, j) and NodeIsSingleValued(j):
-        assert Association(i, a, j)
+    if ObjectPointerHasProperty(i, a, j) and PointerIsScalar(j):
+        assert ObjectPointerHasPropertyScalarized(i, a, j)
 
+
+@dataclass(frozen=True)
+class ObjectPointerHasPropertyNormalized(Fact):
+    # TODO
+    id: PointerID
+    slot_name: SlotDefinitionID
+    value_pointer: PointerID
 
 @dataclass(frozen=True)
 class InstSlotRequired(Fact):
     """
-    Holds of Association holds, for any value
+    Holds of ObjectPointerHasPropertyScalarized holds, for any value
     """
 
-    id: NodeID
+    id: PointerID
     slot_name: SlotDefinitionID
 
+    @classmethod
+    def rules(cls) -> Iterator[Sentence]:
+        i = Variable("I")
+        s = Variable("S")
+        v = Variable("V")
+        yield (
+                InstSlotRequired.p(i, s) &
+                CardinalityConstraint(
+                    None,
+                    ObjectPointerHasPropertyScalarized.p(i, s, v),
+                    maximum_number=0,
+                )
+            ) >> False
+
+
 
 
 @dataclass(frozen=True)
-class NodeIsMultiValued(Fact):
-    node: NodeID
+class PointerIsCollection(Fact):
+    node: PointerID
 
 
 @dataclass(frozen=True)
-class NodeIsSingleValued(Fact):
-    node: NodeID
+class PointerIsScalar(Fact):
+    node: PointerID
 
 
 @axiom
-def multivalued(n: NodeID):
-    if NodeIsList(n):
-        assert NodeIsMultiValued(n)
-    if NodeIsLiteral(n):
-        assert NodeIsSingleValued(n)
-    if Node(n):
-        assert NodeIsMultiValued(n) ^ NodeIsSingleValued(n)
+def infer_scalar_or_collection(n: PointerID):
+    if PointerIsArray(n):
+        assert PointerIsCollection(n)
+    if PointerIsLiteral(n):
+        assert PointerIsScalar(n)
+    if Pointer(n):
+        assert PointerIsCollection(n) ^ PointerIsScalar(n)
 
 
 @axiom
-def disjoint_instance_check(inst: NodeID, cls: ElementID, left_parent: ElementID, right_parent: ElementID):
+def disjoint_instance_check(inst: PointerID, cls: ElementID, left_parent: ElementID, right_parent: ElementID):
     if Disjoint(left_parent, right_parent):
-        assert not (InstanceMemberType(inst, left_parent) and InstanceMemberType(inst, right_parent))
+        assert not (PointerType(inst, left_parent) and PointerType(inst, right_parent))
 
 
 @axiom
@@ -229,18 +243,18 @@ def types():
     assert Disjoint("float", "boolean")
 
 @axiom
-def literals(n: NodeID, v: Any):
-    if NodeIntValue(n, v):
-        assert InstanceMemberType(n, "integer")
-    if NodeStringValue(n, v):
-        assert InstanceMemberType(n, "string")
-    if NodeFloatValue(n, v):
-        assert InstanceMemberType(n, "float")
-    if NodeBooleanValue(n, v):
-        assert InstanceMemberType(n, "boolean")
+def literals(n: PointerID, v: Any):
+    if PointerIntValue(n, v):
+        assert PointerType(n, "integer")
+    if PointerStringValue(n, v):
+        assert PointerType(n, "string")
+    if PointerFloatValue(n, v):
+        assert PointerType(n, "float")
+    if PointerBooleanValue(n, v):
+        assert PointerType(n, "boolean")
 
 
 # @goals
 # def atom_goals():
-#    if Association("/", "persons", "/persons/1/"):
+#    if ObjectPointerHasPropertyScalarized("/", "persons", "/persons/1/"):
 #       assert Instance("/persons/1/")

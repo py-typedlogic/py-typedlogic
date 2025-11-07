@@ -97,7 +97,7 @@ class ProbLogCompiler(Compiler):
         def _to_rules(s: Sentence) -> List[Sentence]:
             rules = []
             try:
-                for rule in to_horn_rules(s, allow_disjunctions_in_head=True, allow_goal_clauses=True):
+                for rule in to_horn_rules(s, allow_disjunctions_in_head=False, allow_goal_clauses=True):
                     rules.append(rule)
             except NotInProfileError as e:
                 logger.info(f"Skipping sentence {s} due to {e}")
@@ -112,6 +112,7 @@ class ProbLogCompiler(Compiler):
                 strs.append(f"{pr}::{as_prolog(r, config=prolog_config)}")
             return "\n".join(strs)
         elif isinstance(sentence, Term) and sentence.predicate == Evidence.__name__:
+            # special treatment for evidence sentences
             if len(sentence.values) != 2:
                 raise ValueError(f"Invalid evidence sentence: {sentence}")
             inner = sentence.values[0]

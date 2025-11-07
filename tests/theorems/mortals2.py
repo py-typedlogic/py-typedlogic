@@ -2,7 +2,8 @@
 from typing import List, Iterator
 
 from pydantic import BaseModel
-from typedlogic import Fact, FactMixin, axiom, gen1, gen3, goal, Variable
+
+from typedlogic import Fact, FactMixin, axiom, gen1, gen3, goal, Variable, Sentence, Term, Implies, Forall
 
 NameType = str
 
@@ -15,40 +16,27 @@ class Mortal(BaseModel, Fact):
     name: NameType
 
     @classmethod
-    def axioms(cls) -> Iterator[Fact]:
+    def rules(cls) -> Iterator[Sentence]:
         x = Variable("x")
-        yield Person(name=x) >> Mortal(name=x)
-
-
-TreeNodeType = str
+        yield Person.p(name=x) >> Mortal.p(name=x)
 
 
 class AncestorOf(BaseModel, Fact):
-    ancestor: TreeNodeType
-    descendant: TreeNodeType
+    ancestor: NameType
+    descendant: NameType
 
+    @classmethod
+    def rules(cls) -> Iterator[Sentence]:
+        x, y, z = Variable.create("x y z")
+        yield Forall(
+            [x, y, z],
+                Implies(
+                    AncestorOf.p(ancestor=x, descendant=y) & AncestorOf.p(ancestor=y, descendant=z),
+                    AncestorOf.p(ancestor=x, descendant=z),
+                )
+        )
+        yield ~ (AncestorOf.p(ancestor=x, descendant=y) and AncestorOf.p(ancestor=y, descendant=x))
 
-@axiom
-def all_persons_are_mortal_axiom():
-    """
-    All persons are mortal
-    """
-    assert all(Person(name=x) >> Mortal(name=x) for x in gen1(NameType))
-
-
-@axiom
-def ancestor_transitivity_axiom() -> bool:
-    return all(
-        AncestorOf(ancestor=x, descendant=y)
-        for x, y, z in gen3(TreeNodeType, TreeNodeType, TreeNodeType)
-        if AncestorOf(ancestor=x, descendant=z) and AncestorOf(ancestor=z, descendant=y)
-    )
-
-
-# TODO:
-@axiom
-def acyclicity_axiom(x: TreeNodeType, y: TreeNodeType):
-    assert not (AncestorOf(ancestor=x, descendant=y) and AncestorOf(ancestor=y, descendant=x))
 
 
 @goal

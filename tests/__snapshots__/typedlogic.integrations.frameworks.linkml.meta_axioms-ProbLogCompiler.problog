@@ -1,5 +1,5 @@
 disjoint(Lhs, Rhs) :- parent(Lhs, Parent), parent(Rhs, Parent), Lhs != Rhs.
-classslot(Cls, Slot); invalidclassslot(Cls, Slot) :- classdefinition(Cls), slotdefinition(Slot).
+invalidclassslot(Cls, Slot) :- classdefinition(Cls), slotdefinition(Slot), \+ classslot(Cls, Slot).
 parent(Cls, Slot_expression) :- slotusage(Cls, Slot_expression).
 parent(Cls, Slot_expression) :- attribute(Cls, Slot_expression).
 parent(Element, Parent) :- isa(Element, Parent).

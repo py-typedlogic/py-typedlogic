@@ -7,14 +7,14 @@ import typedlogic.theories.jsonlog.loader as jsonlog_loader
 from typedlogic import Fact, Theory
 from typedlogic.compiler import write_sentences
 from typedlogic.integrations.frameworks.linkml import ClassDefinition
-from typedlogic.integrations.frameworks.linkml.instance import InstanceMemberType
+from typedlogic.integrations.frameworks.linkml.instance import PointerType
 from typedlogic.integrations.solvers.clingo.clingo_solver import ClingoSolver
 from typedlogic.integrations.solvers.prover9 import Prover9Solver
 from typedlogic.integrations.solvers.souffle import SouffleSolver
 from typedlogic.integrations.solvers.z3 import Z3Solver
 from typedlogic.parsers.pyparser.python_parser import PythonParser
 from typedlogic.solver import Solver
-from typedlogic.theories.jsonlog.jsonlog import NodeIsList
+from typedlogic.theories.jsonlog.jsonlog import PointerIsArray
 
 from tests import OUTPUT_DIR
 
@@ -41,7 +41,7 @@ def solve_data(schema: dict, data: dict, target_class: Optional[str] = None, sol
     theory.extend(linkml_loader.generate_from_object(schema))
     theory.extend(jsonlog_loader.generate_from_object(data))
     if target_class:
-        theory.add(inst.InstanceMemberType("/", target_class))
+        theory.add(inst.PointerType("/", target_class))
     write_sentences(theory.sentences)
     print("PROLOG:")
     write_sentences(theory.sentences, "prolog")
@@ -97,13 +97,13 @@ SCHEMA1 = {
             {"name": "Bob"},
             True,
             [
-                inst.InstanceMemberType("/", "Thing"),
-                inst.InstanceMemberType("/", "Person"),
-                inst.NodeIsSingleValued("/name/"),
-                inst.Association("/", "name", "/name/"),
-                # inst.InstanceMemberType("/name/", "string"),
-                (inst.InstanceMemberType("/name/", "string"), {Z3Solver}),  # todo: unroll nested foralls
-                # inst.InstanceSlotToValueNode("/", "name", "Bob"),
+                inst.PointerType("/", "Thing"),
+                inst.PointerType("/", "Person"),
+                inst.PointerIsScalar("/name/"),
+                inst.ObjectPointerHasPropertyScalarized("/", "name", "/name/"),
+                # inst.PointerType("/name/", "string"),
+                (inst.PointerType("/name/", "string"), {Z3Solver}),  # todo: unroll nested foralls
+                # inst.InstanceSlotToValuePointer("/", "name", "Bob"),
             ],
         ),
         (
@@ -157,9 +157,9 @@ def test_validate(solver_class, schema, data, valid, expected, request):
 
 
 def test_instance_data_model():
-    it = InstanceMemberType("P1", "Person")
+    it = PointerType("P1", "Person")
     assert isinstance(it, Fact)
-    l = NodeIsList("P1")
+    l = PointerIsArray("P1")
     cd = ClassDefinition("Person")
 
 

@@ -26,11 +26,11 @@ from typedlogic import And, Exists, Forall, Implies, Or, PredicateDefinition, Se
     NegationAsFailure
 from typedlogic.datamodel import CardinalityConstraint
 from typedlogic.integrations.frameworks.linkml.instance import (
-    Association,
+    ObjectPointerHasPropertyScalarized,
     InlinedObject,
-    InstanceMemberType,
-    NodeIsMultiValued,
-    NodeIsSingleValued, InstSlotRequired,
+    PointerType,
+    PointerIsCollection,
+    PointerIsScalar, InstSlotRequired,
 )
 from typedlogic.integrations.frameworks.linkml.meta import (
     ClassDefinition,
@@ -41,7 +41,7 @@ from typedlogic.integrations.frameworks.linkml.meta import (
     TreeRoot,
     TypeDefinition,
 )
-from typedlogic.theories.jsonlog.jsonlog import NodeIsList, ObjectPointerHasProperty
+from typedlogic.theories.jsonlog.jsonlog import PointerIsArray, ObjectPointerHasProperty
 
 Result = Union[Sentence, PredicateDefinition]
 
@@ -97,18 +97,6 @@ def generate_from_object(obj: SchemaDict) -> Iterator[Sentence]:
         elif k == "slots":
             for slot_name, slot_defn in v.items():
                 yield from generate_slot_definition(slot_name, slot_defn)
-    # TODO: keep axioms in one place
-    v_i = Variable("I")
-    v_s = Variable("S")
-    v_v = Variable("V")
-    assoc = Term(Association.__name__, v_i, v_s, v_v)
-    yield Implies(
-        And(
-            Term(InstSlotRequired.__name__, Variable("i"), Variable("s")),
-            CardinalityConstraint(assoc, assoc, maximum_number=0)
-        ),
-        Or(),
-    )
     return
 
 def generate_slot_definition(slot_name: str, slot_defn: Dict) -> Iterator[Sentence]:
@@ -119,7 +107,7 @@ def generate_slot_definition(slot_name: str, slot_defn: Dict) -> Iterator[Senten
         >>> inst_var = Variable("I")
         >>> slot_name = "age"
         >>> write_sentences(generate_slot_definition(slot_name, {"required": True}))
-        ∀[I C]. ClassSlot(C, 'age') ∧ InstanceMemberType(I, C) → InstSlotRequired(I, 'age')
+        ∀[I C]. ClassSlot(C, 'age') ∧ PointerType(I, C) → InstSlotRequired(I, 'age')
 
     :param slot_name:
     :param slot_defn:
@@ -136,7 +124,7 @@ def generate_slot_definition(slot_name: str, slot_defn: Dict) -> Iterator[Senten
             Implies(
                 And(
                     Term(ClassSlot.__name__, class_name, slot_name),
-                    Term(InstanceMemberType.__name__, inst_var, class_name),
+                    Term(PointerType.__name__, inst_var, class_name),
                 ),
                 And(*conjs)))
 
@@ -161,7 +149,7 @@ def generate_class_definition(class_name: str, class_defn: Dict) -> Iterator[Sen
         >>> write_sentences(generate_class_definition("C", {"is_a": "D"}))
         ClassDefinition('C')
         IsA('C', 'D')
-        ∀[I]. InstanceMemberType(I, 'C') → InstanceMemberType(I, 'D')
+        ∀[I]. PointerType(I, 'C') → PointerType(I, 'D')
 
     i.e. if I instance an instance of C, it's a member of D
 
@@ -169,31 +157,31 @@ def generate_class_definition(class_name: str, class_defn: Dict) -> Iterator[Sen
 
         >>> write_sentences(generate_class_definition("C", {"attributes": {"a1": {"required": True}}}))
         ClassDefinition('C')
-        ∀[I]. InstanceMemberType(I, 'C') → InstSlotRequired(I, 'a1')
+        ∀[I]. PointerType(I, 'C') → InstSlotRequired(I, 'a1')
 
     Ranges:
 
         >>> write_sentences(generate_class_definition("C", {"attributes": {"a1": {"range": "integer"}}}))
         ClassDefinition('C')
-        ∀[I]. InstanceMemberType(I, 'C') → ∀[v]. Association(I, 'a1', v) → InstanceMemberType(v, 'integer')
+        ∀[I]. PointerType(I, 'C') → ∀[v]. ObjectPointerHasPropertyScalarized(I, 'a1', v) → PointerType(v, 'integer')
 
     Combinations:
 
         >>> write_sentences(generate_class_definition("C", {"attributes": {"a1": {"required": True, "range": "string"}}}))
         ClassDefinition('C')
-        ∀[I]. InstanceMemberType(I, 'C') → InstSlotRequired(I, 'a1') ∧ ∀[v]. Association(I, 'a1', v) → InstanceMemberType(v, 'string')
+        ∀[I]. PointerType(I, 'C') → InstSlotRequired(I, 'a1') ∧ ∀[v]. ObjectPointerHasPropertyScalarized(I, 'a1', v) → PointerType(v, 'string')
 
     Booleans:
 
         >>> write_sentences(generate_class_definition("C", {"attributes": {"a1": {"any_of": [{"required": True}, {"range": "string"}]}}}))
         ClassDefinition('C')
-        ∀[I]. InstanceMemberType(I, 'C') → (InstSlotRequired(I, 'a1') ∨ ∀[v]. Association(I, 'a1', v) → InstanceMemberType(v, 'string'))
+        ∀[I]. PointerType(I, 'C') → (InstSlotRequired(I, 'a1') ∨ ∀[v]. ObjectPointerHasPropertyScalarized(I, 'a1', v) → PointerType(v, 'string'))
 
     Cardinality:
 
         >>> write_sentences(generate_class_definition("C", {"attributes": {"a1": {"multivalued": False}}}))
         ClassDefinition('C')
-        ∀[I]. InstanceMemberType(I, 'C') → ∀[v]. ObjectPointerHasProperty(I, 'a1', v) → NodeIsSingleValued(v)
+        ∀[I]. PointerType(I, 'C') → ∀[v]. ObjectPointerHasProperty(I, 'a1', v) → PointerIsScalar(v)
 
     Allowed slots:
 
@@ -226,8 +214,8 @@ def generate_class_definition(class_name: str, class_defn: Dict) -> Iterator[Sen
             yield Forall(
                 [inst_var],
                 Implies(
-                    Term(InstanceMemberType.__name__, inst_var, class_name),
-                    Term(InstanceMemberType.__name__, inst_var, v),
+                    Term(PointerType.__name__, inst_var, class_name),
+                    Term(PointerType.__name__, inst_var, v),
                 ),
             )
         if k == "mixins":
@@ -236,15 +224,15 @@ def generate_class_definition(class_name: str, class_defn: Dict) -> Iterator[Sen
                 yield Forall(
                     [inst_var],
                     Implies(
-                        Term(InstanceMemberType.__name__, inst_var, class_name),
-                        Term(InstanceMemberType.__name__, inst_var, v1),
+                        Term(PointerType.__name__, inst_var, class_name),
+                        Term(PointerType.__name__, inst_var, v1),
                     ),
                 )
         if k == "tree_root":
             yield TreeRoot(class_name)
-            yield InstanceMemberType("/", class_name)
+            yield PointerType("/", class_name)
     if conjs:
-        yield Forall([inst_var], Implies(Term(InstanceMemberType.__name__, inst_var, class_name), And(*conjs)))
+        yield Forall([inst_var], Implies(Term(PointerType.__name__, inst_var, class_name), And(*conjs)))
     return
 
 
@@ -267,7 +255,7 @@ def generate_type_definition(type_name: str, type_defn: Dict) -> Iterator[Senten
         >>> write_sentences(generate_type_definition("T", {"typeof": "U"}))
         TypeDefinition('T')
         IsA('T', 'U')
-        ∀[i]. InstanceMemberType(i, 'T') → InstanceMemberType(i, 'U')
+        ∀[i]. PointerType(i, 'T') → PointerType(i, 'U')
 
 
     TODO: complete this
@@ -285,8 +273,8 @@ def generate_type_definition(type_name: str, type_defn: Dict) -> Iterator[Senten
             yield Forall(
                 [inst_var],
                 Implies(
-                    Term(InstanceMemberType.__name__, inst_var, type_name),
-                    Term(InstanceMemberType.__name__, inst_var, v),
+                    Term(PointerType.__name__, inst_var, type_name),
+                    Term(PointerType.__name__, inst_var, v),
                 ),
             )
         if k == "mixins":
@@ -294,14 +282,14 @@ def generate_type_definition(type_name: str, type_defn: Dict) -> Iterator[Senten
                 yield Forall(
                     [inst_var],
                     Implies(
-                        Term(InstanceMemberType.__name__, inst_var, type_name),
-                        Term(InstanceMemberType.__name__, inst_var, v1),
+                        Term(PointerType.__name__, inst_var, type_name),
+                        Term(PointerType.__name__, inst_var, v1),
                     ),
                 )
         # for conj in conjunctions_from_type_expression(inst_var, type_name, type_defn):
         #    conjs.append(conj)
     if conjs:
-        yield Forall([inst_var], Implies(Term(InstanceMemberType.__name__, inst_var, type_name), And(*conjs)))
+        yield Forall([inst_var], Implies(Term(PointerType.__name__, inst_var, type_name), And(*conjs)))
     return
 
 
@@ -315,10 +303,10 @@ def conjunctions_from_slot_expression(inst_var: Variable, slot_name: str, slot_e
         >>> write_sentences(conjunctions_from_slot_expression(inst_var, slot_name, {"required": True}))
         InstSlotRequired(I, 'age')
         >>> write_sentences(conjunctions_from_slot_expression(inst_var, slot_name, {"range": "string"}))
-        ∀[v]. Association(I, 'age', v) → InstanceMemberType(v, 'string')
+        ∀[v]. ObjectPointerHasPropertyScalarized(I, 'age', v) → PointerType(v, 'string')
         >>> any_of = {"any_of": [{"range": "string"}, {"range": "integer"}]}
         >>> write_sentences(conjunctions_from_slot_expression(inst_var, slot_name, any_of))
-        (∀[v]. Association(I, 'age', v) → InstanceMemberType(v, 'string') ∨ ∀[v]. Association(I, 'age', v) → InstanceMemberType(v, 'integer'))
+        (∀[v]. ObjectPointerHasPropertyScalarized(I, 'age', v) → PointerType(v, 'string') ∨ ∀[v]. ObjectPointerHasPropertyScalarized(I, 'age', v) → PointerType(v, 'integer'))
 
     :param inst_var:
     :param slot_name:
@@ -363,15 +351,15 @@ def conjunctions_from_slot_expression(inst_var: Variable, slot_name: str, slot_e
                 yield Forall(
                     [val_var],
                     Implies(
-                        Term(Association.__name__, inst_var, slot_name, val_var),
-                        Term(InstanceMemberType.__name__, val_var, v),
+                        Term(ObjectPointerHasPropertyScalarized.__name__, inst_var, slot_name, val_var),
+                        Term(PointerType.__name__, val_var, v),
                     ),
                 )
         elif k == "multivalued" and v is not None:
             if v is True:
-                pred = NodeIsMultiValued.__name__
+                pred = PointerIsCollection.__name__
             else:
-                pred = NodeIsSingleValued.__name__
+                pred = PointerIsScalar.__name__
             yield Forall(
                 [val_var], Implies(Term(ObjectPointerHasProperty.__name__, inst_var, slot_name, val_var), Term(pred, val_var))
             )
@@ -379,7 +367,7 @@ def conjunctions_from_slot_expression(inst_var: Variable, slot_name: str, slot_e
             yield Forall(
                 [val_var],
                 Implies(
-                    Term(ObjectPointerHasProperty.__name__, inst_var, slot_name, val_var), Term(NodeIsList.__name__, val_var)
+                    Term(ObjectPointerHasProperty.__name__, inst_var, slot_name, val_var), Term(PointerIsArray.__name__, val_var)
                 ),
             )
             yield Forall(
@@ -403,9 +391,9 @@ def conjunctions_from_slot_expression(inst_var: Variable, slot_name: str, slot_e
                 [val_var, val_var2],
                 Implies(
                     And(
-                        Term(Association.__name__, inst_var, slot_name, val_var),
-                        Term(Association.__name__, val_var, slot_name, val_var2),
+                        Term(ObjectPointerHasPropertyScalarized.__name__, inst_var, slot_name, val_var),
+                        Term(ObjectPointerHasPropertyScalarized.__name__, val_var, slot_name, val_var2),
                     ),
-                    Term(Association.__name__, inst_var, slot_name, val_var2),
+                    Term(ObjectPointerHasPropertyScalarized.__name__, inst_var, slot_name, val_var2),
                 ),
             )

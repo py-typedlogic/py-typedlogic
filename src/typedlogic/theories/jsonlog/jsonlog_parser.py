@@ -21,10 +21,10 @@ class JsonLogParser(Parser):
         >>> theory = parser.parse("[1]")
         >>> for s in sorted(theory.sentences):
         ...    print(s)
-        NodeIntValue(/[0], 1)
-        NodeIsLiteral(/[0])
+        PointerIntValue(/[0], 1)
+        PointerIsLiteral(/[0])
         ArrayPointerHasMember(/, 0, /[0])
-        NodeIsList(/)
+        PointerIsArray(/)
     """
 
     def parse(self, source: Union[Path, str, TextIO], **kwargs) -> Theory:

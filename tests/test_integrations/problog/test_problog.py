@@ -5,10 +5,10 @@ from typing import Dict, Union
 
 import pytest
 from problog import get_evaluatable
-from problog.logic import Term
 from problog.program import PrologString
 from tests import OUTPUT_DIR, tree_edges
-from typedlogic.datamodel import Forall, Variable
+from typedlogic import Theory
+from typedlogic.datamodel import Forall, Variable, Implies, Term
 from typedlogic.extensions.probabilistic import Evidence, ProbabilisticModel, Probability, That
 from typedlogic.integrations.solvers.problog.problog_compiler import ProbLogCompiler
 from typedlogic.integrations.solvers.problog.problog_solver import ProbLogSolver
@@ -93,6 +93,18 @@ def test_compiler(theory_module, facts, evidences):
     compiler = ProbLogCompiler()
     compiled = compiler.compile(theory)
     assert "0.4::heads(C) :- coin(C)." in compiled
+
+
+def test_compiler_negation_in_body():
+    P = Term("P")
+    Q = Term("Q")
+    theory = Theory()
+    s = Implies(~P, Q)
+    theory.add(s)
+    compiler = ProbLogCompiler()
+    compiled = compiler.compile(theory)
+    assert compiled == r"q :- \+ p."
+
 
 
 @pytest.mark.parametrize(
