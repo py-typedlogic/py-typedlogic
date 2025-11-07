@@ -1,5 +1,5 @@
 import timeit
-from typing import Optional
+from typing import Optional, Union
 
 import pytest
 
@@ -69,9 +69,28 @@ def test_paths(depth, num_children, expected):
 
 
 def test_constraints1():
+    """
+    Test a simple constraint that stats:
+
+       not exists X such that A(X) holds
+
+    Note for Clingo, this has to be expressed as a constraint, not an implication:
+
+        A(X) >> False
+
+    Which in in clingo syntax is:
+
+        :- A(X).
+
+    (the left side is a disjunction with an empty list of terms, which is equivalent to False)
+
+    We test this by asserting a unit clause A(i1) and checking that the solver is unsatisfiable.
+
+    :return:
+    """
     theory = Theory()
     x = Variable("X")
-    theory.add(Term("A", x) >> Or())
+    theory.add(Term("A", x) >> False)
     solver = ClingoSolver()
     solver.add(theory)
     assert solver.check().satisfiable
@@ -80,11 +99,23 @@ def test_constraints1():
     assert not solver.check().satisfiable
 
 def test_constraints2():
-    pytest.skip("TODO: existentials as constraints")
+    """
+    Test a constraint that states:
+
+         if B(X) holds, then C(X) must hold
+
+    This is the ASP-compatible way to express "if B(X) holds, then there exists Y such that C(X) holds"
+    (where C doesn't actually depend on Y).
+
+    In ASP, we express this using negation-as-failure:
+        - B(X) & not C(X) => False (constraint that B(X) requires C(X))
+
+    :return:
+    """
     theory = Theory()
     x = Variable("X")
-    y = Variable("Y")
-    theory.add(Implies(Term("B", x), Exists([y], Term("C", x))))
+    # If B(X) holds and C(X) doesn't, then unsatisfiable
+    theory.add(Implies(And(Term("B", x), NegationAsFailure(Term("C", x))), Or()))
     solver = ClingoSolver()
     solver.add(theory)
     solver.add(Term("B", "i1"))
@@ -135,6 +166,13 @@ def test_constraints4():
 
 
 def test_constraints5():
+    """
+    Test a constraint that states:
+
+        - if C(X, Y) holds, then has_C(X) holds
+        - if B(X) holds then has_C(X) must be provable
+    :return:
+    """
     theory = Theory()
     x = Variable("X")
     y = Variable("_Y")
@@ -281,4 +319,20 @@ def test_cardinality_nary(min_count: int, max_count: int, actual_count: int):
         is_sat = False
     if max_count is not None and actual_count > max_count:
         is_sat = False
+    assert solver.check().satisfiable == is_sat
+
+
+@pytest.mark.parametrize("num_things", [0, 1])
+@pytest.mark.parametrize("consequent", [False, Or()])
+def test_unsat_atomic(num_things: int, consequent: Optional[Union[Term, bool]]):
+    # TODO
+    x = Variable("X")
+    solver = ClingoSolver()
+    # there are no things
+    solver.add(Term("Thing", x) >> consequent)
+    for i in range(num_things):
+        solver.add(Term("Thing", f"t{i}"))
+    print("THEORY:")
+    print(solver.dump())
+    is_sat = num_things == 0
     assert solver.check().satisfiable == is_sat
