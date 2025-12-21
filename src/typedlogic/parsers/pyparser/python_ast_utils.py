@@ -235,8 +235,10 @@ def parse_generator_node(node: ast.GeneratorExp) -> Tuple[List[Variable], Senten
     """
     Parse a generator expression node and return the arguments and the implied sentence.
 
-    :param node:
-    :return:
+    Supports both legacy gen1/gen2/gen3 calls and the new composable Gen(T) * Gen(T) syntax.
+
+    :param node: A generator expression AST node
+    :return: Tuple of (list of Variables, the Sentence from the generator body)
     """
     elt = node.elt
     gens = node.generators
@@ -244,11 +246,18 @@ def parse_generator_node(node: ast.GeneratorExp) -> Tuple[List[Variable], Senten
         raise ValueError(f"Unsupported number of generators: {len(gens)}")
     gen = gens[0]
     iter_node = gen.iter
+
+    # Parse the iterator to extract types
     if isinstance(iter_node, ast.Call):
+        # Legacy gen1/gen2/gen3(Type) or single Gen(Type)
         iter_func, iter_args = parse_gen_call(iter_node)
+    elif isinstance(iter_node, ast.BinOp) and isinstance(iter_node.op, ast.Mult):
+        # Composable Gen(T1) * Gen(T2) * ... syntax
+        iter_args = parse_composable_gen(iter_node)
     else:
-        # iter_func = ast.unparse(iter_node)
+        # Unknown iterator format
         iter_args = []
+
     if gen.ifs:
         if_exprs = [parse_sentence(if_node) for if_node in gen.ifs]
         if_conj = if_exprs[0]
@@ -257,15 +266,16 @@ def parse_generator_node(node: ast.GeneratorExp) -> Tuple[List[Variable], Senten
     else:
         if_conj = None
 
-    # arg_types = {}
+    # Build the variable bindings from target and iter_args
     if isinstance(gen.target, ast.Name):
-        arg_types = {gen.target.id: Variable(gen.target.id, iter_args[0])}
+        arg_types = {gen.target.id: Variable(gen.target.id, iter_args[0] if iter_args else None)}
     elif isinstance(gen.target, ast.Tuple):
         arg_types = {}
         for i, xelt in enumerate(gen.target.elts):
             if not isinstance(xelt, ast.Name):
-                raise ValueError(f"Unsupported target type: {type(elt)}")
-            arg_types[xelt.id] = Variable(xelt.id, iter_args[i])
+                raise ValueError(f"Unsupported target type: {type(xelt)}")
+            domain = iter_args[i] if i < len(iter_args) else None
+            arg_types[xelt.id] = Variable(xelt.id, domain)
     else:
         raise ValueError(f"Unsupported target type: {type(gen.target)}")
 
@@ -297,6 +307,40 @@ def parse_gen_call(node: ast.Call) -> tuple[str, List[str]]:
     func_name = node.func.id if isinstance(node.func, ast.Name) else str(node.func)
     args = [ast.unparse(arg) for arg in node.args]
     return func_name, args
+
+
+def parse_composable_gen(node: ast.expr) -> List[str]:
+    """
+    Parse composable generator expressions like `Gen(T1) * Gen(T2) * Gen(T3)`.
+
+    Handles both simple Gen(Type) calls and binary multiplication operations
+    that chain multiple Gen() calls together.
+
+    :param node: An AST expression node (Call or BinOp)
+    :return: List of type names in order
+    :raises ValueError: If the expression is not a valid composable generator
+    """
+    if isinstance(node, ast.Call):
+        # Single Gen(Type) call
+        func_name = get_func_name(node.func)
+        if func_name == "Gen":
+            if len(node.args) != 1:
+                raise ValueError(f"Gen() expects exactly 1 argument, got {len(node.args)}")
+            return [ast.unparse(node.args[0])]
+        elif func_name in ("gen", "gen1", "gen2", "gen3"):
+            # Handle legacy gen functions
+            return [ast.unparse(arg) for arg in node.args]
+        else:
+            raise ValueError(f"Unknown generator function: {func_name}")
+
+    elif isinstance(node, ast.BinOp) and isinstance(node.op, ast.Mult):
+        # Gen(T1) * Gen(T2) - multiplication chain
+        left_types = parse_composable_gen(node.left)
+        right_types = parse_composable_gen(node.right)
+        return left_types + right_types
+
+    else:
+        raise ValueError(f"Unsupported generator expression: {ast.unparse(node)}")
 
 
 def parse_func(node: ast.Call) -> tuple[str, List[str]]:
