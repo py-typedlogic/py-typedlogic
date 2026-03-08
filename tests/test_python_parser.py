@@ -247,3 +247,75 @@ def test_unsupported_node_type():
     func_def = tree.body[0]
     with pytest.raises(NotImplementedError, match="Unsupported node type"):
         parse_function_def_to_sentence_group(func_def)
+
+
+# Tests for composable Gen syntax
+@pytest.mark.parametrize(
+    "text,expr",
+    [
+        # Single Gen(Type)
+        (
+            "all(Person(name=x) for x in Gen(Name))",
+            Forall([X], PERSON_TERM),
+        ),
+        # Two Gen types with *
+        (
+            "all(Agent(name=x, age=y) for x, y in Gen(Name) * Gen(int) if Person(name=x, age=y))",
+            Forall([X, Y], Implies(PERSON_TERM2, AGENT_TERM2)),
+        ),
+        # Three Gen types chained
+        (
+            "all(P(x, y, z) for x, y, z in Gen(str) * Gen(int) * Gen(float))",
+            Forall(
+                [Variable("x", "str"), Variable("y", "int"), Variable("z", "float")],
+                Term("P", Variable("x"), Variable("y"), Variable("z")),
+            ),
+        ),
+        # Exists with composable Gen
+        (
+            "any(Person(name=x) for x in Gen(Name))",
+            Exists([X], PERSON_TERM),
+        ),
+    ],
+)
+def test_parse_composable_gen(text, expr):
+    """Test parsing of composable Gen(T) * Gen(U) syntax."""
+    tree = ast.parse(text)
+    func_def = tree.body[0]
+    print(ast.dump(func_def, indent=2))
+    sentence = parse_sentence(func_def)
+    print(f"Parsed: {sentence}")
+    print(f"Expected: {expr}")
+    assert isinstance(sentence, type(expr))
+    assert sentence == expr
+
+
+composable_gen_axiom = """
+def transitivity_axiom() -> bool:
+    return all(
+        AncestorOf(ancestor=x, descendant=y)
+        for x, y, z in Gen(TreeNodeType) * Gen(TreeNodeType) * Gen(TreeNodeType)
+        if AncestorOf(ancestor=x, descendant=z) and AncestorOf(ancestor=z, descendant=y)
+    )
+"""
+
+
+def test_parse_composable_gen_axiom():
+    """Test parsing a full axiom using composable Gen syntax."""
+    tree = ast.parse(composable_gen_axiom)
+    func_def = tree.body[0]
+    sentence_group = parse_function_def_to_sentence_group(func_def)
+
+    assert sentence_group.name == "transitivity_axiom"
+    qs = sentence_group.sentences[0]
+    assert isinstance(qs, Forall)
+    assert qs.quantifier == "all"
+    assert len(qs.variables) == 3
+    assert qs.variables[0].name == "x"
+    assert qs.variables[0].domain == "TreeNodeType"
+    assert qs.variables[1].name == "y"
+    assert qs.variables[1].domain == "TreeNodeType"
+    assert qs.variables[2].name == "z"
+    assert qs.variables[2].domain == "TreeNodeType"
+    sentence = qs.sentence
+    assert isinstance(sentence, Implies)

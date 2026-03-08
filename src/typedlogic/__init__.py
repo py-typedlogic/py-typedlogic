@@ -21,7 +21,7 @@ from typedlogic.datamodel import (
     Variable,
 )
 from typedlogic.pybridge import FactMixin, Fact
-from typedlogic.generators import gen, gen1, gen2, gen3
+from typedlogic.generators import gen, gen1, gen2, gen3, Gen, gen_range, gen_list, gen_const, gen_product
 from typedlogic.decorators import axiom, goal
 
 __all__ = [
@@ -50,4 +50,9 @@ __all__ = [
     "gen1",
     "gen2",
     "gen3",
+    "Gen",
+    "gen_range",
+    "gen_list",
+    "gen_const",
+    "gen_product",
 ]
