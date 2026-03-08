@@ -1,0 +1,3764 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/tutorial/05-cli/">
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
+    
+    
+      
+        <title>05 cli - py-typedlogic</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8608ea7d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../../css/pandas-dataframe.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#typedlogic-cli-tutorial" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="py-typedlogic" class="md-header__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            py-typedlogic
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              05 cli
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/py-typedlogic/py-typedlogic/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="py-typedlogic" class="md-nav__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    py-typedlogic
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/py-typedlogic/py-typedlogic/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Tutorial
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Tutorial
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-first-program" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1. First program
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-using-python-data-model" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2. Using the Python Data Model
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-probabilistic-logic" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3. Probabilistic Logic
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-owldl" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4. OWL-DL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5. Command Line
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Concepts
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Concepts
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Core concepts
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/datamodel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Data Model
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/decorators/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decorators
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/generators/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Generators
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/solvers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Solvers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/benchmarks.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Benchmarks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Solvers
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Solvers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Solver overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/clingo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Clingo
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/z3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Z3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/souffle/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Souffle
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/prover9/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prover9
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/snakelog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SnakeLog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/problog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ProbLog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/llm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    LLM Solver
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Compilers
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Compilers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compiler overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/yaml/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAML
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/prolog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prolog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/problog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ProbLog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/tptp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TPTP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/fol/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FOL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/sexpr/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    S-Expression
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Parsers
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Parsers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parser overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/python/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/yaml/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAML
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/dataframe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DataFrame
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/catalog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Catalog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/owlpy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OWLPy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/rdf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDF
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Frameworks
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Frameworks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    OWL-DL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            OWL-DL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/owldl/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OWL-DL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/owldl/owldl-tutorial" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tutorial
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/owldl/owltop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Classes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/owldl/reasoner/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reasoner
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/pydantic" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pydantic
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/sqlmodel.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQLModel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/rdf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDF
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Command Line
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roadmap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#cli-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      CLI Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setting-up-example-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting Up Example Files
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-convert-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. The convert Command
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. The convert Command">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#convert-to-first-order-logic-fol" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convert to First-Order Logic (FOL)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#convert-to-prolog" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convert to Prolog
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#convert-to-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convert to YAML
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save-output-to-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Save Output to File
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-dump-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. The dump Command
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The dump Command">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#combine-theory-with-facts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Combine Theory with Facts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combine-multiple-data-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Combine Multiple Data Files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export-to-different-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Export to Different Formats
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-solve-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. The solve Command
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The solve Command">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-solving-with-clingo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Solving with clingo
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-satisfiability-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check Satisfiability Only
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-different-solvers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using Different Solvers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-data-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Data Files
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#save-results-to-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      Save Results to File
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-advanced-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Advanced Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Advanced Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#working-with-contradictions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Working with Contradictions
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Type Validation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-practical-workflow-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Practical Workflow Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Practical Workflow Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#development-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Development Workflow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batch-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Batch Processing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#converting-for-external-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Converting for External Tools
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-error-handling-and-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Error Handling and Debugging
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Error Handling and Debugging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#invalid-file-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Invalid File Formats
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unknown-solvers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unknown Solvers
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-performance-and-solver-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Performance and Solver Comparison
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      Summary
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Features:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Workflows:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cleanup
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+(function() {
+  function addWidgetsRenderer() {
+    var requireJsScript = document.createElement('script');
+    requireJsScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js';
+
+    var mimeElement = document.querySelector('script[type="application/vnd.jupyter.widget-view+json"]');
+    var jupyterWidgetsScript = document.createElement('script');
+    var widgetRendererSrc = 'https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js';
+    var widgetState;
+
+    // Fallback for older version:
+    try {
+      widgetState = mimeElement && JSON.parse(mimeElement.innerHTML);
+
+      if (widgetState && (widgetState.version_major < 2 || !widgetState.version_major)) {
+        widgetRendererSrc = 'jupyter-js-widgets@*/dist/embed.js';
+      }
+    } catch(e) {}
+
+    jupyterWidgetsScript.src = widgetRendererSrc;
+
+    document.body.appendChild(requireJsScript);
+    document.body.appendChild(jupyterWidgetsScript);
+  }
+
+  document.addEventListener('DOMContentLoaded', addWidgetsRenderer);
+}());
+</script>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="typedlogic-cli-tutorial">TypedLogic CLI Tutorial</h1>
+<p>This tutorial demonstrates how to use the TypedLogic command-line interface (CLI) to work with logical theories and facts. The CLI provides powerful tools for:</p>
+<ul>
+<li><strong>Converting</strong> between different logical formats</li>
+<li><strong>Solving</strong> logical theories with various solvers</li>
+<li><strong>Dumping</strong> combined theories for inspection and preprocessing</li>
+</ul>
+<p>We'll explore these capabilities using practical examples with the familiar path-finding domain from previous tutorials.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="cli-overview">CLI Overview</h2>
+<p>Let's start by exploring the available CLI commands:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="c1"># Show CLI help</span>
+typedlogic<span class="w"> </span>--help
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code><span class="ansi-bold">                                                                                </span>
+<span class="ansi-bold"> </span><span class="ansi-yellow-intense-fg ansi-bold">Usage: </span><span class="ansi-bold">typedlogic [OPTIONS] COMMAND [ARGS]...</span><span class="ansi-bold">                                 </span><span class="ansi-bold"> </span>
+<span class="ansi-bold">                                                                                </span>
+╭─ Options ─────────────────────��──────────────────────────────────────────────╮
+│ <span class="ansi-cyan-intense-fg ansi-bold">-</span><span class="ansi-cyan-intense-fg ansi-bold">-install</span><span class="ansi-cyan-intense-fg ansi-bold">-completion</span>          Install completion for the current shell.      │
+│ <span class="ansi-cyan-intense-fg ansi-bold">-</span><span class="ansi-cyan-intense-fg ansi-bold">-show</span><span class="ansi-cyan-intense-fg ansi-bold">-completion</span>             Show completion for the current shell, to copy │
+│                               it or customize the installation.              │
+│ <span class="ansi-cyan-intense-fg ansi-bold">-</span><span class="ansi-cyan-intense-fg ansi-bold">-help</span>                        Show this message and exit.                    │
+╰───────────────���────────────────────────────────��─────────────────────────────╯
+╭─ Commands ─────────────────────���────────────────────────────────��────────────╮
+│ <span class="ansi-cyan-intense-fg ansi-bold">convert      </span><span class="ansi-cyan-intense-fg ansi-bold"> </span> Convert from one logic form to another.                       │
+│ <span class="ansi-cyan-intense-fg ansi-bold">dump         </span><span class="ansi-cyan-intense-fg ansi-bold"> </span> Parse and combine multiple input files, then export to        │
+│ <span class="ansi-cyan-intense-fg ansi-bold">              </span> specified format without solving.                             │
+│ <span class="ansi-cyan-intense-fg ansi-bold">list-parsers </span><span class="ansi-cyan-intense-fg ansi-bold"> </span>                                                               │
+│ <span class="ansi-cyan-intense-fg ansi-bold">solve        </span><span class="ansi-cyan-intense-fg ansi-bold"> </span> Solve logical theories with facts using the specified solver. │
+╰─────────────────────────────────────────────���────────────────────────────────��
+
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The CLI provides three main commands:</p>
+<ol>
+<li><strong><code>convert</code></strong> - Transform between different logical formats</li>
+<li><strong><code>solve</code></strong> - Solve logical theories with various solvers</li>
+<li><strong><code>dump</code></strong> - Combine and export theories without solving</li>
+</ol>
+<p>Let's explore each in detail.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="setting-up-example-files">Setting Up Example Files</h2>
+<p>First, let's create some example files to work with. We'll use a simple path-finding theory similar to previous tutorials:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="c1"># Create a directory for our examples</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>/tmp/typedlogic_cli_tutorial
+mkdir<span class="w"> </span>-p<span class="w"> </span>/tmp/typedlogic_cli_tutorial/usa
+mkdir<span class="w"> </span>-p<span class="w"> </span>/tmp/typedlogic_cli_tutorial/europe
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">typedlogic_cli_tutorial</span><span class="o">/</span><span class="n">paths_theory</span><span class="o">.</span><span class="n">py</span>
+<span class="sd">&quot;&quot;&quot;Path-finding logical theory with transitivity.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic</span><span class="w"> </span><span class="kn">import</span> <span class="n">FactMixin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">axiom</span>
+
+<span class="n">ID</span> <span class="o">=</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Link</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">FactMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A direct connection between two locations.&quot;&quot;&quot;</span>
+    <span class="n">source</span><span class="p">:</span> <span class="n">ID</span>
+    <span class="n">target</span><span class="p">:</span> <span class="n">ID</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Path</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">FactMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A path (possibly multi-hop) between two locations.&quot;&quot;&quot;</span>
+    <span class="n">source</span><span class="p">:</span> <span class="n">ID</span>
+    <span class="n">target</span><span class="p">:</span> <span class="n">ID</span>
+
+<span class="nd">@axiom</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">link_implies_path</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ID</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">ID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Every direct link implies a path.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">Link</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+
+<span class="nd">@axiom</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">transitivity</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ID</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">ID</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">ID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Paths are transitive: if x-&amp;gt;y and y-&amp;gt;z, then x-&amp;gt;z.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">y</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">z</span><span class="p">))</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">Path</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">z</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Writing /tmp/typedlogic_cli_tutorial/paths_theory.py
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">typedlogic_cli_tutorial</span><span class="o">/</span><span class="n">usa</span><span class="o">/</span><span class="n">Link</span><span class="o">.</span><span class="n">csv</span>
+<span class="n">source</span><span class="p">,</span><span class="n">target</span>
+<span class="n">CA</span><span class="p">,</span><span class="n">NV</span>
+<span class="n">NV</span><span class="p">,</span><span class="n">AZ</span>
+<span class="n">AZ</span><span class="p">,</span><span class="n">UT</span>
+<span class="n">CA</span><span class="p">,</span><span class="n">OR</span>
+<span class="n">OR</span><span class="p">,</span><span class="n">WA</span>
+<span class="n">WA</span><span class="p">,</span><span class="n">ID</span>
+<span class="n">ID</span><span class="p">,</span><span class="n">MT</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Writing /tmp/typedlogic_cli_tutorial/usa/Link.csv
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">typedlogic_cli_tutorial</span><span class="o">/</span><span class="n">europe</span><span class="o">/</span><span class="n">Link</span><span class="o">.</span><span class="n">csv</span>
+<span class="n">source</span><span class="p">,</span><span class="n">target</span>
+<span class="n">FR</span><span class="p">,</span><span class="n">DE</span>
+<span class="n">DE</span><span class="p">,</span><span class="n">PL</span>
+<span class="n">FR</span><span class="p">,</span><span class="n">IT</span>
+<span class="n">IT</span><span class="p">,</span><span class="n">CH</span>
+<span class="n">CH</span><span class="p">,</span><span class="n">DE</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Writing /tmp/typedlogic_cli_tutorial/europe/Link.csv
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="1-the-convert-command">1. The <code>convert</code> Command</h2>
+<p>The <code>convert</code> command transforms logical theories from one format to another. This is useful for:
+- Viewing theories in different representations
+- Preparing input for external tools
+- Understanding the formal semantics of your theories</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="c1"># Show convert command help</span>
+typedlogic<span class="w"> </span>convert<span class="w"> </span>--help
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code><span class="ansi-bold">                                                                                </span>
+<span class="ansi-bold"> </span><span class="ansi-yellow-intense-fg ansi-bold">Usage: </span><span class="ansi-bold">typedlogic convert [OPTIONS] THEORY_FILES...</span><span class="ansi-bold">                           </span><span class="ansi-bold"> </span>
+<span class="ansi-bold">                                                                                </span>
+ Convert from one logic form to another.                                        
+ For a list of supported parsers and compilers, see                             
+ https://py-typedlogic.github.io/py-typedlogic/                                 
+ Note that some conversions may be lossy. Currently no warnings are issued for  
+ such cases.                                                                    
+ Example: <span class="ansi-cyan-intense-fg ansi-bold">-------</span> ```bash typedlogic convert  my_theory.py <span class="ansi-green-intense-fg ansi-bold">-t</span> fol ```           
+
+╭─ Arguments ──────────────────────────────────────────────────────���───────────╮
+│ <span class="ansi-red-fg">*</span>    theory_files      <span class="ansi-yellow-intense-fg ansi-bold">THEORY_FILES...</span>  [default: None] <span class="ansi-red-fg">[required]</span>           │
+╰��──────────────────────────────────────────────────────────────────���──────────╯
+╭─ Options ─────────────────────��──────────────────────────────────────────────╮
+│ <span class="ansi-cyan-intense-fg ansi-bold">-</span><span class="ansi-cyan-intense-fg ansi-bold">-input</span><span class="ansi-cyan-intense-fg ansi-bold">-format</span>    <span class="ansi-green-intense-fg ansi-bold">-f</span>                         <span class="ansi-yellow-intense-fg ansi-bold">TEXT</span>  Input format. Currently   │
+│                                                    supported: python, yaml,  │
+│                                                    owlpy                     │
+│                                                    [default: python]         │
+│ <span class="ansi-cyan-intense-fg ansi-bold">-</span><span class="ansi-cyan-intense-fg ansi-bold">-output</span><span class="ansi-cyan-intense-fg ansi-bold">-format</span>   <span class="ansi-green-intense-fg ansi-bold">-t</span>                         <span class="ansi-yellow-intense-fg ansi-bold">TEXT</span>  Output format             │
+│                                                    [default: None]           │
+│ <span class="ansi-cyan-intense-fg ansi-bold">-</span><span class="ansi-cyan-intense-fg ansi-bold">-output</span><span class="ansi-cyan-intense-fg ansi-bold">-file</span>     <span class="ansi-green-intense-fg ansi-bold">-o</span>                         <span class="ansi-yellow-intense-fg ansi-bold">PATH</span>  Output file path          │
+│                                                    [default: None]           │
+│ <span class="ansi-cyan-intense-fg ansi-bold">-</span><span class="ansi-cyan-intense-fg ansi-bold">-validate</span><span class="ansi-cyan-intense-fg ansi-bold">-types</span>      <span class="ansi-magenta-intense-fg ansi-bold">-</span><span class="ansi-magenta-intense-fg ansi-bold">-no</span><span class="ansi-magenta-intense-fg ansi-bold">-validate-types</span>    <span class="ansi-yellow-intense-fg ansi-bold">    </span>  Use mypy to validate      │
+│                                                    types                     │
+│                                                    [default: validate-types] │
+│ <span class="ansi-cyan-intense-fg ansi-bold">-</span><span class="ansi-cyan-intense-fg ansi-bold">-help</span>                                       <span class="ansi-yellow-intense-fg ansi-bold">    </span>  Show this message and     │
+│                                                    exit.                     │
+╰───────────────────────────────────────���────────────────────────────────��─────╯
+
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="convert-to-first-order-logic-fol">Convert to First-Order Logic (FOL)</h3>
+<p>Let's convert our Python theory to first-order logic:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+typedlogic<span class="w"> </span>convert<span class="w"> </span>paths_theory.py<span class="w"> </span>-t<span class="w"> </span>fol
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+<code>There is no established path to paths_theory.py - compile_python may or may not work
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>∀[x:ID y:ID]. Link(x, y) → Path(x, y)
+∀[x:ID y:ID z:ID]. Path(x, y) ∧ Path(y, z) → Path(x, z)
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="convert-to-prolog">Convert to Prolog</h3>
+<p>Now let's see the same theory in Prolog format:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+typedlogic<span class="w"> </span>convert<span class="w"> </span>paths_theory.py<span class="w"> </span>-t<span class="w"> </span>prolog
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+<code>There is no established path to paths_theory.py - compile_python may or may not work
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>%% Predicate Definitions
+% Link(source: str, target: str)
+% Path(source: str, target: str)
+
+%% link_implies_path
+
+path(X, Y) :- link(X, Y).
+
+%% transitivity
+
+path(X, Z) :- path(X, Y), path(Y, Z).
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="convert-to-yaml">Convert to YAML</h3>
+<p>YAML format is useful for inspection and interchange:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+typedlogic<span class="w"> </span>convert<span class="w"> </span>paths_theory.py<span class="w"> </span>-t<span class="w"> </span>yaml
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+<code>There is no established path to paths_theory.py - compile_python may or may not work
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>type: Theory
+name: paths_theory
+constants: {}
+type_definitions: {}
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: Link
+  arguments:
+    source: str
+    target: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Path
+  arguments:
+    source: str
+    target: str
+  parents: []
+sentence_groups:
+- type: SentenceGroup
+  name: link_implies_path
+  group_type: axiom
+  docstring: Every direct link implies a path.
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - x
+        - ID
+      - type: Variable
+        arguments:
+        - y
+        - ID
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - Link
+        - type: Variable
+          arguments:
+          - x
+        - type: Variable
+          arguments:
+          - y
+      - type: Term
+        arguments:
+        - Path
+        - type: Variable
+          arguments:
+          - x
+        - type: Variable
+          arguments:
+          - y
+- type: SentenceGroup
+  name: transitivity
+  group_type: axiom
+  docstring: 'Paths are transitive: if x-&gt;y and y-&gt;z, then x-&gt;z.'
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - x
+        - ID
+      - type: Variable
+        arguments:
+        - y
+        - ID
+      - type: Variable
+        arguments:
+        - z
+        - ID
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Path
+          - type: Variable
+            arguments:
+            - x
+          - type: Variable
+            arguments:
+            - y
+        - type: Term
+          arguments:
+          - Path
+          - type: Variable
+            arguments:
+            - y
+          - type: Variable
+            arguments:
+            - z
+      - type: Term
+        arguments:
+        - Path
+        - type: Variable
+          arguments:
+          - x
+        - type: Variable
+          arguments:
+          - z
+ground_terms: []
+source_module_name: paths_theory
+
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="save-output-to-file">Save Output to File</h3>
+<p>You can save the converted output to a file:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+typedlogic<span class="w"> </span>convert<span class="w"> </span>paths_theory.py<span class="w"> </span>-t<span class="w"> </span>fol<span class="w"> </span>-o<span class="w"> </span>paths_theory.fol
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Contents of paths_theory.fol ===&quot;</span>
+cat<span class="w"> </span>paths_theory.fol
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+<code>There is no established path to paths_theory.py - compile_python may or may not work
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Conversion result written to paths_theory.fol
+=== Contents of paths_theory.fol ===
+∀[x:ID y:ID]. Link(x, y) → Path(x, y)
+∀[x:ID y:ID z:ID]. Path(x, y) ∧ Path(y, z) → Path(x, z)</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2-the-dump-command">2. The <code>dump</code> Command</h2>
+<p>The <code>dump</code> command combines multiple input files and exports them in a specified format <strong>without solving</strong>. This is useful for:
+- Preprocessing and combining theories with facts
+- Format conversion of combined datasets
+- Inspecting the merged theory before solving</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html"></div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code> <span class="n">Parse</span> <span class="ow">and</span> <span class="n">combine</span> <span class="n">multiple</span> <span class="nb">input</span> <span class="n">files</span><span class="p">,</span> <span class="n">then</span> <span class="n">export</span> <span class="n">to</span> <span class="n">specified</span> <span class="nb">format</span>        
+ <span class="n">without</span> <span class="n">solving</span><span class="o">.</span>                                                               
+ <span class="p">[</span><span class="mi">2</span><span class="n">mThis</span> <span class="n">command</span> <span class="ow">is</span> <span class="n">useful</span> <span class="k">for</span> <span class="n">preprocessing</span><span class="p">,</span> <span class="nb">format</span> <span class="n">conversion</span><span class="p">,</span> <span class="ow">and</span> <span class="n">inspecting</span> <span class="p">[</span><span class="mi">0</span><span class="n">m</span>   
+ <span class="p">[</span><span class="mi">2</span><span class="n">mthe</span> <span class="n">combined</span> <span class="n">logical</span> <span class="n">theory</span> <span class="n">before</span> <span class="n">solving</span><span class="o">.</span><span class="p">[</span><span class="mi">0</span><span class="n">m</span>                                    
+ <span class="p">[</span><span class="mi">2</span><span class="n">mFiles</span> <span class="n">can</span> <span class="n">be</span> <span class="n">Python</span> <span class="p">(</span><span class="o">.</span><span class="n">py</span><span class="p">),</span> <span class="n">YAML</span> <span class="p">(</span><span class="o">.</span><span class="n">yaml</span><span class="p">),</span> <span class="ow">or</span> <span class="n">CSV</span> <span class="p">(</span><span class="o">.</span><span class="n">csv</span><span class="p">)</span> <span class="nb">format</span> <span class="o">-</span> <span class="nb">format</span> <span class="ow">is</span> <span class="n">auto</span><span class="o">-</span><span class="n">detected</span><span class="o">.</span><span class="p">[</span><span class="mi">0</span><span class="n">m</span>    
+ <span class="p">[</span><span class="mi">2</span><span class="n">mExamples</span> <span class="p">[</span><span class="mi">0</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">36</span><span class="n">m</span><span class="o">--------</span><span class="p">[</span><span class="mi">0</span><span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="n">m</span> <span class="err">```</span><span class="n">bash</span> <span class="c1"># Combine and export to first-order logic typedlogic[0m </span>
+ <span class="p">[</span><span class="mi">2</span><span class="n">mdump</span> <span class="n">theory</span><span class="o">.</span><span class="n">py</span> <span class="n">facts</span><span class="o">.</span><span class="n">csv</span> <span class="p">[</span><span class="mi">0</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">32</span><span class="n">m</span><span class="o">-</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="n">m</span> <span class="n">fol</span> <span class="p">[</span><span class="mi">0</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">32</span><span class="n">m</span><span class="o">-</span><span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="n">m</span> <span class="n">combined</span><span class="o">.</span><span class="n">fol</span><span class="p">[</span><span class="mi">0</span><span class="n">m</span>                               
+ <span class="p">[</span><span class="mi">2</span><span class="n">m</span><span class="c1"># Export to YAML format typedlogic dump axioms.py data.csv [0m[1;2;32m-t[0m[2m yaml[0m            </span>
+ <span class="p">[</span><span class="mi">2</span><span class="n">m</span><span class="c1"># Combine multiple files and view as Prolog typedlogic dump theory1.py [0m        </span>
+ <span class="p">[</span><span class="mi">2</span><span class="n">mtheory2</span><span class="o">.</span><span class="n">py</span> <span class="n">facts</span><span class="o">.</span><span class="n">csv</span> <span class="p">[</span><span class="mi">0</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">32</span><span class="n">m</span><span class="o">-</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="n">m</span> <span class="n">prolog</span> <span class="err">```</span><span class="p">[</span><span class="mi">0</span><span class="n">m</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="combine-theory-with-facts">Combine Theory with Facts</h3>
+<p>Let's combine our theory with the USA links CSV data:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+typedlogic<span class="w"> </span>dump<span class="w"> </span>paths_theory.py<span class="w"> </span>usa/Link.csv<span class="w"> </span>-t<span class="w"> </span>yaml
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+<code>There is no established path to paths_theory.py - compile_python may or may not work
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>type: Theory
+name: paths_theory
+constants: {}
+type_definitions: {}
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: Link
+  arguments:
+    source: str
+    target: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Path
+  arguments:
+    source: str
+    target: str
+  parents: []
+sentence_groups:
+- type: SentenceGroup
+  name: link_implies_path
+  group_type: axiom
+  docstring: Every direct link implies a path.
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - x
+        - ID
+      - type: Variable
+        arguments:
+        - y
+        - ID
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - Link
+        - type: Variable
+          arguments:
+          - x
+        - type: Variable
+          arguments:
+          - y
+      - type: Term
+        arguments:
+        - Path
+        - type: Variable
+          arguments:
+          - x
+        - type: Variable
+          arguments:
+          - y
+- type: SentenceGroup
+  name: transitivity
+  group_type: axiom
+  docstring: 'Paths are transitive: if x-&gt;y and y-&gt;z, then x-&gt;z.'
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - x
+        - ID
+      - type: Variable
+        arguments:
+        - y
+        - ID
+      - type: Variable
+        arguments:
+        - z
+        - ID
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Path
+          - type: Variable
+            arguments:
+            - x
+          - type: Variable
+            arguments:
+            - y
+        - type: Term
+          arguments:
+          - Path
+          - type: Variable
+            arguments:
+            - y
+          - type: Variable
+            arguments:
+            - z
+      - type: Term
+        arguments:
+        - Path
+        - type: Variable
+          arguments:
+          - x
+        - type: Variable
+          arguments:
+          - z
+ground_terms:
+- type: Term
+  arguments:
+  - Link
+  - CA
+  - NV
+- type: Term
+  arguments:
+  - Link
+  - NV
+  - AZ
+- type: Term
+  arguments:
+  - Link
+  - AZ
+  - UT
+- type: Term
+  arguments:
+  - Link
+  - CA
+  - OR
+- type: Term
+  arguments:
+  - Link
+  - OR
+  - WA
+- type: Term
+  arguments:
+  - Link
+  - WA
+  - ID
+- type: Term
+  arguments:
+  - Link
+  - ID
+  - MT
+source_module_name: paths_theory
+
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="combine-multiple-data-files">Combine Multiple Data Files</h3>
+<p>We can combine multiple CSV data files with the theory:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+typedlogic<span class="w"> </span>dump<span class="w"> </span>paths_theory.py<span class="w"> </span>usa/Link.csv<span class="w"> </span>europe/Link.csv<span class="w"> </span>-t<span class="w"> </span>yaml
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+<code>There is no established path to paths_theory.py - compile_python may or may not work
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>type: Theory
+name: paths_theory
+constants: {}
+type_definitions: {}
+predicate_definitions:
+- type: PredicateDefinition
+  predicate: Link
+  arguments:
+    source: str
+    target: str
+  parents: []
+- type: PredicateDefinition
+  predicate: Path
+  arguments:
+    source: str
+    target: str
+  parents: []
+sentence_groups:
+- type: SentenceGroup
+  name: link_implies_path
+  group_type: axiom
+  docstring: Every direct link implies a path.
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - x
+        - ID
+      - type: Variable
+        arguments:
+        - y
+        - ID
+    - type: Implies
+      arguments:
+      - type: Term
+        arguments:
+        - Link
+        - type: Variable
+          arguments:
+          - x
+        - type: Variable
+          arguments:
+          - y
+      - type: Term
+        arguments:
+        - Path
+        - type: Variable
+          arguments:
+          - x
+        - type: Variable
+          arguments:
+          - y
+- type: SentenceGroup
+  name: transitivity
+  group_type: axiom
+  docstring: 'Paths are transitive: if x-&gt;y and y-&gt;z, then x-&gt;z.'
+  sentences:
+  - type: Forall
+    arguments:
+    - - type: Variable
+        arguments:
+        - x
+        - ID
+      - type: Variable
+        arguments:
+        - y
+        - ID
+      - type: Variable
+        arguments:
+        - z
+        - ID
+    - type: Implies
+      arguments:
+      - type: And
+        arguments:
+        - type: Term
+          arguments:
+          - Path
+          - type: Variable
+            arguments:
+            - x
+          - type: Variable
+            arguments:
+            - y
+        - type: Term
+          arguments:
+          - Path
+          - type: Variable
+            arguments:
+            - y
+          - type: Variable
+            arguments:
+            - z
+      - type: Term
+        arguments:
+        - Path
+        - type: Variable
+          arguments:
+          - x
+        - type: Variable
+          arguments:
+          - z
+ground_terms:
+- type: Term
+  arguments:
+  - Link
+  - CA
+  - NV
+- type: Term
+  arguments:
+  - Link
+  - NV
+  - AZ
+- type: Term
+  arguments:
+  - Link
+  - AZ
+  - UT
+- type: Term
+  arguments:
+  - Link
+  - CA
+  - OR
+- type: Term
+  arguments:
+  - Link
+  - OR
+  - WA
+- type: Term
+  arguments:
+  - Link
+  - WA
+  - ID
+- type: Term
+  arguments:
+  - Link
+  - ID
+  - MT
+- type: Term
+  arguments:
+  - Link
+  - FR
+  - DE
+- type: Term
+  arguments:
+  - Link
+  - DE
+  - PL
+- type: Term
+  arguments:
+  - Link
+  - FR
+  - IT
+- type: Term
+  arguments:
+  - Link
+  - IT
+  - CH
+- type: Term
+  arguments:
+  - Link
+  - CH
+  - DE
+source_module_name: paths_theory
+
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="export-to-different-formats">Export to Different Formats</h3>
+<p>The combined theory can be exported to various formats:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Prolog Format ===&quot;</span>
+typedlogic<span class="w"> </span>dump<span class="w"> </span>paths_theory.py<span class="w"> </span>usa/Link.csv<span class="w"> </span>-t<span class="w"> </span>prolog
+
+<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;\n=== TPTP Format ===&quot;</span>
+typedlogic<span class="w"> </span>dump<span class="w"> </span>paths_theory.py<span class="w"> </span>usa/Link.csv<span class="w"> </span>-t<span class="w"> </span>tptp
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>=== Prolog Format ===
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+<code>There is no established path to paths_theory.py - compile_python may or may not work
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>%% Predicate Definitions
+% Link(source: str, target: str)
+% Path(source: str, target: str)
+
+%% link_implies_path
+
+path(X, Y) :- link(X, Y).
+
+%% transitivity
+
+path(X, Z) :- path(X, Y), path(Y, Z).
+
+=== TPTP Format ===
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+<code>There is no established path to paths_theory.py - compile_python may or may not work
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>% Problem: paths_theory
+fof(axiom1, axiom, ! [X, Y] : (link(X, Y) =&gt; path(X, Y))).
+fof(axiom2, axiom, ! [X, Y, Z] : ((path(X, Y) &amp; path(Y, Z)) =&gt; path(X, Z))).
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="3-the-solve-command">3. The <code>solve</code> Command</h2>
+<p>The <code>solve</code> command is the most powerful CLI feature. It combines logical theories with facts, checks satisfiability, and enumerates models. This supports:
+- Multiple solver backends (Z3, Clingo, Souffle, etc.)
+- Satisfiability checking before model enumeration
+- Comprehensive error reporting and validation</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code> <span class="n">Solve</span> <span class="n">logical</span> <span class="n">theories</span> <span class="k">with</span> <span class="n">facts</span> <span class="n">using</span> <span class="n">the</span> <span class="n">specified</span> <span class="n">solver</span><span class="o">.</span>                  
+ <span class="p">[</span><span class="mi">2</span><span class="n">mAccepts</span> <span class="n">a</span> <span class="n">theory</span> <span class="n">file</span> <span class="ow">and</span> <span class="n">optional</span> <span class="n">data</span> <span class="n">files</span> <span class="n">containing</span> <span class="n">facts</span><span class="o">.</span> <span class="n">Files</span> <span class="n">can</span> <span class="n">be</span> <span class="p">[</span><span class="mi">0</span><span class="n">m</span>  
+ <span class="p">[</span><span class="mi">2</span><span class="n">mPython</span> <span class="p">(</span><span class="o">.</span><span class="n">py</span><span class="p">),</span> <span class="n">YAML</span> <span class="p">(</span><span class="o">.</span><span class="n">yaml</span><span class="p">),</span> <span class="ow">or</span> <span class="n">CSV</span> <span class="p">(</span><span class="o">.</span><span class="n">csv</span><span class="p">)</span> <span class="nb">format</span> <span class="o">-</span> <span class="nb">format</span> <span class="ow">is</span> <span class="n">auto</span><span class="o">-</span><span class="n">detected</span><span class="o">.</span><span class="p">[</span><span class="mi">0</span><span class="n">m</span>                 
+ <span class="p">[</span><span class="mi">2</span><span class="n">mFirst</span> <span class="n">checks</span> <span class="n">satisfiability</span><span class="p">,</span> <span class="n">then</span> <span class="n">enumerates</span> <span class="nb">all</span> <span class="n">models</span> <span class="k">if</span> <span class="n">satisfiable</span><span class="o">.</span><span class="p">[</span><span class="mi">0</span><span class="n">m</span>        
+ <span class="p">[</span><span class="mi">2</span><span class="n">mExamples</span> <span class="p">[</span><span class="mi">0</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">36</span><span class="n">m</span><span class="o">--------</span><span class="p">[</span><span class="mi">0</span><span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="n">m</span> <span class="err">```</span><span class="n">bash</span> <span class="c1"># Solve with theory and facts typedlogic solve [0m      </span>
+ <span class="p">[</span><span class="mi">2</span><span class="n">mtheory</span><span class="o">.</span><span class="n">py</span> <span class="n">facts</span><span class="o">.</span><span class="n">csv</span> <span class="p">[</span><span class="mi">0</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">36</span><span class="n">m</span><span class="o">-</span><span class="p">[</span><span class="mi">0</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">36</span><span class="n">m</span><span class="o">-</span><span class="n">solver</span><span class="p">[</span><span class="mi">0</span><span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="n">m</span> <span class="n">z3</span><span class="p">[</span><span class="mi">0</span><span class="n">m</span>                                               
+ <span class="p">[</span><span class="mi">2</span><span class="n">m</span><span class="c1"># Check satisfiability only typedlogic solve theory.py [0m[1;2;36m-[0m[1;2;36m-check[0m[1;2;36m-only[0m            </span>
+ <span class="p">[</span><span class="mi">2</span><span class="n">m</span><span class="c1"># Solve with multiple data files typedlogic solve theory.py data1.csv [0m        </span>
+ <span class="p">[</span><span class="mi">2</span><span class="n">mdata2</span><span class="o">.</span><span class="n">csv</span> <span class="p">[</span><span class="mi">0</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">36</span><span class="n">m</span><span class="o">-</span><span class="p">[</span><span class="mi">0</span><span class="n">m</span><span class="p">[</span><span class="mi">1</span><span class="p">;</span><span class="mi">2</span><span class="p">;</span><span class="mi">36</span><span class="n">m</span><span class="o">-</span><span class="n">solver</span><span class="p">[</span><span class="mi">0</span><span class="n">m</span><span class="p">[</span><span class="mi">2</span><span class="n">m</span> <span class="n">z3</span> <span class="err">```</span><span class="p">[</span><span class="mi">0</span><span class="n">m</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="basic-solving-with-clingo">Basic Solving with clingo</h3>
+<p>Let's solve our path theory with the USA links using the clingo solver:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+typedlogic<span class="w"> </span>solve<span class="w"> </span>paths_theory.py<span class="w"> </span>usa/Link.csv<span class="w"> </span>--solver<span class="w"> </span>clingo
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+<code>There is no established path to paths_theory.py - compile_python may or may not work
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Checking satisfiability...
+SATISFIABLE: The theory has valid models.
+Enumerating all models...
+
+==================================================
+Satisfiable: True
+
+=== Model 1 ===
+Link(CA, NV)
+Link(NV, AZ)
+Link(AZ, UT)
+Link(CA, OR)
+Link(OR, WA)
+Link(WA, ID)
+Link(ID, MT)
+Path(CA, NV)
+Path(NV, AZ)
+Path(AZ, UT)
+Path(CA, OR)
+Path(OR, WA)
+Path(WA, ID)
+Path(ID, MT)
+Path(WA, MT)
+Path(OR, ID)
+Path(CA, WA)
+Path(NV, UT)
+Path(CA, AZ)
+Path(CA, UT)
+Path(CA, ID)
+Path(OR, MT)
+Path(CA, MT)
+
+Total models found: 1
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="check-satisfiability-only">Check Satisfiability Only</h3>
+<p>Sometimes you only want to check if a theory is satisfiable without enumerating models:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+typedlogic<span class="w"> </span>solve<span class="w"> </span>paths_theory.py<span class="w"> </span>usa/Link.csv<span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--check-only
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+<code>There is no established path to paths_theory.py - compile_python may or may not work
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Checking satisfiability...
+SATISFIABLE: The theory has valid models.
+
+==================================================
+Satisfiable: True
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="using-different-solvers">Using Different Solvers</h3>
+<p>TypedLogic supports multiple solvers. Let's try the SnakeLog solver (pure Python datalog):</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+typedlogic<span class="w"> </span>solve<span class="w"> </span>paths_theory.py<span class="w"> </span>usa/Link.csv<span class="w"> </span>--solver<span class="w"> </span>snakelog
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+<code>There is no established path to paths_theory.py - compile_python may or may not work
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Checking satisfiability...
+UNKNOWN: Satisfiability could not be determined.
+Enumerating all models...
+
+==================================================
+Satisfiable: None
+
+=== Model 1 ===
+Link(AZ, UT)
+Link(CA, NV)
+Link(CA, OR)
+Link(ID, MT)
+Link(NV, AZ)
+Link(OR, WA)
+Link(WA, ID)
+Path(AZ, UT)
+Path(CA, AZ)
+Path(CA, ID)
+Path(CA, MT)
+Path(CA, NV)
+Path(CA, OR)
+Path(CA, UT)
+Path(CA, WA)
+Path(ID, MT)
+Path(NV, AZ)
+Path(NV, UT)
+Path(OR, ID)
+Path(OR, MT)
+Path(OR, WA)
+Path(WA, ID)
+Path(WA, MT)
+
+Total models found: 1
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="multiple-data-files">Multiple Data Files</h3>
+<p>You can solve with multiple data files:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+typedlogic<span class="w"> </span>solve<span class="w"> </span>paths_theory.py<span class="w"> </span>usa/Link.csv<span class="w"> </span>europe/Link.csv<span class="w"> </span>--solver<span class="w"> </span>snakelog
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+<code>There is no established path to paths_theory.py - compile_python may or may not work
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Checking satisfiability...
+UNKNOWN: Satisfiability could not be determined.
+Enumerating all models...
+
+==================================================
+Satisfiable: None
+
+=== Model 1 ===
+Link(AZ, UT)
+Link(CA, NV)
+Link(CA, OR)
+Link(CH, DE)
+Link(DE, PL)
+Link(FR, DE)
+Link(FR, IT)
+Link(ID, MT)
+Link(IT, CH)
+Link(NV, AZ)
+Link(OR, WA)
+Link(WA, ID)
+Path(AZ, UT)
+Path(CA, AZ)
+Path(CA, ID)
+Path(CA, MT)
+Path(CA, NV)
+Path(CA, OR)
+Path(CA, UT)
+Path(CA, WA)
+Path(CH, DE)
+Path(CH, PL)
+Path(DE, PL)
+Path(FR, CH)
+Path(FR, DE)
+Path(FR, IT)
+Path(FR, PL)
+Path(ID, MT)
+Path(IT, CH)
+Path(IT, DE)
+Path(IT, PL)
+Path(NV, AZ)
+Path(NV, UT)
+Path(OR, ID)
+Path(OR, MT)
+Path(OR, WA)
+Path(WA, ID)
+Path(WA, MT)
+
+Total models found: 1
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="save-results-to-file">Save Results to File</h3>
+<p>You can save the solving results to a file:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+typedlogic<span class="w"> </span>solve<span class="w"> </span>paths_theory.py<span class="w"> </span>usa/Link.csv<span class="w"> </span>europe/Link.csv<span class="w"> </span>--solver<span class="w"> </span>snakelog<span class="w"> </span>-o<span class="w"> </span>results.txt
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Contents of results.txt ===&quot;</span>
+tail<span class="w"> </span>results.txt
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+<code>There is no established path to paths_theory.py - compile_python may or may not work
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Checking satisfiability...
+UNKNOWN: Satisfiability could not be determined.
+Enumerating all models...
+Solution written to results.txt
+=== Contents of results.txt ===
+Path(IT, PL)
+Path(NV, AZ)
+Path(NV, UT)
+Path(OR, ID)
+Path(OR, MT)
+Path(OR, WA)
+Path(WA, ID)
+Path(WA, MT)
+
+Total models found: 1
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="4-advanced-examples">4. Advanced Examples</h2>
+<h3 id="working-with-contradictions">Working with Contradictions</h3>
+<p>Let's create a theory with a contradiction to see how the CLI handles unsatisfiable theories:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">typedlogic_cli_tutorial</span><span class="o">/</span><span class="n">contradictory_theory</span><span class="o">.</span><span class="n">py</span>
+<span class="sd">&quot;&quot;&quot;A theory with contradictory axioms.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic</span><span class="w"> </span><span class="kn">import</span> <span class="n">FactMixin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">axiom</span>
+
+<span class="n">ID</span> <span class="o">=</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Person</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">FactMixin</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">ID</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Mortal</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">FactMixin</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">ID</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Immortal</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">FactMixin</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">ID</span>
+
+<span class="c1"># Facts will be loaded from CSV as &#39;fact&#39; predicate</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">fact</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">FactMixin</span><span class="p">):</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">ID</span>
+
+<span class="nd">@axiom</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">person_from_fact</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract Person facts from generic fact entries.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">fact</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Person&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">x</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">Person</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+
+<span class="nd">@axiom</span>  
+<span class="k">def</span><span class="w"> </span><span class="nf">immortal_from_fact</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract Immortal facts from generic fact entries.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">fact</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Immortal&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">x</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">Immortal</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+
+<span class="nd">@axiom</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">all_persons_mortal</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;All persons are mortal.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">Person</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">x</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="n">Mortal</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+
+<span class="nd">@axiom</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">contradiction</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ID</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;No one can be both mortal and immortal.&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="o">~</span><span class="p">(</span><span class="n">Mortal</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">x</span><span class="p">)</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">Immortal</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">x</span><span class="p">))</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Writing /tmp/typedlogic_cli_tutorial/contradictory_theory.py
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">typedlogic_cli_tutorial</span><span class="o">/</span><span class="n">fact</span><span class="o">.</span><span class="n">csv</span>
+<span class="nb">type</span><span class="p">,</span><span class="n">name</span>
+<span class="n">Person</span><span class="p">,</span><span class="n">Socrates</span>
+<span class="n">Immortal</span><span class="p">,</span><span class="n">Socrates</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Writing /tmp/typedlogic_cli_tutorial/fact.csv
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+typedlogic<span class="w"> </span>solve<span class="w"> </span>contradictory_theory.py<span class="w"> </span>fact.csv<span class="w"> </span>--solver<span class="w"> </span>z3
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+<code>There is no established path to contradictory_theory.py - compile_python may or may not work
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Checking satisfiability...
+UNSATISFIABLE: The theory has no valid models.
+
+==================================================
+Satisfiable: False
+No models exist.
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="type-validation">Type Validation</h3>
+<p>The CLI can validate Python files using mypy before processing:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+<span class="c1"># With type validation (default)</span>
+typedlogic<span class="w"> </span>solve<span class="w"> </span>paths_theory.py<span class="w"> </span>usa/Link.csv<span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--check-only<span class="w"> </span>--validate-types
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+<code>There is no established path to paths_theory.py - compile_python may or may not work
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Checking satisfiability...
+SATISFIABLE: The theory has valid models.
+
+==================================================
+Satisfiable: True
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="5-practical-workflow-examples">5. Practical Workflow Examples</h2>
+<h3 id="development-workflow">Development Workflow</h3>
+<p>Here's a typical development workflow using the CLI:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;1. First, inspect the combined theory:&quot;</span>
+typedlogic<span class="w"> </span>dump<span class="w"> </span>paths_theory.py<span class="w"> </span>usa_links.csv<span class="w"> </span>-t<span class="w"> </span>fol
+
+<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;\n2. Check if theory + facts are satisfiable:&quot;</span>
+typedlogic<span class="w"> </span>solve<span class="w"> </span>paths_theory.py<span class="w"> </span>usa_links.csv<span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--check-only
+
+<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;\n3. If satisfiable, solve and examine models:&quot;</span>
+typedlogic<span class="w"> </span>solve<span class="w"> </span>paths_theory.py<span class="w"> </span>usa_links.csv<span class="w"> </span>--solver<span class="w"> </span>z3
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="batch-processing">Batch Processing</h3>
+<p>You can use the CLI in scripts for batch processing:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+
+<span class="c1"># Process multiple datasets</span>
+<span class="k">for</span><span class="w"> </span>dataset<span class="w"> </span><span class="k">in</span><span class="w"> </span>usa_links.csv<span class="w"> </span>europe_links.csv<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Processing </span><span class="nv">$dataset</span><span class="s2"> ===&quot;</span>
+<span class="w">    </span>typedlogic<span class="w"> </span>solve<span class="w"> </span>paths_theory.py<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$dataset</span><span class="s2">&quot;</span><span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--check-only
+<span class="k">done</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="converting-for-external-tools">Converting for External Tools</h3>
+<p>Convert theories to formats suitable for external tools:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+
+<span class="c1"># Export to TPTP for theorem provers</span>
+typedlogic<span class="w"> </span>dump<span class="w"> </span>paths_theory.py<span class="w"> </span>usa_links.csv<span class="w"> </span>-t<span class="w"> </span>tptp<span class="w"> </span>-o<span class="w"> </span>paths.tptp
+
+<span class="c1"># Export to Prolog for Prolog systems  </span>
+typedlogic<span class="w"> </span>dump<span class="w"> </span>paths_theory.py<span class="w"> </span>usa_links.csv<span class="w"> </span>-t<span class="w"> </span>prolog<span class="w"> </span>-o<span class="w"> </span>paths.pl
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Generated files:&quot;</span>
+ls<span class="w"> </span>-la<span class="w"> </span>*.tptp<span class="w"> </span>*.pl
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="6-error-handling-and-debugging">6. Error Handling and Debugging</h2>
+<p>The CLI provides comprehensive error handling. Let's see some examples:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="invalid-file-formats">Invalid File Formats</h3>
+<p>The CLI gracefully handles invalid files:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;This is not valid CSV content: unclosed,quotes,\&quot;here&quot;</span><span class="w"> </span><span class="p">&amp;</span>gt<span class="p">;</span><span class="w"> </span>invalid.csv
+typedlogic<span class="w"> </span>solve<span class="w"> </span>paths_theory.py<span class="w"> </span>invalid.csv<span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--check-only<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Command failed as expected&quot;</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="unknown-solvers">Unknown Solvers</h3>
+<p>Using an unknown solver produces a helpful error:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+typedlogic<span class="w"> </span>solve<span class="w"> </span>paths_theory.py<span class="w"> </span>usa_links.csv<span class="w"> </span>--solver<span class="w"> </span>nonexistent_solver<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Command failed as expected&quot;</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="7-performance-and-solver-comparison">7. Performance and Solver Comparison</h2>
+<p>Different solvers have different strengths. Let's compare their behavior:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="nb">cd</span><span class="w"> </span>/tmp/typedlogic_cli_tutorial
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Z3 Solver ===&quot;</span>
+<span class="nb">time</span><span class="w"> </span>typedlogic<span class="w"> </span>solve<span class="w"> </span>paths_theory.py<span class="w"> </span>usa_links.csv<span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--check-only
+
+<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;\n=== SnakeLog Solver ===&quot;</span><span class="w">  </span>
+<span class="nb">time</span><span class="w"> </span>typedlogic<span class="w"> </span>solve<span class="w"> </span>paths_theory.py<span class="w"> </span>usa_links.csv<span class="w"> </span>--solver<span class="w"> </span>snakelog<span class="w"> </span>--check-only
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="summary">Summary</h2>
+<p>The TypedLogic CLI provides three powerful commands:</p>
+<ol>
+<li><strong><code>convert</code></strong> - Transform theories between formats (Python ↔ FOL, Prolog, YAML, etc.)</li>
+<li><strong><code>dump</code></strong> - Combine multiple files and export without solving (great for preprocessing)</li>
+<li><strong><code>solve</code></strong> - Full logical reasoning with satisfiability checking and model enumeration</li>
+</ol>
+<h3 id="key-features">Key Features:</h3>
+<ul>
+<li><strong>Multi-file support</strong>: Combine theories with multiple fact files</li>
+<li><strong>Format auto-detection</strong>: Handles .py, .yaml, and .csv files automatically  </li>
+<li><strong>Multiple solvers</strong>: Z3, Clingo, Souffle, SnakeLog, and more</li>
+<li><strong>Satisfiability checking</strong>: Always checks SAT before model enumeration</li>
+<li><strong>Type validation</strong>: Optional mypy validation for Python files</li>
+<li><strong>Comprehensive error handling</strong>: Clear error messages and validation</li>
+</ul>
+<h3 id="common-workflows">Common Workflows:</h3>
+<ol>
+<li><strong>Development</strong>: <code>dump</code> → <code>solve --check-only</code> → <code>solve</code></li>
+<li><strong>Debugging</strong>: Use <code>convert</code> to inspect formal semantics</li>
+<li><strong>Integration</strong>: Use <code>dump</code> to export for external tools</li>
+<li><strong>Batch processing</strong>: Script multiple <code>solve</code> calls</li>
+</ol>
+<p>The CLI makes TypedLogic accessible for both interactive exploration and automated processing pipelines.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="cleanup">Cleanup</h2>
+<p>Clean up our tutorial files:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code>%%bash
+<span class="c1"># Clean up tutorial files</span>
+rm<span class="w"> </span>-rf<span class="w"> </span>/tmp/typedlogic_cli_tutorial
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Tutorial cleanup complete!&quot;</span>
+</code></pre></div>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>

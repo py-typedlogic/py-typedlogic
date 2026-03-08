@@ -399,6 +399,28 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorial/05-cli" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5. Command Line
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1143,6 +1165,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#typedlogic.parsers.pyparser.python_parser.PythonParser.parse" class="md-nav__link">
+    <span class="md-ellipsis">
+      parse
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#typedlogic.parsers.pyparser.python_parser.PythonParser.validate_iter" class="md-nav__link">
     <span class="md-ellipsis">
       validate_iter
@@ -1172,6 +1203,50 @@
   
   <span class="md-ellipsis">
     YAML
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dataframe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DataFrame
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../catalog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Catalog
     
   </span>
   
@@ -1594,6 +1669,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#typedlogic.parsers.pyparser.python_parser.PythonParser.parse" class="md-nav__link">
+    <span class="md-ellipsis">
+      parse
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#typedlogic.parsers.pyparser.python_parser.PythonParser.validate_iter" class="md-nav__link">
     <span class="md-ellipsis">
       validate_iter
@@ -1654,6 +1738,21 @@
 <span class="err">∀</span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="n">TreeNodeType</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">:</span><span class="w"> </span><span class="n">TreeNodeType</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">~</span><span class="p">(</span><span class="n">AncestorOf</span><span class="p">(</span><span class="o">?</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="n">y</span><span class="p">))</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">AncestorOf</span><span class="p">(</span><span class="o">?</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="n">x</span><span class="p">))</span>
 <span class="err">∀</span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="n">TreeNodeType</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">:</span><span class="w"> </span><span class="n">TreeNodeType</span><span class="p">,</span><span class="w"> </span><span class="n">z</span><span class="o">:</span><span class="w"> </span><span class="n">TreeNodeType</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">((</span><span class="n">AncestorOf</span><span class="p">(</span><span class="o">?</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="n">z</span><span class="p">))</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">AncestorOf</span><span class="p">(</span><span class="o">?</span><span class="n">z</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="n">y</span><span class="p">))</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">AncestorOf</span><span class="p">(</span><span class="o">?</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="n">y</span><span class="p">))</span>
 <span class="err">∀</span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="n">NameType</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="n">Person</span><span class="p">(</span><span class="o">?</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Mortal</span><span class="p">(</span><span class="o">?</span><span class="n">x</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Inheritance:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">theory</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;tests/theorems/class_inheritance.py&quot;</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">theory</span><span class="o">.</span><span class="n">name</span>
+<span class="s1">&#39;class_inheritance&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[(</span><span class="n">pd</span><span class="o">.</span><span class="n">predicate</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">]</span>
+<span class="p">[(</span><span class="s1">&#39;Thing&#39;</span><span class="p">,</span> <span class="p">[]),</span> <span class="p">(</span><span class="s1">&#39;Place&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Thing&#39;</span><span class="p">]),</span> <span class="p">(</span><span class="s1">&#39;Person&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Thing&#39;</span><span class="p">])]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.transformations</span><span class="w"> </span><span class="kn">import</span> <span class="n">implies_from_parents</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># TODO - consider making this default</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">theory</span> <span class="o">=</span> <span class="n">implies_from_parents</span><span class="p">(</span><span class="n">theory</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">theory</span><span class="o">.</span><span class="n">sentences</span><span class="p">):</span>
+<span class="o">...</span>     <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="err">∀</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="nb">int</span> <span class="p">:</span> <span class="p">(</span><span class="n">Person</span><span class="p">(</span><span class="err">?</span><span class="n">name</span><span class="p">,</span> <span class="err">?</span><span class="n">age</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Thing</span><span class="p">(</span><span class="err">?</span><span class="n">name</span><span class="p">))</span>
+<span class="err">∀</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="p">:</span> <span class="p">(</span><span class="n">Place</span><span class="p">(</span><span class="err">?</span><span class="n">name</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Thing</span><span class="p">(</span><span class="err">?</span><span class="n">name</span><span class="p">))</span>
 </code></pre></div>
 
 
@@ -1783,7 +1882,32 @@
 <span class="normal">173</span>
 <span class="normal">174</span>
 <span class="normal">175</span>
-<span class="normal">176</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PythonParser</span><span class="p">(</span><span class="n">Parser</span><span class="p">):</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PythonParser</span><span class="p">(</span><span class="n">Parser</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A parser for Python modules that contain axioms.</span>
 
@@ -1802,6 +1926,22 @@
 <span class="sd">        ∀x: TreeNodeType, y: TreeNodeType : ~(AncestorOf(?x, ?y)) &amp; (AncestorOf(?y, ?x))</span>
 <span class="sd">        ∀x: TreeNodeType, y: TreeNodeType, z: TreeNodeType : ((AncestorOf(?x, ?z)) &amp; (AncestorOf(?z, ?y)) -&gt; AncestorOf(?x, ?y))</span>
 <span class="sd">        ∀x: NameType : (Person(?x) -&gt; Mortal(?x))</span>
+
+<span class="sd">    Inheritance:</span>
+
+<span class="sd">        &gt;&gt;&gt; theory = parser.parse(Path(&quot;tests/theorems/class_inheritance.py&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; theory.name</span>
+<span class="sd">        &#39;class_inheritance&#39;</span>
+<span class="sd">        &gt;&gt;&gt; [(pd.predicate, pd.parents) for pd in theory.predicate_definitions]</span>
+<span class="sd">        [(&#39;Thing&#39;, []), (&#39;Place&#39;, [&#39;Thing&#39;]), (&#39;Person&#39;, [&#39;Thing&#39;])]</span>
+<span class="sd">        &gt;&gt;&gt; from typedlogic.transformations import implies_from_parents</span>
+<span class="sd">        &gt;&gt;&gt; # TODO - consider making this default</span>
+<span class="sd">        &gt;&gt;&gt; theory = implies_from_parents(theory)</span>
+<span class="sd">        &gt;&gt;&gt; for s in sorted(theory.sentences):</span>
+<span class="sd">        ...     print(s)</span>
+<span class="sd">        ∀name: str, age: int : (Person(?name, ?age) -&gt; Thing(?name))</span>
+<span class="sd">        ∀name: str : (Place(?name) -&gt; Thing(?name))</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">ModuleType</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Theory</span><span class="p">:</span>
@@ -1815,6 +1955,14 @@
         <span class="k">return</span> <span class="n">translate_module_to_theory</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">,</span> <span class="n">ModuleType</span><span class="p">],</span> <span class="n">file_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Theory</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse a Python module or source code into a Theory.</span>
+
+<span class="sd">        :param source:</span>
+<span class="sd">        :param file_name:</span>
+<span class="sd">        :param kwargs:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">ModuleType</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">translate_module_to_theory</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_validate</span><span class="p">:</span>
@@ -1827,6 +1975,7 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">module</span> <span class="o">=</span> <span class="n">compile_python</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">package_path</span><span class="o">=</span><span class="n">file_name</span><span class="p">)</span>
             <span class="n">sgs</span> <span class="o">=</span> <span class="n">get_module_sentence_groups</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+            <span class="n">sgs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">get_module_class_level_sentence_groups</span><span class="p">(</span><span class="n">module</span><span class="p">))</span>
             <span class="n">pds</span> <span class="o">=</span> <span class="n">get_module_predicate_definitions</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
             <span class="c1"># get the python module name</span>
             <span class="k">return</span> <span class="n">Theory</span><span class="p">(</span>
@@ -2008,15 +2157,15 @@
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/parsers/pyparser/python_parser.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">ModuleType</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Theory</span><span class="p">:</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">ModuleType</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Theory</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transform a Python module into a Theory</span>
 
@@ -2025,6 +2174,185 @@
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">translate_module_to_theory</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="typedlogic.parsers.pyparser.python_parser.PythonParser.parse" class="doc doc-heading">
+            <code class=" language-python"><span class="n">parse</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Parse a Python module or source code into a Theory.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>source</code>
+            </td>
+            <td>
+                  <code><span title="typing.Union">Union</span>[<span title="pathlib.Path">Path</span>, <span title="str">str</span>, <span title="typing.TextIO">TextIO</span>, <span title="types.ModuleType">ModuleType</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>file_name</code>
+            </td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="str">str</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>kwargs</code>
+            </td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+            <td>
+                  <code>{}</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="Theory
+
+
+  
+      dataclass
+   (typedlogic.Theory)" href="../../../concepts/datamodel/#typedlogic.datamodel.Theory">Theory</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/typedlogic/parsers/pyparser/python_parser.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">,</span> <span class="n">ModuleType</span><span class="p">],</span> <span class="n">file_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Theory</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse a Python module or source code into a Theory.</span>
+
+<span class="sd">    :param source:</span>
+<span class="sd">    :param file_name:</span>
+<span class="sd">    :param kwargs:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">ModuleType</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">translate_module_to_theory</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_validate</span><span class="p">:</span>
+        <span class="n">errs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">errs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation errors: </span><span class="si">{</span><span class="n">errs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">source</span><span class="o">.</span><span class="n">open</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">source</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">compile_python</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">package_path</span><span class="o">=</span><span class="n">file_name</span><span class="p">)</span>
+        <span class="n">sgs</span> <span class="o">=</span> <span class="n">get_module_sentence_groups</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+        <span class="n">sgs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">get_module_class_level_sentence_groups</span><span class="p">(</span><span class="n">module</span><span class="p">))</span>
+        <span class="n">pds</span> <span class="o">=</span> <span class="n">get_module_predicate_definitions</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+        <span class="c1"># get the python module name</span>
+        <span class="k">return</span> <span class="n">Theory</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">module</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="n">predicate_definitions</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">pds</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+            <span class="n">sentence_groups</span><span class="o">=</span><span class="n">sgs</span><span class="p">,</span>
+            <span class="n">source_module_name</span><span class="o">=</span><span class="n">module</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="p">(</span><span class="n">TextIOWrapper</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">)):</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">readlines</span><span class="p">())</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">file_name</span><span class="o">=</span><span class="n">file_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported source type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">source</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2165,32 +2493,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/parsers/pyparser/python_parser.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
 <span class="normal">140</span>
 <span class="normal">141</span>
 <span class="normal">142</span>
@@ -2227,7 +2530,32 @@
 <span class="normal">173</span>
 <span class="normal">174</span>
 <span class="normal">175</span>
-<span class="normal">176</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_iter</span><span class="p">(</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_iter</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">,</span> <span class="n">ModuleType</span><span class="p">],</span> <span class="n">file_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>

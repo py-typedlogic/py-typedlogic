@@ -399,6 +399,28 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorial/05-cli" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5. Command Line
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1140,6 +1162,50 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../conversion/parsers/dataframe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DataFrame
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../conversion/parsers/catalog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Catalog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../conversion/parsers/owlpy/" class="md-nav__link">
         
   
@@ -1716,7 +1782,8 @@ See the tutorial for examples of this.</p>
 <span class="normal">128</span>
 <span class="normal">129</span>
 <span class="normal">130</span>
-<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">131</span>
+<span class="normal">132</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ClingoSolver</span><span class="p">(</span><span class="n">Solver</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A solver that uses clingo.</span>
@@ -1767,6 +1834,7 @@ See the tutorial for examples of this.</p>
             <span class="n">disjunctive_datalog</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">double_quote_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">negation_symbol</span><span class="o">=</span><span class="n">negation_symbol</span><span class="p">,</span>
+            <span class="n">negation_as_failure_symbol</span><span class="o">=</span><span class="s2">&quot;not&quot;</span><span class="p">,</span>
             <span class="n">allow_nesting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">double_quote_floats</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>

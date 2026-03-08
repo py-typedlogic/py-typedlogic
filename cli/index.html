@@ -399,6 +399,28 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial/05-cli" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5. Command Line
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1128,6 +1150,50 @@
   
   
     <li class="md-nav__item">
+      <a href="../conversion/parsers/dataframe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DataFrame
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conversion/parsers/catalog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Catalog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../conversion/parsers/owlpy/" class="md-nav__link">
         
   
@@ -1577,18 +1643,85 @@ see https://py-typedlogic.github.io/py-typedlogic/</p>
                                   validate-types]
   --help                          Show this message and exit.
 </code></pre></div>
+<h2 id="dump">dump</h2>
+<p>Parse and combine multiple input files, then export to specified format without solving.</p>
+<p>This command is useful for preprocessing, format conversion, and inspecting
+the combined logical theory before solving.</p>
+<p>Files can be Python (.py) or YAML (.yaml) format - format is auto-detected.</p>
+<h2 id="examples">Examples</h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># Combine and export to first-order logic</span>
+typedlogic<span class="w"> </span>dump<span class="w"> </span>theory.py<span class="w"> </span>facts.yaml<span class="w"> </span>-t<span class="w"> </span>fol<span class="w"> </span>-o<span class="w"> </span>combined.fol
+
+<span class="c1"># Export to YAML format</span>
+typedlogic<span class="w"> </span>dump<span class="w"> </span>axioms.py<span class="w"> </span>data.yaml<span class="w"> </span>-t<span class="w"> </span>yaml
+
+<span class="c1"># Combine multiple files and view as Prolog</span>
+typedlogic<span class="w"> </span>dump<span class="w"> </span>theory1.py<span class="w"> </span>theory2.py<span class="w"> </span>facts.yaml<span class="w"> </span>-t<span class="w"> </span>prolog
+</code></pre></div>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>typedlogic dump [OPTIONS] INPUT_FILES...
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<div class="highlight"><pre><span></span><code>  INPUT_FILES...                  [required]
+  -t, --output-format TEXT        Output format (fol, yaml, prolog, etc.)
+                                  [default: yaml]
+  -o, --output-file PATH          Output file path
+  --validate-types / --no-validate-types
+                                  Use mypy to validate types  [default:
+                                  validate-types]
+  --help                          Show this message and exit.
+</code></pre></div>
+<h2 id="list-compilers">list-compilers</h2>
+<p>Lists all compilers.</p>
+<p>Anything here should be usable as an output format.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>typedlogic list-compilers [OPTIONS]
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<div class="highlight"><pre><span></span><code>  --help  Show this message and exit.
+</code></pre></div>
+<h2 id="list-parsers">list-parsers</h2>
+<p>Lists all parsers.</p>
+<p>Anything here should be usable as an input format.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>typedlogic list-parsers [OPTIONS]
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<div class="highlight"><pre><span></span><code>  --help  Show this message and exit.
+</code></pre></div>
+<h2 id="list-solvers">list-solvers</h2>
+<p>Lists all solvers.</p>
+<p>Anything here should be usable as a solver.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>typedlogic list-solvers [OPTIONS]
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<div class="highlight"><pre><span></span><code>  --help  Show this message and exit.
+</code></pre></div>
 <h2 id="solve">solve</h2>
-<p>Solve using the specified solver.</p>
-<h2 id="example_1">Example:</h2>
-<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>solve<span class="w"> </span>--solver<span class="w"> </span>clingo<span class="w"> </span>my_theory.py<span class="w"> </span>my_data.yaml
+<p>Solve logical theories with facts using the specified solver.</p>
+<p>Accepts a theory file and optional data files containing facts.
+Files can be Python (.py) or YAML (.yaml) format - format is auto-detected.</p>
+<p>First checks satisfiability, then enumerates all models if satisfiable.</p>
+<h2 id="examples_1">Examples</h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># Solve with theory and facts</span>
+typedlogic<span class="w"> </span>solve<span class="w"> </span>theory.py<span class="w"> </span>facts.yaml<span class="w"> </span>--solver<span class="w"> </span>z3
+
+<span class="c1"># Check satisfiability only</span>
+typedlogic<span class="w"> </span>solve<span class="w"> </span>theory.py<span class="w"> </span>--check-only
+
+<span class="c1"># Solve with multiple data files</span>
+typedlogic<span class="w"> </span>solve<span class="w"> </span>theory.py<span class="w"> </span>data1.yaml<span class="w"> </span>data2.yaml<span class="w"> </span>--solver<span class="w"> </span>z3
 </code></pre></div>
 <p><strong>Usage:</strong></p>
 <div class="highlight"><pre><span></span><code>typedlogic solve [OPTIONS] THEORY_FILE [DATA_FILES]...
 </code></pre></div>
 <p><strong>Options:</strong></p>
 <div class="highlight"><pre><span></span><code>  THEORY_FILE                     [required]
-  --solver TEXT                   Solver to use
-  -c, --check-only                Check only, do not solve
+  -s, --solver TEXT               Solver to use (z3, souffle, clingo, etc.)
+                                  [default: souffle]
+  -c, --check-only                Check satisfiability only, do not enumerate
+                                  models
   --validate-types / --no-validate-types
                                   Use mypy to validate types  [default:
                                   validate-types]

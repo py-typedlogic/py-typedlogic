@@ -399,6 +399,28 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorial/05-cli" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5. Command Line
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1180,6 +1202,50 @@
   
   
     <li class="md-nav__item">
+      <a href="../../parsers/dataframe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DataFrame
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parsers/catalog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Catalog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../parsers/owlpy/" class="md-nav__link">
         
   
@@ -1773,7 +1839,11 @@
 <span class="normal">163</span>
 <span class="normal">164</span>
 <span class="normal">165</span>
-<span class="normal">166</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ProbLogCompiler</span><span class="p">(</span><span class="n">Compiler</span><span class="p">):</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ProbLogCompiler</span><span class="p">(</span><span class="n">Compiler</span><span class="p">):</span>
     <span class="n">default_suffix</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;problog&quot;</span>
     <span class="n">_predicate_mappings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -1803,12 +1873,15 @@
 <span class="sd">            ancestorof(&quot;p1a&quot;, &quot;p1aa&quot;).</span>
 <span class="sd">            query(ancestorof(Ancestor, Descendant)).</span>
 
+<span class="sd">        Note like most compilers, you don&#39;t need to use this directly. It is more common to use ProblogSolver, which takes care of</span>
+<span class="sd">        compiling the problog program, feeding it to problog, and parsing results.</span>
+
 <span class="sd">        :param theory:</span>
 <span class="sd">        :param syntax:</span>
 <span class="sd">        :param kwargs:</span>
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">prolog_config</span> <span class="o">=</span> <span class="n">PrologConfig</span><span class="p">(</span><span class="n">disjunctive_datalog</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">double_quote_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_nesting</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">prolog_config</span> <span class="o">=</span> <span class="n">PrologConfig</span><span class="p">(</span><span class="n">disjunctive_datalog</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">double_quote_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_nesting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_ungrounded_vars_in_head</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_mappings</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_mappings</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">:</span>
@@ -1848,7 +1921,7 @@
         <span class="k">def</span><span class="w"> </span><span class="nf">_to_rules</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]:</span>
             <span class="n">rules</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">to_horn_rules</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">allow_disjunctions_in_head</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_goal_clauses</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">to_horn_rules</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">allow_disjunctions_in_head</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_goal_clauses</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
                     <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">NotInProfileError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping sentence </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2"> due to </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1863,6 +1936,7 @@
                 <span class="n">strs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pr</span><span class="si">}</span><span class="s2">::</span><span class="si">{</span><span class="n">as_prolog</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="o">=</span><span class="n">prolog_config</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">strs</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">Term</span><span class="p">)</span> <span class="ow">and</span> <span class="n">sentence</span><span class="o">.</span><span class="n">predicate</span> <span class="o">==</span> <span class="n">Evidence</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span>
+            <span class="c1"># special treatment for evidence sentences</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentence</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid evidence sentence: </span><span class="si">{</span><span class="n">sentence</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">inner</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -1966,6 +2040,9 @@
 <span class="n">ancestorof</span><span class="p">(</span><span class="s2">&quot;p1a&quot;</span><span class="p">,</span> <span class="s2">&quot;p1aa&quot;</span><span class="p">)</span><span class="o">.</span>
 <span class="n">query</span><span class="p">(</span><span class="n">ancestorof</span><span class="p">(</span><span class="n">Ancestor</span><span class="p">,</span> <span class="n">Descendant</span><span class="p">))</span><span class="o">.</span>
 </code></pre></div>
+
+<p>Note like most compilers, you don't need to use this directly. It is more common to use ProblogSolver, which takes care of
+compiling the problog program, feeding it to problog, and parsing results.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -2111,7 +2188,10 @@
 <span class="normal">74</span>
 <span class="normal">75</span>
 <span class="normal">76</span>
-<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">syntax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelSyntax</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">syntax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelSyntax</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compile a Theory object into ProbLog code.</span>
 
@@ -2137,12 +2217,15 @@
 <span class="sd">        ancestorof(&quot;p1a&quot;, &quot;p1aa&quot;).</span>
 <span class="sd">        query(ancestorof(Ancestor, Descendant)).</span>
 
+<span class="sd">    Note like most compilers, you don&#39;t need to use this directly. It is more common to use ProblogSolver, which takes care of</span>
+<span class="sd">    compiling the problog program, feeding it to problog, and parsing results.</span>
+
 <span class="sd">    :param theory:</span>
 <span class="sd">    :param syntax:</span>
 <span class="sd">    :param kwargs:</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">prolog_config</span> <span class="o">=</span> <span class="n">PrologConfig</span><span class="p">(</span><span class="n">disjunctive_datalog</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">double_quote_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_nesting</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">prolog_config</span> <span class="o">=</span> <span class="n">PrologConfig</span><span class="p">(</span><span class="n">disjunctive_datalog</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">double_quote_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_nesting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_ungrounded_vars_in_head</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_mappings</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_mappings</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">:</span>

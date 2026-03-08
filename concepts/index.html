@@ -399,6 +399,28 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial/05-cli" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5. Command Line
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1189,6 +1211,50 @@
   
   
     <li class="md-nav__item">
+      <a href="../conversion/parsers/dataframe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DataFrame
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conversion/parsers/catalog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Catalog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../conversion/parsers/owlpy/" class="md-nav__link">
         
   
@@ -1697,6 +1763,7 @@ functions <a href="decorators">decorated</a> with <code>@axiom</code>.</p>
     <span class="k">if</span> <span class="n">OwnsPet</span><span class="p">(</span><span class="n">person</span><span class="o">=</span><span class="n">person</span><span class="p">,</span> <span class="n">pet</span><span class="o">=</span><span class="n">pet</span><span class="p">):</span>
         <span class="k">assert</span> <span class="n">Person</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">person</span><span class="p">)</span> <span class="ow">and</span> <span class="n">Pet</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">pet</span><span class="p">)</span>
 </code></pre></div>
+<p>Note that the Python code in the function definition is <strong>never executed</strong>. The code must be in a <a href="../conversion/parsers/python/">subset of python</a> that is translated to logic statements.</p>
 <p>You can also derive new facts from axioms:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SameOwner</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">FactMixin</span><span class="p">):</span>
     <span class="n">pet1</span><span class="p">:</span> <span class="n">PetID</span>
@@ -1720,8 +1787,8 @@ functions <a href="decorators">decorated</a> with <code>@axiom</code>.</p>
 </code></pre></div>
 <p>See <a href="generators">Generators</a> for more information.</p>
 <h2 id="solvers">Solvers</h2>
-<p>TypedLogic supports multiple solvers, including Z3 and Souffle. Solvers are responsible for reasoning over the facts and axioms to derive new information or check for consistency.</p>
-<p>Example (using Z3 solver):</p>
+<p>TypedLogic supports multiple <a href="../integrations/solvers/">solvers</a>, including Z3 and Souffle. Solvers are responsible for reasoning over the facts and axioms to derive new information or check for consistency.</p>
+<p>Example (using the <a href="../integrations/solvers/z3/">Z3 solver</a> ):</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.integrations.solvers.z3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Z3Solver</span>
 
 <span class="n">solver</span> <span class="o">=</span> <span class="n">Z3Solver</span><span class="p">()</span>
@@ -1729,7 +1796,7 @@ functions <a href="decorators">decorated</a> with <code>@axiom</code>.</p>
 <span class="n">result</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
 </code></pre></div>
 <h2 id="theories">Theories</h2>
-<p>A Theory in TypedLogic is a collection of predicate definitions, facts, and axioms. It represents a complete knowledge base that can be reasoned over.</p>
+<p>A <a href="datamodel/#typedlogic.datamodel.Theory">Theory</a> in TypedLogic is a collection of predicate definitions, facts, and axioms. It represents a complete knowledge base that can be reasoned over.</p>
 <p>Example:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Theory</span>
 
