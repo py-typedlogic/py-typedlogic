@@ -37,6 +37,14 @@ def test_owlstar_package_loads_predicates_and_axioms():
     assert {group.name for group in theory.sentence_groups} >= {"disjointness", "transitivity", "unary_rules"}
 
 
+def test_owlstar_package_and_submodule_compile_equivalent_rules():
+    """Test that package and submodule loading expose equivalent Souffle rules."""
+    package_compiled = SouffleCompiler().compile(translate_module_to_theory(owlstar_package))
+    submodule_compiled = SouffleCompiler().compile(translate_module_to_theory(owlstar))
+
+    assert set(package_compiled.splitlines()) == set(submodule_compiled.splitlines())
+
+
 def test_owlstar_disjointness_is_preserved_for_souffle_compilation():
     """Test that Souffle compilation keeps disjointness as positive inference."""
     theory = translate_module_to_theory(owlstar)
@@ -86,6 +94,20 @@ def test_owlstar_disjoint_classes_constrain_exact_one_edges_with_z3():
     solver.add(owlstar.EdgeAllSome("Cell", "part_of", "Membrane"))
 
     assert solver.check().satisfiable is False
+
+
+def test_owlstar_transitive_predicate_derives_composed_edge_with_z3():
+    """Test that transitive predicates compose all-some edges."""
+    pytest.importorskip("z3")
+    from typedlogic.integrations.solvers.z3.z3_solver import Z3Solver
+
+    solver = Z3Solver()
+    solver.load(owlstar)
+    solver.add(owlstar.TransitivePredicate("part_of"))
+    solver.add(owlstar.EdgeAllSome("Finger", "part_of", "Hand"))
+    solver.add(owlstar.EdgeAllSome("Hand", "part_of", "Limb"))
+
+    assert solver.prove(owlstar.EdgeAllSome.p("Finger", "part_of", "Limb")) is True
 
 
 def test_owlstar_edge_all_one_entails_edge_all_some_with_z3():
