@@ -1,0 +1,120 @@
+name: Codex Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  codex-review:
+    if: |
+      !github.event.pull_request.draft &&
+      !contains(github.event.pull_request.title, '[skip-review]') &&
+      !contains(github.event.pull_request.title, '[WIP]')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      final_message: ${{ steps.run_codex.outputs.final-message }}
+    env:
+      CODEX_AUTH_JSON: ${{ secrets.CODEX_AUTH_JSON }}
+      CODEX_HOME: ${{ runner.temp }}/codex-home
+    steps:
+      - name: Checkout pull request
+        uses: actions/checkout@v5
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+          fetch-depth: 1
+
+      - name: Pre-fetch base and head refs
+        env:
+          PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          git fetch --no-tags origin \
+            "$PR_BASE_REF" \
+            "+refs/pull/$PR_NUMBER/head"
+
+      - name: Restore Codex OAuth auth
+        if: env.CODEX_AUTH_JSON != ''
+        shell: bash
+        run: |
+          mkdir -p "$CODEX_HOME"
+          chmod 700 "$CODEX_HOME"
+          printf '%s' "$CODEX_AUTH_JSON" > "$CODEX_HOME/auth.json"
+          chmod 600 "$CODEX_HOME/auth.json"
+
+      - name: Run Codex review
+        id: run_codex
+        if: env.CODEX_AUTH_JSON != ''
+        uses: openai/codex-action@v1
+        with:
+          codex-home: ${{ env.CODEX_HOME }}
+          sandbox: read-only
+          prompt: |
+            This is PR #${{ github.event.pull_request.number }} for ${{ github.repository }}.
+
+            Review only the changes introduced by this PR. Use the available git
+            history and diff context, especially:
+
+              git log --oneline ${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }}
+              git diff ${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }}
+
+            Focus on bugs, behavioral regressions, security issues, test gaps,
+            and maintainability risks. Be concise and specific, and include file
+            paths and line references when possible.
+
+            Pull request title:
+            ${{ github.event.pull_request.title }}
+
+            Pull request body:
+            ${{ github.event.pull_request.body }}
+
+  post-codex-review:
+    needs: codex-review
+    if: needs.codex-review.outputs.final_message != ''
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Post Codex feedback
+        uses: actions/github-script@v7
+        env:
+          CODEX_FINAL_MESSAGE: ${{ needs.codex-review.outputs.final_message }}
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            const marker = '<!-- codex-code-review -->';
+            const body = [
+              marker,
+              '## Codex Review',
+              '',
+              process.env.CODEX_FINAL_MESSAGE,
+            ].join('\n');
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              per_page: 100,
+            });
+
+            const existing = comments.find((comment) =>
+              comment.user?.type === 'Bot' && comment.body?.includes(marker)
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body,
+              });
+            }
