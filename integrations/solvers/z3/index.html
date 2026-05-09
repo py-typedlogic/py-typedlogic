@@ -1724,20 +1724,50 @@
    (typedlogic.solver.Solver)" href="../../../api/solver/#typedlogic.solver.Solver">Solver</a></code></p>
 
 
-        <p>A solver that uses Z3.</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.integrations.frameworks.pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">FactBaseModel</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span><span class="w"> </span><span class="nc">AncestorOf</span><span class="p">(</span><span class="n">FactBaseModel</span><span class="p">):</span>
-<span class="o">...</span>     <span class="n">ancestor</span><span class="p">:</span> <span class="nb">str</span>
-<span class="o">...</span>     <span class="n">descendant</span><span class="p">:</span> <span class="nb">str</span>
+        <p>A solver that uses Z3 for type checking and constraint validation.</p>
+<p>Z3 excels at verifying type constraints, detecting inconsistencies in typed systems,
+and proving properties through logical inference. While useful for entailment, Z3's
+real strength is in checking that constraints and type invariants are satisfied.</p>
+<p>Example: Detecting type violations in a categorization system:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Term</span><span class="p">,</span> <span class="n">Variable</span><span class="p">,</span> <span class="n">Forall</span><span class="p">,</span> <span class="n">Not</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Define predicates for a categorization system</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">Z3Solver</span><span class="p">()</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">solver</span><span class="o">.</span><span class="n">add_predicate_definition</span><span class="p">(</span><span class="n">PredicateDefinition</span><span class="p">(</span><span class="n">predicate</span><span class="o">=</span><span class="s2">&quot;AncestorOf&quot;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ancestor&#39;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">,</span> <span class="s1">&#39;descendant&#39;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">}))</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">solver</span><span class="o">.</span><span class="n">add_fact</span><span class="p">(</span><span class="n">AncestorOf</span><span class="p">(</span><span class="n">ancestor</span><span class="o">=</span><span class="s1">&#39;p1&#39;</span><span class="p">,</span> <span class="n">descendant</span><span class="o">=</span><span class="s1">&#39;p1a&#39;</span><span class="p">))</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">solver</span><span class="o">.</span><span class="n">add_fact</span><span class="p">(</span><span class="n">AncestorOf</span><span class="p">(</span><span class="n">ancestor</span><span class="o">=</span><span class="s1">&#39;p1a&#39;</span><span class="p">,</span> <span class="n">descendant</span><span class="o">=</span><span class="s1">&#39;p1aa&#39;</span><span class="p">))</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic</span><span class="w"> </span><span class="kn">import</span> <span class="n">SentenceGroup</span><span class="p">,</span> <span class="n">PredicateDefinition</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">aa</span> <span class="o">=</span> <span class="n">SentenceGroup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;transitivity-of-ancestor-of&quot;</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">solver</span><span class="o">.</span><span class="n">add_sentence_group</span><span class="p">(</span><span class="n">aa</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">solver</span><span class="o">.</span><span class="n">add_predicate_definition</span><span class="p">(</span><span class="n">PredicateDefinition</span><span class="p">(</span>
+<span class="o">...</span>     <span class="n">predicate</span><span class="o">=</span><span class="s2">&quot;IsPositive&quot;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">}</span>
+<span class="o">...</span> <span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">solver</span><span class="o">.</span><span class="n">add_predicate_definition</span><span class="p">(</span><span class="n">PredicateDefinition</span><span class="p">(</span>
+<span class="o">...</span>     <span class="n">predicate</span><span class="o">=</span><span class="s2">&quot;IsNegative&quot;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">}</span>
+<span class="o">...</span> <span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Type constraint: nothing can be both positive and negative</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;int&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">mutual_exclusion</span> <span class="o">=</span> <span class="n">Forall</span><span class="p">([</span><span class="n">x</span><span class="p">],</span> <span class="n">Not</span><span class="p">(</span>
+<span class="o">...</span>     <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;IsPositive&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">})</span> <span class="o">&amp;</span> <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;IsNegative&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">})</span>
+<span class="o">...</span> <span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">solver</span><span class="o">.</span><span class="n">add_sentence</span><span class="p">(</span><span class="n">mutual_exclusion</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Valid: separate classifications</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">solver</span><span class="o">.</span><span class="n">add_fact</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;IsPositive&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">}))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">solver</span><span class="o">.</span><span class="n">add_fact</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;IsNegative&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">3</span><span class="p">}))</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">soln</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">soln</span><span class="o">.</span><span class="n">satisfiable</span>
+<span class="kc">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Invalid: contradictory classification of same value</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">solver2</span> <span class="o">=</span> <span class="n">Z3Solver</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">solver2</span><span class="o">.</span><span class="n">add_predicate_definition</span><span class="p">(</span><span class="n">PredicateDefinition</span><span class="p">(</span>
+<span class="o">...</span>     <span class="n">predicate</span><span class="o">=</span><span class="s2">&quot;IsPositive&quot;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">}</span>
+<span class="o">...</span> <span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">solver2</span><span class="o">.</span><span class="n">add_predicate_definition</span><span class="p">(</span><span class="n">PredicateDefinition</span><span class="p">(</span>
+<span class="o">...</span>     <span class="n">predicate</span><span class="o">=</span><span class="s2">&quot;IsNegative&quot;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span><span class="p">}</span>
+<span class="o">...</span> <span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">solver2</span><span class="o">.</span><span class="n">add_sentence</span><span class="p">(</span><span class="n">mutual_exclusion</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">solver2</span><span class="o">.</span><span class="n">add_fact</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;IsPositive&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">}))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">solver2</span><span class="o">.</span><span class="n">add_fact</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;IsNegative&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">}))</span>  <span class="c1"># Contradiction!</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">soln2</span> <span class="o">=</span> <span class="n">solver2</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">soln2</span><span class="o">.</span><span class="n">satisfiable</span>
+<span class="kc">False</span>
 </code></pre></div>
+
+<p>Z3 can also verify class hierarchies, check inheritance constraints, and prove
+complex logical entailments from axiom systems.</p>
 
 
 
@@ -2029,23 +2059,87 @@
 <span class="normal">340</span>
 <span class="normal">341</span>
 <span class="normal">342</span>
-<span class="normal">343</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Z3Solver</span><span class="p">(</span><span class="n">Solver</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A solver that uses Z3.</span>
+<span class="sd">    A solver that uses Z3 for type checking and constraint validation.</span>
 
-<span class="sd">        &gt;&gt;&gt; from typedlogic.integrations.frameworks.pydantic import FactBaseModel</span>
-<span class="sd">        &gt;&gt;&gt; class AncestorOf(FactBaseModel):</span>
-<span class="sd">        ...     ancestor: str</span>
-<span class="sd">        ...     descendant: str</span>
+<span class="sd">    Z3 excels at verifying type constraints, detecting inconsistencies in typed systems,</span>
+<span class="sd">    and proving properties through logical inference. While useful for entailment, Z3&#39;s</span>
+<span class="sd">    real strength is in checking that constraints and type invariants are satisfied.</span>
+
+<span class="sd">    Example: Detecting type violations in a categorization system:</span>
+
+<span class="sd">        &gt;&gt;&gt; from typedlogic import Term, Variable, Forall, Not</span>
+<span class="sd">        &gt;&gt;&gt; # Define predicates for a categorization system</span>
 <span class="sd">        &gt;&gt;&gt; solver = Z3Solver()</span>
-<span class="sd">        &gt;&gt;&gt; solver.add_predicate_definition(PredicateDefinition(predicate=&quot;AncestorOf&quot;, arguments={&#39;ancestor&#39;: &quot;str&quot;, &#39;descendant&#39;: &quot;str&quot;}))</span>
-<span class="sd">        &gt;&gt;&gt; solver.add_fact(AncestorOf(ancestor=&#39;p1&#39;, descendant=&#39;p1a&#39;))</span>
-<span class="sd">        &gt;&gt;&gt; solver.add_fact(AncestorOf(ancestor=&#39;p1a&#39;, descendant=&#39;p1aa&#39;))</span>
-<span class="sd">        &gt;&gt;&gt; from typedlogic import SentenceGroup, PredicateDefinition</span>
-<span class="sd">        &gt;&gt;&gt; aa = SentenceGroup(name=&quot;transitivity-of-ancestor-of&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; solver.add_sentence_group(aa)</span>
+<span class="sd">        &gt;&gt;&gt; solver.add_predicate_definition(PredicateDefinition(</span>
+<span class="sd">        ...     predicate=&quot;IsPositive&quot;, arguments={&#39;x&#39;: &quot;int&quot;}</span>
+<span class="sd">        ... ))</span>
+<span class="sd">        &gt;&gt;&gt; solver.add_predicate_definition(PredicateDefinition(</span>
+<span class="sd">        ...     predicate=&quot;IsNegative&quot;, arguments={&#39;x&#39;: &quot;int&quot;}</span>
+<span class="sd">        ... ))</span>
+<span class="sd">        &gt;&gt;&gt; # Type constraint: nothing can be both positive and negative</span>
+<span class="sd">        &gt;&gt;&gt; x = Variable(&quot;x&quot;, &quot;int&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; mutual_exclusion = Forall([x], Not(</span>
+<span class="sd">        ...     Term(&quot;IsPositive&quot;, {&quot;x&quot;: x}) &amp; Term(&quot;IsNegative&quot;, {&quot;x&quot;: x})</span>
+<span class="sd">        ... ))</span>
+<span class="sd">        &gt;&gt;&gt; solver.add_sentence(mutual_exclusion)</span>
+<span class="sd">        &gt;&gt;&gt; # Valid: separate classifications</span>
+<span class="sd">        &gt;&gt;&gt; solver.add_fact(Term(&quot;IsPositive&quot;, {&quot;x&quot;: 5}))</span>
+<span class="sd">        &gt;&gt;&gt; solver.add_fact(Term(&quot;IsNegative&quot;, {&quot;x&quot;: -3}))</span>
 <span class="sd">        &gt;&gt;&gt; soln = solver.check()</span>
+<span class="sd">        &gt;&gt;&gt; soln.satisfiable</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; # Invalid: contradictory classification of same value</span>
+<span class="sd">        &gt;&gt;&gt; solver2 = Z3Solver()</span>
+<span class="sd">        &gt;&gt;&gt; solver2.add_predicate_definition(PredicateDefinition(</span>
+<span class="sd">        ...     predicate=&quot;IsPositive&quot;, arguments={&#39;x&#39;: &quot;int&quot;}</span>
+<span class="sd">        ... ))</span>
+<span class="sd">        &gt;&gt;&gt; solver2.add_predicate_definition(PredicateDefinition(</span>
+<span class="sd">        ...     predicate=&quot;IsNegative&quot;, arguments={&#39;x&#39;: &quot;int&quot;}</span>
+<span class="sd">        ... ))</span>
+<span class="sd">        &gt;&gt;&gt; solver2.add_sentence(mutual_exclusion)</span>
+<span class="sd">        &gt;&gt;&gt; solver2.add_fact(Term(&quot;IsPositive&quot;, {&quot;x&quot;: 7}))</span>
+<span class="sd">        &gt;&gt;&gt; solver2.add_fact(Term(&quot;IsNegative&quot;, {&quot;x&quot;: 7}))  # Contradiction!</span>
+<span class="sd">        &gt;&gt;&gt; soln2 = solver2.check()</span>
+<span class="sd">        &gt;&gt;&gt; soln2.satisfiable</span>
+<span class="sd">        False</span>
+
+<span class="sd">    Z3 can also verify class hierarchies, check inheritance constraints, and prove</span>
+<span class="sd">    complex logical entailments from axiom systems.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -2397,23 +2491,23 @@
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/integrations/solvers/z3/z3_solver.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_unroll_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">DefinedType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_unroll_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">:</span> <span class="n">DefinedType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Unroll a defined type into its components</span>
 
@@ -2512,24 +2606,24 @@
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/integrations/solvers/z3/z3_solver.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span>
-<span class="normal">209</span>
-<span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span>
-<span class="normal">213</span>
-<span class="normal">214</span>
-<span class="normal">215</span>
-<span class="normal">216</span>
-<span class="normal">217</span>
-<span class="normal">218</span>
-<span class="normal">219</span>
-<span class="normal">220</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_predicate_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate_definition</span><span class="p">:</span> <span class="n">PredicateDefinition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_predicate_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate_definition</span><span class="p">:</span> <span class="n">PredicateDefinition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add a predicate definition to the solver.</span>
 
@@ -2639,39 +2733,7 @@
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/integrations/solvers/z3/z3_solver.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">222</span>
-<span class="normal">223</span>
-<span class="normal">224</span>
-<span class="normal">225</span>
-<span class="normal">226</span>
-<span class="normal">227</span>
-<span class="normal">228</span>
-<span class="normal">229</span>
-<span class="normal">230</span>
-<span class="normal">231</span>
-<span class="normal">232</span>
-<span class="normal">233</span>
-<span class="normal">234</span>
-<span class="normal">235</span>
-<span class="normal">236</span>
-<span class="normal">237</span>
-<span class="normal">238</span>
-<span class="normal">239</span>
-<span class="normal">240</span>
-<span class="normal">241</span>
-<span class="normal">242</span>
-<span class="normal">243</span>
-<span class="normal">244</span>
-<span class="normal">245</span>
-<span class="normal">246</span>
-<span class="normal">247</span>
-<span class="normal">248</span>
-<span class="normal">249</span>
-<span class="normal">250</span>
-<span class="normal">251</span>
-<span class="normal">252</span>
-<span class="normal">253</span>
-<span class="normal">254</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">254</span>
 <span class="normal">255</span>
 <span class="normal">256</span>
 <span class="normal">257</span>
@@ -2757,7 +2819,39 @@
 <span class="normal">337</span>
 <span class="normal">338</span>
 <span class="normal">339</span>
-<span class="normal">340</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">translate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">bindings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">z3</span><span class="o">.</span><span class="n">SortRef</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">z3</span><span class="o">.</span><span class="n">ExprRef</span><span class="p">:</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">translate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">bindings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">z3</span><span class="o">.</span><span class="n">SortRef</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">z3</span><span class="o">.</span><span class="n">ExprRef</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Translate a Sentence to a Z3 expression.</span>
 
