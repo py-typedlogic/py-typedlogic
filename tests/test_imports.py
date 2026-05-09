@@ -22,14 +22,14 @@ import importlib.abc
 import sys
 
 
-class BlockMypyc(importlib.abc.MetaPathFinder):
+class BlockOptionalMypy(importlib.abc.MetaPathFinder):
     def find_spec(self, fullname, path=None, target=None):
-        if fullname == "mypyc" or fullname.startswith("mypyc."):
+        if fullname in {"mypy", "mypyc"} or fullname.startswith(("mypy.", "mypyc.")):
             raise ModuleNotFoundError(fullname)
         return None
 
 
-sys.meta_path.insert(0, BlockMypyc())
+sys.meta_path.insert(0, BlockOptionalMypy())
 import typedlogic.compiler
 """
     env = os.environ.copy()
