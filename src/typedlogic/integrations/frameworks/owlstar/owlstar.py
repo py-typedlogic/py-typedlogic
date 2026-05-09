@@ -17,7 +17,7 @@ PredicateID = NodeID
 
 
 @dataclass(frozen=True)
-class Edge(Fact, ABC):
+class Edge(ABC):
     """A directed edge between two node identifiers."""
 
     subject: NodeID
@@ -26,21 +26,21 @@ class Edge(Fact, ABC):
 
 
 @dataclass(frozen=True)
-class EdgeAllSome(Edge):
+class EdgeAllSome(Edge, Fact):
     """An edge whose subject has some predicate successor in the object class."""
 
     pass
 
 
 @dataclass(frozen=True)
-class EdgeAllNone(Edge):
+class EdgeAllNone(Edge, Fact):
     """An edge whose subject has no predicate successor in the object class."""
 
     pass
 
 
 @dataclass(frozen=True)
-class EdgeAllOne(Edge):
+class EdgeAllOne(Edge, Fact):
     """
     Every instance of the subject s stands in relation p to exactly one instance of object o.
 
@@ -55,14 +55,14 @@ class EdgeAllOne(Edge):
 
 
 @dataclass(frozen=True)
-class PredicateCharacteristic(Fact, ABC):
+class PredicateCharacteristic(ABC):
     """A characteristic attached to a predicate."""
 
     predicate: PredicateID
 
 
 @dataclass(frozen=True)
-class TransitivePredicate(PredicateCharacteristic):
+class TransitivePredicate(PredicateCharacteristic, Fact):
     """A predicate declared as transitive."""
 
     pass
@@ -110,9 +110,9 @@ def disjointness(
         assert EdgeAllNone(s, p, c2)  # noqa: S101
     if DisjointOver(c2, c1, p) and EdgeAllSome(s, p, c1):
         assert EdgeAllNone(s, p, c2)  # noqa: S101
-    if DisjointClasses(c1, c2) and EdgeAllSome(s, p, c1):
+    if DisjointClasses(c1, c2) and EdgeAllOne(s, p, c1):
         assert EdgeAllNone(s, p, c2)  # noqa: S101
-    if DisjointClasses(c2, c1) and EdgeAllSome(s, p, c1):
+    if DisjointClasses(c2, c1) and EdgeAllOne(s, p, c1):
         assert EdgeAllNone(s, p, c2)  # noqa: S101
 
 

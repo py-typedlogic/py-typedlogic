@@ -40,9 +40,9 @@ def disjointness(
         assert EdgeAllNone(s, p, c2)  # noqa: S101
     if DisjointOver(c2, c1, p) and EdgeAllSome(s, p, c1):
         assert EdgeAllNone(s, p, c2)  # noqa: S101
-    if DisjointClasses(c1, c2) and EdgeAllSome(s, p, c1):
+    if DisjointClasses(c1, c2) and EdgeAllOne(s, p, c1):
         assert EdgeAllNone(s, p, c2)  # noqa: S101
-    if DisjointClasses(c2, c1) and EdgeAllSome(s, p, c1):
+    if DisjointClasses(c2, c1) and EdgeAllOne(s, p, c1):
         assert EdgeAllNone(s, p, c2)  # noqa: S101
 
 

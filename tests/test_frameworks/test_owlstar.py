@@ -14,6 +14,8 @@ def test_owlstar_module_loads_predicates_and_axioms():
     theory = translate_module_to_theory(owlstar)
 
     predicate_names = {predicate.predicate for predicate in theory.predicate_definitions}
+    assert "Edge" not in predicate_names
+    assert "PredicateCharacteristic" not in predicate_names
     assert {
         "DisjointClasses",
         "DisjointOver",
@@ -41,7 +43,7 @@ def test_owlstar_disjointness_is_preserved_for_souffle_compilation():
     compiled = SouffleCompiler().compile(theory)
 
     assert "EdgeAllNone(s, p, c2) :- DisjointOver(c1, c2, p), EdgeAllSome(s, p, c1)." in compiled
-    assert "EdgeAllNone(s, p, c2) :- DisjointClasses(c1, c2), EdgeAllSome(s, p, c1)." in compiled
+    assert "EdgeAllNone(s, p, c2) :- DisjointClasses(c1, c2), EdgeAllOne(s, p, c1)." in compiled
 
 
 def test_owlstar_disjoint_over_detects_inconsistent_all_some_edges_with_z3():
@@ -53,6 +55,34 @@ def test_owlstar_disjoint_over_detects_inconsistent_all_some_edges_with_z3():
     solver.load(owlstar)
     solver.add(owlstar.DisjointOver("Nucleus", "Membrane", "part_of"))
     solver.add(owlstar.EdgeAllSome("Cell", "part_of", "Nucleus"))
+    solver.add(owlstar.EdgeAllSome("Cell", "part_of", "Membrane"))
+
+    assert solver.check().satisfiable is False
+
+
+def test_owlstar_disjoint_classes_allow_distinct_existential_fillers_with_z3():
+    """Test that bare class disjointness does not reject two all-some edges."""
+    pytest.importorskip("z3")
+    from typedlogic.integrations.solvers.z3.z3_solver import Z3Solver
+
+    solver = Z3Solver()
+    solver.load(owlstar)
+    solver.add(owlstar.DisjointClasses("Nucleus", "Membrane"))
+    solver.add(owlstar.EdgeAllSome("Cell", "part_of", "Nucleus"))
+    solver.add(owlstar.EdgeAllSome("Cell", "part_of", "Membrane"))
+
+    assert solver.check().satisfiable is True
+
+
+def test_owlstar_disjoint_classes_constrain_exact_one_edges_with_z3():
+    """Test that exact-one edges are incompatible with disjoint same-predicate fillers."""
+    pytest.importorskip("z3")
+    from typedlogic.integrations.solvers.z3.z3_solver import Z3Solver
+
+    solver = Z3Solver()
+    solver.load(owlstar)
+    solver.add(owlstar.DisjointClasses("Nucleus", "Membrane"))
+    solver.add(owlstar.EdgeAllOne("Cell", "part_of", "Nucleus"))
     solver.add(owlstar.EdgeAllSome("Cell", "part_of", "Membrane"))
 
     assert solver.check().satisfiable is False
