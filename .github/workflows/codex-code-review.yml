@@ -6,18 +6,19 @@ on:
 
 jobs:
   codex-review:
+    # Review draft PRs too: Codex-created branches in this repo are often opened as drafts.
     if: |
-      !github.event.pull_request.draft &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.pull_request.author_association) &&
       !contains(github.event.pull_request.title, '[skip-review]') &&
       !contains(github.event.pull_request.title, '[WIP]')
     runs-on: ubuntu-latest
     permissions:
       contents: read
     outputs:
-      final_message: ${{ steps.run_codex.outputs.final-message }}
+      final_message: ${{ steps.run_codex.outputs.final_message }}
     env:
-      CODEX_AUTH_JSON: ${{ secrets.CODEX_AUTH_JSON }}
-      CODEX_HOME: ${{ runner.temp }}/codex-home
+      HAS_CODEX_AUTH_JSON: ${{ secrets.CODEX_AUTH_JSON != '' }}
     steps:
       - name: Checkout pull request
         uses: actions/checkout@v5
@@ -34,8 +35,21 @@ jobs:
             "$PR_BASE_REF" \
             "+refs/pull/$PR_NUMBER/head"
 
+      - name: Set up Node.js
+        if: env.HAS_CODEX_AUTH_JSON == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Codex CLI
+        if: env.HAS_CODEX_AUTH_JSON == 'true'
+        run: npm install -g @openai/codex
+
       - name: Restore Codex OAuth auth
-        if: env.CODEX_AUTH_JSON != ''
+        if: env.HAS_CODEX_AUTH_JSON == 'true'
+        env:
+          CODEX_AUTH_JSON: ${{ secrets.CODEX_AUTH_JSON }}
+          CODEX_HOME: ${{ runner.temp }}/codex-home
         shell: bash
         run: |
           mkdir -p "$CODEX_HOME"
@@ -45,29 +59,50 @@ jobs:
 
       - name: Run Codex review
         id: run_codex
-        if: env.CODEX_AUTH_JSON != ''
-        uses: openai/codex-action@v1
-        with:
-          codex-home: ${{ env.CODEX_HOME }}
-          sandbox: read-only
-          prompt: |
-            This is PR #${{ github.event.pull_request.number }} for ${{ github.repository }}.
+        if: env.HAS_CODEX_AUTH_JSON == 'true'
+        env:
+          CODEX_HOME: ${{ runner.temp }}/codex-home
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_REPOSITORY: ${{ github.repository }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        shell: bash
+        run: |
+          output_file="$RUNNER_TEMP/codex-review.md"
+          prompt_file="$RUNNER_TEMP/codex-review-prompt.md"
 
-            Review only the changes introduced by this PR. Use the available git
-            history and diff context, especially:
+          {
+            printf 'This is PR #%s for %s.\n\n' "$PR_NUMBER" "$PR_REPOSITORY"
+            printf 'Review only the changes introduced by this PR. Use the available git\n'
+            printf 'history and diff context, especially:\n\n'
+            printf '  git log --oneline %s...%s\n' "$PR_BASE_SHA" "$PR_HEAD_SHA"
+            printf '  git diff %s...%s\n\n' "$PR_BASE_SHA" "$PR_HEAD_SHA"
+            printf 'Focus on bugs, behavioral regressions, security issues, test gaps,\n'
+            printf 'and maintainability risks. Be concise and specific, and include file\n'
+            printf 'paths and line references when possible.\n\n'
+            printf 'Pull request title:\n%s\n\n' "$PR_TITLE"
+            printf 'Pull request body:\n%s\n' "$PR_BODY"
+          } > "$prompt_file"
 
-              git log --oneline ${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }}
-              git diff ${{ github.event.pull_request.base.sha }}...${{ github.event.pull_request.head.sha }}
+          codex exec \
+            --sandbox read-only \
+            --cd "$GITHUB_WORKSPACE" \
+            --output-last-message "$output_file" \
+            - < "$prompt_file"
 
-            Focus on bugs, behavioral regressions, security issues, test gaps,
-            and maintainability risks. Be concise and specific, and include file
-            paths and line references when possible.
+          delimiter="CODEX_REVIEW_$(uuidgen | tr '[:lower:]-' '[:upper:]_')"
+          if grep -qxF "$delimiter" "$output_file"; then
+            echo "Generated GitHub output delimiter appeared in Codex output; retry the workflow." >&2
+            exit 1
+          fi
 
-            Pull request title:
-            ${{ github.event.pull_request.title }}
-
-            Pull request body:
-            ${{ github.event.pull_request.body }}
+          {
+            printf 'final_message<<%s\n' "$delimiter"
+            cat "$output_file"
+            printf '\n%s\n' "$delimiter"
+          } >> "$GITHUB_OUTPUT"
 
   post-codex-review:
     needs: codex-review
