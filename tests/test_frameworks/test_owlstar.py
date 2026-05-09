@@ -3,6 +3,7 @@
 # ruff: noqa: S101
 
 import pytest
+import typedlogic.integrations.frameworks.owlstar as owlstar_package
 from typedlogic.integrations.frameworks.owlstar import owlstar
 from typedlogic.integrations.solvers.souffle.souffle_compiler import SouffleCompiler
 from typedlogic.parsers.pyparser.introspection import translate_module_to_theory
@@ -21,6 +22,16 @@ def test_owlstar_module_loads_predicates_and_axioms():
         "EdgeAllSome",
         "TransitivePredicate",
     } <= predicate_names
+    assert {group.name for group in theory.sentence_groups} >= {"disjointness", "transitivity", "unary_rules"}
+
+
+def test_owlstar_package_loads_predicates_and_axioms():
+    """Test that the public OWLStar package module can be loaded as a theory."""
+    theory = translate_module_to_theory(owlstar_package)
+
+    predicate_names = {predicate.predicate for predicate in theory.predicate_definitions}
+    assert "EdgeAllSome" in predicate_names
+    assert "DisjointOver" in predicate_names
     assert {group.name for group in theory.sentence_groups} >= {"disjointness", "transitivity", "unary_rules"}
 
 
