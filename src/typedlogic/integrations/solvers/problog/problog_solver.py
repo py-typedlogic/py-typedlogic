@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from typing import Any, ClassVar, Dict, Iterator, Optional
 
 from problog import get_evaluatable
+from problog.errors import InconsistentEvidenceError
 from problog.program import PrologString
 
 from typedlogic.datamodel import NotInProfileError, Sentence, Term
@@ -20,8 +21,20 @@ from typedlogic.solver import Solution, Solver
 logger = logging.getLogger(__name__)
 
 DEFAULT_PROBLOG_ARGS = {
-    'propagate_evidence': False,
+    "propagate_evidence": False,
 }
+
+
+class UnsatisfiableEvidenceError(NotInProfileError):
+    """
+    Raised when ProbLog evidence is inconsistent with the program.
+    """
+
+
+class AmbiguousModelError(NotInProfileError):
+    """
+    Raised when a single-model API sees more than one probabilistic model.
+    """
 
 
 @dataclass
@@ -67,7 +80,13 @@ class ProbLogSolver(Solver):
             for k, v in self.problog_args.items():
                 if k not in kwargs:
                     kwargs[k] = v
-        result = ev.create_from(p, **kwargs).evaluate()
+        try:
+            result = ev.create_from(p, **kwargs).evaluate()
+        except InconsistentEvidenceError as e:
+            raise UnsatisfiableEvidenceError(
+                "ProbLog evidence is inconsistent; no probabilistic model can satisfy the asserted evidence. "
+                f"ProbLog reported: {e}"
+            ) from e
         m = ProbabilisticModel()
         for term, prob in result.items():
             plt_term = compiler.decompile_term(term)
@@ -82,13 +101,21 @@ class ProbLogSolver(Solver):
     def model(self) -> ProbabilisticModel:
         models = list(self.models())
         if len(models) == 0:
-            raise NotInProfileError("No models found")
+            raise UnsatisfiableEvidenceError(
+                "ProbLog produced no models; the evidence may be unsatisfiable for this probabilistic theory."
+            )
         if len(models) > 1:
-            raise NotInProfileError("Multiple models found")
+            raise AmbiguousModelError(
+                "ProbLog produced multiple models; ProbLogSolver.model() expects exactly one model. "
+                "Use ProbLogSolver.models() to inspect all models."
+            )
         return models[0]
 
     def check(self) -> Solution:
-        models = list(self.models())
+        try:
+            models = list(self.models())
+        except UnsatisfiableEvidenceError:
+            return Solution(satisfiable=False)
         sat = len(models) > 0
         return Solution(satisfiable=sat)
 
