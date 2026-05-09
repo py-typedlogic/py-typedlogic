@@ -1,18 +1,19 @@
-"""OWLStar predicates and inference rules."""
+"""
+OWLStar predicates and inference rules.
+
+The rules in this module are intentionally Horn-friendly. They expose positive
+consequences such as derived ``EdgeAllSome`` and ``EdgeAllNone`` facts. Solvers
+that preserve negation or constraints can additionally use the ``EdgeAllSome``
+and ``EdgeAllNone`` disjointness rule to detect inconsistent theories.
+"""
 
 from abc import ABC
 from dataclasses import dataclass
-from typing import Iterator
 
-from typedlogic import Fact, Sentence, Variable, axiom
+from typedlogic import Fact, axiom
 
 NodeID = str
 PredicateID = NodeID
-
-S = Variable("S", domain=NodeID.__name__)
-C1 = Variable("C1", domain=NodeID.__name__)
-C2 = Variable("C2", domain=NodeID.__name__)
-P = Variable("P", domain=PredicateID.__name__)
 
 
 @dataclass(frozen=True)
@@ -45,8 +46,9 @@ class EdgeAllOne(Edge):
 
     E.g. every instance of a Finger is part of exactly one instance of a Hand.
 
-    We also want to infer that is LeftHand is a Hand that is part of exactly one LeftSide,
-    and LeftFinger is part of exactly one LeftHand, then LeftFinger is part of exactly one LeftHand.
+    The current rules expose only the existential consequence of this restriction:
+    an ``EdgeAllOne`` fact entails ``EdgeAllSome``. Cardinality/uniqueness checking is
+    intentionally left to solvers or future OWLStar rules that support it directly.
     """
 
     pass
@@ -68,7 +70,7 @@ class TransitivePredicate(PredicateCharacteristic):
 
 @dataclass(frozen=True)
 class DisjointClasses(Fact):
-    """A pair of disjoint classes."""
+    """A pair of disjoint classes whose same-predicate all-some edges are incompatible."""
 
     class1: NodeID
     class2: NodeID
@@ -82,11 +84,6 @@ class DisjointOver(Fact):
     class2: NodeID
     predicate: PredicateID
 
-    @classmethod
-    def rules(cls) -> Iterator[Sentence]:
-        """Yield class-level rules for disjoint-over constraints."""
-        yield (EdgeAllSome.p(S, P, C1) & EdgeAllSome.p(S, P, C2) & DisjointOver.p(C1, C2, P)) >> False
-
 
 @axiom
 def unary_rules(
@@ -99,6 +96,24 @@ def unary_rules(
         assert ~EdgeAllNone(s, p, o)  # noqa: S101
     if EdgeAllOne(s, p, o):
         assert EdgeAllSome(s, p, o)  # noqa: S101
+
+
+@axiom
+def disjointness(
+    s: NodeID,
+    p: PredicateID,
+    c1: NodeID,
+    c2: NodeID,
+):
+    """Infer all-none edges from class and predicate-scoped disjointness."""
+    if DisjointOver(c1, c2, p) and EdgeAllSome(s, p, c1):
+        assert EdgeAllNone(s, p, c2)  # noqa: S101
+    if DisjointOver(c2, c1, p) and EdgeAllSome(s, p, c1):
+        assert EdgeAllNone(s, p, c2)  # noqa: S101
+    if DisjointClasses(c1, c2) and EdgeAllSome(s, p, c1):
+        assert EdgeAllNone(s, p, c2)  # noqa: S101
+    if DisjointClasses(c2, c1) and EdgeAllSome(s, p, c1):
+        assert EdgeAllNone(s, p, c2)  # noqa: S101
 
 
 @axiom
