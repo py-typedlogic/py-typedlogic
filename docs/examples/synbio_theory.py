@@ -108,7 +108,7 @@ def misligation_detection(
         and upstream == n1
         and downstream == n2
     ):
-        if pos2 != pos1 + 1 and pos2 != 0:
+        if pos2 != pos1 + 1:
             assert MisligationRisk(upstream, downstream)
 
 
@@ -198,6 +198,13 @@ class GOCAMIndividual(Fact):
 
 
 @dataclass(frozen=True)
+class CausalRelation(Fact):
+    """A relation that should connect molecular function individuals in GO-CAM."""
+
+    relation: str
+
+
+@dataclass(frozen=True)
 class CausalEdge(Fact):
     """A causal relation between two GO-CAM individuals."""
 
@@ -223,7 +230,12 @@ def causal_edge_upstream_must_be_mf(
     aspect: str,
 ):
     """Require the upstream node of a causal edge to instantiate a molecular function."""
-    if CausalEdge(up, down, rel) and GOCAMIndividual(up, upstream_class) and GOAspect(upstream_class, aspect):
+    if (
+        CausalEdge(up, down, rel)
+        and CausalRelation(rel)
+        and GOCAMIndividual(up, upstream_class)
+        and GOAspect(upstream_class, aspect)
+    ):
         if aspect != "MF":
             assert GOCAMViolation(up, "causal_upstream_not_MF")
 
@@ -237,6 +249,11 @@ def causal_edge_downstream_must_be_mf(
     aspect: str,
 ):
     """Require the downstream node of a causal edge to instantiate a molecular function."""
-    if CausalEdge(up, down, rel) and GOCAMIndividual(down, downstream_class) and GOAspect(downstream_class, aspect):
+    if (
+        CausalEdge(up, down, rel)
+        and CausalRelation(rel)
+        and GOCAMIndividual(down, downstream_class)
+        and GOAspect(downstream_class, aspect)
+    ):
         if aspect != "MF":
             assert GOCAMViolation(down, "causal_downstream_not_MF")
