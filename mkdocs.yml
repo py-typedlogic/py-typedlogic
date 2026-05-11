@@ -64,7 +64,6 @@ nav:
   - Gallery:
       - Examples: examples.md
       - Synthetic biology design checks: examples/synbio-design-checks.ipynb
-      - Probabilistic ensemble classification: examples/probabilistic-score.ipynb
   - Concepts:
       - Core concepts: concepts/index.md
       - Data Model: concepts/datamodel.md

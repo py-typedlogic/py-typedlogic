@@ -5,7 +5,6 @@ This page provides various examples to illustrate the usage of TypedLogic in dif
 ## Gallery Tutorials
 
 - [Synthetic biology design checks](examples/synbio-design-checks.ipynb): assembly structure, GO-driven pathway feasibility, and GO-CAM curation consistency in one reusable theory.
-- [Probabilistic ensemble classification](examples/probabilistic-score.ipynb): probabilistic reasoning over classifier outputs and ontological relationships.
 
 ## Basic Family Relationships
 
