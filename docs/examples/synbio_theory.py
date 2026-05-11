@@ -16,6 +16,7 @@ from typedlogic import Fact, axiom
 class Part(Fact):
     """A DNA part in an ordered assembly."""
 
+    assembly: str
     name: str
     part_type: str
     five_oh: str
@@ -27,6 +28,7 @@ class Part(Fact):
 class CanLigate(Fact):
     """Two parts have compatible overhangs and can ligate."""
 
+    assembly: str
     upstream: str
     downstream: str
 
@@ -35,6 +37,16 @@ class CanLigate(Fact):
 class IntendedAdjacent(Fact):
     """Two parts are adjacent in the intended design order."""
 
+    assembly: str
+    upstream: str
+    downstream: str
+
+
+@dataclass(frozen=True)
+class IntendedLigationGap(Fact):
+    """Two intended adjacent parts have incompatible overhangs."""
+
+    assembly: str
     upstream: str
     downstream: str
 
@@ -43,17 +55,20 @@ class IntendedAdjacent(Fact):
 class MisligationRisk(Fact):
     """A compatible ligation exists outside the intended adjacency order."""
 
+    assembly: str
     upstream: str
     downstream: str
 
 
 @axiom
 def ligation_compatibility(
+    assembly1: str,
     n1: str,
     t1: str,
     fo1: str,
     to1: str,
     pos1: int,
+    assembly2: str,
     n2: str,
     t2: str,
     fo2: str,
@@ -61,18 +76,20 @@ def ligation_compatibility(
     pos2: int,
 ):
     """Derive ligation compatibility when the upstream 3' overhang matches the downstream 5' overhang."""
-    if Part(n1, t1, fo1, to1, pos1) and Part(n2, t2, fo2, to2, pos2):
-        if to1 == fo2 and n1 != n2:
-            assert CanLigate(n1, n2)
+    if Part(assembly1, n1, t1, fo1, to1, pos1) and Part(assembly2, n2, t2, fo2, to2, pos2):
+        if assembly1 == assembly2 and to1 == fo2 and n1 != n2:
+            assert CanLigate(assembly1, n1, n2)
 
 
 @axiom
 def intended_adjacency(
+    assembly1: str,
     n1: str,
     t1: str,
     fo1: str,
     to1: str,
     pos1: int,
+    assembly2: str,
     n2: str,
     t2: str,
     fo2: str,
@@ -80,13 +97,35 @@ def intended_adjacency(
     pos2: int,
 ):
     """Derive intended adjacency from the declared part positions."""
-    if Part(n1, t1, fo1, to1, pos1) and Part(n2, t2, fo2, to2, pos2):
-        if pos2 == pos1 + 1:
-            assert IntendedAdjacent(n1, n2)
+    if Part(assembly1, n1, t1, fo1, to1, pos1) and Part(assembly2, n2, t2, fo2, to2, pos2):
+        if assembly1 == assembly2 and pos2 == pos1 + 1:
+            assert IntendedAdjacent(assembly1, n1, n2)
+
+
+@axiom
+def intended_ligation_gap(
+    assembly1: str,
+    n1: str,
+    t1: str,
+    fo1: str,
+    to1: str,
+    pos1: int,
+    assembly2: str,
+    n2: str,
+    t2: str,
+    fo2: str,
+    to2: str,
+    pos2: int,
+):
+    """Flag intended adjacent parts whose overhangs do not match."""
+    if Part(assembly1, n1, t1, fo1, to1, pos1) and Part(assembly2, n2, t2, fo2, to2, pos2):
+        if assembly1 == assembly2 and pos2 == pos1 + 1 and to1 != fo2:
+            assert IntendedLigationGap(assembly1, n1, n2)
 
 
 @axiom
 def misligation_detection(
+    assembly: str,
     upstream: str,
     downstream: str,
     n1: str,
@@ -102,14 +141,14 @@ def misligation_detection(
 ):
     """Flag compatible ligations that skip over the intended next position."""
     if (
-        CanLigate(upstream, downstream)
-        and Part(n1, t1, fo1, to1, pos1)
-        and Part(n2, t2, fo2, to2, pos2)
+        CanLigate(assembly, upstream, downstream)
+        and Part(assembly, n1, t1, fo1, to1, pos1)
+        and Part(assembly, n2, t2, fo2, to2, pos2)
         and upstream == n1
         and downstream == n2
     ):
         if pos2 != pos1 + 1:
-            assert MisligationRisk(upstream, downstream)
+            assert MisligationRisk(assembly, upstream, downstream)
 
 
 @dataclass(frozen=True)
