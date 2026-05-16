@@ -8,10 +8,10 @@ from problog import get_evaluatable
 from problog.program import PrologString
 from tests import OUTPUT_DIR, tree_edges
 from typedlogic import Theory
-from typedlogic.datamodel import Forall, Variable, Implies, Term
+from typedlogic.datamodel import Forall, Variable, Implies, PredicateDefinition, Term
 from typedlogic.extensions.probabilistic import Evidence, ProbabilisticModel, Probability, That
 from typedlogic.integrations.solvers.problog.problog_compiler import ProbLogCompiler
-from typedlogic.integrations.solvers.problog.problog_solver import ProbLogSolver
+from typedlogic.integrations.solvers.problog.problog_solver import ProbLogSolver, UnsatisfiableEvidenceError
 from typedlogic.parsers.pyparser.introspection import translate_module_to_theory
 
 from tests.theorems.probabilistic import coins, coins2, smokers
@@ -152,6 +152,19 @@ def test_solver(theory_module, facts, evidences, expected):
     #    print(pr, "::", term, type(term), model.term_probabilities[term])
     for term, pr in expected:
         assert round(model.term_probabilities[term.to_model_object()], 3) == pr
+
+
+def test_solver_model_reports_unsatisfiable_evidence():
+    solver = ProbLogSolver()
+    solver.add_predicate_definition(PredicateDefinition(predicate="Foo", arguments={}))
+    solver.add_probabilistic_fact(Term("Foo"), 0.5)
+    solver.add_evidence(Term("Foo"), True)
+    solver.add_evidence(Term("Foo"), False)
+
+    assert solver.check().satisfiable is False
+    with pytest.raises(UnsatisfiableEvidenceError, match="evidence is inconsistent"):
+        solver.model()
+
 
 @pytest.mark.parametrize(
     "facts,disease_priors,phenotype_priors,d2p,d2g,evidences",
