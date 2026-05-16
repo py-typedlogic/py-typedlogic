@@ -72,23 +72,28 @@ invalid_slot_usage(c, s) :- slot_usage(c, s), not effective_class_slot(c, s).
 ```tlog
 has_slot_range(s) :- slot_range(s, r).
 has_slot_usage_range(c, s) :- slot_usage_range(c, s, r).
+has_applicable_slot_usage_range(c, s) :- slot_usage_range(c, s, r).
+has_applicable_slot_usage_range(c, s) :- class_parent(c, p), has_applicable_slot_usage_range(p, s), not has_slot_usage_range(c, s).
 
 slot_effective_range(s, r) :- slot_range(s, r).
 slot_effective_range(s, "string") :- slot_definition(s), not has_slot_range(s).
 
-effective_range(c, s, r) :- effective_class_slot(c, s), slot_effective_range(s, r), not has_slot_usage_range(c, s).
 effective_range(c, s, r) :- slot_usage_range(c, s, r).
+effective_range(c, s, r) :- class_parent(c, p), effective_range(p, s, r), has_applicable_slot_usage_range(p, s), effective_class_slot(c, s), not has_slot_usage_range(c, s).
+effective_range(c, s, r) :- effective_class_slot(c, s), slot_effective_range(s, r), not has_applicable_slot_usage_range(c, s).
 
 invalid_range(c, s, r) :- effective_range(c, s, r), not range_definition(r).
 :- invalid_range(c, s, r).
 
 effective_required(c, s) :- effective_class_slot(c, s), slot_required(s), not slot_usage_required_false(c, s).
 effective_required(c, s) :- slot_usage_required(c, s).
+effective_required(c, s) :- class_parent(c, p), effective_required(p, s), effective_class_slot(c, s), not slot_usage_required_false(c, s), not slot_usage_required(c, s).
 
-effective_multivalued(c, s) :- effective_class_slot(c, s), slot_multivalued(s), not slot_usage_multivalued_false(c, s).
-effective_multivalued(c, s) :- slot_usage_multivalued(c, s).
-effective_singlevalued(c, s) :- effective_class_slot(c, s), not slot_multivalued(s), not slot_usage_multivalued(c, s).
-effective_singlevalued(c, s) :- slot_multivalued_false(s), effective_class_slot(c, s), not slot_usage_multivalued(c, s).
+has_applicable_multivalued(c, s) :- effective_class_slot(c, s), slot_multivalued(s), not slot_usage_multivalued_false(c, s).
+has_applicable_multivalued(c, s) :- slot_usage_multivalued(c, s).
+has_applicable_multivalued(c, s) :- class_parent(c, p), has_applicable_multivalued(p, s), effective_class_slot(c, s), not slot_usage_multivalued_false(c, s), not slot_usage_multivalued(c, s).
+effective_multivalued(c, s) :- has_applicable_multivalued(c, s).
+effective_singlevalued(c, s) :- effective_class_slot(c, s), not has_applicable_multivalued(c, s).
 effective_singlevalued(c, s) :- slot_usage_multivalued_false(c, s).
 ```
 
@@ -99,11 +104,13 @@ explicit_minimum_cardinality(c, s, n) :- effective_class_slot(c, s), slot_minimu
 explicit_minimum_cardinality(c, s, n) :- slot_usage_minimum_cardinality(c, s, n).
 explicit_minimum_cardinality(c, s, n) :- effective_class_slot(c, s), slot_exact_cardinality(s, n), not has_slot_usage_exact_cardinality(c, s).
 explicit_minimum_cardinality(c, s, n) :- slot_usage_exact_cardinality(c, s, n).
+explicit_minimum_cardinality(c, s, n) :- class_parent(c, p), explicit_minimum_cardinality(p, s, n), effective_class_slot(c, s), not has_slot_usage_minimum_cardinality(c, s), not has_slot_usage_exact_cardinality(c, s).
 
 explicit_maximum_cardinality(c, s, n) :- effective_class_slot(c, s), slot_maximum_cardinality(s, n), not has_slot_usage_maximum_cardinality(c, s).
 explicit_maximum_cardinality(c, s, n) :- slot_usage_maximum_cardinality(c, s, n).
 explicit_maximum_cardinality(c, s, n) :- effective_class_slot(c, s), slot_exact_cardinality(s, n), not has_slot_usage_exact_cardinality(c, s).
 explicit_maximum_cardinality(c, s, n) :- slot_usage_exact_cardinality(c, s, n).
+explicit_maximum_cardinality(c, s, n) :- class_parent(c, p), explicit_maximum_cardinality(p, s, n), effective_class_slot(c, s), not has_slot_usage_maximum_cardinality(c, s), not has_slot_usage_exact_cardinality(c, s).
 
 effective_exact_cardinality(c, s, n) :- effective_class_slot(c, s), slot_exact_cardinality(s, n), not has_slot_usage_exact_cardinality(c, s).
 effective_exact_cardinality(c, s, n) :- slot_usage_exact_cardinality(c, s, n).

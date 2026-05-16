@@ -22,6 +22,7 @@ from typedlogic.integrations.frameworks.linkml.reasoning import (
     schema_theory_from_object,
     validate_abox,
 )
+from typedlogic.integrations.frameworks.linkml.validator import validate as validate_with_legacy_entrypoint
 from typedlogic.integrations.solvers.clingo.clingo_solver import ClingoSolver
 
 runner = CliRunner()
@@ -78,6 +79,24 @@ def test_loader_emits_reified_tbox_facts_only() -> None:
     assert has_term(facts, "slot_required_false", "age")
     assert has_term(facts, "slot_usage_required", "Person", "age")
     assert not any(term.predicate == "InstSlotRequired" for term in facts)
+
+
+def test_loader_emits_type_enum_and_boolean_slot_expression_facts() -> None:
+    """Types, enums, and explicit false slot-expression values are represented as TBox facts."""
+    schema = {
+        "types": {"PositiveInteger": {"typeof": "integer"}},
+        "enums": {"Status": {"permissible_values": {"ACTIVE": {}, "INACTIVE": {}}}},
+        "slots": {"status": {"range": "Status", "required": False, "multivalued": False}},
+        "classes": {"Sample": {"slots": ["status"]}},
+    }
+
+    facts = list(loader.generate_from_object(schema))
+
+    assert has_term(facts, "type_definition", "PositiveInteger")
+    assert has_term(facts, "enum_definition", "Status")
+    assert has_term(facts, "is_a", "PositiveInteger", "integer")
+    assert has_term(facts, "slot_required_false", "status")
+    assert has_term(facts, "slot_multivalued_false", "status")
 
 
 def test_schema_rules_and_macro_rules_are_parseable_tlog_markdown() -> None:
@@ -139,6 +158,41 @@ def test_schema_reasoning_rejects_inconsistent_cardinality() -> None:
     }
 
     assert not check_schema(schema)
+
+
+def test_schema_reasoning_rejects_unknown_ranges() -> None:
+    """Slot ranges must refer to a declared class, type, enum, or primitive type."""
+    schema = {
+        "slots": {"status": {"range": "MissingEnum"}},
+        "classes": {"Sample": {"slots": ["status"]}},
+    }
+
+    assert not check_schema(schema)
+
+
+def test_schema_reasoning_materializes_mixin_slots_and_abox_hierarchy() -> None:
+    """Mixins participate in schema closure and direct ABox class materialization."""
+    schema = {
+        "slots": {"label": {"range": "string", "required": True}},
+        "classes": {
+            "NamedMixin": {"slots": ["label"]},
+            "Person": {"mixins": ["NamedMixin"]},
+        },
+    }
+    materialized = set(materialize_schema(schema).materialized_facts)
+
+    assert has_term(materialized, "class_parent", "Person", "NamedMixin")
+    assert has_term(materialized, "class_ancestor", "Person", "NamedMixin")
+    assert has_term(materialized, "effective_class_slot", "Person", "label")
+    assert not validate_abox(schema, [Term("Person", "p1")])
+    assert validate_abox(
+        schema,
+        [
+            Term("Person", "p1"),
+            Term("label", "p1", "l1"),
+            Term("string", "l1"),
+        ],
+    )
 
 
 def test_compile_schema_to_abox_rejects_required_slot_absence() -> None:
@@ -237,6 +291,79 @@ def test_slot_usage_range_overrides_global_slot_range() -> None:
     )
 
 
+def test_subclass_inherits_parent_slot_usage_range_and_required() -> None:
+    """Subclass induced slots inherit parent slot_usage refinements."""
+    schema = {
+        "slots": {"value": {"range": "string"}},
+        "classes": {
+            "Measurement": {
+                "slots": ["value"],
+                "slot_usage": {"value": {"range": "integer", "required": True}},
+            },
+            "DerivedMeasurement": {"is_a": "Measurement"},
+        },
+    }
+    materialized = set(materialize_schema(schema).materialized_facts)
+
+    assert has_term(materialized, "effective_range", "DerivedMeasurement", "value", "integer")
+    assert not has_term(materialized, "effective_range", "DerivedMeasurement", "value", "string")
+    assert has_term(materialized, "effective_required", "DerivedMeasurement", "value")
+    assert not validate_abox(schema, [Term("DerivedMeasurement", "m1")])
+    assert validate_abox(
+        schema,
+        [
+            Term("DerivedMeasurement", "m1"),
+            Term("value", "m1", "v1"),
+            Term("integer", "v1"),
+        ],
+    )
+    assert not validate_abox(
+        schema,
+        [
+            Term("DerivedMeasurement", "m1"),
+            Term("value", "m1", "v1"),
+            Term("string", "v1"),
+        ],
+    )
+
+
+def test_subclass_inherits_parent_slot_usage_multivalued_cardinality() -> None:
+    """Subclass induced slots inherit parent slot_usage cardinality and multivalued refinements."""
+    schema = {
+        "slots": {"code": {"range": "string"}},
+        "classes": {
+            "Sample": {
+                "slots": ["code"],
+                "slot_usage": {"code": {"multivalued": True, "minimum_cardinality": 2, "maximum_cardinality": 3}},
+            },
+            "DerivedSample": {"is_a": "Sample"},
+        },
+    }
+    materialized = set(materialize_schema(schema).materialized_facts)
+
+    assert has_term(materialized, "effective_multivalued", "DerivedSample", "code")
+    assert has_term(materialized, "effective_minimum_cardinality", "DerivedSample", "code", 2)
+    assert has_term(materialized, "effective_maximum_cardinality", "DerivedSample", "code", 3)
+    assert validate_abox(
+        schema,
+        [
+            Term("DerivedSample", "s1"),
+            Term("code", "s1", "c1"),
+            Term("code", "s1", "c2"),
+            Term("string", "c1"),
+            Term("string", "c2"),
+        ],
+    )
+    assert not validate_abox(
+        schema,
+        [
+            Term("DerivedSample", "s1"),
+            Term("code", "s1", "c1"),
+            Term("string", "c1"),
+        ],
+    )
+
+
 def test_compile_schema_to_abox_rejects_singlevalued_and_max_cardinality_violations() -> None:
     """Default single-valued slots and explicit maximum cardinalities become ABox constraints."""
     too_many_names = [
@@ -270,6 +397,54 @@ def test_compile_schema_to_abox_rejects_singlevalued_and_max_cardinality_violati
 
     assert not validate_abox(PERSON_SCHEMA, too_many_names)
     assert not validate_abox(PERSON_SCHEMA, too_many_aliases)
+
+
+def test_compile_schema_to_abox_supports_type_and_enum_ranges() -> None:
+    """ABox range checks work for LinkML type and enum definitions."""
+    schema = {
+        "types": {"PositiveInteger": {"typeof": "integer"}},
+        "enums": {"Status": {"permissible_values": {"ACTIVE": {}, "INACTIVE": {}}}},
+        "slots": {
+            "score": {"range": "PositiveInteger", "required": True},
+            "status": {"range": "Status", "required": True},
+        },
+        "classes": {"Sample": {"slots": ["score", "status"]}},
+    }
+
+    assert validate_abox(
+        schema,
+        [
+            Term("Sample", "s1"),
+            Term("score", "s1", "score1"),
+            Term("status", "s1", "status1"),
+            Term("PositiveInteger", "score1"),
+            Term("Status", "status1"),
+        ],
+    )
+    assert not validate_abox(
+        schema,
+        [
+            Term("Sample", "s1"),
+            Term("score", "s1", "score1"),
+            Term("status", "s1", "status1"),
+            Term("integer", "score1"),
+            Term("string", "status1"),
+        ],
+    )
+
+
+def test_compile_schema_to_abox_dump_contains_closed_world_aggregate_constraints() -> None:
+    """Generated ABox rules are concrete clingo constraints, not schema-level macros."""
+    schema = {
+        "slots": {"code": {"range": "string", "exact_cardinality": 2, "multivalued": True}},
+        "classes": {"Sample": {"slots": ["code"]}},
+    }
+    solver = ClingoSolver()
+    solver.add(compile_schema_to_abox(schema))
+    program = solver.dump()
+
+    assert ":- sample(I), {code(I, V) : code(I, V)} <= 1." in program
+    assert ":- sample(I), 3 <= {code(I, V) : code(I, V)}." in program
 
 
 def test_compile_schema_to_abox_enforces_exact_cardinality() -> None:
@@ -321,6 +496,21 @@ def test_compile_schema_to_abox_rejects_invalid_predicate_names() -> None:
 
     with pytest.raises(ValueError, match="valid predicate identifiers"):
         compile_schema_to_abox(schema)
+
+
+def test_validator_entrypoint_accepts_direct_abox_facts() -> None:
+    """The legacy validator module delegates to the direct ABox validation layer."""
+    schema = {"slots": {"name": {"required": True}}, "classes": {"Person": {"slots": ["name"]}}}
+
+    assert validate_with_legacy_entrypoint(
+        schema,
+        [
+            Term("Person", "p1"),
+            Term("name", "p1", "n1"),
+            Term("string", "n1"),
+        ],
+    )
+    assert not validate_with_legacy_entrypoint(schema, [Term("Person", "p1")])
 
 
 def test_linkml_parser_returns_schema_theory_with_rules(tmp_path: Path) -> None:
