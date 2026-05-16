@@ -6,7 +6,7 @@ import pytest
 from typedlogic import Exists, Forall, Iff, Implies, NegationAsFailure, Not, Or, Term, Variable
 from typedlogic.compilers.prolog_compiler import PrologCompiler
 from typedlogic.integrations.solvers.souffle.souffle_compiler import SouffleCompiler
-from typedlogic.parsers.tlog_parser import TLogParser
+from typedlogic.parsers.tlog_parser import TLogMarkdownParser, TLogParser
 from typedlogic.registry import get_parser
 
 
@@ -122,6 +122,25 @@ def test_exists_quantifier() -> None:
     check(repr(sentence.sentence) == "observed(?witness)", repr(sentence.sentence))
 
 
+def test_unicode_quantifier_symbols() -> None:
+    """Classic universal and existential quantifier symbols are accepted aliases."""
+    theory = TLogParser().parse(
+        """
+        ∀ i: PointerID, C: ElementID | pointer_type(i, C) -> instance(i).
+        ∃ witness | observed(witness).
+        """
+    )
+
+    universal = theory.sentences[0]
+    existential = theory.sentences[1]
+    check(isinstance(universal, Forall), repr(universal))
+    check([v.name for v in universal.variables] == ["i", "C"], repr(universal.variables))
+    check(universal.variables[0].domain == "PointerID", repr(universal.variables))
+    check(universal.variables[1].domain == "ElementID", repr(universal.variables))
+    check(isinstance(existential, Exists), repr(existential))
+    check([v.name for v in existential.variables] == ["witness"], repr(existential.variables))
+
+
 def test_question_mark_variables_disambiguate_without_explicit_forall() -> None:
     """Question-mark variables are always variables and are implicitly universally quantified in rules."""
     sentence = parse_one('likes(?person, "tea") -> happy(?person).')
@@ -204,6 +223,13 @@ def test_registry_discovers_tlog_parser() -> None:
     check(isinstance(parser, TLogParser), repr(parser))
 
 
+def test_registry_discovers_tlog_markdown_parser() -> None:
+    """The parser registry discovers the Markdown wrapper parser by class name."""
+    parser = get_parser("tlogmarkdown")
+
+    check(isinstance(parser, TLogMarkdownParser), repr(parser))
+
+
 def test_parse_literature_style_linkml_rules_example() -> None:
     """The checked-in LinkML rule example exercises declarations, constraints, comments, and HiLog syntax."""
     theory = TLogParser().parse(Path("tests/input/linkml_rules.tlog"))
@@ -213,6 +239,17 @@ def test_parse_literature_style_linkml_rules_example() -> None:
     check(len(theory.sentences) == 4, repr(theory.sentences))
     check(theory.sentences[0].annotations["comment"] == "Inherit slots through the class hierarchy.", "bad comment")
     check(isinstance(theory.sentences[-1].sentence.antecedent.predicate, Variable), repr(theory.sentences[-1]))
+
+
+def test_parse_literate_markdown_tlog_blocks() -> None:
+    """Markdown prose can wrap fenced TLog blocks without affecting the parsed theory."""
+    theory = TLogMarkdownParser().parse(Path("tests/input/linkml_rules.md"))
+
+    check(theory.type_definitions["PointerID"] == "str", repr(theory.type_definitions))
+    check(theory.predicate_definitions[0].predicate == "pointer_type", repr(theory.predicate_definitions))
+    check(len(theory.sentences) == 3, repr(theory.sentences))
+    check(isinstance(theory.sentences[1], Forall), repr(theory.sentences[1]))
+    check(isinstance(theory.sentences[2], Exists), repr(theory.sentences[2]))
 
 
 def test_tlog_rules_export_to_existing_prolog_compiler() -> None:

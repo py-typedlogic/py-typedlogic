@@ -134,8 +134,8 @@ arg_list: arg_expr ("," arg_expr)*
       | TRUE                                 -> true
       | FALSE                                -> false
 
-ALL.2: "all" | "forall"
-EXISTS.2: "exists" | "some"
+ALL.2: "all" | "forall" | "∀"
+EXISTS.2: "exists" | "some" | "∃"
 TYPE.2: "type" | "typedef"
 PRED.2: "pred" | "predicate" | "rel" | "relation"
 NAF.2: "not" | "\\+"
@@ -568,3 +568,50 @@ class TLogParser(Parser):
 
         visit(sentence)
         return variables
+
+
+class TLogMarkdownParser(TLogParser):
+    """Parse TLog blocks embedded in Markdown prose."""
+
+    default_suffix = "tlog.md"
+    code_block_languages = frozenset({"tlog", "typedlogic", "logic"})
+
+    def parse(self, source: Union[Path, str, TextIO], **kwargs: Any) -> Theory:
+        """Parse fenced TLog code blocks from Markdown into a theory."""
+        text = self._read_source(source)
+        return super().parse(self._extract_tlog_blocks(text), **kwargs)
+
+    def _extract_tlog_blocks(self, text: str) -> str:
+        blocks: list[str] = []
+        block_lines: list[str] = []
+        in_block = False
+        collecting = False
+        fence = ""
+
+        for line in text.splitlines():
+            stripped = line.strip()
+            if not in_block and self._starts_fence(stripped):
+                fence = stripped[:3]
+                language = stripped[3:].strip().split(maxsplit=1)[0].lower()
+                collecting = language in self.code_block_languages
+                in_block = True
+                block_lines = []
+                continue
+            if in_block and stripped.startswith(fence):
+                if collecting:
+                    blocks.append("\n".join(block_lines))
+                in_block = False
+                collecting = False
+                fence = ""
+                block_lines = []
+                continue
+            if collecting:
+                block_lines.append(line)
+
+        if in_block and collecting:
+            blocks.append("\n".join(block_lines))
+
+        return "\n\n".join(blocks)
+
+    def _starts_fence(self, stripped: str) -> bool:
+        return stripped.startswith("```") or stripped.startswith("~~~")
