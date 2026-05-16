@@ -1,59 +1,36 @@
 """
-Assumed pre-processing:
+Load LinkML schemas as reified TBox facts.
 
-- defaults:
-    - if an axiom refers to the metaproperty P of a slot S, then defaults are NOT applied
-        - default_range
-        - multivalued
-        - inlined (false)
-
-closed-world reasoning for required=True
-
-if we place this on the LHS it doesn't act as a constraint; so we need to treat it the same as range etc
-where we have separate disjointness constraints; e.g.
-
-ExpectedAssoc(i, "s") ; ... : - cls(i),
-
-# then
-
-:- ExpectedAssoc(i, s), {...}=0.
-
+The loader deliberately does not expand LinkML metamodel semantics into Python
+rules.  It emits a compact relational representation of the schema; the schema
+reasoning rules and the ABox compile-away layer live in :mod:`reasoning`.
 """
 
-from typing import Any, Dict, Iterator, List, Union
+from __future__ import annotations
 
-from typedlogic import And, Exists, Forall, Implies, Or, PredicateDefinition, Sentence, Term, Variable, Xor, \
-    NegationAsFailure
-from typedlogic.datamodel import CardinalityConstraint
-from typedlogic.integrations.frameworks.linkml.instance import (
-    ObjectPointerHasPropertyScalarized,
-    InlinedObject,
-    PointerType,
-    PointerIsCollection,
-    PointerIsScalar, InstSlotRequired,
+from collections.abc import Iterable, Iterator, Mapping
+from typing import Any
+
+from typedlogic import Term
+
+SchemaDict = Mapping[str, Any]
+
+PRIMITIVE_TYPES = (
+    "string",
+    "integer",
+    "float",
+    "double",
+    "decimal",
+    "boolean",
+    "date",
+    "datetime",
+    "uri",
+    "uriorcurie",
 )
-from typedlogic.integrations.frameworks.linkml.meta import (
-    ClassDefinition,
-    ClassSlot,
-    Identifier,
-    IsA,
-    Mixin,
-    TreeRoot,
-    TypeDefinition,
-)
-from typedlogic.theories.jsonlog.jsonlog import PointerIsArray, ObjectPointerHasProperty
 
-Result = Union[Sentence, PredicateDefinition]
-
-SchemaDict = Dict[str, Any]
 
 def remove_empty_kvs(obj: Any) -> Any:
-    """
-    Remove empty values from a dictionary.
-
-    :param obj: The dictionary to clean.
-    :return: A new dictionary with empty values removed.
-    """
+    """Remove ``None`` values from a schema-like object."""
     if isinstance(obj, dict):
         return {k: remove_empty_kvs(v) for k, v in obj.items() if v is not None}
     if isinstance(obj, list):
@@ -61,339 +38,145 @@ def remove_empty_kvs(obj: Any) -> Any:
     return obj
 
 
-def closed_world_constraint(pre: Sentence, post: Sentence) -> Sentence:
+def generate_from_object(obj: SchemaDict) -> Iterator[Term]:
     """
-    Generate a closed-world constraint that states if pre is true, then post must also be true.
+    Generate reified LinkML TBox facts from a schema dictionary.
 
-    Example:
-
-        >>> from typedlogic.datamodel import Term
-        >>> closed_world_constraint(Term("P"), Term("Q"))
-        Implies(And(P, NegationAsFailure(Q)), Or())
-
-    :param pre: The precondition sentence.
-    :param post: The postcondition sentence.
-    :return: A sentence representing the closed-world constraint.
+    Predicate names intentionally use the classic logic spelling used by the
+    TLog rules, for example ``class_definition/1``, ``slot_definition/1``, and
+    ``class_slot/2``.
     """
-    return Implies(And(pre, NegationAsFailure(post)), Or())
+    schema = remove_empty_kvs(dict(obj))
+    schema_id = schema.get("id") or schema.get("name")
+    if schema_id:
+        yield Term("schema_definition", str(schema_id))
+
+    yielded_types = set()
+    for type_name in PRIMITIVE_TYPES:
+        yielded_types.add(type_name)
+        yield Term("type_definition", type_name)
+
+    for type_name, type_defn in _items(schema.get("types")):
+        yielded_types.add(type_name)
+        yield from generate_type_definition(type_name, type_defn or {})
+
+    for enum_name, enum_defn in _items(schema.get("enums")):
+        yield from generate_enum_definition(enum_name, enum_defn or {})
+
+    for slot_name, slot_defn in _items(schema.get("slots")):
+        yield from generate_slot_definition(slot_name, slot_defn or {})
+
+    for class_name, class_defn in _items(schema.get("classes")):
+        yield from generate_class_definition(class_name, class_defn or {})
 
 
-def generate_from_object(obj: SchemaDict) -> Iterator[Sentence]:
-    """
-    Generates logical sentence in the LinkML predicate metamodel based on
-    an object/dict representation.
+def generate_class_definition(class_name: str, class_defn: Mapping[str, Any]) -> Iterator[Term]:
+    """Generate facts for one LinkML class definition."""
+    yield Term("class_definition", class_name)
+    if class_defn.get("tree_root") is True:
+        yield Term("tree_root", class_name)
+    yield from _element_parent_facts(class_name, class_defn)
 
-    :param obj:
-    :return:
-    """
-    obj = remove_empty_kvs(obj)
-    for k, v in obj.items():
-        if k == "classes":
-            for class_name, class_defn in v.items():
-                yield from generate_class_definition(class_name, class_defn)
-        elif k == "types":
-            for type_name, type_defn in v.items():
-                yield from generate_type_definition(type_name, type_defn)
-        elif k == "slots":
-            for slot_name, slot_defn in v.items():
-                yield from generate_slot_definition(slot_name, slot_defn)
-    return
+    for slot_name in _as_list(class_defn.get("slots")):
+        yield Term("class_slot", class_name, str(slot_name))
 
-def generate_slot_definition(slot_name: str, slot_defn: Dict) -> Iterator[Sentence]:
-    """
-    Maps an individual LinkML slot definition to a set of sentences.
+    for slot_name, slot_expr in _items(class_defn.get("attributes")):
+        yield Term("attribute", class_name, slot_name)
+        yield Term("slot_definition", slot_name)
+        yield Term("class_slot", class_name, slot_name)
+        yield from _slot_expression_facts("slot", (slot_name,), slot_expr or {})
 
-        >>> from typedlogic.compiler import write_sentences
-        >>> inst_var = Variable("I")
-        >>> slot_name = "age"
-        >>> write_sentences(generate_slot_definition(slot_name, {"required": True}))
-        ∀[I C]. ClassSlot(C, 'age') ∧ PointerType(I, C) → InstSlotRequired(I, 'age')
-
-    :param slot_name:
-    :param slot_defn:
-    :return:
-    """
-    inst_var = Variable("I")
-    class_name = Variable("C")
-    conjs = []
-    for conj in conjunctions_from_slot_expression(inst_var, slot_name, slot_defn):
-        conjs.append(conj)
-    if conjs:
-        yield Forall(
-            [inst_var, class_name],
-            Implies(
-                And(
-                    Term(ClassSlot.__name__, class_name, slot_name),
-                    Term(PointerType.__name__, inst_var, class_name),
-                ),
-                And(*conjs)))
+    for slot_name, slot_expr in _items(class_defn.get("slot_usage")):
+        yield Term("slot_usage", class_name, slot_name)
+        yield from _slot_expression_facts("slot_usage", (class_name, slot_name), slot_expr or {})
 
 
-
-def generate_class_definition(class_name: str, class_defn: Dict) -> Iterator[Sentence]:
-    """
-    Maps an individual LinkML class definition to a set of sentences.
-
-    Each class definition is treated as a collection of universally quantified sentences, of the form
-    for all i, if i is an instance of class_name, then i satisfies the following conditions <...>
-
-    Simple classes become ground unary terms:
-
-        >>> from typedlogic.compiler import write_sentences
-        >>> write_sentences(generate_class_definition("C", {}))
-        ClassDefinition('C')
-
-    For constructs such as inheritance, direct translations of the model are provided, in
-    addition to horn rules
-
-        >>> write_sentences(generate_class_definition("C", {"is_a": "D"}))
-        ClassDefinition('C')
-        IsA('C', 'D')
-        ∀[I]. PointerType(I, 'C') → PointerType(I, 'D')
-
-    i.e. if I instance an instance of C, it's a member of D
-
-    Constraints:
-
-        >>> write_sentences(generate_class_definition("C", {"attributes": {"a1": {"required": True}}}))
-        ClassDefinition('C')
-        ∀[I]. PointerType(I, 'C') → InstSlotRequired(I, 'a1')
-
-    Ranges:
-
-        >>> write_sentences(generate_class_definition("C", {"attributes": {"a1": {"range": "integer"}}}))
-        ClassDefinition('C')
-        ∀[I]. PointerType(I, 'C') → ∀[v]. ObjectPointerHasPropertyScalarized(I, 'a1', v) → PointerType(v, 'integer')
-
-    Combinations:
-
-        >>> write_sentences(generate_class_definition("C", {"attributes": {"a1": {"required": True, "range": "string"}}}))
-        ClassDefinition('C')
-        ∀[I]. PointerType(I, 'C') → InstSlotRequired(I, 'a1') ∧ ∀[v]. ObjectPointerHasPropertyScalarized(I, 'a1', v) → PointerType(v, 'string')
-
-    Booleans:
-
-        >>> write_sentences(generate_class_definition("C", {"attributes": {"a1": {"any_of": [{"required": True}, {"range": "string"}]}}}))
-        ClassDefinition('C')
-        ∀[I]. PointerType(I, 'C') → (InstSlotRequired(I, 'a1') ∨ ∀[v]. ObjectPointerHasPropertyScalarized(I, 'a1', v) → PointerType(v, 'string'))
-
-    Cardinality:
-
-        >>> write_sentences(generate_class_definition("C", {"attributes": {"a1": {"multivalued": False}}}))
-        ClassDefinition('C')
-        ∀[I]. PointerType(I, 'C') → ∀[v]. ObjectPointerHasProperty(I, 'a1', v) → PointerIsScalar(v)
-
-    Allowed slots:
-
-        >>> write_sentences(generate_class_definition("C", {"slots": ["s1"]}))
-        ClassDefinition('C')
-        ClassSlot('C', 's1')
+def generate_slot_definition(slot_name: str, slot_defn: Mapping[str, Any]) -> Iterator[Term]:
+    """Generate facts for one LinkML slot definition."""
+    yield Term("slot_definition", slot_name)
+    yield from _element_parent_facts(slot_name, slot_defn)
+    yield from _slot_expression_facts("slot", (slot_name,), slot_defn)
 
 
-    :param class_name:
-    :param class_defn:
-    :return:
-    """
-    yield ClassDefinition(class_name)
-    inst_var = Variable("I")
-    conjs: List[Sentence] = []
-    for k, v in class_defn.items():
-        if k in ("slot_usage", "attributes"):
-            for slot_name, slot_defn in v.items():
-                for attr_k, attr_v in slot_defn.items():
-                    # special case - not expanded
-                    if attr_k == "identifier":
-                        yield Identifier(class_name, slot_name)
-                for conj in conjunctions_from_slot_expression(inst_var, slot_name, slot_defn):
-                    conjs.append(conj)
-        if k == "slots":
-            for slot_name in v:
-                yield ClassSlot(class_name, slot_name)
-        if k == "is_a":
-            yield IsA(class_name, v)
-            yield Forall(
-                [inst_var],
-                Implies(
-                    Term(PointerType.__name__, inst_var, class_name),
-                    Term(PointerType.__name__, inst_var, v),
-                ),
-            )
-        if k == "mixins":
-            for v1 in v:
-                yield Mixin(class_name, v1)
-                yield Forall(
-                    [inst_var],
-                    Implies(
-                        Term(PointerType.__name__, inst_var, class_name),
-                        Term(PointerType.__name__, inst_var, v1),
-                    ),
-                )
-        if k == "tree_root":
-            yield TreeRoot(class_name)
-            yield PointerType("/", class_name)
-    if conjs:
-        yield Forall([inst_var], Implies(Term(PointerType.__name__, inst_var, class_name), And(*conjs)))
-    return
+def generate_type_definition(type_name: str, type_defn: Mapping[str, Any]) -> Iterator[Term]:
+    """Generate facts for one LinkML type definition."""
+    yield Term("type_definition", type_name)
+    if parent := type_defn.get("typeof"):
+        yield Term("is_a", type_name, str(parent))
+    yield from _element_parent_facts(type_name, type_defn)
 
 
-def generate_type_definition(type_name: str, type_defn: Dict) -> Iterator[Sentence]:
-    """
-    Maps an individual LinkML type definition to a set of sentences.
-
-    Each type definition is treated as a collection of universally quantified sentences, of the form
-    for all i, if i is an instance of class_name, then i satisfies the following conditions <...>
-
-    Simple classes become ground unary terms:
-
-        >>> from typedlogic.compiler import write_sentences
-        >>> write_sentences(generate_type_definition("T", {}))
-        TypeDefinition('T')
-
-    For constructs such as inheritance, direct translations of the model are provided, in
-    addition to horn rules
-
-        >>> write_sentences(generate_type_definition("T", {"typeof": "U"}))
-        TypeDefinition('T')
-        IsA('T', 'U')
-        ∀[i]. PointerType(i, 'T') → PointerType(i, 'U')
+def generate_enum_definition(enum_name: str, enum_defn: Mapping[str, Any]) -> Iterator[Term]:
+    """Generate facts for one LinkML enum definition."""
+    yield Term("enum_definition", enum_name)
+    yield from _element_parent_facts(enum_name, enum_defn)
 
 
-    TODO: complete this
+def _slot_expression_facts(prefix: str, args: tuple[str, ...], slot_expr: Mapping[str, Any]) -> Iterator[Term]:
+    """Generate facts for the LinkML SlotExpression metaslots used by reasoning."""
+    bool_slots = {
+        "required",
+        "recommended",
+        "multivalued",
+        "identifier",
+        "key",
+        "designates_type",
+        "inlined",
+        "inlined_as_list",
+        "transitive",
+    }
+    value_slots = {
+        "range",
+        "pattern",
+        "minimum_cardinality",
+        "maximum_cardinality",
+        "exact_cardinality",
+        "equals_string",
+        "equals_number",
+        "equals_expression",
+    }
 
-    :param type_name:
-    :param type_defn:
-    :return:
-    """
-    yield TypeDefinition(type_name)
-    inst_var = Variable("i")
-    conjs: List[Sentence] = []
-    for k, v in type_defn.items():
-        if k == "typeof":
-            yield IsA(type_name, v)
-            yield Forall(
-                [inst_var],
-                Implies(
-                    Term(PointerType.__name__, inst_var, type_name),
-                    Term(PointerType.__name__, inst_var, v),
-                ),
-            )
-        if k == "mixins":
-            for v1 in v:
-                yield Forall(
-                    [inst_var],
-                    Implies(
-                        Term(PointerType.__name__, inst_var, type_name),
-                        Term(PointerType.__name__, inst_var, v1),
-                    ),
-                )
-        # for conj in conjunctions_from_type_expression(inst_var, type_name, type_defn):
-        #    conjs.append(conj)
-    if conjs:
-        yield Forall([inst_var], Implies(Term(PointerType.__name__, inst_var, type_name), And(*conjs)))
-    return
+    for key in sorted(bool_slots):
+        if key in slot_expr:
+            fact_name = f"{prefix}_{key}"
+            if slot_expr[key] is True:
+                yield Term(fact_name, *args)
+            elif slot_expr[key] is False:
+                yield Term(f"{fact_name}_false", *args)
+
+    for key in sorted(value_slots):
+        value = slot_expr.get(key)
+        if value is not None:
+            yield Term(f"{prefix}_{key}", *args, value)
+
+    for value in _as_list(slot_expr.get("equals_string_in")):
+        yield Term(f"{prefix}_equals_string_in", *args, str(value))
+
+    for expression_kind in ("any_of", "all_of", "none_of", "exactly_one_of"):
+        for index, expression in enumerate(_as_list(slot_expr.get(expression_kind))):
+            expression_id = ":".join((*args, expression_kind, str(index)))
+            yield Term(f"{prefix}_{expression_kind}", *args, expression_id)
+            yield from _slot_expression_facts("anonymous_slot_expression", (expression_id,), expression or {})
 
 
-def conjunctions_from_slot_expression(inst_var: Variable, slot_name: str, slot_expr: Dict) -> Iterator[Sentence]:
-    """
-    Generate a set of conjunctions from a slot expression
+def _element_parent_facts(element_name: str, definition: Mapping[str, Any]) -> Iterator[Term]:
+    if parent := definition.get("is_a"):
+        yield Term("is_a", element_name, str(parent))
+    for mixin in _as_list(definition.get("mixins")):
+        yield Term("mixin", element_name, str(mixin))
 
-        >>> from typedlogic.compiler import write_sentences
-        >>> inst_var = Variable("I")
-        >>> slot_name = "age"
-        >>> write_sentences(conjunctions_from_slot_expression(inst_var, slot_name, {"required": True}))
-        InstSlotRequired(I, 'age')
-        >>> write_sentences(conjunctions_from_slot_expression(inst_var, slot_name, {"range": "string"}))
-        ∀[v]. ObjectPointerHasPropertyScalarized(I, 'age', v) → PointerType(v, 'string')
-        >>> any_of = {"any_of": [{"range": "string"}, {"range": "integer"}]}
-        >>> write_sentences(conjunctions_from_slot_expression(inst_var, slot_name, any_of))
-        (∀[v]. ObjectPointerHasPropertyScalarized(I, 'age', v) → PointerType(v, 'string') ∨ ∀[v]. ObjectPointerHasPropertyScalarized(I, 'age', v) → PointerType(v, 'integer'))
 
-    :param inst_var:
-    :param slot_name:
-    :param slot_expr:
-    :return:
-    """
-    val_var = Variable("v")
-    assert val_var.name == "v"
-    for k, v in slot_expr.items():
-        if k == "any_of":
-            or_exprs = []
-            for sub_expr in v:
-                or_exprs.extend(list(conjunctions_from_slot_expression(inst_var, slot_name, sub_expr)))
-            yield Or(*or_exprs)
-        elif k == "all_of":
-            and_exprs = []
-            for sub_expr in v:
-                and_exprs.extend(list(conjunctions_from_slot_expression(inst_var, slot_name, sub_expr)))
-            yield And(*and_exprs)
-        elif k == "none_of":
-            none_exprs = []
-            for sub_expr in v:
-                none_exprs.extend(list(conjunctions_from_slot_expression(inst_var, slot_name, sub_expr)))
-            if len(none_exprs) == 1:
-                yield ~none_exprs[0]
-            else:
-                yield ~And(*none_exprs)
-        elif k == "exactly_one_of":
-            or_exprs = []
-            for sub_expr in v:
-                or_exprs.extend(list(conjunctions_from_slot_expression(inst_var, slot_name, sub_expr)))
-            yield Xor(*or_exprs)
-        elif k == "required":
-            if v:
-                yield Term(InstSlotRequired.__name__, inst_var, slot_name)
-        # elif k == "identifier":
-        #    yield Identifier(class_name, slot_name)
-        elif k == "range":
-            # assumes pre-processing has decorated the range with the appropriate type
-            # TODO: linkml:Any
-            if v:
-                yield Forall(
-                    [val_var],
-                    Implies(
-                        Term(ObjectPointerHasPropertyScalarized.__name__, inst_var, slot_name, val_var),
-                        Term(PointerType.__name__, val_var, v),
-                    ),
-                )
-        elif k == "multivalued" and v is not None:
-            if v is True:
-                pred = PointerIsCollection.__name__
-            else:
-                pred = PointerIsScalar.__name__
-            yield Forall(
-                [val_var], Implies(Term(ObjectPointerHasProperty.__name__, inst_var, slot_name, val_var), Term(pred, val_var))
-            )
-        elif k == "inlined_as_list" and v is True:
-            yield Forall(
-                [val_var],
-                Implies(
-                    Term(ObjectPointerHasProperty.__name__, inst_var, slot_name, val_var), Term(PointerIsArray.__name__, val_var)
-                ),
-            )
-            yield Forall(
-                [val_var],
-                Implies(
-                    Term(ObjectPointerHasProperty.__name__, inst_var, slot_name, val_var),
-                    Term(InlinedObject.__name__, val_var, v),
-                ),
-            )
-        elif k == "inlined" and v is True:
-            yield Forall(
-                [val_var],
-                Implies(
-                    Term(ObjectPointerHasProperty.__name__, inst_var, slot_name, val_var),
-                    Term(InlinedObject.__name__, val_var, v),
-                ),
-            )
-        elif k == "transitive" and v is True:
-            val_var2 = Variable("v2")
-            yield Forall(
-                [val_var, val_var2],
-                Implies(
-                    And(
-                        Term(ObjectPointerHasPropertyScalarized.__name__, inst_var, slot_name, val_var),
-                        Term(ObjectPointerHasPropertyScalarized.__name__, val_var, slot_name, val_var2),
-                    ),
-                    Term(ObjectPointerHasPropertyScalarized.__name__, inst_var, slot_name, val_var2),
-                ),
-            )
+def _items(value: Any) -> Iterable[tuple[str, Mapping[str, Any]]]:
+    if not value:
+        return ()
+    if not isinstance(value, Mapping):
+        raise ValueError(f"Expected a mapping, got {type(value)}")
+    return ((str(k), v or {}) for k, v in value.items())
+
+
+def _as_list(value: Any) -> list[Any]:
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return value
+    return [value]
