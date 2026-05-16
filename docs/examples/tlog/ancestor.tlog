@@ -1,0 +1,13 @@
+type PersonID: str.
+
+pred parent(parent: PersonID, child: PersonID).
+pred ancestor(ancestor: PersonID, descendant: PersonID).
+
+parent("Alice", "Bob").
+parent("Bob", "Charlie").
+
+/// Direct parent links are ancestor links.
+ancestor(x, y) :- parent(x, y).
+
+/// Ancestor links are transitive.
+ancestor(x, z) :- ancestor(x, y), ancestor(y, z).

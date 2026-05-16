@@ -64,6 +64,8 @@ nav:
   - Gallery:
       - Examples: examples.md
       - Synthetic biology design checks: examples/synbio-design-checks.ipynb
+      - TLog CLI workflow: examples/tlog-cli.md
+      - TLog CLI notebook: examples/tlog-cli.ipynb
   - Concepts:
       - Core concepts: concepts/index.md
       - Data Model: concepts/datamodel.md
@@ -84,6 +86,7 @@ nav:
   - Compilers:
       - Compiler overview: conversion/compilers/index.md
       - YAML: conversion/compilers/yaml.md
+      - TLog: conversion/compilers/tlog.md
       - Prolog: conversion/compilers/prolog.md
       - ProbLog: conversion/compilers/problog.md
       - TPTP: conversion/compilers/tptp.md
@@ -92,6 +95,7 @@ nav:
   - Parsers:
       - Parser overview: conversion/parsers/index.md
       - Python: conversion/parsers/python.md
+      - TLog: conversion/parsers/tlog.md
       - YAML: conversion/parsers/yaml.md
       - DataFrame: conversion/parsers/dataframe.md
       - Catalog: conversion/parsers/catalog.md
