@@ -5,9 +5,10 @@ from pathlib import Path
 import pytest
 from typedlogic import Exists, Forall, Iff, Implies, NegationAsFailure, Not, Or, Term, Variable
 from typedlogic.compilers.prolog_compiler import PrologCompiler
+from typedlogic.compilers.tlog_compiler import TLogCompiler
 from typedlogic.integrations.solvers.souffle.souffle_compiler import SouffleCompiler
 from typedlogic.parsers.tlog_parser import TLogMarkdownParser, TLogParser
-from typedlogic.registry import get_parser
+from typedlogic.registry import get_compiler, get_parser
 
 
 def check(condition: bool, message: str) -> None:
@@ -223,6 +224,13 @@ def test_registry_discovers_tlog_parser() -> None:
     check(isinstance(parser, TLogParser), repr(parser))
 
 
+def test_registry_discovers_tlog_compiler() -> None:
+    """The compiler registry discovers TLogCompiler by class name."""
+    compiler = get_compiler("tlog")
+
+    check(isinstance(compiler, TLogCompiler), repr(compiler))
+
+
 def test_registry_discovers_tlog_markdown_parser() -> None:
     """The parser registry discovers the Markdown wrapper parser by class name."""
     parser = get_parser("tlogmarkdown")
@@ -266,6 +274,29 @@ def test_tlog_rules_export_to_existing_prolog_compiler() -> None:
     compiled = PrologCompiler().compile(theory)
     check("ancestor(X, Y) :- parent(X, Y)." in compiled, compiled)
     check("ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y)." in compiled, compiled)
+
+
+def test_tlog_compiler_roundtrips_core_tlog_constructs() -> None:
+    """The TLog compiler produces syntax that the TLog parser can read back."""
+    theory = TLogParser().parse(
+        """
+        type PersonID: str.
+        pred parent(parent: PersonID, child: PersonID).
+        pred ancestor(ancestor: PersonID, descendant: PersonID).
+        /// Direct parent links are ancestor links.
+        ancestor(x, y) :- parent(x, y).
+        parent(Alice, Bob).
+        """
+    )
+
+    compiled = TLogCompiler().compile(theory)
+    roundtripped = TLogParser().parse(compiled)
+    check("type PersonID: str." in compiled, compiled)
+    check("pred parent(parent: PersonID, child: PersonID)." in compiled, compiled)
+    check("/// Direct parent links are ancestor links." in compiled, compiled)
+    check(roundtripped.type_definitions == theory.type_definitions, repr(roundtripped.type_definitions))
+    check(roundtripped.predicate_definitions == theory.predicate_definitions, repr(roundtripped.predicate_definitions))
+    check(len(roundtripped.sentences) == len(theory.sentences), repr(roundtripped.sentences))
 
 
 def test_tlog_type_annotations_export_to_typed_souffle_compiler() -> None:

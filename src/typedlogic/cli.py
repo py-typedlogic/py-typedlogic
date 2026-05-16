@@ -27,12 +27,19 @@ import click
 import typer
 from typer.main import get_command
 
-from typedlogic.registry import get_compiler, get_parser, get_solver, all_parser_classes, all_compiler_classes, all_solver_classes
+from typedlogic.registry import (
+    all_compiler_classes,
+    all_parser_classes,
+    all_solver_classes,
+    get_compiler,
+    get_parser,
+    get_solver,
+)
 
 app = typer.Typer()
 
 input_format_option = typer.Option(
-    "python", "--input-format", "-f", help="Input format. Currently supported: python, yaml, owlpy"
+    None, "--input-format", "-f", help="Input format; inferred from file suffix if omitted"
 )
 output_format_option = typer.Option(None, "--output-format", "-t", help="Output format")
 
@@ -74,7 +81,7 @@ def list_solvers():
 @app.command()
 def convert(
     theory_files: List[Path] = typer.Argument(..., exists=True, dir_okay=False, readable=True),
-    input_format: str = input_format_option,
+    input_format: Optional[str] = input_format_option,
     output_format: str = output_format_option,
     output_file: Optional[Path] = output_file_option,
     validate_types: bool = typer.Option(
@@ -96,7 +103,7 @@ def convert(
     ```
 
     """
-    parser = get_parser(input_format)
+    parser = get_parser(input_format or _guess_format(theory_files[0]))
     if validate_types:
         for p in theory_files:
             errs = parser.validate(p)
@@ -126,7 +133,9 @@ def _guess_format(data_file: Path) -> str:
     # Check for catalog files first
     if data_file.name.endswith('.catalog.yaml') or data_file.name.endswith('.catalog.yml'):
         return "catalog"
-    
+    if data_file.name.endswith(".tlog.md"):
+        return "tlogmarkdown"
+
     suffix = data_file.suffix[1:]
     if suffix == "py":
         return "python"
@@ -138,16 +147,16 @@ def _guess_format(data_file: Path) -> str:
 def _combine_input_files(input_files: List[Path], validate_types: bool = True):
     """
     Combine multiple input files into a single theory.
-    
+
     Args:
     ----
         input_files: List of file paths to combine
         validate_types: Whether to validate Python files with mypy
-        
+
     Returns:
     -------
         Combined theory object
-        
+
     Raises:
     ------
         ValueError: If validation fails or no valid theories found
@@ -237,22 +246,31 @@ def _combine_input_files(input_files: List[Path], validate_types: bool = True):
 def solve(
     theory_file: Path = typer.Argument(..., exists=True, dir_okay=False, readable=True),
     solver: str = typer.Option("souffle", "--solver", "-s", help="Solver to use (z3, souffle, clingo, etc.)"),
-    check_only: bool = typer.Option(False, "--check-only", "-c", help="Check satisfiability only, do not enumerate models"),
+    check_only: bool = typer.Option(
+        False, "--check-only", "-c", help="Check satisfiability only, do not enumerate models"
+    ),
     validate_types: bool = typer.Option(
         True, "--validate-types/--no-validate-types", help="Use mypy to validate types"
     ),
-    input_format: str = input_format_option,
+    input_format: Optional[str] = input_format_option,
     data_input_format: str = typer.Option(None, "--data-input-format", "-d", help="Format for ground terms"),
     output_format: str = output_format_option,
     output_file: Optional[Path] = output_file_option,
+    show_predicates: Optional[List[str]] = typer.Option(
+        None,
+        "--show",
+        "--predicate",
+        help="Only show materialized ground terms for these predicates. Repeat for multiple predicates.",
+    ),
+    max_models: Optional[int] = typer.Option(None, "--max-models", help="Stop after showing this many models"),
     data_files: Annotated[Optional[List[Path]], typer.Argument()] = None,
 ):
     """
     Solve logical theories with facts using the specified solver.
-    
+
     Accepts a theory file and optional data files containing facts.
     Files can be Python (.py) or YAML (.yaml) format - format is auto-detected.
-    
+
     First checks satisfiability, then enumerates all models if satisfiable.
 
     Examples
@@ -260,26 +278,26 @@ def solve(
     ```bash
     # Solve with theory and facts
     typedlogic solve theory.py facts.yaml --solver z3
-    
+
     # Check satisfiability only
     typedlogic solve theory.py --check-only
-    
+
     # Solve with multiple data files
     typedlogic solve theory.py data1.yaml data2.yaml --solver z3
     ```
 
     """
     # Parse theory file
-    parser = get_parser(input_format or "python")
+    parser = get_parser(input_format or _guess_format(theory_file))
     if validate_types:
         errs = parser.validate(theory_file)
         if errs:
             for err in errs:
                 click.echo(f"Validation error in {theory_file}: {err}")
             raise typer.Exit(1)
-    
+
     combined_theory = parser.parse(theory_file)
-    
+
     # Parse data files and add ground terms
     if data_files:
         if combined_theory.ground_terms is None:
@@ -318,17 +336,22 @@ def solve(
             model_count = 0
             for model in solver_instance.models():
                 result += f"\n=== Model {model_count + 1} ===\n"
-                if model.ground_terms:
-                    for fact in model.ground_terms:
+                facts = model.ground_terms
+                if show_predicates:
+                    facts = [fact for fact in facts if str(fact.predicate) in show_predicates]
+                if facts:
+                    for fact in facts:
                         result += f"{fact}\n"
                 else:
                     result += "(empty model)\n"
                 model_count += 1
+                if max_models is not None and model_count >= max_models:
+                    break
 
             if model_count == 0:
                 result += "No models generated (solver may not support model enumeration).\n"
             else:
-                result += f"\nTotal models found: {model_count}\n"
+                result += f"\nTotal models shown: {model_count}\n"
 
 
     # Output results
@@ -352,10 +375,10 @@ def dump(
 ):
     """
     Parse and combine multiple input files, then export to specified format without solving.
-    
+
     This command is useful for preprocessing, format conversion, and inspecting
     the combined logical theory before solving.
-    
+
     Files can be Python (.py) or YAML (.yaml) format - format is auto-detected.
 
     Examples
@@ -363,10 +386,10 @@ def dump(
     ```bash
     # Combine and export to first-order logic
     typedlogic dump theory.py facts.yaml -t fol -o combined.fol
-    
+
     # Export to YAML format
     typedlogic dump axioms.py data.yaml -t yaml
-    
+
     # Combine multiple files and view as Prolog
     typedlogic dump theory1.py theory2.py facts.yaml -t prolog
     ```
