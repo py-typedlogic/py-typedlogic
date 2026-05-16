@@ -1,13 +1,12 @@
 """
 Framework for compiling a theory to an external format (e.g., FOL, CL, TPTP, Prolog, etc.)
 """
+
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from typing import ClassVar, Optional, Type, Union, TextIO, Iterable, List
-
-from mypyc.ir.ops import SetAttr
 
 from typedlogic import Sentence, Theory
 from typedlogic.parser import Parser
@@ -15,12 +14,15 @@ from typedlogic.parser import Parser
 
 def compile_sentences(sentences: Iterable[Sentence], syntax="fol") -> List[str]:
     from typedlogic.registry import get_compiler
+
     compiler = get_compiler(syntax)
     return [compiler.compile_sentence(s) for s in sentences]
+
 
 def write_sentences(sentences: Iterable[Sentence], syntax="fol"):
     for s in compile_sentences(sentences, syntax=syntax):
         print(s)
+
 
 class ModelSyntax(str, Enum):
     """
