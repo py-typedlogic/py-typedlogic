@@ -10,6 +10,14 @@ pytest:
 mypy:
 	$(RUN) mypy src tests
 
+lint:
+	$(RUN) ruff format --check --diff src/ tests/ --exclude tests/input --exclude tests/output
+	$(RUN) ruff check src/ tests/ --exclude tests/input --exclude tests/output
+
+format:
+	$(RUN) ruff format src/ tests/ --exclude tests/input --exclude tests/output
+	$(RUN) ruff check --fix src/ tests/ --exclude tests/input --exclude tests/output
+
 codespell:
 	$(RUN) tox -e codespell
 

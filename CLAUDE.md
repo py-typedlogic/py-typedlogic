@@ -8,7 +8,7 @@
 - **Run tests by pattern**: `uv run pytest -k "pattern"`
 - **Type check**: `uv run mypy src tests`
 - **Lint**: `uv run ruff check src/ tests/ --exclude tests/input --exclude tests/output`
-- **Format code**: `uv run black src/ tests/ --exclude "/(tests/input|tests/output)/"`
+- **Format code**: `uv run ruff format src/ tests/ --exclude tests/input --exclude tests/output`
 - **Fix linting**: `uv run tox -e lint-fix`
 - **Spell check**: `uv run tox -e codespell`
 - **Update dependencies**: `uv lock --upgrade`

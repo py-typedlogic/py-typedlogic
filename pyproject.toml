@@ -6,8 +6,9 @@ authors = [
     {name = "Author 1", email = "author@org.org"}
 ]
 license = {text = "MIT"}
+license-files = ["LICENSE"]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<4.0"
 dependencies = [
     "importlib-metadata>=8.2.0",
     "typer>=0.12.5",
@@ -34,7 +35,6 @@ typedlogic = "typedlogic.cli:app"
 
 [dependency-groups]
 dev = [
-    "black",
     "pytest>=8.3.2",
     "ruff",
     "tox>=4.16.0",
@@ -55,18 +55,13 @@ dev = [
     "mkdocs-with-pdf",
 ]
 
-# poetry-dynamic-versioning requires this placeholder in PEP 621 mode.
-[tool.poetry]
-version = "0.0.0"
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
 
-[tool.poetry-dynamic-versioning]
-enable = true
+[tool.uv-dynamic-versioning]
 vcs = "git"
 style = "pep440"
-
-[tool.black]
-line-length = 120
-target-version = ["py38", "py39", "py310"]
+fallback-version = "0.0.0"
 
 [tool.ruff]
 lint.extend-ignore = [
@@ -104,8 +99,8 @@ quiet-level = 3
 ignore-words-list = "fof,te,disjointness,NotIn,EHR"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0", "poetry-dynamic-versioning>=1.8.0,<2.0.0"]
-build-backend = "poetry_dynamic_versioning.backend"
+requires = ["hatchling", "uv-dynamic-versioning"]
+build-backend = "hatchling.build"
 
 [[tool.mypy.overrides]]
 module = "pyhornedowl.*"

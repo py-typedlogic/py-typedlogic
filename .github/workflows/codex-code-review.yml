@@ -86,11 +86,14 @@ jobs:
             printf 'Pull request body:\n%s\n' "$PR_BODY"
           } > "$prompt_file"
 
-          codex exec \
+          if ! codex exec \
             --sandbox read-only \
             --cd "$GITHUB_WORKSPACE" \
             --output-last-message "$output_file" \
-            - < "$prompt_file"
+            - < "$prompt_file"; then
+            echo "::warning::Codex review failed. Check or rotate the CODEX_AUTH_JSON secret; skipping advisory review."
+            exit 0
+          fi
 
           delimiter="CODEX_REVIEW_$(uuidgen | tr '[:lower:]-' '[:upper:]_')"
           if grep -qxF "$delimiter" "$output_file"; then
