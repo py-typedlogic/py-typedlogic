@@ -11,6 +11,7 @@ readme = "README.md"
 requires-python = ">=3.10,<4.0"
 dependencies = [
     "importlib-metadata>=8.2.0",
+    "lark>=1.2.0",
     "typer>=0.12.5",
 ]
 

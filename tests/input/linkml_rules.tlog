@@ -1,0 +1,20 @@
+type PointerID: str.
+type ElementID: str.
+type SlotID: str.
+
+pred pointer_type(id: PointerID, element: ElementID).
+pred class_slot(cls: ElementID, slot: SlotID).
+pred required(slot: SlotID).
+pred object_pointer_has_property_scalarized(id: PointerID, slot: SlotID, value: PointerID).
+
+/// Inherit slots through the class hierarchy.
+class_slot(c, s) :- is_a(c, p), class_slot(p, s).
+
+/// A reified closed-world helper for required slot constraints.
+has_slot_value(i, s) :- object_pointer_has_property_scalarized(i, s, v).
+
+/// Required slots must have at least one observed value.
+:- pointer_type(i, c), class_slot(c, s), required(s), not has_slot_value(i, s).
+
+/// HiLog-style predicate variable syntax can be represented for later macro expansion.
+all slot, i, v | @slot(i, v) -> has_slot_value(i, slot).
