@@ -61,6 +61,9 @@ nav:
      - 3. Probabilistic Logic: tutorial/03-probabilistic-logic
      - 4. OWL-DL: tutorial/04-owldl
      - 5. Command Line: tutorial/05-cli
+  - Gallery:
+      - Examples: examples.md
+      - Synthetic biology design checks: examples/synbio-design-checks.ipynb
   - Concepts:
       - Core concepts: concepts/index.md
       - Data Model: concepts/datamodel.md

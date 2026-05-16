@@ -2,6 +2,10 @@
 
 This page provides various examples to illustrate the usage of TypedLogic in different scenarios.
 
+## Gallery Tutorials
+
+- [Synthetic biology design checks](examples/synbio-design-checks.ipynb): assembly structure, GO-driven pathway feasibility, and GO-CAM curation consistency in one reusable theory.
+
 ## Basic Family Relationships
 
 ```python
@@ -99,4 +103,3 @@ print(f"Buddy is an animal: {result}")
 ```
 
 These examples demonstrate how to use TypedLogic to model relationships and hierarchies, define axioms, and perform logical reasoning. You can expand on these examples to create more complex logical systems tailored to your specific use cases.
-
