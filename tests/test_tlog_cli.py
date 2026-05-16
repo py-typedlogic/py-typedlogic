@@ -3,8 +3,9 @@
 from pathlib import Path
 
 import pytest
-from typedlogic.cli import app
 from typer.testing import CliRunner
+
+from typedlogic.cli import app
 
 runner = CliRunner()
 

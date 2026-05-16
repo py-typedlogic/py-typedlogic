@@ -3,6 +3,7 @@
 from pathlib import Path
 
 import pytest
+
 from typedlogic import Exists, Forall, Iff, Implies, NegationAsFailure, Not, Or, Term, Variable
 from typedlogic.compilers.prolog_compiler import PrologCompiler
 from typedlogic.compilers.tlog_compiler import TLogCompiler

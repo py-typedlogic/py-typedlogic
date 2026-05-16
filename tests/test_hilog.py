@@ -3,6 +3,7 @@
 from typing import cast
 
 import pytest
+
 from typedlogic import Forall, PredicateDefinition, Term, Theory, Variable
 from typedlogic.compilers.fol_compiler import FOLCompiler
 from typedlogic.compilers.prolog_compiler import PrologCompiler
