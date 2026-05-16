@@ -1,0 +1,2838 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/examples/synbio-design-checks/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../../concepts/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
+    
+    
+      
+        <title>Synthetic biology design checks - py-typedlogic</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8608ea7d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../../css/pandas-dataframe.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#synthetic-biology-design-checks-with-typedlogic" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="py-typedlogic" class="md-header__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            py-typedlogic
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Synthetic biology design checks
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/py-typedlogic/py-typedlogic/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="py-typedlogic" class="md-nav__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    py-typedlogic
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/py-typedlogic/py-typedlogic/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Tutorial
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Tutorial
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/01-first-program" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1. First program
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/02-using-python-data-model" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2. Using the Python Data Model
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/03-probabilistic-logic" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3. Probabilistic Logic
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/04-owldl" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4. OWL-DL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/05-cli" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5. Command Line
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Gallery
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Gallery
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Synthetic biology design checks
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Synthetic biology design checks
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#layer-1-assembly-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer 1: Assembly Structure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#layer-2-go-driven-pathway-feasibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer 2: GO-Driven Pathway Feasibility
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#layer-3-go-cam-curation-consistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer 3: GO-CAM Curation Consistency
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inspect-the-compiled-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inspect the Compiled Rules
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next Steps
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Concepts
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Concepts
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Core concepts
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/datamodel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Data Model
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/decorators/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decorators
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/generators/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Generators
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/solvers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Solvers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/benchmarks.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Benchmarks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Solvers
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Solvers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Solver overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/clingo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Clingo
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/z3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Z3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/souffle/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Souffle
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/prover9/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prover9
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/snakelog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SnakeLog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/problog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ProbLog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/llm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    LLM Solver
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Compilers
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Compilers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compiler overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/yaml/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAML
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/prolog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prolog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/problog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ProbLog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/tptp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TPTP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/fol/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FOL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/sexpr/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    S-Expression
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Parsers
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Parsers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parser overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/python/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/yaml/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAML
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/dataframe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DataFrame
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/catalog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Catalog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/owlpy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OWLPy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/rdf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDF
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Frameworks
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Frameworks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_1" id="__nav_8_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    OWL-DL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_1">
+            <span class="md-nav__icon md-icon"></span>
+            OWL-DL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/owldl/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OWL-DL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/owldl/owldl-tutorial" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tutorial
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/owldl/owltop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Classes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/owldl/reasoner/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reasoner
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/pydantic" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pydantic
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/sqlmodel.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQLModel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/rdf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDF
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Command Line
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roadmap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#layer-1-assembly-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer 1: Assembly Structure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#layer-2-go-driven-pathway-feasibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer 2: GO-Driven Pathway Feasibility
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#layer-3-go-cam-curation-consistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer 3: GO-CAM Curation Consistency
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inspect-the-compiled-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inspect the Compiled Rules
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next Steps
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+(function() {
+  function addWidgetsRenderer() {
+    var requireJsScript = document.createElement('script');
+    requireJsScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js';
+
+    var mimeElement = document.querySelector('script[type="application/vnd.jupyter.widget-view+json"]');
+    var jupyterWidgetsScript = document.createElement('script');
+    var widgetRendererSrc = 'https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js';
+    var widgetState;
+
+    // Fallback for older version:
+    try {
+      widgetState = mimeElement && JSON.parse(mimeElement.innerHTML);
+
+      if (widgetState && (widgetState.version_major < 2 || !widgetState.version_major)) {
+        widgetRendererSrc = 'jupyter-js-widgets@*/dist/embed.js';
+      }
+    } catch(e) {}
+
+    jupyterWidgetsScript.src = widgetRendererSrc;
+
+    document.body.appendChild(requireJsScript);
+    document.body.appendChild(jupyterWidgetsScript);
+  }
+
+  document.addEventListener('DOMContentLoaded', addWidgetsRenderer);
+}());
+</script>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="synthetic-biology-design-checks-with-typedlogic">Synthetic Biology Design Checks with TypedLogic</h1>
+<p>This gallery tutorial turns a small synthetic biology design problem into composable logical checks. The same TypedLogic theory covers assembly structure, GO-driven pathway feasibility, and GO-CAM curation consistency.</p>
+<p>The running example is sucrose utilization in <em>E. coli</em>: a design needs a transporter (<code>cscB</code>) to bring sucrose into the cell and an invertase (<code>cscA</code>) to convert intracellular sucrose into glucose and fructose.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="installation">Installation</h2>
+<p>This notebook uses the Clingo solver because the pathway rule is recursive and naturally evaluated as a Datalog-style fixpoint.</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;typedlogic[clingo]&#39;</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="setup">Setup</h2>
+<p>The formal predicates and axioms live in <code>synbio_theory.py</code> next to this notebook. Keeping the theory in a normal Python module makes it reusable from tests, scripts, and notebooks.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Markdown</span><span class="p">,</span> <span class="n">display</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.lib.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Code</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.integrations.solvers.clingo</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClingoSolver</span>
+
+<span class="n">EXAMPLE_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">EXAMPLE_DIR</span> <span class="o">/</span> <span class="s2">&quot;synbio_theory.py&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+    <span class="n">EXAMPLE_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;docs&quot;</span> <span class="o">/</span> <span class="s2">&quot;examples&quot;</span>
+
+<span class="n">THEORY_PATH</span> <span class="o">=</span> <span class="n">EXAMPLE_DIR</span> <span class="o">/</span> <span class="s2">&quot;synbio_theory.py&quot;</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">EXAMPLE_DIR</span><span class="p">))</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">synbio_theory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AvailableMetabolite</span><span class="p">,</span>
+    <span class="n">CausalEdge</span><span class="p">,</span>
+    <span class="n">CausalRelation</span><span class="p">,</span>
+    <span class="n">DesignContains</span><span class="p">,</span>
+    <span class="n">EncodesProtein</span><span class="p">,</span>
+    <span class="n">FunctionCatalyzes</span><span class="p">,</span>
+    <span class="n">GOAspect</span><span class="p">,</span>
+    <span class="n">GOCAMIndividual</span><span class="p">,</span>
+    <span class="n">HasMolecularFunction</span><span class="p">,</span>
+    <span class="n">Part</span><span class="p">,</span>
+    <span class="n">RequiredMetabolite</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="nd">@contextmanager</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">silence_clingo_stderr</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Suppress harmless Clingo messages about predicates that only appear as facts.&quot;&quot;&quot;</span>
+    <span class="n">saved</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">dup</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">devnull</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_WRONLY</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">dup2</span><span class="p">(</span><span class="n">devnull</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">dup2</span><span class="p">(</span><span class="n">saved</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">saved</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">devnull</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">infer</span><span class="p">(</span><span class="n">facts</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">object</span><span class="p">],</span> <span class="o">*</span><span class="n">predicate_names</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">object</span><span class="p">,</span> <span class="o">...</span><span class="p">]]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the synbio theory, add facts, and return selected derived predicates.&quot;&quot;&quot;</span>
+    <span class="n">solver</span> <span class="o">=</span> <span class="n">ClingoSolver</span><span class="p">()</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">THEORY_PATH</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">fact</span> <span class="ow">in</span> <span class="n">facts</span><span class="p">:</span>
+        <span class="n">solver</span><span class="o">.</span><span class="n">add_fact</span><span class="p">(</span><span class="n">fact</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">silence_clingo_stderr</span><span class="p">():</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">{</span><span class="n">predicate_name</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">predicate_name</span> <span class="ow">in</span> <span class="n">predicate_names</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">ground_terms</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">term</span><span class="o">.</span><span class="n">predicate</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="n">rows</span><span class="p">[</span><span class="n">term</span><span class="o">.</span><span class="n">predicate</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">term</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">predicate</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="k">for</span> <span class="n">predicate</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">rows</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">markdown_table</span><span class="p">(</span><span class="n">headers</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">rows</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">object</span><span class="p">]])</span> <span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Render a small Markdown table without adding a pandas dependency.&quot;&quot;&quot;</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;| &quot;</span> <span class="o">+</span> <span class="s2">&quot; | &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; |&quot;</span><span class="p">]</span>
+    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;| &quot;</span> <span class="o">+</span> <span class="s2">&quot; | &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;---&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">headers</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; |&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;| &quot;</span> <span class="o">+</span> <span class="s2">&quot; | &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">row</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; |&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pairs</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">object</span><span class="p">,</span> <span class="o">...</span><span class="p">]])</span> <span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format binary or assembly-scoped predicate values as compact edges.&quot;&quot;&quot;</span>
+    <span class="n">formatted</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="n">formatted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">left</span><span class="si">}</span><span class="s2">-&amp;gt;</span><span class="si">{</span><span class="n">right</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">assembly</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="n">formatted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">assembly</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">left</span><span class="si">}</span><span class="s2">-&amp;gt;</span><span class="si">{</span><span class="n">right</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">formatted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-&amp;gt;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">value</span><span class="p">))</span>
+    <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">formatted</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;-&quot;</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">csv</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">object</span><span class="p">])</span> <span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format a short sequence for a Markdown table cell.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;-&quot;</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">Code</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">THEORY_PATH</span><span class="p">),</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result">
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.output_html .hll { background-color: #ffffcc }
+.output_html { background: #f8f8f8; }
+.output_html .c { color: #3D7B7B; font-style: italic } /* Comment */
+.output_html .err { border: 1px solid #F00 } /* Error */
+.output_html .k { color: #008000; font-weight: bold } /* Keyword */
+.output_html .o { color: #666 } /* Operator */
+.output_html .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.output_html .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.output_html .cp { color: #9C6500 } /* Comment.Preproc */
+.output_html .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.output_html .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.output_html .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.output_html .gd { color: #A00000 } /* Generic.Deleted */
+.output_html .ge { font-style: italic } /* Generic.Emph */
+.output_html .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.output_html .gr { color: #E40000 } /* Generic.Error */
+.output_html .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.output_html .gi { color: #008400 } /* Generic.Inserted */
+.output_html .go { color: #717171 } /* Generic.Output */
+.output_html .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.output_html .gs { font-weight: bold } /* Generic.Strong */
+.output_html .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.output_html .gt { color: #04D } /* Generic.Traceback */
+.output_html .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.output_html .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.output_html .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.output_html .kp { color: #008000 } /* Keyword.Pseudo */
+.output_html .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.output_html .kt { color: #B00040 } /* Keyword.Type */
+.output_html .m { color: #666 } /* Literal.Number */
+.output_html .s { color: #BA2121 } /* Literal.String */
+.output_html .na { color: #687822 } /* Name.Attribute */
+.output_html .nb { color: #008000 } /* Name.Builtin */
+.output_html .nc { color: #00F; font-weight: bold } /* Name.Class */
+.output_html .no { color: #800 } /* Name.Constant */
+.output_html .nd { color: #A2F } /* Name.Decorator */
+.output_html .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.output_html .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.output_html .nf { color: #00F } /* Name.Function */
+.output_html .nl { color: #767600 } /* Name.Label */
+.output_html .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+.output_html .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.output_html .nv { color: #19177C } /* Name.Variable */
+.output_html .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.output_html .w { color: #BBB } /* Text.Whitespace */
+.output_html .mb { color: #666 } /* Literal.Number.Bin */
+.output_html .mf { color: #666 } /* Literal.Number.Float */
+.output_html .mh { color: #666 } /* Literal.Number.Hex */
+.output_html .mi { color: #666 } /* Literal.Number.Integer */
+.output_html .mo { color: #666 } /* Literal.Number.Oct */
+.output_html .sa { color: #BA2121 } /* Literal.String.Affix */
+.output_html .sb { color: #BA2121 } /* Literal.String.Backtick */
+.output_html .sc { color: #BA2121 } /* Literal.String.Char */
+.output_html .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.output_html .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.output_html .s2 { color: #BA2121 } /* Literal.String.Double */
+.output_html .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.output_html .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.output_html .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.output_html .sx { color: #008000 } /* Literal.String.Other */
+.output_html .sr { color: #A45A77 } /* Literal.String.Regex */
+.output_html .s1 { color: #BA2121 } /* Literal.String.Single */
+.output_html .ss { color: #19177C } /* Literal.String.Symbol */
+.output_html .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.output_html .fm { color: #00F } /* Name.Function.Magic */
+.output_html .vc { color: #19177C } /* Name.Variable.Class */
+.output_html .vg { color: #19177C } /* Name.Variable.Global */
+.output_html .vi { color: #19177C } /* Name.Variable.Instance */
+.output_html .vm { color: #19177C } /* Name.Variable.Magic */
+.output_html .il { color: #666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre><span></span><span class="sd">"""Synthetic biology design checks for the gallery notebook."""</span>
+
+<span class="c1"># ruff: noqa: S101</span>
+<span class="c1">#</span>
+<span class="c1"># The theory is intentionally small, but it spans three practical layers:</span>
+<span class="c1"># 1. Assembly structure checks for compatible Golden Gate-style overhangs.</span>
+<span class="c1"># 2. GO-driven pathway reachability for engineered metabolic functions.</span>
+<span class="c1"># 3. GO-CAM curation checks for causal edges between molecular functions.</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fact</span><span class="p">,</span> <span class="n">axiom</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Part</span><span class="p">(</span><span class="n">Fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A DNA part in an ordered assembly."""</span>
+
+    <span class="n">assembly</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">part_type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">five_oh</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">three_oh</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">position</span><span class="p">:</span> <span class="nb">int</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CanLigate</span><span class="p">(</span><span class="n">Fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Two parts have compatible overhangs and can ligate."""</span>
+
+    <span class="n">assembly</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">upstream</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">downstream</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">IntendedAdjacent</span><span class="p">(</span><span class="n">Fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Two parts are adjacent in the intended design order."""</span>
+
+    <span class="n">assembly</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">upstream</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">downstream</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">IntendedLigationGap</span><span class="p">(</span><span class="n">Fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Two intended adjacent parts have incompatible overhangs."""</span>
+
+    <span class="n">assembly</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">upstream</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">downstream</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MisligationRisk</span><span class="p">(</span><span class="n">Fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A compatible ligation exists outside the intended adjacency order."""</span>
+
+    <span class="n">assembly</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">upstream</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">downstream</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@axiom</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ligation_compatibility</span><span class="p">(</span>
+    <span class="n">assembly1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">n1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">t1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">fo1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">to1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">pos1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">assembly2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">n2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">t2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">fo2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">to2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">pos2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Derive ligation compatibility when the upstream 3' overhang matches the downstream 5' overhang."""</span>
+    <span class="k">if</span> <span class="n">Part</span><span class="p">(</span><span class="n">assembly1</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">fo1</span><span class="p">,</span> <span class="n">to1</span><span class="p">,</span> <span class="n">pos1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">Part</span><span class="p">(</span><span class="n">assembly2</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">fo2</span><span class="p">,</span> <span class="n">to2</span><span class="p">,</span> <span class="n">pos2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">assembly1</span> <span class="o">==</span> <span class="n">assembly2</span> <span class="ow">and</span> <span class="n">to1</span> <span class="o">==</span> <span class="n">fo2</span> <span class="ow">and</span> <span class="n">n1</span> <span class="o">!=</span> <span class="n">n2</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">CanLigate</span><span class="p">(</span><span class="n">assembly1</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+
+
+<span class="nd">@axiom</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">intended_adjacency</span><span class="p">(</span>
+    <span class="n">assembly1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">n1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">t1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">fo1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">to1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">pos1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">assembly2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">n2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">t2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">fo2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">to2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">pos2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Derive intended adjacency from the declared part positions."""</span>
+    <span class="k">if</span> <span class="n">Part</span><span class="p">(</span><span class="n">assembly1</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">fo1</span><span class="p">,</span> <span class="n">to1</span><span class="p">,</span> <span class="n">pos1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">Part</span><span class="p">(</span><span class="n">assembly2</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">fo2</span><span class="p">,</span> <span class="n">to2</span><span class="p">,</span> <span class="n">pos2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">assembly1</span> <span class="o">==</span> <span class="n">assembly2</span> <span class="ow">and</span> <span class="n">pos2</span> <span class="o">==</span> <span class="n">pos1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">IntendedAdjacent</span><span class="p">(</span><span class="n">assembly1</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+
+
+<span class="nd">@axiom</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">intended_ligation_gap</span><span class="p">(</span>
+    <span class="n">assembly1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">n1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">t1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">fo1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">to1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">pos1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">assembly2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">n2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">t2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">fo2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">to2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">pos2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Flag intended adjacent parts whose overhangs do not match."""</span>
+    <span class="k">if</span> <span class="n">Part</span><span class="p">(</span><span class="n">assembly1</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">fo1</span><span class="p">,</span> <span class="n">to1</span><span class="p">,</span> <span class="n">pos1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">Part</span><span class="p">(</span><span class="n">assembly2</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">fo2</span><span class="p">,</span> <span class="n">to2</span><span class="p">,</span> <span class="n">pos2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">assembly1</span> <span class="o">==</span> <span class="n">assembly2</span> <span class="ow">and</span> <span class="n">pos2</span> <span class="o">==</span> <span class="n">pos1</span> <span class="o">+</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">to1</span> <span class="o">!=</span> <span class="n">fo2</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">IntendedLigationGap</span><span class="p">(</span><span class="n">assembly1</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">)</span>
+
+
+<span class="nd">@axiom</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">misligation_detection</span><span class="p">(</span>
+    <span class="n">assembly</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">upstream</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">downstream</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">n1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">t1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">fo1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">to1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">pos1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">n2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">t2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">fo2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">to2</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">pos2</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Flag compatible ligations that skip over the intended next position."""</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">CanLigate</span><span class="p">(</span><span class="n">assembly</span><span class="p">,</span> <span class="n">upstream</span><span class="p">,</span> <span class="n">downstream</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">Part</span><span class="p">(</span><span class="n">assembly</span><span class="p">,</span> <span class="n">n1</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">fo1</span><span class="p">,</span> <span class="n">to1</span><span class="p">,</span> <span class="n">pos1</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">Part</span><span class="p">(</span><span class="n">assembly</span><span class="p">,</span> <span class="n">n2</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">fo2</span><span class="p">,</span> <span class="n">to2</span><span class="p">,</span> <span class="n">pos2</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">upstream</span> <span class="o">==</span> <span class="n">n1</span>
+        <span class="ow">and</span> <span class="n">downstream</span> <span class="o">==</span> <span class="n">n2</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">pos2</span> <span class="o">!=</span> <span class="n">pos1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">MisligationRisk</span><span class="p">(</span><span class="n">assembly</span><span class="p">,</span> <span class="n">upstream</span><span class="p">,</span> <span class="n">downstream</span><span class="p">)</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">EncodesProtein</span><span class="p">(</span><span class="n">Fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A CDS part encodes a protein."""</span>
+
+    <span class="n">part</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">protein</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">HasMolecularFunction</span><span class="p">(</span><span class="n">Fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A protein has a GO molecular function."""</span>
+
+    <span class="n">protein</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">go_mf</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FunctionCatalyzes</span><span class="p">(</span><span class="n">Fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A molecular function converts a substrate metabolite to a product metabolite."""</span>
+
+    <span class="n">go_mf</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">substrate</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">product</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DesignContains</span><span class="p">(</span><span class="n">Fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A named design contains a part."""</span>
+
+    <span class="n">design</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">part</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AvailableMetabolite</span><span class="p">(</span><span class="n">Fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A metabolite is available to a design from the environment or an encoded function."""</span>
+
+    <span class="n">design</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">metabolite</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RequiredMetabolite</span><span class="p">(</span><span class="n">Fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A metabolite that the engineered cell needs for the design intent."""</span>
+
+    <span class="n">design</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">metabolite</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@axiom</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">metabolite_produced_by_design</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">part</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">protein</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">go_mf</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">substrate</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">product</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Propagate metabolite availability through functions encoded by the design."""</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">DesignContains</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="n">part</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">EncodesProtein</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">protein</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">HasMolecularFunction</span><span class="p">(</span><span class="n">protein</span><span class="p">,</span> <span class="n">go_mf</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">FunctionCatalyzes</span><span class="p">(</span><span class="n">go_mf</span><span class="p">,</span> <span class="n">substrate</span><span class="p">,</span> <span class="n">product</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">AvailableMetabolite</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="n">substrate</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">assert</span> <span class="n">AvailableMetabolite</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="n">product</span><span class="p">)</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GOAspect</span><span class="p">(</span><span class="n">Fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The aspect of a GO term: molecular function, biological process, or cellular component."""</span>
+
+    <span class="n">go_term</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">aspect</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GOCAMIndividual</span><span class="p">(</span><span class="n">Fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""An individual in a GO-CAM model instantiating a GO class."""</span>
+
+    <span class="n">iri</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">go_class</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CausalRelation</span><span class="p">(</span><span class="n">Fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A relation that should connect molecular function individuals in GO-CAM."""</span>
+
+    <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CausalEdge</span><span class="p">(</span><span class="n">Fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A causal relation between two GO-CAM individuals."""</span>
+
+    <span class="n">upstream_iri</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">downstream_iri</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GOCAMViolation</span><span class="p">(</span><span class="n">Fact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A derived GO-CAM curation rule violation."""</span>
+
+    <span class="n">individual</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">rule</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@axiom</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">causal_edge_upstream_must_be_mf</span><span class="p">(</span>
+    <span class="n">up</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">down</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">rel</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">upstream_class</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">aspect</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Require the upstream node of a causal edge to instantiate a molecular function."""</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">CausalEdge</span><span class="p">(</span><span class="n">up</span><span class="p">,</span> <span class="n">down</span><span class="p">,</span> <span class="n">rel</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">CausalRelation</span><span class="p">(</span><span class="n">rel</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">GOCAMIndividual</span><span class="p">(</span><span class="n">up</span><span class="p">,</span> <span class="n">upstream_class</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">GOAspect</span><span class="p">(</span><span class="n">upstream_class</span><span class="p">,</span> <span class="n">aspect</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">aspect</span> <span class="o">!=</span> <span class="s2">"MF"</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">GOCAMViolation</span><span class="p">(</span><span class="n">up</span><span class="p">,</span> <span class="s2">"causal_upstream_not_MF"</span><span class="p">)</span>
+
+
+<span class="nd">@axiom</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">causal_edge_downstream_must_be_mf</span><span class="p">(</span>
+    <span class="n">up</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">down</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">rel</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">downstream_class</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">aspect</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Require the downstream node of a causal edge to instantiate a molecular function."""</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">CausalEdge</span><span class="p">(</span><span class="n">up</span><span class="p">,</span> <span class="n">down</span><span class="p">,</span> <span class="n">rel</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">CausalRelation</span><span class="p">(</span><span class="n">rel</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">GOCAMIndividual</span><span class="p">(</span><span class="n">down</span><span class="p">,</span> <span class="n">downstream_class</span><span class="p">)</span>
+        <span class="ow">and</span> <span class="n">GOAspect</span><span class="p">(</span><span class="n">downstream_class</span><span class="p">,</span> <span class="n">aspect</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">aspect</span> <span class="o">!=</span> <span class="s2">"MF"</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">GOCAMViolation</span><span class="p">(</span><span class="n">down</span><span class="p">,</span> <span class="s2">"causal_downstream_not_MF"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="layer-1-assembly-structure">Layer 1: Assembly Structure</h2>
+<p>The structural layer treats overhangs as assembly-scoped typed facts. From those facts it derives which parts can ligate, which parts are intended neighbors, whether an intended neighboring pair fails to ligate, and whether any compatible ligation skips the intended next position.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">safe_assembly</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Part</span><span class="p">(</span><span class="s2">&quot;clean&quot;</span><span class="p">,</span> <span class="s2">&quot;p_lac&quot;</span><span class="p">,</span> <span class="s2">&quot;promoter&quot;</span><span class="p">,</span> <span class="s2">&quot;GGAG&quot;</span><span class="p">,</span> <span class="s2">&quot;TACT&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="n">Part</span><span class="p">(</span><span class="s2">&quot;clean&quot;</span><span class="p">,</span> <span class="s2">&quot;rbs_b0034&quot;</span><span class="p">,</span> <span class="s2">&quot;rbs&quot;</span><span class="p">,</span> <span class="s2">&quot;TACT&quot;</span><span class="p">,</span> <span class="s2">&quot;AATG&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">Part</span><span class="p">(</span><span class="s2">&quot;clean&quot;</span><span class="p">,</span> <span class="s2">&quot;cscB&quot;</span><span class="p">,</span> <span class="s2">&quot;cds&quot;</span><span class="p">,</span> <span class="s2">&quot;AATG&quot;</span><span class="p">,</span> <span class="s2">&quot;GCTT&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">Part</span><span class="p">(</span><span class="s2">&quot;clean&quot;</span><span class="p">,</span> <span class="s2">&quot;term_b0015&quot;</span><span class="p">,</span> <span class="s2">&quot;terminator&quot;</span><span class="p">,</span> <span class="s2">&quot;GCTT&quot;</span><span class="p">,</span> <span class="s2">&quot;CGCT&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">risky_assembly</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Part</span><span class="p">(</span><span class="s2">&quot;risky&quot;</span><span class="p">,</span> <span class="s2">&quot;p_lac&quot;</span><span class="p">,</span> <span class="s2">&quot;promoter&quot;</span><span class="p">,</span> <span class="s2">&quot;GGAG&quot;</span><span class="p">,</span> <span class="s2">&quot;TACT&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="n">Part</span><span class="p">(</span><span class="s2">&quot;risky&quot;</span><span class="p">,</span> <span class="s2">&quot;rbs_b0034&quot;</span><span class="p">,</span> <span class="s2">&quot;rbs&quot;</span><span class="p">,</span> <span class="s2">&quot;TACT&quot;</span><span class="p">,</span> <span class="s2">&quot;AATG&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">Part</span><span class="p">(</span><span class="s2">&quot;risky&quot;</span><span class="p">,</span> <span class="s2">&quot;cscB_skip_rbs&quot;</span><span class="p">,</span> <span class="s2">&quot;cds&quot;</span><span class="p">,</span> <span class="s2">&quot;TACT&quot;</span><span class="p">,</span> <span class="s2">&quot;GCTT&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">Part</span><span class="p">(</span><span class="s2">&quot;risky&quot;</span><span class="p">,</span> <span class="s2">&quot;term_b0015&quot;</span><span class="p">,</span> <span class="s2">&quot;terminator&quot;</span><span class="p">,</span> <span class="s2">&quot;GCTT&quot;</span><span class="p">,</span> <span class="s2">&quot;CGCT&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">assembly_report</span><span class="p">(</span><span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">facts</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Part</span><span class="p">])</span> <span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">infer</span><span class="p">(</span><span class="n">facts</span><span class="p">,</span> <span class="s2">&quot;CanLigate&quot;</span><span class="p">,</span> <span class="s2">&quot;IntendedAdjacent&quot;</span><span class="p">,</span> <span class="s2">&quot;IntendedLigationGap&quot;</span><span class="p">,</span> <span class="s2">&quot;MisligationRisk&quot;</span><span class="p">)</span>
+    <span class="n">gaps</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;IntendedLigationGap&quot;</span><span class="p">]</span>
+    <span class="n">risks</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;MisligationRisk&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">label</span><span class="p">,</span>
+        <span class="n">pairs</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;CanLigate&quot;</span><span class="p">]),</span>
+        <span class="n">pairs</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;IntendedAdjacent&quot;</span><span class="p">]),</span>
+        <span class="n">pairs</span><span class="p">(</span><span class="n">gaps</span><span class="p">)</span> <span class="k">if</span> <span class="n">gaps</span> <span class="k">else</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="n">pairs</span><span class="p">(</span><span class="n">risks</span><span class="p">)</span> <span class="k">if</span> <span class="n">risks</span> <span class="k">else</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="n">assembly_rows</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">assembly_report</span><span class="p">(</span><span class="s2">&quot;clean overhang grammar&quot;</span><span class="p">,</span> <span class="n">safe_assembly</span><span class="p">),</span>
+    <span class="n">assembly_report</span><span class="p">(</span><span class="s2">&quot;CDS can skip RBS&quot;</span><span class="p">,</span> <span class="n">risky_assembly</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">Markdown</span><span class="p">(</span>
+        <span class="n">markdown_table</span><span class="p">(</span>
+            <span class="p">[</span><span class="s2">&quot;Assembly&quot;</span><span class="p">,</span> <span class="s2">&quot;Can ligate&quot;</span><span class="p">,</span> <span class="s2">&quot;Intended adjacency&quot;</span><span class="p">,</span> <span class="s2">&quot;Intended gap&quot;</span><span class="p">,</span> <span class="s2">&quot;Skip risk&quot;</span><span class="p">],</span>
+            <span class="n">assembly_rows</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<table>
+<thead>
+<tr>
+<th>Assembly</th>
+<th>Can ligate</th>
+<th>Intended adjacency</th>
+<th>Intended gap</th>
+<th>Skip risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>clean overhang grammar</td>
+<td>clean:cscB-&gt;term_b0015, clean:p_lac-&gt;rbs_b0034, clean:rbs_b0034-&gt;cscB</td>
+<td>clean:cscB-&gt;term_b0015, clean:p_lac-&gt;rbs_b0034, clean:rbs_b0034-&gt;cscB</td>
+<td>none</td>
+<td>none</td>
+</tr>
+<tr>
+<td>CDS can skip RBS</td>
+<td>risky:cscB_skip_rbs-&gt;term_b0015, risky:p_lac-&gt;cscB_skip_rbs, risky:p_lac-&gt;rbs_b0034</td>
+<td>risky:cscB_skip_rbs-&gt;term_b0015, risky:p_lac-&gt;rbs_b0034, risky:rbs_b0034-&gt;cscB_skip_rbs</td>
+<td>risky:rbs_b0034-&gt;cscB_skip_rbs</td>
+<td>risky:p_lac-&gt;cscB_skip_rbs</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In the second assembly, <code>rbs_b0034</code> and <code>cscB_skip_rbs</code> are intended neighbors but have incompatible overhangs. The same assembly also lets <code>p_lac</code> ligate directly into <code>cscB_skip_rbs</code>, so the theory reports both the intended ligation gap and the skip risk before considering pathway function.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="layer-2-go-driven-pathway-feasibility">Layer 2: GO-Driven Pathway Feasibility</h2>
+<p>The functional layer connects parts to proteins, proteins to GO molecular functions, and GO functions to metabolite transformations. A recursive rule derives every metabolite reachable from the growth medium.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">BIOLOGY</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">EncodesProtein</span><span class="p">(</span><span class="s2">&quot;cscA&quot;</span><span class="p">,</span> <span class="s2">&quot;P10000_cscA&quot;</span><span class="p">),</span>
+    <span class="n">EncodesProtein</span><span class="p">(</span><span class="s2">&quot;cscB&quot;</span><span class="p">,</span> <span class="s2">&quot;P30000_cscB&quot;</span><span class="p">),</span>
+    <span class="n">HasMolecularFunction</span><span class="p">(</span><span class="s2">&quot;P10000_cscA&quot;</span><span class="p">,</span> <span class="s2">&quot;GO:0004575&quot;</span><span class="p">),</span>  <span class="c1"># sucrose alpha-glucosidase</span>
+    <span class="n">HasMolecularFunction</span><span class="p">(</span><span class="s2">&quot;P30000_cscB&quot;</span><span class="p">,</span> <span class="s2">&quot;GO:0008515&quot;</span><span class="p">),</span>  <span class="c1"># sucrose:H+ symporter</span>
+    <span class="n">FunctionCatalyzes</span><span class="p">(</span><span class="s2">&quot;GO:0008515&quot;</span><span class="p">,</span> <span class="s2">&quot;sucrose_out&quot;</span><span class="p">,</span> <span class="s2">&quot;sucrose_in&quot;</span><span class="p">),</span>
+    <span class="n">FunctionCatalyzes</span><span class="p">(</span><span class="s2">&quot;GO:0004575&quot;</span><span class="p">,</span> <span class="s2">&quot;sucrose_in&quot;</span><span class="p">,</span> <span class="s2">&quot;glucose_in&quot;</span><span class="p">),</span>
+    <span class="n">FunctionCatalyzes</span><span class="p">(</span><span class="s2">&quot;GO:0004575&quot;</span><span class="p">,</span> <span class="s2">&quot;sucrose_in&quot;</span><span class="p">,</span> <span class="s2">&quot;fructose_in&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pathway_report</span><span class="p">(</span><span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">design_parts</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="n">facts</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="o">*</span><span class="n">BIOLOGY</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">(</span><span class="n">DesignContains</span><span class="p">(</span><span class="s2">&quot;sucrose_design&quot;</span><span class="p">,</span> <span class="n">part</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">design_parts</span><span class="p">),</span>
+        <span class="n">AvailableMetabolite</span><span class="p">(</span><span class="s2">&quot;sucrose_design&quot;</span><span class="p">,</span> <span class="s2">&quot;sucrose_out&quot;</span><span class="p">),</span>
+        <span class="n">RequiredMetabolite</span><span class="p">(</span><span class="s2">&quot;sucrose_design&quot;</span><span class="p">,</span> <span class="s2">&quot;glucose_in&quot;</span><span class="p">),</span>
+    <span class="p">]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">infer</span><span class="p">(</span><span class="n">facts</span><span class="p">,</span> <span class="s2">&quot;AvailableMetabolite&quot;</span><span class="p">,</span> <span class="s2">&quot;RequiredMetabolite&quot;</span><span class="p">)</span>
+    <span class="n">available</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">metabolite</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">metabolite</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;AvailableMetabolite&quot;</span><span class="p">]})</span>
+    <span class="n">required</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">({</span><span class="n">metabolite</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">metabolite</span> <span class="ow">in</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;RequiredMetabolite&quot;</span><span class="p">]})</span>
+    <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">metabolite</span> <span class="k">for</span> <span class="n">metabolite</span> <span class="ow">in</span> <span class="n">required</span> <span class="k">if</span> <span class="n">metabolite</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">available</span><span class="p">]</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;complete&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">missing</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;gap: </span><span class="si">{</span><span class="n">csv</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">label</span><span class="p">,</span> <span class="n">csv</span><span class="p">(</span><span class="n">design_parts</span><span class="p">),</span> <span class="n">csv</span><span class="p">(</span><span class="n">available</span><span class="p">),</span> <span class="n">status</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">pathway_rows</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">pathway_report</span><span class="p">(</span><span class="s2">&quot;full sucrose pathway&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;cscA&quot;</span><span class="p">,</span> <span class="s2">&quot;cscB&quot;</span><span class="p">]),</span>
+    <span class="n">pathway_report</span><span class="p">(</span><span class="s2">&quot;permease only&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;cscB&quot;</span><span class="p">]),</span>
+    <span class="n">pathway_report</span><span class="p">(</span><span class="s2">&quot;invertase only&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;cscA&quot;</span><span class="p">]),</span>
+    <span class="n">pathway_report</span><span class="p">(</span><span class="s2">&quot;empty design&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+<span class="p">]</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">Markdown</span><span class="p">(</span><span class="n">markdown_table</span><span class="p">([</span><span class="s2">&quot;Design&quot;</span><span class="p">,</span> <span class="s2">&quot;Parts&quot;</span><span class="p">,</span> <span class="s2">&quot;Reachable metabolites&quot;</span><span class="p">,</span> <span class="s2">&quot;Verdict&quot;</span><span class="p">],</span> <span class="n">pathway_rows</span><span class="p">)))</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<table>
+<thead>
+<tr>
+<th>Design</th>
+<th>Parts</th>
+<th>Reachable metabolites</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>full sucrose pathway</td>
+<td>cscA, cscB</td>
+<td>fructose_in, glucose_in, sucrose_in, sucrose_out</td>
+<td>complete</td>
+</tr>
+<tr>
+<td>permease only</td>
+<td>cscB</td>
+<td>sucrose_in, sucrose_out</td>
+<td>gap: glucose_in</td>
+</tr>
+<tr>
+<td>invertase only</td>
+<td>cscA</td>
+<td>sucrose_out</td>
+<td>gap: glucose_in</td>
+</tr>
+<tr>
+<td>empty design</td>
+<td>-</td>
+<td>sucrose_out</td>
+<td>gap: glucose_in</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The full design reaches intracellular glucose from extracellular sucrose. The permease-only design imports sucrose but cannot cleave it. The invertase-only design has the enzyme, but no route for sucrose to enter the cell.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="layer-3-go-cam-curation-consistency">Layer 3: GO-CAM Curation Consistency</h2>
+<p>The curation layer checks a common GO-CAM modeling rule: declared causal relations such as <code>RO:0002413</code> should connect molecular function individuals, not biological process individuals.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">GO_ASPECTS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">GOAspect</span><span class="p">(</span><span class="s2">&quot;GO:0004575&quot;</span><span class="p">,</span> <span class="s2">&quot;MF&quot;</span><span class="p">),</span>  <span class="c1"># sucrose alpha-glucosidase activity</span>
+    <span class="n">GOAspect</span><span class="p">(</span><span class="s2">&quot;GO:0008515&quot;</span><span class="p">,</span> <span class="s2">&quot;MF&quot;</span><span class="p">),</span>  <span class="c1"># sucrose:H+ symporter activity</span>
+    <span class="n">GOAspect</span><span class="p">(</span><span class="s2">&quot;GO:0005992&quot;</span><span class="p">,</span> <span class="s2">&quot;BP&quot;</span><span class="p">),</span>  <span class="c1"># trehalose biosynthetic process</span>
+    <span class="n">GOAspect</span><span class="p">(</span><span class="s2">&quot;GO:0006012&quot;</span><span class="p">,</span> <span class="s2">&quot;BP&quot;</span><span class="p">),</span>  <span class="c1"># galactose metabolic process</span>
+<span class="p">]</span>
+
+<span class="n">CAUSAL_RELATIONS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">CausalRelation</span><span class="p">(</span><span class="s2">&quot;RO:0002411&quot;</span><span class="p">),</span>  <span class="c1"># causally upstream of</span>
+    <span class="n">CausalRelation</span><span class="p">(</span><span class="s2">&quot;RO:0002413&quot;</span><span class="p">),</span>  <span class="c1"># provides direct input for</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">gocam_report</span><span class="p">(</span>
+    <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">individuals</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+    <span class="n">edges</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+<span class="p">)</span> <span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="n">facts</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="o">*</span><span class="n">GO_ASPECTS</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">CAUSAL_RELATIONS</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">(</span><span class="n">GOCAMIndividual</span><span class="p">(</span><span class="n">iri</span><span class="p">,</span> <span class="n">go_class</span><span class="p">)</span> <span class="k">for</span> <span class="n">iri</span><span class="p">,</span> <span class="n">go_class</span> <span class="ow">in</span> <span class="n">individuals</span><span class="p">),</span>
+        <span class="o">*</span><span class="p">(</span><span class="n">CausalEdge</span><span class="p">(</span><span class="n">upstream</span><span class="p">,</span> <span class="n">downstream</span><span class="p">,</span> <span class="n">relation</span><span class="p">)</span> <span class="k">for</span> <span class="n">upstream</span><span class="p">,</span> <span class="n">downstream</span><span class="p">,</span> <span class="n">relation</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">),</span>
+    <span class="p">]</span>
+    <span class="n">violations</span> <span class="o">=</span> <span class="n">infer</span><span class="p">(</span><span class="n">facts</span><span class="p">,</span> <span class="s2">&quot;GOCAMViolation&quot;</span><span class="p">)[</span><span class="s2">&quot;GOCAMViolation&quot;</span><span class="p">]</span>
+    <span class="n">violation_text</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">iri</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">rule</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">iri</span><span class="p">,</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">violations</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;none&quot;</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">label</span><span class="p">,</span>
+        <span class="n">csv</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">iri</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">go_class</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">iri</span><span class="p">,</span> <span class="n">go_class</span> <span class="ow">in</span> <span class="n">individuals</span><span class="p">]),</span>
+        <span class="n">pairs</span><span class="p">([(</span><span class="n">upstream</span><span class="p">,</span> <span class="n">downstream</span><span class="p">)</span> <span class="k">for</span> <span class="n">upstream</span><span class="p">,</span> <span class="n">downstream</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">]),</span>
+        <span class="n">violation_text</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">gocam_rows</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">gocam_report</span><span class="p">(</span>
+        <span class="s2">&quot;valid MF to MF causal edge&quot;</span><span class="p">,</span>
+        <span class="n">individuals</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;ind:1&quot;</span><span class="p">,</span> <span class="s2">&quot;GO:0008515&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;ind:2&quot;</span><span class="p">,</span> <span class="s2">&quot;GO:0004575&quot;</span><span class="p">)],</span>
+        <span class="n">edges</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;ind:1&quot;</span><span class="p">,</span> <span class="s2">&quot;ind:2&quot;</span><span class="p">,</span> <span class="s2">&quot;RO:0002413&quot;</span><span class="p">)],</span>
+    <span class="p">),</span>
+    <span class="n">gocam_report</span><span class="p">(</span>
+        <span class="s2">&quot;invalid MF to BP causal edge&quot;</span><span class="p">,</span>
+        <span class="n">individuals</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;ind:3&quot;</span><span class="p">,</span> <span class="s2">&quot;GO:0008515&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;ind:4&quot;</span><span class="p">,</span> <span class="s2">&quot;GO:0005992&quot;</span><span class="p">)],</span>
+        <span class="n">edges</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;ind:3&quot;</span><span class="p">,</span> <span class="s2">&quot;ind:4&quot;</span><span class="p">,</span> <span class="s2">&quot;RO:0002413&quot;</span><span class="p">)],</span>
+    <span class="p">),</span>
+    <span class="n">gocam_report</span><span class="p">(</span>
+        <span class="s2">&quot;invalid BP to BP causal edge&quot;</span><span class="p">,</span>
+        <span class="n">individuals</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;ind:5&quot;</span><span class="p">,</span> <span class="s2">&quot;GO:0006012&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;ind:6&quot;</span><span class="p">,</span> <span class="s2">&quot;GO:0005992&quot;</span><span class="p">)],</span>
+        <span class="n">edges</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;ind:5&quot;</span><span class="p">,</span> <span class="s2">&quot;ind:6&quot;</span><span class="p">,</span> <span class="s2">&quot;RO:0002413&quot;</span><span class="p">)],</span>
+    <span class="p">),</span>
+    <span class="n">gocam_report</span><span class="p">(</span>
+        <span class="s2">&quot;non-causal relation to BP&quot;</span><span class="p">,</span>
+        <span class="n">individuals</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;ind:7&quot;</span><span class="p">,</span> <span class="s2">&quot;GO:0008515&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;ind:8&quot;</span><span class="p">,</span> <span class="s2">&quot;GO:0005992&quot;</span><span class="p">)],</span>
+        <span class="n">edges</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;ind:7&quot;</span><span class="p">,</span> <span class="s2">&quot;ind:8&quot;</span><span class="p">,</span> <span class="s2">&quot;BFO:0000050&quot;</span><span class="p">)],</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">Markdown</span><span class="p">(</span><span class="n">markdown_table</span><span class="p">([</span><span class="s2">&quot;GO-CAM model&quot;</span><span class="p">,</span> <span class="s2">&quot;Individuals&quot;</span><span class="p">,</span> <span class="s2">&quot;Causal edge&quot;</span><span class="p">,</span> <span class="s2">&quot;Violations&quot;</span><span class="p">],</span> <span class="n">gocam_rows</span><span class="p">)))</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<table>
+<thead>
+<tr>
+<th>GO-CAM model</th>
+<th>Individuals</th>
+<th>Causal edge</th>
+<th>Violations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>valid MF to MF causal edge</td>
+<td>ind:1=GO:0008515, ind:2=GO:0004575</td>
+<td>ind:1-&gt;ind:2</td>
+<td>none</td>
+</tr>
+<tr>
+<td>invalid MF to BP causal edge</td>
+<td>ind:3=GO:0008515, ind:4=GO:0005992</td>
+<td>ind:3-&gt;ind:4</td>
+<td>ind:4: causal_downstream_not_MF</td>
+</tr>
+<tr>
+<td>invalid BP to BP causal edge</td>
+<td>ind:5=GO:0006012, ind:6=GO:0005992</td>
+<td>ind:5-&gt;ind:6</td>
+<td>ind:5: causal_upstream_not_MF, ind:6: causal_downstream_not_MF</td>
+</tr>
+<tr>
+<td>non-causal relation to BP</td>
+<td>ind:7=GO:0008515, ind:8=GO:0005992</td>
+<td>ind:7-&gt;ind:8</td>
+<td>none</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The same solver workflow handles design-time checks and curation-time checks. In a production pipeline, the facts could come from a parts registry, GO annotations, Rhea mappings, and GO-CAM RDF exports rather than hand-authored lists.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="inspect-the-compiled-rules">Inspect the Compiled Rules</h2>
+<p>TypedLogic parses the Python axioms into a logical theory and the Clingo backend renders that theory as ASP. The recursive pathway rule is the key fixpoint rule.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">solver</span> <span class="o">=</span> <span class="n">ClingoSolver</span><span class="p">()</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">THEORY_PATH</span><span class="p">)</span>
+<span class="n">compiled_rules</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">compiled_rules</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">rule</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;availablemetabolite&quot;</span><span class="p">,</span> <span class="s2">&quot;intendedligationgap&quot;</span><span class="p">,</span> <span class="s2">&quot;misligationrisk&quot;</span><span class="p">,</span> <span class="s2">&quot;gocamviolation&quot;</span><span class="p">)):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>intendedligationgap(Assembly1, N1, N2) :- part(Assembly1, N1, T1, Fo1, To1, Pos1), part(Assembly2, N2, T2, Fo2, To2, Pos2), Assembly1 == Assembly2, Pos2 == Pos1 + 1, To1 != Fo2.
+misligationrisk(Assembly, Upstream, Downstream) :- canligate(Assembly, Upstream, Downstream), part(Assembly, N1, T1, Fo1, To1, Pos1), part(Assembly, N2, T2, Fo2, To2, Pos2), Upstream == N1, Downstream == N2, Pos2 != Pos1 + 1.
+availablemetabolite(Design, Product) :- designcontains(Design, Part), encodesprotein(Part, Protein), hasmolecularfunction(Protein, Go_mf), functioncatalyzes(Go_mf, Substrate, Product), availablemetabolite(Design, Substrate).
+gocamviolation(Up, "causal_upstream_not_MF") :- causaledge(Up, Down, Rel), causalrelation(Rel), gocamindividual(Up, Upstream_class), goaspect(Upstream_class, Aspect), Aspect != "MF".
+gocamviolation(Down, "causal_downstream_not_MF") :- causaledge(Up, Down, Rel), causalrelation(Rel), gocamindividual(Down, Downstream_class), goaspect(Downstream_class, Aspect), Aspect != "MF".
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="next-steps">Next Steps</h2>
+<p>This pattern scales by swapping the toy facts for real sources: a parts library for assembly facts, GO and Rhea mappings for function-to-reaction facts, and GO-CAM exports for curation facts. Violations can then be reported back as design review comments or curator feedback.</p>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>
