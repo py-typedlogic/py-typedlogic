@@ -12,7 +12,7 @@ from tests import tree_edges
 # Check for external dependencies
 has_prover9 = shutil.which("prover9") is not None
 has_souffle = shutil.which("souffle") is not None
-has_clingo = True  # Assuming Python package is installed via poetry
+has_clingo = True  # Assuming Python package is installed in the test environment
 
 def pytest_configure(config):
     """Register custom markers."""

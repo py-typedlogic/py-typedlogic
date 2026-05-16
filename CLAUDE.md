@@ -1,17 +1,17 @@
 # Python TypedLogic Development Guide
 
 ## Commands
-- **Install**: `poetry install`
-- **Build**: `poetry build`
-- **Run all tests**: `poetry run pytest` or `make test`
-- **Run single test**: `poetry run pytest tests/path/to/test_file.py::test_function_name`
-- **Run tests by pattern**: `poetry run pytest -k "pattern"`
-- **Type check**: `poetry run mypy src tests`
-- **Lint**: `poetry run ruff check src/ tests/ --exclude tests/input --exclude tests/output`
-- **Format code**: `poetry run black src/ tests/ --exclude "/(tests/input|tests/output)/"`
-- **Fix linting**: `poetry run tox -e lint-fix`
-- **Spell check**: `poetry run tox -e codespell`
-- **Update dependencies**: `poetry update`
+- **Install**: `uv sync --all-extras --dev`
+- **Build**: `uv build`
+- **Run all tests**: `uv run pytest` or `make test`
+- **Run single test**: `uv run pytest tests/path/to/test_file.py::test_function_name`
+- **Run tests by pattern**: `uv run pytest -k "pattern"`
+- **Type check**: `uv run mypy src tests`
+- **Lint**: `uv run ruff check src/ tests/ --exclude tests/input --exclude tests/output`
+- **Format code**: `uv run black src/ tests/ --exclude "/(tests/input|tests/output)/"`
+- **Fix linting**: `uv run tox -e lint-fix`
+- **Spell check**: `uv run tox -e codespell`
+- **Update dependencies**: `uv lock --upgrade`
 
 ## Style Guidelines
 - Python 3.10+ with strict typing
@@ -37,6 +37,6 @@
 
 ## Troubleshooting
 - For codespell issues, add words to ignore-words-list in pyproject.toml
-- If Poetry has hash verification issues, run `poetry update` to refresh the lock file
+- If uv reports that the lockfile is stale, run `uv lock` to refresh it
 - When tests fail with specific solvers, try Z3Solver which has the broadest support
 - For CI pipeline issues, check the GitHub Actions log for specific error messages

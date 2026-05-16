@@ -1,4 +1,4 @@
-RUN = poetry run
+RUN = uv run
 
 all: test
 test: pytest doctest mypy codespell
@@ -40,4 +40,3 @@ tmp/docs/%.ipynb: docs/%.ipynb
 
 %-doctest: %
 	$(RUN) python -m doctest --option ELLIPSIS --option NORMALIZE_WHITESPACE $<
-

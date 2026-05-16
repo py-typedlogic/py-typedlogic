@@ -115,5 +115,5 @@ To install optional dependencies for testing:
 
 Run tests with:
 ```bash
-poetry run pytest
+uv run pytest
 ```
