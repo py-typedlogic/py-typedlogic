@@ -508,6 +508,50 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/tlog-cli/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TLog CLI workflow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/tlog-cli/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TLog CLI notebook
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1018,6 +1062,28 @@
   
   
     <li class="md-nav__item">
+      <a href="../conversion/compilers/tlog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TLog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../conversion/compilers/prolog/" class="md-nav__link">
         
   
@@ -1198,6 +1264,28 @@
   
   <span class="md-ellipsis">
     Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conversion/parsers/tlog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TLog
     
   </span>
   
@@ -1721,8 +1809,8 @@ see https://py-typedlogic.github.io/py-typedlogic/</p>
 </code></pre></div>
 <p><strong>Options:</strong></p>
 <div class="highlight"><pre><span></span><code>  THEORY_FILES...                 [required]
-  -f, --input-format TEXT         Input format. Currently supported: python,
-                                  yaml, owlpy  [default: python]
+  -f, --input-format TEXT         Input format; inferred from file suffix if
+                                  omitted
   -t, --output-format TEXT        Output format
   -o, --output-file PATH          Output file path
   --validate-types / --no-validate-types
@@ -1812,11 +1900,15 @@ typedlogic<span class="w"> </span>solve<span class="w"> </span>theory.py<span cl
   --validate-types / --no-validate-types
                                   Use mypy to validate types  [default:
                                   validate-types]
-  -f, --input-format TEXT         Input format. Currently supported: python,
-                                  yaml, owlpy  [default: python]
+  -f, --input-format TEXT         Input format; inferred from file suffix if
+                                  omitted
   -d, --data-input-format TEXT    Format for ground terms
   -t, --output-format TEXT        Output format
   -o, --output-file PATH          Output file path
+  --show, --predicate TEXT        Only show materialized ground terms for
+                                  these predicates. Repeat for multiple
+                                  predicates.
+  --max-models INTEGER            Stop after showing this many models
   [DATA_FILES]...
   --help                          Show this message and exit.
 </code></pre></div>

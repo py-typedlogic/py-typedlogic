@@ -8,24 +8,28 @@
       
       
       
-        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/advanced/">
+        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/examples/tlog-cli/">
       
       
+        <link rel="prev" href="../synbio-design-checks/">
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+        <link rel="next" href="./">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
     
     
       
-        <title>Advanced Usage - py-typedlogic</title>
+        <title>TLog CLI workflow - py-typedlogic</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.8608ea7d.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8608ea7d.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -44,15 +48,15 @@
       
     
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../css/ansi-colours.css">
+      <link rel="stylesheet" href="../../css/ansi-colours.css">
     
-      <link rel="stylesheet" href="../css/jupyter-cells.css">
+      <link rel="stylesheet" href="../../css/jupyter-cells.css">
     
-      <link rel="stylesheet" href="../css/pandas-dataframe.css">
+      <link rel="stylesheet" href="../../css/pandas-dataframe.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#advanced-usage" class="md-skip">
+        <a href="#tlog-cli-examples" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +98,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="py-typedlogic" class="md-header__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+    <a href="../.." title="py-typedlogic" class="md-header__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Advanced Usage
+              TLog CLI workflow
             
           </span>
         </div>
@@ -227,7 +231,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="py-typedlogic" class="md-nav__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+    <a href="../.." title="py-typedlogic" class="md-nav__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -257,7 +261,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -314,7 +318,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/01-first-program" class="md-nav__link">
+      <a href="../../tutorial/01-first-program" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -336,7 +340,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/02-using-python-data-model" class="md-nav__link">
+      <a href="../../tutorial/02-using-python-data-model" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -358,7 +362,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/03-probabilistic-logic" class="md-nav__link">
+      <a href="../../tutorial/03-probabilistic-logic" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -380,7 +384,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/04-owldl" class="md-nav__link">
+      <a href="../../tutorial/04-owldl" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -402,7 +406,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/05-cli" class="md-nav__link">
+      <a href="../../tutorial/05-cli" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -428,17 +432,19 @@
       
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -453,7 +459,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Gallery
@@ -467,7 +473,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -489,7 +495,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/synbio-design-checks/" class="md-nav__link">
+      <a href="../synbio-design-checks/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -508,10 +514,31 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../examples/tlog-cli/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    TLog CLI workflow
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -521,6 +548,71 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#convert-tlog-to-other-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convert TLog To Other Formats
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convert-to-tlog" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convert To TLog
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#literate-markdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      Literate Markdown
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-inference-with-clingo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run Inference With Clingo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#show-multiple-worlds" class="md-nav__link">
+    <span class="md-ellipsis">
+      Show Multiple Worlds
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -533,7 +625,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/tlog-cli/" class="md-nav__link">
+      <a href="./" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -598,7 +690,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concepts/" class="md-nav__link">
+      <a href="../../concepts/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -620,7 +712,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concepts/datamodel/" class="md-nav__link">
+      <a href="../../concepts/datamodel/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -642,7 +734,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concepts/decorators/" class="md-nav__link">
+      <a href="../../concepts/decorators/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -664,7 +756,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concepts/generators/" class="md-nav__link">
+      <a href="../../concepts/generators/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -686,7 +778,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concepts/solvers/" class="md-nav__link">
+      <a href="../../concepts/solvers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -708,7 +800,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concepts/models/" class="md-nav__link">
+      <a href="../../concepts/models/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -730,7 +822,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../concepts/benchmarks.md" class="md-nav__link">
+      <a href="../../concepts/benchmarks.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -795,7 +887,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/solvers/" class="md-nav__link">
+      <a href="../../integrations/solvers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -817,7 +909,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/solvers/clingo/" class="md-nav__link">
+      <a href="../../integrations/solvers/clingo/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -839,7 +931,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/solvers/z3/" class="md-nav__link">
+      <a href="../../integrations/solvers/z3/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -861,7 +953,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/solvers/souffle/" class="md-nav__link">
+      <a href="../../integrations/solvers/souffle/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -883,7 +975,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/solvers/prover9/" class="md-nav__link">
+      <a href="../../integrations/solvers/prover9/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -905,7 +997,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/solvers/snakelog/" class="md-nav__link">
+      <a href="../../integrations/solvers/snakelog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -927,7 +1019,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/solvers/problog/" class="md-nav__link">
+      <a href="../../integrations/solvers/problog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -949,7 +1041,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/solvers/llm/" class="md-nav__link">
+      <a href="../../integrations/solvers/llm/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1014,7 +1106,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/compilers/" class="md-nav__link">
+      <a href="../../conversion/compilers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1036,7 +1128,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/compilers/yaml/" class="md-nav__link">
+      <a href="../../conversion/compilers/yaml/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1058,7 +1150,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/compilers/tlog/" class="md-nav__link">
+      <a href="../../conversion/compilers/tlog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1080,7 +1172,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/compilers/prolog/" class="md-nav__link">
+      <a href="../../conversion/compilers/prolog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1102,7 +1194,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/compilers/problog/" class="md-nav__link">
+      <a href="../../conversion/compilers/problog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1124,7 +1216,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/compilers/tptp/" class="md-nav__link">
+      <a href="../../conversion/compilers/tptp/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1146,7 +1238,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/compilers/fol/" class="md-nav__link">
+      <a href="../../conversion/compilers/fol/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1168,7 +1260,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/compilers/sexpr/" class="md-nav__link">
+      <a href="../../conversion/compilers/sexpr/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1233,7 +1325,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/parsers/" class="md-nav__link">
+      <a href="../../conversion/parsers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1255,7 +1347,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/parsers/python/" class="md-nav__link">
+      <a href="../../conversion/parsers/python/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1277,7 +1369,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/parsers/tlog/" class="md-nav__link">
+      <a href="../../conversion/parsers/tlog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1299,7 +1391,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/parsers/yaml/" class="md-nav__link">
+      <a href="../../conversion/parsers/yaml/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1321,7 +1413,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/parsers/dataframe/" class="md-nav__link">
+      <a href="../../conversion/parsers/dataframe/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1343,7 +1435,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/parsers/catalog/" class="md-nav__link">
+      <a href="../../conversion/parsers/catalog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1365,7 +1457,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/parsers/owlpy/" class="md-nav__link">
+      <a href="../../conversion/parsers/owlpy/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1387,7 +1479,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conversion/parsers/rdf/" class="md-nav__link">
+      <a href="../../conversion/parsers/rdf/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1488,7 +1580,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/frameworks/owldl/" class="md-nav__link">
+      <a href="../../integrations/frameworks/owldl/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1510,7 +1602,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/frameworks/owldl/owldl-tutorial" class="md-nav__link">
+      <a href="../../integrations/frameworks/owldl/owldl-tutorial" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1532,7 +1624,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/frameworks/owldl/owltop/" class="md-nav__link">
+      <a href="../../integrations/frameworks/owldl/owltop/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1554,7 +1646,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/frameworks/owldl/reasoner/" class="md-nav__link">
+      <a href="../../integrations/frameworks/owldl/reasoner/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1584,7 +1676,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/frameworks/pydantic" class="md-nav__link">
+      <a href="../../integrations/frameworks/pydantic" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1606,7 +1698,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/frameworks/sqlmodel.md" class="md-nav__link">
+      <a href="../../integrations/frameworks/sqlmodel.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1628,7 +1720,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrations/frameworks/rdf/" class="md-nav__link">
+      <a href="../../integrations/frameworks/rdf/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1657,7 +1749,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../cli/" class="md-nav__link">
+      <a href="../../cli/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1678,7 +1770,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../faq/" class="md-nav__link">
+      <a href="../../faq/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1699,7 +1791,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../roadmap/" class="md-nav__link">
+      <a href="../../roadmap/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1720,7 +1812,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributing.md" class="md-nav__link">
+      <a href="../../contributing.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1761,36 +1853,45 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#working-with-multiple-solvers" class="md-nav__link">
+  <a href="#convert-tlog-to-other-formats" class="md-nav__link">
     <span class="md-ellipsis">
-      Working with Multiple Solvers
+      Convert TLog To Other Formats
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#custom-predicate-definitions" class="md-nav__link">
+  <a href="#convert-to-tlog" class="md-nav__link">
     <span class="md-ellipsis">
-      Custom Predicate Definitions
+      Convert To TLog
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#integrating-with-pydantic" class="md-nav__link">
+  <a href="#literate-markdown" class="md-nav__link">
     <span class="md-ellipsis">
-      Integrating with Pydantic
+      Literate Markdown
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#handling-negation-and-existential-quantification" class="md-nav__link">
+  <a href="#run-inference-with-clingo" class="md-nav__link">
     <span class="md-ellipsis">
-      Handling Negation and Existential Quantification
+      Run Inference With Clingo
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#show-multiple-worlds" class="md-nav__link">
+    <span class="md-ellipsis">
+      Show Multiple Worlds
     </span>
   </a>
   
@@ -1815,64 +1916,94 @@
   
 
 
-<h1 id="advanced-usage">Advanced Usage</h1>
-<p>This section covers more advanced topics and techniques for using TypedLogic effectively.</p>
-<h2 id="working-with-multiple-solvers">Working with Multiple Solvers</h2>
-<p>TypedLogic supports multiple solvers, allowing you to choose the best tool for your specific use case. Here's an example of using both Z3 and Souffle solvers:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.integrations.solvers.z3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Z3Solver</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.integrations.solvers.souffle</span><span class="w"> </span><span class="kn">import</span> <span class="n">SouffleSolver</span>
-
-<span class="c1"># Using Z3</span>
-<span class="n">z3_solver</span> <span class="o">=</span> <span class="n">Z3Solver</span><span class="p">()</span>
-<span class="n">z3_solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">theory</span><span class="p">)</span>
-<span class="n">z3_result</span> <span class="o">=</span> <span class="n">z3_solver</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
-
-<span class="c1"># Using Souffle</span>
-<span class="n">souffle_solver</span> <span class="o">=</span> <span class="n">SouffleSolver</span><span class="p">()</span>
-<span class="n">souffle_solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">theory</span><span class="p">)</span>
-<span class="n">souffle_result</span> <span class="o">=</span> <span class="n">souffle_solver</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+<h1 id="tlog-cli-examples">TLog CLI Examples</h1>
+<p>TLog is a parser and compiler format, not a separate CLI mode. Use the existing
+generic commands:</p>
+<ul>
+<li><code>convert</code> for one input theory to one output format</li>
+<li><code>dump</code> for combining and exporting inputs</li>
+<li><code>solve</code> for satisfiability, materialization, and answer-set enumeration</li>
+</ul>
+<h2 id="convert-tlog-to-other-formats">Convert TLog To Other Formats</h2>
+<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>convert<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span>-t<span class="w"> </span>prolog
 </code></pre></div>
-<h2 id="custom-predicate-definitions">Custom Predicate Definitions</h2>
-<p>For more complex scenarios, you can define custom predicates with specific argument types:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic</span><span class="w"> </span><span class="kn">import</span> <span class="n">PredicateDefinition</span>
+<p>Example output:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">%% Predicate Definitions</span>
+<span class="c1">% parent(parent: PersonID, child: PersonID)</span>
+<span class="c1">% ancestor(ancestor: PersonID, descendant: PersonID)</span>
 
-<span class="n">custom_predicate</span> <span class="o">=</span> <span class="n">PredicateDefinition</span><span class="p">(</span>
-    <span class="n">predicate</span><span class="o">=</span><span class="s2">&quot;ComplexRelation&quot;</span><span class="p">,</span>
-    <span class="n">arguments</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;arg1&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="s2">&quot;arg2&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="s2">&quot;arg3&quot;</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="p">}</span>
-<span class="p">)</span>
-
-<span class="n">theory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">custom_predicate</span><span class="p">)</span>
+<span class="nf">parent</span><span class="p">(</span><span class="s s-Atom">&#39;Alice&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;Bob&#39;</span><span class="p">).</span>
+<span class="nf">parent</span><span class="p">(</span><span class="s s-Atom">&#39;Bob&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;Charlie&#39;</span><span class="p">).</span>
+<span class="nf">ancestor</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">)</span> <span class="p">:-</span> <span class="nf">parent</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">).</span>
+<span class="nf">ancestor</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Z</span><span class="p">)</span> <span class="p">:-</span> <span class="nf">ancestor</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">),</span> <span class="nf">ancestor</span><span class="p">(</span><span class="nv">Y</span><span class="p">,</span> <span class="nv">Z</span><span class="p">).</span>
 </code></pre></div>
-<h2 id="integrating-with-pydantic">Integrating with Pydantic</h2>
-<p>TypedLogic seamlessly integrates with Pydantic for robust data validation:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic</span><span class="w"> </span><span class="kn">import</span> <span class="n">FactMixin</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">ComplexFact</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">FactMixin</span><span class="p">):</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">age</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
-    <span class="n">scores</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">min_items</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_items</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-
-<span class="c1"># This fact will be validated according to the Pydantic rules</span>
-<span class="n">valid_fact</span> <span class="o">=</span> <span class="n">ComplexFact</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">scores</span><span class="o">=</span><span class="p">[</span><span class="mf">85.5</span><span class="p">,</span> <span class="mf">92.0</span><span class="p">,</span> <span class="mf">78.5</span><span class="p">])</span>
+<p>Other compiler targets work the same way:</p>
+<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>convert<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span>-t<span class="w"> </span>yaml
+typedlogic<span class="w"> </span>convert<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span>-t<span class="w"> </span>fol
+typedlogic<span class="w"> </span>convert<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span>-t<span class="w"> </span>souffle
 </code></pre></div>
-<h2 id="handling-negation-and-existential-quantification">Handling Negation and Existential Quantification</h2>
-<p>TypedLogic supports negation and existential quantification in axioms:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic</span><span class="w"> </span><span class="kn">import</span> <span class="n">axiom</span><span class="p">,</span> <span class="n">gen1</span><span class="p">,</span> <span class="n">Exists</span>
-
-<span class="nd">@axiom</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">unique_parent</span><span class="p">():</span>
-    <span class="k">return</span> <span class="nb">all</span><span class="p">(</span>
-        <span class="o">~</span><span class="n">Exists</span><span class="p">([</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">Parent</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">child</span><span class="o">=</span><span class="n">x</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y</span> <span class="o">!=</span> <span class="n">z</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">gen2</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">Parent</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">z</span><span class="p">,</span> <span class="n">child</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
-    <span class="p">)</span>
+<h2 id="convert-to-tlog">Convert To TLog</h2>
+<p>Use <code>-t tlog</code> with any parser-supported input:</p>
+<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>convert<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span>-t<span class="w"> </span>tlog
 </code></pre></div>
-<p>These advanced techniques allow you to express complex logical relationships and constraints in your TypedLogic-based systems.</p>
+<p>Example output:</p>
+<div class="highlight"><pre><span></span><code>type PersonID: str.
+
+pred parent(parent: PersonID, child: PersonID).
+pred ancestor(ancestor: PersonID, descendant: PersonID).
+
+parent(&#39;Alice&#39;, &#39;Bob&#39;).
+parent(&#39;Bob&#39;, &#39;Charlie&#39;).
+/// Direct parent links are ancestor links.
+all x, y | ancestor(x, y) :- parent(x, y).
+/// Ancestor links are transitive.
+all x, y, z | ancestor(x, z) :- (ancestor(x, y) &amp; ancestor(y, z)).
+</code></pre></div>
+<h2 id="literate-markdown">Literate Markdown</h2>
+<p>Files ending in <code>.tlog.md</code> are parsed as Markdown wrappers around fenced TLog
+blocks:</p>
+<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>dump<span class="w"> </span>docs/examples/tlog/literate-rules.tlog.md<span class="w"> </span>-t<span class="w"> </span>prolog
+</code></pre></div>
+<p>The prose is ignored. Fenced <code>tlog</code>, <code>typedlogic</code>, or <code>logic</code> blocks are parsed
+in order.</p>
+<h2 id="run-inference-with-clingo">Run Inference With Clingo</h2>
+<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>solve<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--solver<span class="w"> </span>clingo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--show<span class="w"> </span>ancestor<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--max-models<span class="w"> </span><span class="m">1</span>
+</code></pre></div>
+<p>Example output:</p>
+<div class="highlight"><pre><span></span><code>Satisfiable: True
+
+=== Model 1 ===
+ancestor(Alice, Bob)
+ancestor(Bob, Charlie)
+ancestor(Alice, Charlie)
+
+Total models shown: 1
+</code></pre></div>
+<p><code>--show ancestor</code> filters materialized output to selected predicates. It is a
+generic <code>solve</code> option and works for other syntaxes too.</p>
+<h2 id="show-multiple-worlds">Show Multiple Worlds</h2>
+<p>Answer-set solvers such as Clingo can produce multiple models:</p>
+<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>solve<span class="w"> </span>docs/examples/tlog/worlds.tlog<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--solver<span class="w"> </span>clingo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--show<span class="w"> </span>selected<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--max-models<span class="w"> </span><span class="m">2</span>
+</code></pre></div>
+<p>Example output:</p>
+<div class="highlight"><pre><span></span><code>Satisfiable: True
+
+=== Model 1 ===
+selected(coffee)
+
+=== Model 2 ===
+selected(tea)
+
+Total models shown: 2
+</code></pre></div>
+<p>The input syntax is still just TLog; the multiple-world behavior comes from the
+chosen solver.</p>
 
 
 
@@ -1921,10 +2052,10 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["content.tabs.link"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
       
     
   </body>

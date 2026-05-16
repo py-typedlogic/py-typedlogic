@@ -1,0 +1,8 @@
+pred selected(option: str).
+pred explanation(option: str).
+pred hidden(option: str).
+
+selected("tea") | selected("coffee").
+
+explanation(option) :- selected(option).
+hidden("noise").

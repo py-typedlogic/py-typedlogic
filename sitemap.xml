@@ -93,6 +93,10 @@
          <lastmod>2026-05-16</lastmod>
     </url>
     <url>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/compilers/tlog/</loc>
+         <lastmod>2026-05-16</lastmod>
+    </url>
+    <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/compilers/tptp/</loc>
          <lastmod>2026-05-16</lastmod>
     </url>
@@ -125,6 +129,10 @@
          <lastmod>2026-05-16</lastmod>
     </url>
     <url>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/parsers/tlog/</loc>
+         <lastmod>2026-05-16</lastmod>
+    </url>
+    <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/parsers/yaml/</loc>
          <lastmod>2026-05-16</lastmod>
     </url>
@@ -134,6 +142,18 @@
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/examples/synbio-design-checks/</loc>
+         <lastmod>2026-05-16</lastmod>
+    </url>
+    <url>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/examples/tlog-cli/</loc>
+         <lastmod>2026-05-16</lastmod>
+    </url>
+    <url>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/examples/tlog-cli/</loc>
+         <lastmod>2026-05-16</lastmod>
+    </url>
+    <url>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/examples/tlog/literate-rules.tlog/</loc>
          <lastmod>2026-05-16</lastmod>
     </url>
     <url>
