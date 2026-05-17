@@ -144,7 +144,11 @@ def _guess_format(data_file: Path) -> str:
     return suffix
 
 
-def _combine_input_files(input_files: List[Path], validate_types: bool = True):
+def _combine_input_files(
+    input_files: List[Path],
+    validate_types: bool = True,
+    input_format: Optional[str] = None,
+):
     """
     Combine multiple input files into a single theory.
 
@@ -165,7 +169,7 @@ def _combine_input_files(input_files: List[Path], validate_types: bool = True):
     combined_theory = None
 
     for input_file in input_files:
-        file_format = _guess_format(input_file)
+        file_format = input_format or _guess_format(input_file)
         parser = get_parser(file_format)
 
         if validate_types and file_format == "python":
@@ -367,6 +371,7 @@ def solve(
 @app.command()
 def dump(
     input_files: List[Path] = typer.Argument(..., exists=True, dir_okay=False, readable=True),
+    input_format: Optional[str] = input_format_option,
     output_format: str = typer.Option("yaml", "--output-format", "-t", help="Output format (fol, yaml, prolog, etc.)"),
     output_file: Optional[Path] = output_file_option,
     validate_types: bool = typer.Option(
@@ -397,7 +402,7 @@ def dump(
     """
     # Combine all input files into a single theory
     try:
-        combined_theory = _combine_input_files(input_files, validate_types)
+        combined_theory = _combine_input_files(input_files, validate_types, input_format)
     except ValueError as e:
         click.echo(f"Error: {e}")
         raise typer.Exit(1)

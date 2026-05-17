@@ -1,28 +1,24 @@
-from io import TextIOWrapper
 from pathlib import Path
-from typing import Any, Dict, List, Optional, TextIO, Union
+from typing import TextIO, Union
 
 import yaml
 
 from typedlogic import Theory
+from typedlogic.integrations.frameworks.linkml.reasoning import schema_theory_from_object
 from typedlogic.parser import Parser
-import typedlogic.integrations.frameworks.linkml.loader as linkml_loader
-from typedlogic.parsers.pyparser import PythonParser
 
 
 class LinkMLParser(Parser):
-    """
-    A parser for LinkML YAML files.
-    """
+    """A parser for LinkML YAML schema files."""
 
     def parse(self, source: Union[Path, str, TextIO], **kwargs) -> Theory:
         if isinstance(source, Path):
-            source = source.open()
-        if not isinstance(source, (str, TextIOWrapper)):
+            text = source.read_text(encoding="utf-8")
+        elif hasattr(source, "read"):
+            text = source.read()
+        elif isinstance(source, str):
+            text = source
+        else:
             raise ValueError(f"Invalid source type: {type(source)}")
-        obj = yaml.safe_load(source)
-        python_parser = PythonParser()
-        theory = python_parser.parse(linkml_loader)
-        # theory = Theory()
-        theory.extend(linkml_loader.generate_from_object(obj))
-        return theory
+        obj = yaml.safe_load(text)
+        return schema_theory_from_object(obj, include_schema_rules=kwargs.get("include_schema_rules", True))
