@@ -91,6 +91,7 @@ nav:
       - ProbLog: conversion/compilers/problog.md
       - TPTP: conversion/compilers/tptp.md
       - FOL: conversion/compilers/fol.md
+      - SQL: conversion/compilers/sql.md
       - S-Expression: conversion/compilers/sexpr.md
   - Parsers:
       - Parser overview: conversion/parsers/index.md
