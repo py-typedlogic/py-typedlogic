@@ -5,6 +5,7 @@ This page provides various examples to illustrate the usage of TypedLogic in dif
 ## Gallery Tutorials
 
 - [Synthetic biology design checks](examples/synbio-design-checks.ipynb): assembly structure, GO-driven pathway feasibility, and GO-CAM curation consistency in one reusable theory.
+- [SQL goal compiler](examples/sql-compiler.ipynb): bind predicates to SQL tables, compile goals to SQL, run recursive CTEs, and check constraints in SQLite.
 - [TLog CLI examples](examples/tlog-cli.md): author `.tlog` and literate `.tlog.md` files, convert them, run Clingo, filter materialized predicates, and inspect multiple worlds.
 - [TLog notebook](examples/tlog-cli.ipynb): notebook form of the same CLI-oriented workflow.
 
