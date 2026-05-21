@@ -8,9 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/concepts/types/">
+        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/examples/sql-compiler/">
       
       
+        <link rel="prev" href="../synbio-design-checks/">
+      
+      
+        <link rel="next" href="../tlog-cli/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -18,7 +22,7 @@
     
     
       
-        <title>Typing in typed-logic - py-typedlogic</title>
+        <title>SQL goal compiler - py-typedlogic</title>
       
     
     
@@ -78,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#typing-in-typed-logic" class="md-skip">
+        <a href="#sql-goal-compiler" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Typing in typed-logic
+              SQL goal compiler
             
           </span>
         </div>
@@ -428,17 +432,19 @@
       
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -453,7 +459,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Gallery
@@ -467,7 +473,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -489,7 +495,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/synbio-design-checks/" class="md-nav__link">
+      <a href="../synbio-design-checks/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -508,10 +514,31 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../examples/sql-compiler/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    SQL goal compiler
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -521,6 +548,80 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rules-as-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rules As Views
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inline-unit-clauses" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inline Unit Clauses
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#goal-sentence-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      Goal Sentence Groups
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#negation-as-failure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Negation As Failure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constraint-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Constraint Checks
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -533,7 +634,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/tlog-cli/" class="md-nav__link">
+      <a href="../tlog-cli/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -555,7 +656,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/tlog-cli/" class="md-nav__link">
+      <a href="../tlog-cli/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -620,7 +721,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../concepts/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -642,7 +743,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../datamodel/" class="md-nav__link">
+      <a href="../../concepts/datamodel/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -664,7 +765,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decorators/" class="md-nav__link">
+      <a href="../../concepts/decorators/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -686,7 +787,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../generators/" class="md-nav__link">
+      <a href="../../concepts/generators/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -708,7 +809,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../solvers/" class="md-nav__link">
+      <a href="../../concepts/solvers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -730,7 +831,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../models/" class="md-nav__link">
+      <a href="../../concepts/models/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -752,7 +853,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../benchmarks.md" class="md-nav__link">
+      <a href="../../concepts/benchmarks.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1805,9 +1906,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pytheories" class="md-nav__link">
+  <a href="#setup" class="md-nav__link">
     <span class="md-ellipsis">
-      Pytheories
+      Setup
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rules-as-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rules As Views
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inline-unit-clauses" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inline Unit Clauses
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#goal-sentence-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      Goal Sentence Groups
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#negation-as-failure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Negation As Failure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constraint-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Constraint Checks
     </span>
   </a>
   
@@ -1832,15 +1978,256 @@
   
 
 
-<h1 id="typing-in-typed-logic">Typing in typed-logic</h1>
-<p>Broadly speaking, logics can be broken down into <em>untyped</em> logics, and <em>typed</em> (also known as <em>sorted</em> logics).</p>
-<p>The data model for typedlogic follows the typed logic model</p>
-<h2 id="pytheories">Pytheories</h2>
-<p>Any typed-logic theory written in Python follows the same rules as the rest of Python.
-It must of course be a valid Python program, without any syntax or runtime errors.</p>
-<p>Additionally, you can avail yourself of standard Python tooling to help keep your code clean
-and bug-free. This includes type checking, whether via a tool such as <code>mypy</code>, or simply
-via your IDE.</p>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+(function() {
+  function addWidgetsRenderer() {
+    var requireJsScript = document.createElement('script');
+    requireJsScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js';
+
+    var mimeElement = document.querySelector('script[type="application/vnd.jupyter.widget-view+json"]');
+    var jupyterWidgetsScript = document.createElement('script');
+    var widgetRendererSrc = 'https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js';
+    var widgetState;
+
+    // Fallback for older version:
+    try {
+      widgetState = mimeElement && JSON.parse(mimeElement.innerHTML);
+
+      if (widgetState && (widgetState.version_major < 2 || !widgetState.version_major)) {
+        widgetRendererSrc = 'jupyter-js-widgets@*/dist/embed.js';
+      }
+    } catch(e) {}
+
+    jupyterWidgetsScript.src = widgetRendererSrc;
+
+    document.body.appendChild(requireJsScript);
+    document.body.appendChild(jupyterWidgetsScript);
+  }
+
+  document.addEventListener('DOMContentLoaded', addWidgetsRenderer);
+}());
+</script>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="sql-goal-compiler">SQL Goal Compiler</h1>
+<p>This notebook demonstrates how to translate a TypedLogic theory plus a query or goal into SQL.</p>
+<p>The examples use an in-memory SQLite database so the generated SQL is executed end to end.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="setup">Setup</h2>
+<p>The SQL compiler is a regular TypedLogic compiler. <code>PredicateBinding</code> tells the compiler which SQL table and columns back an extensional predicate.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic</span><span class="w"> </span><span class="kn">import</span> <span class="n">And</span><span class="p">,</span> <span class="n">Forall</span><span class="p">,</span> <span class="n">Implies</span><span class="p">,</span> <span class="n">NegationAsFailure</span><span class="p">,</span> <span class="n">Not</span><span class="p">,</span> <span class="n">PredicateDefinition</span><span class="p">,</span> <span class="n">SentenceGroup</span><span class="p">,</span> <span class="n">Term</span><span class="p">,</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">Variable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.compilers.sql_compiler</span><span class="w"> </span><span class="kn">import</span> <span class="n">PredicateBinding</span><span class="p">,</span> <span class="n">SQLCompiler</span><span class="p">,</span> <span class="n">SQLCompilerConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.datamodel</span><span class="w"> </span><span class="kn">import</span> <span class="n">SentenceGroupType</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fetchall</span><span class="p">(</span><span class="n">sql</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">setup</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run SQL in a fresh in-memory SQLite database.&quot;&quot;&quot;</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;:memory:&quot;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">statement</span> <span class="ow">in</span> <span class="n">setup</span> <span class="ow">or</span> <span class="p">[]:</span>
+            <span class="n">connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">statement</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">))</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<span class="n">compiler</span> <span class="o">=</span> <span class="n">SQLCompiler</span><span class="p">()</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="rules-as-views">Rules As Views</h2>
+<p>This theory defines <code>Ancestor</code> from <code>Parent</code>. The recursive rule is compiled as a recursive common table expression.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">x</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">)</span>
+
+<span class="n">family_theory</span> <span class="o">=</span> <span class="n">Theory</span><span class="p">(</span>
+    <span class="n">predicate_definitions</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">PredicateDefinition</span><span class="p">(</span><span class="s2">&quot;Parent&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;parent&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">}),</span>
+        <span class="n">PredicateDefinition</span><span class="p">(</span><span class="s2">&quot;Ancestor&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;ancestor&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">,</span> <span class="s2">&quot;descendant&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">}),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">family_theory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Forall</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">Implies</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Parent&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Ancestor&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))))</span>
+<span class="n">family_theory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+    <span class="n">Forall</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">],</span>
+        <span class="n">Implies</span><span class="p">(</span><span class="n">And</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Ancestor&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Parent&quot;</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)),</span> <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Ancestor&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">)),</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">ancestor_sql</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="n">family_theory</span><span class="p">,</span>
+    <span class="n">goal</span><span class="o">=</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Ancestor&quot;</span><span class="p">,</span> <span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;who&quot;</span><span class="p">)),</span>
+    <span class="n">bindings</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Parent&quot;</span><span class="p">:</span> <span class="n">PredicateBinding</span><span class="p">(</span><span class="s2">&quot;parent_edges&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;parent&quot;</span><span class="p">:</span> <span class="s2">&quot;src&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">:</span> <span class="s2">&quot;dst&quot;</span><span class="p">})},</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ancestor_sql</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">fetchall</span><span class="p">(</span>
+    <span class="n">ancestor_sql</span><span class="p">,</span>
+    <span class="p">[</span>
+        <span class="s2">&quot;CREATE TABLE parent_edges (src TEXT, dst TEXT)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;INSERT INTO parent_edges VALUES (&#39;Alice&#39;, &#39;Bob&#39;), (&#39;Bob&#39;, &#39;Carol&#39;), (&#39;Carol&#39;, &#39;Dana&#39;)&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="inline-unit-clauses">Inline Unit Clauses</h2>
+<p>Ground facts do not require table bindings. They become inline CTE branches.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">person_theory</span> <span class="o">=</span> <span class="n">Theory</span><span class="p">(</span><span class="n">predicate_definitions</span><span class="o">=</span><span class="p">[</span><span class="n">PredicateDefinition</span><span class="p">(</span><span class="s2">&quot;Person&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">})])</span>
+<span class="n">person_theory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Person&quot;</span><span class="p">,</span> <span class="s2">&quot;Alice&quot;</span><span class="p">))</span>
+<span class="n">person_theory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Person&quot;</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">))</span>
+
+<span class="n">person_sql</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">person_theory</span><span class="p">,</span> <span class="n">goal</span><span class="o">=</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Person&quot;</span><span class="p">,</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">person_sql</span><span class="p">)</span>
+<span class="n">fetchall</span><span class="p">(</span><span class="n">person_sql</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="goal-sentence-groups">Goal Sentence Groups</h2>
+<p>If no explicit <code>goal</code> is supplied, the compiler uses goal sentence groups from the theory.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">goal_theory</span> <span class="o">=</span> <span class="n">Theory</span><span class="p">(</span><span class="n">predicate_definitions</span><span class="o">=</span><span class="p">[</span><span class="n">PredicateDefinition</span><span class="p">(</span><span class="s2">&quot;Person&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">})])</span>
+<span class="n">goal_theory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Person&quot;</span><span class="p">,</span> <span class="s2">&quot;Alice&quot;</span><span class="p">))</span>
+<span class="n">goal_theory</span><span class="o">.</span><span class="n">sentence_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+    <span class="n">SentenceGroup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;goals&quot;</span><span class="p">,</span> <span class="n">group_type</span><span class="o">=</span><span class="n">SentenceGroupType</span><span class="o">.</span><span class="n">GOAL</span><span class="p">,</span> <span class="n">sentences</span><span class="o">=</span><span class="p">[</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Person&quot;</span><span class="p">,</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">))])</span>
+<span class="p">)</span>
+
+<span class="n">goal_sql</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">goal_theory</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">goal_sql</span><span class="p">)</span>
+<span class="n">fetchall</span><span class="p">(</span><span class="n">goal_sql</span><span class="o">.</span><span class="n">removesuffix</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">))</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="negation-as-failure">Negation As Failure</h2>
+<p>Negated body atoms are emitted as correlated <code>NOT EXISTS</code> subqueries.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">eligibility_theory</span> <span class="o">=</span> <span class="n">Theory</span><span class="p">(</span>
+    <span class="n">predicate_definitions</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">PredicateDefinition</span><span class="p">(</span><span class="s2">&quot;Person&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">}),</span>
+        <span class="n">PredicateDefinition</span><span class="p">(</span><span class="s2">&quot;Blocked&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">}),</span>
+        <span class="n">PredicateDefinition</span><span class="p">(</span><span class="s2">&quot;Eligible&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">}),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">eligibility_theory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+    <span class="n">Forall</span><span class="p">([</span><span class="n">x</span><span class="p">],</span> <span class="n">Implies</span><span class="p">(</span><span class="n">And</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Person&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">NegationAsFailure</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Blocked&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">))),</span> <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Eligible&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)))</span>
+<span class="p">)</span>
+
+<span class="n">eligible_sql</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="n">eligibility_theory</span><span class="p">,</span>
+    <span class="n">goal</span><span class="o">=</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Eligible&quot;</span><span class="p">,</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)),</span>
+    <span class="n">bindings</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Person&quot;</span><span class="p">:</span> <span class="s2">&quot;people&quot;</span><span class="p">,</span> <span class="s2">&quot;Blocked&quot;</span><span class="p">:</span> <span class="s2">&quot;blocked&quot;</span><span class="p">},</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">eligible_sql</span><span class="p">)</span>
+<span class="n">fetchall</span><span class="p">(</span>
+    <span class="n">eligible_sql</span><span class="p">,</span>
+    <span class="p">[</span>
+        <span class="s2">&quot;CREATE TABLE people (name TEXT)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;CREATE TABLE blocked (name TEXT)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;INSERT INTO people VALUES (&#39;Alice&#39;), (&#39;Bob&#39;)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;INSERT INTO blocked VALUES (&#39;Bob&#39;)&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="constraint-checks">Constraint Checks</h2>
+<p>First-order denial constraints compile to validation queries. A returned row is a violation witness.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">constraint_theory</span> <span class="o">=</span> <span class="n">Theory</span><span class="p">(</span>
+    <span class="n">predicate_definitions</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">PredicateDefinition</span><span class="p">(</span><span class="s2">&quot;Cat&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">}),</span>
+        <span class="n">PredicateDefinition</span><span class="p">(</span><span class="s2">&quot;Dog&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">}),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">constraint_theory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Forall</span><span class="p">([</span><span class="n">x</span><span class="p">],</span> <span class="n">Not</span><span class="p">(</span><span class="n">And</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Cat&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Dog&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)))))</span>
+
+<span class="p">[</span><span class="n">constraint_sql</span><span class="p">]</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">compile_constraints</span><span class="p">(</span>
+    <span class="n">constraint_theory</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">SQLCompilerConfig</span><span class="p">(</span><span class="n">bindings</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Cat&quot;</span><span class="p">:</span> <span class="n">PredicateBinding</span><span class="p">(</span><span class="s2">&quot;cats&quot;</span><span class="p">),</span> <span class="s2">&quot;Dog&quot;</span><span class="p">:</span> <span class="n">PredicateBinding</span><span class="p">(</span><span class="s2">&quot;dogs&quot;</span><span class="p">)}),</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">constraint_sql</span><span class="p">)</span>
+<span class="n">fetchall</span><span class="p">(</span>
+    <span class="n">constraint_sql</span><span class="p">,</span>
+    <span class="p">[</span>
+        <span class="s2">&quot;CREATE TABLE cats (name TEXT)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;CREATE TABLE dogs (name TEXT)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;INSERT INTO cats VALUES (&#39;Jules&#39;), (&#39;Milo&#39;)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;INSERT INTO dogs VALUES (&#39;Milo&#39;), (&#39;Rex&#39;)&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+
+</div>
+</div>
 
 
 
