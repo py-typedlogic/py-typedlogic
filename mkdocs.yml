@@ -64,6 +64,7 @@ nav:
   - Gallery:
       - Examples: examples.md
       - Synthetic biology design checks: examples/synbio-design-checks.ipynb
+      - SQL goal compiler: examples/sql-compiler.ipynb
       - TLog CLI workflow: examples/tlog-cli.md
       - TLog CLI notebook: examples/tlog-cli.ipynb
   - Concepts:
