@@ -9,8 +9,8 @@
 - **Type check**: `uv run mypy src tests`
 - **Lint**: `uv run ruff check src/ tests/ --exclude tests/input --exclude tests/output`
 - **Format code**: `uv run ruff format src/ tests/ --exclude tests/input --exclude tests/output`
-- **Fix linting**: `uv run tox -e lint-fix`
-- **Spell check**: `uv run tox -e codespell`
+- **Fix linting**: `make format` (ruff format + `ruff check --fix`)
+- **Spell check**: `uv run codespell src/ tests/ -S tests/input/,tests/output/` or `make codespell`
 - **Update dependencies**: `uv lock --upgrade`
 
 ## Style Guidelines
