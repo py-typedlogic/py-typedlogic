@@ -3,7 +3,7 @@ from collections import abc
 from dataclasses import dataclass, field
 from pathlib import Path
 from types import ModuleType
-from typing import Any, ClassVar, Dict, Iterable, Iterator, List, Optional, TextIO, Tuple, Type, Union
+from typing import Any, ClassVar, Dict, Iterable, Iterator, List, Optional, Set, TextIO, Tuple, Type, Union
 
 from typedlogic import FactMixin, Variable
 from typedlogic.datamodel import (
@@ -37,9 +37,22 @@ class Model:
     description: Optional[str] = None
     source_object: Optional[Any] = None
     ground_terms: List[Term] = field(default_factory=list)
+    _predicate_index: Optional[Dict[str, List[Term]]] = field(default=None, init=False, repr=False, compare=False)
+    _indexed_count: int = field(default=0, init=False, repr=False, compare=False)
 
     def retrieve(self, predicate: Union[str, type], *args) -> List[Term]:
         return list(self.iter_retrieve(predicate, *args))
+
+    def _ensure_predicate_index(self) -> Dict[str, List[Term]]:
+        # the index is rebuilt if ground_terms has grown or shrunk; in-place
+        # replacement of a term at the same length is not detected
+        if self._predicate_index is None or self._indexed_count != len(self.ground_terms):
+            index: Dict[str, List[Term]] = {}
+            for t in self.ground_terms:
+                index.setdefault(t.predicate, []).append(t)
+            self._predicate_index = index
+            self._indexed_count = len(self.ground_terms)
+        return self._predicate_index
 
     def iter_retrieve(self, predicate: Union[str, type], *args) -> Iterator[Term]:
         """
@@ -50,15 +63,12 @@ class Model:
         """
         if isinstance(predicate, type):
             predicate = predicate.__name__
-        for t in self.ground_terms:
-            if t.predicate != predicate:
-                continue
+        for t in self._ensure_predicate_index().get(predicate, []):
             if args:
+                t_values = t.values
                 is_match = True
-                for i in range(len(args)):
-                    if args[i] is None:
-                        continue
-                    if args[i] != t.values[i]:
+                for i, arg in enumerate(args):
+                    if arg is not None and arg != t_values[i]:
                         is_match = False
                         break
                 if not is_match:
@@ -143,6 +153,8 @@ class Solver(ABC):
     type_definitions: Dict[str, str] = field(default_factory=dict)
     constants: Dict[str, Any] = field(default_factory=dict)
     goals: Optional[List[SentenceGroup]] = None
+    _sentences_added: Set[Sentence] = field(default_factory=set, init=False, repr=False, compare=False)
+    _unhashable_sentences_added: List[Sentence] = field(default_factory=list, init=False, repr=False, compare=False)
 
     @property
     def method(self) -> Method:
@@ -199,27 +211,24 @@ class Solver(ABC):
         if isinstance(sentence, Term):
             # Note: the default implementation may be highly ineffecient.
             # it is recommended to override this method in a subclass.
-            has_vars = sentence.variables
-            cls = type(self)
-            new_solver = cls()
-            new_solver.add(self.base_theory)
+            sentence_values = sentence.values
+            has_vars = any(isinstance(v, Variable) for v in sentence_values)
             model = self.model()
             for t in model.iter_retrieve(sentence.predicate):
                 if t == sentence:
                     return True
                 if has_vars:
-                    if t.predicate == sentence.predicate:
-                        is_match = True
-                        for i in range(len(sentence.values)):
-                            arg_val = sentence.values[i]
-                            if isinstance(arg_val, Variable):
-                                # auto-match (assume existential over whole domain)
-                                continue
-                            if arg_val != t.values[i]:
-                                is_match = False
-                                break
-                        if is_match:
-                            return True
+                    t_values = t.values
+                    is_match = True
+                    for arg_val, t_val in zip(sentence_values, t_values, strict=False):
+                        if isinstance(arg_val, Variable):
+                            # auto-match (assume existential over whole domain)
+                            continue
+                        if arg_val != t_val:
+                            is_match = False
+                            break
+                    if is_match:
+                        return True
             return False
         if isinstance(sentence, Exists):
             inner = sentence.sentence
@@ -273,11 +282,30 @@ class Solver(ABC):
             self.goals.append(sentence_group)
         if sentence_group.sentences:
             for sentence in sentence_group.sentences:
+                self._register_sentence(sentence)
                 self.add_sentence(sentence)
 
+    def _register_sentence(self, sentence: Sentence) -> bool:
+        """
+        Record a sentence as part of the base theory, returning True if it was already registered.
+
+        Sentences are tracked in a set; sentences embedding unhashable values
+        (e.g. raw fact objects in probabilistic terms) fall back to a linear scan.
+        """
+        try:
+            if sentence in self._sentences_added:
+                return True
+            self._sentences_added.add(sentence)
+        except TypeError:
+            if sentence in self._unhashable_sentences_added:
+                return True
+            self._unhashable_sentences_added.append(sentence)
+        return False
+
     def add_sentence(self, sentence: Sentence) -> None:
-        if sentence not in self.base_theory.sentences:
-            self.base_theory.sentence_groups.append(SentenceGroup(name="dynamic", sentences=[sentence]))
+        if self._register_sentence(sentence):
+            return
+        self.base_theory.sentence_groups.append(SentenceGroup(name="dynamic", sentences=[sentence]))
 
     def add_predicate_definition(self, predicate_definition: PredicateDefinition) -> None:
         """

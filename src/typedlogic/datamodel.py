@@ -349,7 +349,7 @@ class Term(Sentence):
         Representation of the arguments of the term as a fixed-position tuples
         :return:
         """
-        return tuple([v for v in self.bindings.values()])
+        return tuple(self.bindings.values())
 
     @property
     def variables(self) -> List[Variable]:
@@ -554,6 +554,9 @@ class BooleanSentence(Sentence, ABC):
     def __eq__(self, other):
         return isinstance(other, type(self)) and self.operands == other.operands
 
+    def __hash__(self):
+        return hash((type(self), self.operands))
+
     def as_sexpr(self) -> SExpression:
         return [type(self).__name__] + [as_sexpr(op) for op in self.operands]
 
@@ -562,7 +565,7 @@ class BooleanSentence(Sentence, ABC):
         return list(self.operands)
 
 
-@dataclass
+@dataclass(eq=False)
 class And(BooleanSentence):
     """
     A conjunction of sentences.
@@ -594,7 +597,7 @@ class And(BooleanSentence):
         return f'And({", ".join(repr(op) for op in self.operands)})'
 
 
-@dataclass
+@dataclass(eq=False)
 class Or(BooleanSentence):
     """
     A disjunction of sentences.
@@ -628,7 +631,7 @@ class Or(BooleanSentence):
         return f'Or({", ".join(repr(op) for op in self.operands)})'
 
 
-@dataclass
+@dataclass(eq=False)
 class Not(BooleanSentence):
     """
     A complement of a sentence
@@ -677,7 +680,7 @@ class Xor(BooleanSentence):
         super().__init__(left, right, **kwargs)
 
 
-@dataclass
+@dataclass(eq=False)
 class ExactlyOne(BooleanSentence):
     """
     Exactly one of the sentences is true
@@ -697,7 +700,7 @@ class ExactlyOne(BooleanSentence):
         return f'ExactlyOne({", ".join(repr(op) for op in self.operands)})'
 
 
-@dataclass
+@dataclass(eq=False)
 class Implication(BooleanSentence, ABC):
     """
     An abstract grouping of sentences with an implication operator.
@@ -725,7 +728,7 @@ class Implication(BooleanSentence, ABC):
         return f"{type(self).__name__}({repr(self.operands[0])}, {repr(self.operands[1])})"
 
 
-@dataclass
+@dataclass(eq=False)
 class Implies(Implication):
     """
     An if-then implication.
@@ -763,7 +766,7 @@ class Implies(Implication):
         return f"Implies({repr(self.operands[0])}, {repr(self.operands[1])})"
 
 
-@dataclass
+@dataclass(eq=False)
 class Implied(Implication):
     """
     An implication of the form consequent <- antecedent
@@ -793,7 +796,7 @@ class Implied(Implication):
         return f"Implied({repr(self.operands[0])}, {repr(self.operands[1])})"
 
 
-@dataclass
+@dataclass(eq=False)
 class Iff(Implication):
     """
     An equivalence of sentences
@@ -827,7 +830,7 @@ class Iff(Implication):
         return f"Iff({repr(self.operands[0])}, {repr(self.operands[1])})"
 
 
-@dataclass
+@dataclass(eq=False)
 class NegationAsFailure(BooleanSentence):
     """
     A negated sentence, interpreted via negation as failure semantics.
@@ -889,7 +892,7 @@ class QuantifiedSentence(Sentence, ABC):
         return [self.variables, self.sentence]
 
 
-@dataclass
+@dataclass(eq=False)
 class Forall(QuantifiedSentence):
     """
     Universal quantifier.

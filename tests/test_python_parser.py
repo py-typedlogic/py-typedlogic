@@ -319,3 +319,40 @@ def test_parse_composable_gen_axiom():
     assert qs.variables[2].domain == "TreeNodeType"
     sentence = qs.sentence
     assert isinstance(sentence, Implies)
+
+
+MORTALS_SOURCE = '''
+from dataclasses import dataclass
+
+from typedlogic import FactMixin, axiom
+
+
+@dataclass
+class Person(FactMixin):
+    name: str
+
+
+@dataclass
+class Mortal(FactMixin):
+    name: str
+
+
+@axiom
+def all_persons_are_mortal(name: str):
+    """First line.
+    Second line."""
+    if Person(name):
+        assert Mortal(name)
+'''
+
+
+def test_parse_file_handle_preserves_line_breaks(tmp_path):
+    """Parsing from a file handle must not double line breaks (issue #30)."""
+    from typedlogic.parsers.pyparser.python_parser import PythonParser
+
+    path = tmp_path / "mortals_example.py"
+    path.write_text(MORTALS_SOURCE)
+    with path.open() as f:
+        theory = PythonParser().parse(f)
+    [sg] = [sg for sg in theory.sentence_groups if sg.name == "all_persons_are_mortal"]
+    assert sg.docstring == "First line.\nSecond line."
