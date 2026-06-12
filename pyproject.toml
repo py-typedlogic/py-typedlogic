@@ -38,7 +38,7 @@ typedlogic = "typedlogic.cli:app"
 dev = [
     "pytest>=8.3.2",
     "ruff",
-    "tox>=4.16.0",
+    "codespell[toml]",
     "mypy",
     "types-PyYAML",
     "jupyter",

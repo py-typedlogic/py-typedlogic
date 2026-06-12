@@ -19,7 +19,7 @@ format:
 	$(RUN) ruff check --fix src/ tests/ --exclude tests/input --exclude tests/output
 
 codespell:
-	$(RUN) tox -e codespell
+	$(RUN) codespell src/ tests/ -S tests/input/,tests/output/
 
 DOCTEST_DIR = src
 doctest:

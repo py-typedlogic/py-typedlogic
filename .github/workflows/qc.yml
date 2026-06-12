@@ -26,10 +26,7 @@ jobs:
         run: uv sync --locked --all-extras --dev
 
       - name: Check common spelling errors
-        run: uv run tox -e codespell
-
-      #- name: Check code quality with flake8
-      #  run: uv run tox -e lint
+        run: uv run codespell src/ tests/ -S tests/input/,tests/output/
 
       - name: Test with pytest and generate coverage file
         run: uv run pytest -v --durations=10
