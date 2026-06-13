@@ -132,8 +132,7 @@ class PythonParser(Parser):
                 source_module_name=module.__name__,
             )
         if isinstance(source, (TextIOWrapper, TextIO)):
-            lines = "\n".join(source.readlines())
-            return self.parse(lines, file_name=file_name, **kwargs)
+            return self.parse(source.read(), file_name=file_name, **kwargs)
         raise ValueError(f"Unsupported source type: {type(source)}")
 
     def validate_iter(

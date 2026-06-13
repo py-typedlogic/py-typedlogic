@@ -4,8 +4,9 @@ import subprocess
 import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import ClassVar, Iterator
+from typing import ClassVar, Dict, Iterator, List
 
+from typedlogic.datamodel import Term
 from typedlogic.integrations.solvers.souffle.souffle_compiler import SouffleCompiler
 from typedlogic.profiles import (
     AllowsComparisonTerms,
@@ -64,6 +65,9 @@ class SouffleSolver(Solver):
         pdmap = {}
 
         facts = []
+        terms_by_predicate: Dict[str, List[Term]] = {}
+        for term in self.base_theory.ground_terms:
+            terms_by_predicate.setdefault(term.predicate, []).append(term)
         with tempfile.TemporaryDirectory() as temp_dir:
             # Create output directives for each predicate
             output_files = {}
@@ -79,9 +83,8 @@ class SouffleSolver(Solver):
                 program += f'\n.input {pred}(IO=file, filename="{input_file}")\n'
                 with open(input_file, "w", encoding="utf-8") as csvfile:
                     writer = csv.writer(csvfile, delimiter="\t")
-                    for term in self.base_theory.ground_terms:
-                        if term.predicate == pred:
-                            writer.writerow(term.bindings.values())
+                    for term in terms_by_predicate.get(pred, []):
+                        writer.writerow(term.bindings.values())
 
             with tempfile.NamedTemporaryFile(suffix=".dl", mode="w") as fp:
                 fp.write(program)
