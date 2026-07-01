@@ -113,7 +113,7 @@ def test_schema_rules_and_macro_rules_are_parseable_tlog_markdown() -> None:
     assert "@c(" in TLogCompiler().compile(macro_rules)
 
 
-def test_schema_reasoning_materializes_inheritance_defaults_and_overrides() -> None:
+def test_schema_reasoning_materializes_inheritance_defaults_and_refinements() -> None:
     """Clingo preprocessing derives effective LinkML schema facts."""
     check = materialize_schema(PERSON_SCHEMA)
     facts = set(check.materialized_facts)
@@ -132,6 +132,13 @@ def test_schema_reasoning_materializes_inheritance_defaults_and_overrides() -> N
 def test_schema_reasoning_rejects_is_a_cycles() -> None:
     """The schema reasoning layer catches class is_a cycles."""
     schema = {"classes": {"A": {"is_a": "B"}, "B": {"is_a": "A"}}}
+
+    assert not check_schema(schema)
+
+
+def test_schema_reasoning_rejects_mixin_cycles() -> None:
+    """The schema reasoning layer catches cycles through mixin parents."""
+    schema = {"classes": {"A": {"mixins": ["B"]}, "B": {"mixins": ["A"]}}}
 
     assert not check_schema(schema)
 
@@ -258,8 +265,8 @@ def test_compile_schema_to_abox_rejects_range_violations() -> None:
     assert not validate_abox(PERSON_SCHEMA, facts)
 
 
-def test_slot_usage_range_overrides_global_slot_range() -> None:
-    """Class-local slot usage refinements override global slot expressions."""
+def test_slot_usage_range_intersects_global_slot_range() -> None:
+    """Class-local slot usage ranges are intersected with global slot ranges, not overridden."""
     schema = {
         "slots": {"value": {"range": "string"}},
         "classes": {
@@ -272,8 +279,17 @@ def test_slot_usage_range_overrides_global_slot_range() -> None:
     materialized = set(materialize_schema(schema).materialized_facts)
 
     assert has_term(materialized, "effective_range", "Measurement", "value", "integer")
-    assert not has_term(materialized, "effective_range", "Measurement", "value", "string")
+    assert has_term(materialized, "effective_range", "Measurement", "value", "string")
     assert validate_abox(
+        schema,
+        [
+            Term("Measurement", "m1"),
+            Term("value", "m1", "v1"),
+            Term("integer", "v1"),
+            Term("string", "v1"),
+        ],
+    )
+    assert not validate_abox(
         schema,
         [
             Term("Measurement", "m1"),
@@ -291,6 +307,59 @@ def test_slot_usage_range_overrides_global_slot_range() -> None:
     )
 
 
+def test_class_range_refinements_intersect_via_hierarchy() -> None:
+    """Range refinements over a class hierarchy intersect naturally in the ABox layer."""
+    schema = {
+        "slots": {"owner": {"range": "NamedThing", "required": True}},
+        "classes": {
+            "NamedThing": {},
+            "Person": {"is_a": "NamedThing"},
+            "Registration": {"slots": ["owner"]},
+            "DogRegistration": {
+                "is_a": "Registration",
+                "slot_usage": {"owner": {"range": "Person"}},
+            },
+        },
+    }
+    materialized = set(materialize_schema(schema).materialized_facts)
+
+    assert has_term(materialized, "effective_range", "DogRegistration", "owner", "NamedThing")
+    assert has_term(materialized, "effective_range", "DogRegistration", "owner", "Person")
+    # Person(p1) materializes NamedThing(p1), so the intersection is satisfied.
+    assert validate_abox(
+        schema,
+        [
+            Term("DogRegistration", "r1"),
+            Term("owner", "r1", "p1"),
+            Term("Person", "p1"),
+        ],
+    )
+    assert not validate_abox(
+        schema,
+        [
+            Term("DogRegistration", "r1"),
+            Term("owner", "r1", "p1"),
+            Term("NamedThing", "p1"),
+        ],
+    )
+
+
+def test_default_range_applies_only_when_no_range_declared() -> None:
+    """The string default range is pre-processing: any declared range disables it per class."""
+    schema = {
+        "slots": {"value": {}},
+        "classes": {
+            "Measurement": {"slots": ["value"], "slot_usage": {"value": {"range": "integer"}}},
+            "Reading": {"slots": ["value"]},
+        },
+    }
+    materialized = set(materialize_schema(schema).materialized_facts)
+
+    assert has_term(materialized, "effective_range", "Measurement", "value", "integer")
+    assert not has_term(materialized, "effective_range", "Measurement", "value", "string")
+    assert has_term(materialized, "effective_range", "Reading", "value", "string")
+
+
 def test_subclass_inherits_parent_slot_usage_range_and_required() -> None:
     """Subclass induced slots inherit parent slot_usage refinements."""
     schema = {
@@ -306,7 +375,7 @@ def test_subclass_inherits_parent_slot_usage_range_and_required() -> None:
     materialized = set(materialize_schema(schema).materialized_facts)
 
     assert has_term(materialized, "effective_range", "DerivedMeasurement", "value", "integer")
-    assert not has_term(materialized, "effective_range", "DerivedMeasurement", "value", "string")
+    assert has_term(materialized, "effective_range", "DerivedMeasurement", "value", "string")
     assert has_term(materialized, "effective_required", "DerivedMeasurement", "value")
     assert not validate_abox(schema, [Term("DerivedMeasurement", "m1")])
     assert validate_abox(
@@ -315,6 +384,7 @@ def test_subclass_inherits_parent_slot_usage_range_and_required() -> None:
             Term("DerivedMeasurement", "m1"),
             Term("value", "m1", "v1"),
             Term("integer", "v1"),
+            Term("string", "v1"),
         ],
     )
     assert not validate_abox(
@@ -362,6 +432,76 @@ def test_subclass_inherits_parent_slot_usage_multivalued_cardinality() -> None:
             Term("string", "c1"),
         ],
     )
+
+
+def test_slot_usage_cannot_relax_required() -> None:
+    """required: false in slot_usage contributes no constraint and cannot cancel required: true."""
+    schema = {
+        "slots": {"name": {"range": "string", "required": True}},
+        "classes": {
+            "Person": {"slots": ["name"], "slot_usage": {"name": {"required": False}}},
+            "Student": {"is_a": "Person"},
+        },
+    }
+    materialized = set(materialize_schema(schema).materialized_facts)
+
+    assert has_term(materialized, "effective_required", "Person", "name")
+    assert has_term(materialized, "effective_required", "Student", "name")
+    assert not validate_abox(schema, [Term("Person", "p1")])
+
+
+def test_slot_usage_cannot_relax_multivalued_false() -> None:
+    """multivalued: true in slot_usage cannot cancel an explicit multivalued: false."""
+    schema = {
+        "slots": {"alias": {"range": "string", "multivalued": False}},
+        "classes": {
+            "Person": {"slots": ["alias"], "slot_usage": {"alias": {"multivalued": True}}},
+            "Student": {"is_a": "Person"},
+        },
+    }
+    materialized = set(materialize_schema(schema).materialized_facts)
+
+    assert has_term(materialized, "effective_singlevalued", "Person", "alias")
+    assert has_term(materialized, "effective_singlevalued", "Student", "alias")
+    assert not has_term(materialized, "effective_multivalued", "Person", "alias")
+    assert not validate_abox(
+        schema,
+        [
+            Term("Person", "p1"),
+            Term("alias", "p1", "a1"),
+            Term("alias", "p1", "a2"),
+            Term("string", "a1"),
+            Term("string", "a2"),
+        ],
+    )
+
+
+def test_slot_usage_multivalued_restricts_single_valued_default() -> None:
+    """A slot_usage may tighten a multivalued slot to single-valued for a class subtree."""
+    schema = {
+        "slots": {"alias": {"range": "string", "multivalued": True}},
+        "classes": {
+            "Person": {"slots": ["alias"], "slot_usage": {"alias": {"multivalued": False}}},
+            "Student": {"is_a": "Person"},
+        },
+    }
+    materialized = set(materialize_schema(schema).materialized_facts)
+
+    assert has_term(materialized, "effective_singlevalued", "Person", "alias")
+    assert has_term(materialized, "effective_singlevalued", "Student", "alias")
+    assert has_term(materialized, "effective_maximum_cardinality", "Student", "alias", 1)
+
+
+def test_conflicting_cardinality_refinements_are_rejected() -> None:
+    """A slot_usage minimum above an applicable maximum makes the intersection empty."""
+    schema = {
+        "slots": {"code": {"range": "string", "multivalued": True, "maximum_cardinality": 1}},
+        "classes": {
+            "Sample": {"slots": ["code"], "slot_usage": {"code": {"minimum_cardinality": 2}}},
+        },
+    }
+
+    assert not check_schema(schema)
 
 
 def test_compile_schema_to_abox_rejects_singlevalued_and_max_cardinality_violations() -> None:
