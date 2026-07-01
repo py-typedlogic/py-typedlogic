@@ -6,29 +6,51 @@ schema terms are expanded away before a concrete ABox theory is sent to clingo.
 
 Convention:
 
-- TBox predicates such as `effective_required/2` are ordinary clingo predicates.
+- TBox predicates such as `effective_required/2` are ordinary clingo predicates
+  materialized by the schema rules layer.
 - ABox predicates such as `Person/1` and `name/2` are generated from LinkML
   class, type, enum, and slot names.
 - The Python compile-away step only substitutes concrete predicate names; it
   does not implement LinkML schema semantics directly.
 
+The schema layer is monotonic (see `linkml_schema_rules.tlog.md`): every
+applicable constraint materializes as its own TBox fact, so a class/slot pair
+may carry several `effective_range` facts and several cardinality bounds.  The
+macros expand each fact to its own ABox constraint, and the conjunction of
+those constraints realizes the intersection semantics — a value must satisfy
+every applicable range, and slot counts must fall inside every applicable
+cardinality interval.
+
+Metaslots not yet expanded by this layer include `pattern`, `identifier`,
+`key`, and the `equals_*` family.
+
 ```tlog
 type ElementID: str.
 type SlotID: str.
-type PointerID: str.
+type Count: int.
 
-pred class_ancestor(cls: ElementID, ancestor: ElementID).
+pred range_ancestor(element: ElementID, ancestor: ElementID).
+pred slot_ancestor(slot: SlotID, ancestor: SlotID).
+pred permissible_value(enum: ElementID, value: str).
 pred effective_range(cls: ElementID, slot: SlotID, range: ElementID).
-pred effective_minimum_cardinality(cls: ElementID, slot: SlotID, count: int).
-pred effective_maximum_cardinality(cls: ElementID, slot: SlotID, count: int).
+pred effective_minimum_cardinality(cls: ElementID, slot: SlotID, count: Count).
+pred effective_maximum_cardinality(cls: ElementID, slot: SlotID, count: Count).
 ```
 
 ## Intended Macro Semantics
 
 ```tlog
-/// Class hierarchy materialization:
-/// class_ancestor(C, P) + C(I) expands to P(I).
-all c, p, i | class_ancestor(c, p) & @c(i) -> @p(i).
+/// Class, type, and enum hierarchy materialization:
+/// range_ancestor(E, P) + E(I) expands to P(I).
+all e, p, i | range_ancestor(e, p) & @e(i) -> @p(i).
+
+/// Slot hierarchy materialization (subproperty semantics):
+/// slot_ancestor(S, T) + S(I, V) expands to T(I, V).
+all s, t, i, v | slot_ancestor(s, t) & @s(i, v) -> @t(i, v).
+
+/// Enum membership:
+/// permissible_value(E, V) expands to the ground fact E(V).
+all e, v | permissible_value(e, v) -> @e(v).
 
 /// Range checks:
 /// effective_range(C, S, R) expands to an ABox constraint over C/1, S/2, and R/1.

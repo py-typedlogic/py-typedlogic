@@ -42,8 +42,12 @@ pred class_slot(cls: ElementID, slot: SlotID).
 pred attribute(cls: ElementID, slot: SlotID).
 pred slot_usage(cls: ElementID, slot: SlotID).
 
+pred element_parent(element: ElementID, parent: ElementID).
+pred element_ancestor(element: ElementID, ancestor: ElementID).
 pred class_parent(cls: ElementID, parent: ElementID).
 pred class_ancestor(cls: ElementID, ancestor: ElementID).
+pred range_ancestor(element: ElementID, ancestor: ElementID).
+pred slot_ancestor(slot: SlotID, ancestor: SlotID).
 pred effective_class_slot(cls: ElementID, slot: SlotID).
 pred range_definition(id: ElementID).
 pred effective_range(cls: ElementID, slot: SlotID, range: ElementID).
@@ -57,6 +61,13 @@ pred effective_exact_cardinality(cls: ElementID, slot: SlotID, count: Count).
 
 ## Element Closure And Schema Validity
 
+The `is_a`/`mixin` hierarchy is closed over all element kinds and then
+projected per kind: `class_ancestor` drives slot inheritance and `slot_usage`
+propagation, while `range_ancestor` (classes, types, and enums) and
+`slot_ancestor` are the interface consumed by the ABox compile-away layer.
+Parents must be declared and of the same element kind as the child, and the
+hierarchy must be acyclic.
+
 ```tlog
 range_definition(r) :- class_definition(r).
 range_definition(r) :- type_definition(r).
@@ -65,13 +76,21 @@ range_definition(r) :- enum_definition(r).
 slot_definition(s) :- attribute(c, s).
 class_slot(c, s) :- attribute(c, s).
 
-class_parent(c, p) :- is_a(c, p).
-class_parent(c, p) :- mixin(c, p).
-class_ancestor(c, p) :- class_parent(c, p).
-class_ancestor(c, a) :- class_parent(c, p), class_ancestor(p, a).
+element_parent(e, p) :- is_a(e, p).
+element_parent(e, p) :- mixin(e, p).
+element_ancestor(e, p) :- element_parent(e, p).
+element_ancestor(e, a) :- element_parent(e, p), element_ancestor(p, a).
 
-invalid_parent_cycle(c) :- class_ancestor(c, c).
-invalid_parent_reference(c, p) :- class_definition(c), class_parent(c, p), not class_definition(p).
+class_parent(c, p) :- class_definition(c), element_parent(c, p).
+class_ancestor(c, a) :- class_definition(c), element_ancestor(c, a).
+range_ancestor(e, a) :- range_definition(e), element_ancestor(e, a).
+slot_ancestor(s, a) :- slot_definition(s), element_ancestor(s, a).
+
+invalid_parent_cycle(e) :- element_ancestor(e, e).
+invalid_parent_reference(c, p) :- class_definition(c), element_parent(c, p), not class_definition(p).
+invalid_parent_reference(s, p) :- slot_definition(s), element_parent(s, p), not slot_definition(p).
+invalid_parent_reference(t, p) :- type_definition(t), element_parent(t, p), not type_definition(p).
+invalid_parent_reference(e, p) :- enum_definition(e), element_parent(e, p), not enum_definition(p).
 invalid_class_slot(c, s) :- class_slot(c, s), not class_definition(c).
 invalid_class_slot(c, s) :- class_slot(c, s), not slot_definition(s).
 

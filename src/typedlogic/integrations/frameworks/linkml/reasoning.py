@@ -117,8 +117,16 @@ def compile_schema_to_abox(schema: SchemaSource) -> Theory:
     _merge_predicate_definitions(theory, _abox_predicate_definitions(facts))
     _add_schema_metadata(theory, check)
 
-    for child, parent in sorted(_tuples(facts, "class_ancestor")):
+    for child, parent in sorted(_tuples(facts, "range_ancestor")):
         _add_once(theory, _unary_rule(child, parent))
+
+    for child, parent in sorted(_tuples(facts, "slot_ancestor")):
+        _add_once(theory, _binary_rule(child, parent))
+
+    for enum_name, value in sorted(_tuples(facts, "permissible_value")):
+        term = Term(str(enum_name), str(value))
+        if term not in theory.ground_terms:
+            theory.ground_terms.append(term)
 
     for cls, slot, range_name in sorted(_tuples(facts, "effective_range")):
         _add_once(theory, _range_constraint(cls, slot, range_name))
@@ -161,6 +169,12 @@ def _tuples(facts: Mapping[str, set[tuple[Any, ...]]], predicate: str) -> set[tu
 def _unary_rule(child: str, parent: str) -> Sentence:
     instance = Variable("I")
     return Forall([instance], Implies(Term(child, instance), Term(parent, instance)))
+
+
+def _binary_rule(child: str, parent: str) -> Sentence:
+    instance = Variable("I")
+    value = Variable("V")
+    return Forall([instance, value], Implies(Term(child, instance, value), Term(parent, instance, value)))
 
 
 def _range_constraint(cls: str, slot: str, range_name: str) -> Sentence:
@@ -253,6 +267,7 @@ def _schema_predicate_definitions() -> list[PredicateDefinition]:
         "mixin",
         "class_slot",
         "attribute",
+        "permissible_value",
         "slot_range",
         "slot_pattern",
         "slot_minimum_cardinality",

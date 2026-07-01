@@ -109,6 +109,10 @@ def generate_type_definition(type_name: str, type_defn: Mapping[str, Any]) -> It
 def generate_enum_definition(enum_name: str, enum_defn: Mapping[str, Any]) -> Iterator[Term]:
     """Generate facts for one LinkML enum definition."""
     yield Term("enum_definition", enum_name)
+    values = enum_defn.get("permissible_values")
+    value_names = list(values) if isinstance(values, Mapping) else _as_list(values)
+    for value_name in value_names:
+        yield Term("permissible_value", enum_name, str(value_name))
     yield from _element_parent_facts(enum_name, enum_defn)
 
 

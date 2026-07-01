@@ -94,6 +94,8 @@ def test_loader_emits_type_enum_and_boolean_slot_expression_facts() -> None:
 
     assert has_term(facts, "type_definition", "PositiveInteger")
     assert has_term(facts, "enum_definition", "Status")
+    assert has_term(facts, "permissible_value", "Status", "ACTIVE")
+    assert has_term(facts, "permissible_value", "Status", "INACTIVE")
     assert has_term(facts, "is_a", "PositiveInteger", "integer")
     assert has_term(facts, "slot_required_false", "status")
     assert has_term(facts, "slot_multivalued_false", "status")
@@ -109,7 +111,7 @@ def test_schema_rules_and_macro_rules_are_parseable_tlog_markdown() -> None:
         "slot": "SlotID",
     }
     assert len(schema_rules.sentences) > 30
-    assert len(macro_rules.sentences) == 4
+    assert len(macro_rules.sentences) == 6
     assert "@c(" in TLogCompiler().compile(macro_rules)
 
 
@@ -139,6 +141,26 @@ def test_schema_reasoning_rejects_is_a_cycles() -> None:
 def test_schema_reasoning_rejects_mixin_cycles() -> None:
     """The schema reasoning layer catches cycles through mixin parents."""
     schema = {"classes": {"A": {"mixins": ["B"]}, "B": {"mixins": ["A"]}}}
+
+    assert not check_schema(schema)
+
+
+def test_schema_reasoning_rejects_slot_is_a_cycles() -> None:
+    """The element hierarchy cycle check also covers slot is_a chains."""
+    schema = {
+        "slots": {"a": {"is_a": "b"}, "b": {"is_a": "a"}},
+        "classes": {"Thing": {"slots": ["a", "b"]}},
+    }
+
+    assert not check_schema(schema)
+
+
+def test_schema_reasoning_rejects_missing_slot_parents() -> None:
+    """Slot parents must be declared slots, mirroring the class parent check."""
+    schema = {
+        "slots": {"name": {"is_a": "missing_slot"}},
+        "classes": {"Thing": {"slots": ["name"]}},
+    }
 
     assert not check_schema(schema)
 
@@ -569,6 +591,57 @@ def test_compile_schema_to_abox_supports_type_and_enum_ranges() -> None:
             Term("status", "s1", "status1"),
             Term("integer", "score1"),
             Term("string", "status1"),
+        ],
+    )
+
+
+def test_compile_schema_to_abox_materializes_slot_hierarchy() -> None:
+    """Slot is_a compiles to binary subproperty rules, not unary class rules."""
+    schema = {
+        "slots": {
+            "name": {"range": "string", "required": True, "multivalued": True},
+            "first_name": {"is_a": "name", "range": "string"},
+        },
+        "classes": {"Person": {"slots": ["name", "first_name"]}},
+    }
+    theory = compile_schema_to_abox(schema)
+    theory.ground_terms.extend(
+        [
+            Term("Person", "p1"),
+            Term("first_name", "p1", "f1"),
+            Term("string", "f1"),
+        ]
+    )
+
+    solver = ClingoSolver()
+    solver.add(theory)
+    assert solver.check().satisfiable
+    model = next(solver.models())
+    # first_name(p1, f1) materializes name(p1, f1), satisfying required name.
+    assert Term("name", "p1", "f1") in model.ground_terms
+    assert not validate_abox(schema, [Term("Person", "p1")])
+
+
+def test_compile_schema_to_abox_checks_enum_permissible_values() -> None:
+    """Enum ranges validate values against permissible values without extra membership facts."""
+    schema = {
+        "enums": {"Status": {"permissible_values": {"ACTIVE": {}, "INACTIVE": {}}}},
+        "slots": {"status": {"range": "Status", "required": True}},
+        "classes": {"Sample": {"slots": ["status"]}},
+    }
+
+    assert validate_abox(
+        schema,
+        [
+            Term("Sample", "s1"),
+            Term("status", "s1", "ACTIVE"),
+        ],
+    )
+    assert not validate_abox(
+        schema,
+        [
+            Term("Sample", "s1"),
+            Term("status", "s1", "BOGUS"),
         ],
     )
 
