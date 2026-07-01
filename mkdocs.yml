@@ -91,6 +91,7 @@ nav:
       - Prolog: conversion/compilers/prolog.md
       - ProbLog: conversion/compilers/problog.md
       - TPTP: conversion/compilers/tptp.md
+      - CLIF: conversion/compilers/clif.md
       - FOL: conversion/compilers/fol.md
       - SQL: conversion/compilers/sql.md
       - S-Expression: conversion/compilers/sexpr.md
@@ -98,6 +99,7 @@ nav:
       - Parser overview: conversion/parsers/index.md
       - Python: conversion/parsers/python.md
       - TLog: conversion/parsers/tlog.md
+      - CLIF: conversion/parsers/clif.md
       - YAML: conversion/parsers/yaml.md
       - DataFrame: conversion/parsers/dataframe.md
       - Catalog: conversion/parsers/catalog.md

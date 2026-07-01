@@ -1,0 +1,7 @@
+(cl-text typedlogic.integrations.frameworks.linkml.meta
+  (forall ((id str)) (if (ClassDefinition id) (Element id)))
+  (forall ((id str)) (if (TypeDefinition id) (Element id)))
+  (forall ((id str)) (if (EnumDefinition id) (Element id)))
+  (forall ((id str)) (if (SlotDefinition id) (Element id)))
+  (forall ((id str)) (if (SchemaDefinition id) (Element id)))
+)

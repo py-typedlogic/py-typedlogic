@@ -1,0 +1,4 @@
+(cl-text tests.theorems.barbers
+  (forall ((shaver NameType) (customer NameType)) (if (and (Barber shaver) (Person customer) (not (Shaves customer customer))) (Shaves shaver customer)))
+  (forall ((name str)) (if (Barber name) (Person name)))
+)

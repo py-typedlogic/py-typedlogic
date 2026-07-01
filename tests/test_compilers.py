@@ -1,5 +1,6 @@
 import pytest
 from typedlogic import Forall, Implies, Not, PredicateDefinition, Term, Theory, Variable
+from typedlogic.compilers.clif_compiler import ClifCompiler
 from typedlogic.datamodel import NotInProfileError
 from typedlogic.compilers.fol_compiler import FOLCompiler
 from typedlogic.compilers.prolog_compiler import PrologCompiler
@@ -47,6 +48,7 @@ from typedlogic.registry import all_parser_classes, all_compiler_classes
         YAMLCompiler,
         SExprCompiler,
         ProbLogCompiler,
+        ClifCompiler,
     ],
 )
 @pytest.mark.parametrize(

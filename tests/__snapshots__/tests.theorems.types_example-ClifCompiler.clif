@@ -1,0 +1,6 @@
+(cl-text tests.theorems.types_example
+  (StageAge Adult ?AGE_THRESHOLD)
+  (forall ((name Thing) (age int)) (if (ge age ?AGE_THRESHOLD) (Adult name)))
+  (if (PersonWithAge Alice 25) (Adult Alice))
+  (if (Adult Bob) (exists ((age int)) (PersonWithAge Alice age)))
+)
