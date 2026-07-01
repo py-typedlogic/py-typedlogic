@@ -7,3 +7,4 @@ foo('bar').
 
 %% neg
 
+%% UNTRANSLATABLE: ¬Foo('bar')

@@ -54,11 +54,20 @@ class PrologCompiler(Compiler):
         for pd in theory.predicate_definitions:
             args = ", ".join([f"{k}: {v}" for k, v in pd.arguments.items()])
             lines.append(f"% {pd.predicate}({args})")
+        if theory.ground_terms:
+            lines.append("\n%% Ground Terms\n")
+            for t in theory.ground_terms:
+                lines.append(as_prolog(t, config, translate=True))
         for sg in theory.asserted_sentence_groups:
             lines.append(f"\n%% {sg.name}\n")
             for s in sg.sentences or []:
                 try:
-                    lines.append(as_prolog(s, config, translate=True))
+                    translated = as_prolog(s, config, translate=True)
+                    if not translated.strip():
+                        # all clauses were dropped, e.g. an integrity constraint
+                        # that cannot be expressed as a Horn rule
+                        raise NotInProfileError(f"No Horn rule translation for: {s}")
+                    lines.append(translated)
                 except NotInProfileError as e:
                     self._add_untranslatable(s)
                     fol = as_fol(s)
