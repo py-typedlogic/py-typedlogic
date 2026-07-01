@@ -293,8 +293,11 @@ class Z3Solver(Solver):
             rhs = self.translate(sentence.operands[1], bindings)
             return z3.Implies(lhs, rhs)
         if isinstance(sentence, (tlog.Forall, tlog.Exists)):
-            if not bindings:
-                bindings = {}
+            # Copy the incoming bindings so variables bound by this quantifier are
+            # scoped to its body and do not leak into sibling subformulas (variable
+            # capture). Mutating a shared dict here would let an inner quantifier's
+            # variable bind free occurrences of the same name elsewhere.
+            bindings = dict(bindings) if bindings else {}
             args = []
             for v in sentence.variables:
                 var_name = v.name
@@ -304,6 +307,10 @@ class Z3Solver(Solver):
                 bindings[var_name] = arg
                 args.append(arg)
             inner_sentence = self.translate(sentence.sentence, bindings)
+            if not args:
+                # z3 rejects quantifiers over an empty variable list; a quantifier
+                # binding nothing is logically equivalent to its body.
+                return inner_sentence
             if isinstance(sentence, tlog.Exists):
                 return z3.Exists(args, inner_sentence)
             else:
@@ -342,12 +349,11 @@ class Z3Solver(Solver):
                 elif isinstance(var, Term):
                     args = [self._tr(a, bindings) for a in var.values]
                     p = var.predicate
-                    if p == "add":
-                        pf_args.append(args[0] + args[1])
-                    elif p == "gt":
-                        pf_args.append(args[0] > args[1])
-                    elif p == "date":
-                        pf_args.append(args[0] == args[1])
+                    # Reuse the same builtin table as the top-level predicate path so
+                    # nested function terms (e.g. sub, mul, comparisons) map correctly
+                    # and consistently, instead of a hand-picked subset.
+                    if p in NUMERIC_BUILTINS:
+                        pf_args.append(NUMERIC_BUILTINS[p](*args))
                     else:
                         raise NotImplementedError(f"Term not implemented: p: {p} {type(var)} v: {var}")
                 elif var is None:
