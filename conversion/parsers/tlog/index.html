@@ -3082,7 +3082,8 @@ the same name may still be used at multiple arities when no <code>pred</code> de
 <span class="normal">754</span>
 <span class="normal">755</span>
 <span class="normal">756</span>
-<span class="normal">757</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TLogMarkdownParser</span><span class="p">(</span><span class="n">TLogParser</span><span class="p">):</span>
+<span class="normal">757</span>
+<span class="normal">758</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TLogMarkdownParser</span><span class="p">(</span><span class="n">TLogParser</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse TLog blocks embedded in Markdown prose.&quot;&quot;&quot;</span>
 
     <span class="n">default_suffix</span> <span class="o">=</span> <span class="s2">&quot;tlog.md&quot;</span>
@@ -3102,7 +3103,8 @@ the same name may still be used at multiple arities when no <code>pred</code> de
             <span class="n">stripped</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">in_block</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_starts_fence</span><span class="p">(</span><span class="n">stripped</span><span class="p">):</span>
                 <span class="n">fence</span> <span class="o">=</span> <span class="n">stripped</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
-                <span class="n">language</span> <span class="o">=</span> <span class="n">stripped</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+                <span class="n">info</span> <span class="o">=</span> <span class="n">stripped</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">language</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">if</span> <span class="n">info</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
                 <span class="n">collecting</span> <span class="o">=</span> <span class="n">language</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_block_languages</span>
                 <span class="n">in_block</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
