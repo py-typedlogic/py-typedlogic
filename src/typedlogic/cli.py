@@ -504,6 +504,8 @@ def _model_contains_term(model: Model, sentence: Term) -> bool:
 
 def _term_matches_with_variables(term: Term, sentence_values: tuple[Any, ...]) -> bool:
     """Return whether a ground term matches expected values containing variables."""
+    if len(term.values) != len(sentence_values):
+        return False
     return all(
         isinstance(expected, Variable) or expected == actual
         for expected, actual in zip(sentence_values, term.values)
