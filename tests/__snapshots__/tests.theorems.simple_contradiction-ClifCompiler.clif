@@ -1,0 +1,4 @@
+(cl-text tests.theorems.simple_contradiction
+  (Foo bar)
+  (not (Foo bar))
+)

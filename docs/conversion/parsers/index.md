@@ -11,6 +11,7 @@ TypedLogic supports parsing from multiple input formats to create logical theori
 - **[Python Parser](python.md)** - Parse Python modules with TypedLogic decorators
 - **[YAML Parser](yaml.md)** - Parse YAML files containing logical specifications
 - **[TLog Parser](tlog.md)** - Parse compact `.tlog` files and literate `.tlog.md` Markdown files
+- **[CLIF Parser](clif.md)** - Parse Common Logic Interchange Format (ISO/IEC 24707) documents
 
 ### Data Parsers  
 

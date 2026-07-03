@@ -1,0 +1,6 @@
+(cl-text tests.theorems.numbers
+  (PersonAge Alice 25)
+  (PersonAge Bob 30)
+  (PersonAge Ciara 30)
+  (forall ((name1 NameType) (name2 NameType)) (if (exists ((age int)) (and (PersonAge name1 age) (PersonAge name2 age))) (SameAge name1 name2)))
+)

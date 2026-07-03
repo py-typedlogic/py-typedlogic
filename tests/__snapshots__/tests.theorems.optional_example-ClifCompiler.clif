@@ -1,0 +1,6 @@
+(cl-text tests.theorems.optional_example
+  (forall ((s Person) (o Person) (y int)) (if (FriendOf s o null null) (FriendPath s o)))
+  (forall ((s Person) (o Person) (y int)) (if (FriendOf s o null null) (FriendPath s o)))
+  (FriendOf Fred Jie 2000 2005)
+  (FriendOf Jie Li null null)
+)

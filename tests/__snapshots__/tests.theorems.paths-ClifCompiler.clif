@@ -1,0 +1,4 @@
+(cl-text tests.theorems.paths
+  (forall ((x ID) (y ID) (z ID)) (if (and (Path x y) (Path y z)) (Path x z)))
+  (forall ((source str) (target str)) (if (Link source target) (Path source target)))
+)
