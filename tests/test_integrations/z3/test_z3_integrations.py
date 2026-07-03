@@ -1,6 +1,16 @@
 import pytest
 from typedlogic.compiler import ModelSyntax
-from typedlogic.datamodel import Forall, PredicateDefinition, Term, Theory, Variable
+from typedlogic.datamodel import (
+    And,
+    CardinalityConstraint,
+    Forall,
+    Implies,
+    Or,
+    PredicateDefinition,
+    Term,
+    Theory,
+    Variable,
+)
 from typedlogic.integrations.solvers.z3 import Z3Solver
 from typedlogic.integrations.solvers.z3.z3_compiler import Z3Compiler
 from typedlogic.parsers.pyparser.python_parser import PythonParser
@@ -182,3 +192,103 @@ def test_types_example():
     goals_proved = list(solver.prove_goals())
     assert goals_proved
     assert len(goals_proved) == 2
+
+
+def _cardinality_solver() -> Z3Solver:
+    """A Z3 solver pre-loaded with predicate definitions used by the cardinality tests."""
+    solver = Z3Solver()
+    solver.add_predicate_definition(PredicateDefinition(predicate="Thing", arguments={"x": "str"}))
+    solver.add_predicate_definition(PredicateDefinition(predicate="Wing", arguments={"y": "str"}))
+    solver.add_predicate_definition(PredicateDefinition(predicate="HasWing", arguments={"x": "str", "y": "str"}))
+    solver.add_predicate_definition(PredicateDefinition(predicate="Part", arguments={"y": "str"}))
+    solver.add_predicate_definition(PredicateDefinition(predicate="HasPart", arguments={"x": "str", "y": "str"}))
+    return solver
+
+
+def test_cardinality_at_most_zero_existence_check():
+    """A ``maximum_number`` of 0 forbids any witness (∀y. ¬(template ∧ conditions))."""
+    x = Variable("X")
+    y = Variable("Y")
+    solver = _cardinality_solver()
+    # Every Thing must have at most 0 wings.
+    solver.add_sentence(
+        Forall([x], Implies(Term("Thing", x), CardinalityConstraint(Term("HasWing", x, y), Term("Wing", y), None, 0)))
+    )
+    solver.add_fact(Term("Thing", "fly1"))
+    # No wing asserted: consistent.
+    assert solver.check().satisfiable
+    # Asserting a wing for fly1 violates the "at most 0 wings" constraint.
+    solver.add_fact(Term("Wing", "w1"))
+    solver.add_fact(Term("HasWing", "fly1", "w1"))
+    assert not solver.check().satisfiable
+
+
+@pytest.mark.parametrize("actual_count,satisfiable", [(0, True), (1, True), (2, True), (3, False), (4, False)])
+def test_cardinality_at_most_n(actual_count: int, satisfiable: bool):
+    """An upper bound is violated once more than N pairwise-distinct witnesses are asserted."""
+    x = Variable("X")
+    y = Variable("Y")
+    solver = _cardinality_solver()
+    # Every Thing must have at most 2 parts.
+    solver.add_sentence(
+        Forall([x], Implies(Term("Thing", x), CardinalityConstraint(Term("HasPart", x, y), Term("Part", y), None, 2)))
+    )
+    solver.add_fact(Term("Thing", "t1"))
+    for i in range(actual_count):
+        solver.add_fact(Term("Part", f"p{i}"))
+        solver.add_fact(Term("HasPart", "t1", f"p{i}"))
+    assert solver.check().satisfiable == satisfiable
+
+
+def test_cardinality_at_least_with_closed_domain():
+    """A lower bound has teeth once the domain of witnesses is otherwise constrained.
+
+    Under Z3's open-world assumption an "at least 1" constraint is satisfiable on its own
+    (Z3 may invent a witness), but becomes unsatisfiable once another axiom forbids any
+    witness from existing.
+    """
+    x = Variable("X")
+    y = Variable("Y")
+    solver = _cardinality_solver()
+    # Every Thing must have at least 1 part.
+    solver.add_sentence(
+        Forall([x], Implies(Term("Thing", x), CardinalityConstraint(Term("HasPart", x, y), Term("Part", y), 1, None)))
+    )
+    solver.add_fact(Term("Thing", "t1"))
+    # Open world: Z3 may posit a part for t1.
+    assert solver.check().satisfiable
+    # Now forbid anything from having a part; t1 can no longer meet its lower bound.
+    solver.add_sentence(Forall([x, y], Implies(Term("HasPart", x, y), Or())))
+    assert not solver.check().satisfiable
+
+
+def test_cardinality_range_consistent():
+    """A witness count within an explicit ``[min, max]`` range is satisfiable."""
+    x = Variable("X")
+    y = Variable("Y")
+    solver = _cardinality_solver()
+    # Every Thing must have between 1 and 3 parts.
+    solver.add_sentence(
+        Forall([x], Implies(Term("Thing", x), CardinalityConstraint(Term("HasPart", x, y), Term("Part", y), 1, 3)))
+    )
+    solver.add_fact(Term("Thing", "t1"))
+    solver.add_fact(Term("Part", "p0"))
+    solver.add_fact(Term("HasPart", "t1", "p0"))
+    solver.add_fact(Term("Part", "p1"))
+    solver.add_fact(Term("HasPart", "t1", "p1"))
+    assert solver.check().satisfiable
+
+
+def test_cardinality_range_upper_violation():
+    """Exceeding the upper end of a ``[min, max]`` range is unsatisfiable."""
+    x = Variable("X")
+    y = Variable("Y")
+    solver = _cardinality_solver()
+    solver.add_sentence(
+        Forall([x], Implies(Term("Thing", x), CardinalityConstraint(Term("HasPart", x, y), Term("Part", y), 1, 2)))
+    )
+    solver.add_fact(Term("Thing", "t1"))
+    for i in range(3):
+        solver.add_fact(Term("Part", f"p{i}"))
+        solver.add_fact(Term("HasPart", "t1", f"p{i}"))
+    assert not solver.check().satisfiable

@@ -285,24 +285,25 @@ def test_cardinality_existence_check():
 @pytest.mark.parametrize("max_count", [None, 0, 1, 2, 3])
 @pytest.mark.parametrize("min_count", [None, 0, 1, 2, 3])
 def test_cardinality_nary(min_count: int, max_count: int, actual_count: int):
-    pytest.skip("TODO")
+    """
+    General n-ary cardinality constraint used as a satisfiability check.
+
+    The rule states that every Thing must have between ``min_count`` and ``max_count``
+    parts. We assert one Thing ``t1`` with exactly ``actual_count`` parts and check that
+    the program is satisfiable exactly when ``actual_count`` lies within the bounds.
+    """
     theory = Theory()
     x = Variable("X")
     y = Variable("Y")
     thing = Term("Thing", x)
     hp = Term("HasPart", x, y)
     part = Term("Part", y)
-    rule = Implies(
-            thing,
-            CardinalityConstraint(hp, part, min_count, max_count)
-        )
+    rule = Implies(thing, CardinalityConstraint(hp, part, min_count, max_count))
     print(rule)
     print(to_horn_rules(rule))
     print(simplify(rule))
     print(as_prolog(rule))
-    theory.add(
-        rule
-    )
+    theory.add(rule)
     solver = ClingoSolver()
     solver.add(theory)
     print("THEORY:")
@@ -311,7 +312,7 @@ def test_cardinality_nary(min_count: int, max_count: int, actual_count: int):
     for part_num in range(0, actual_count):
         p = f"p{part_num}"
         solver.add(Term("Part", p))
-        solver.add(Term("HasPart", "f1", p))
+        solver.add(Term("HasPart", "t1", p))
     print("ALL:")
     print(solver.dump())
     is_sat = True

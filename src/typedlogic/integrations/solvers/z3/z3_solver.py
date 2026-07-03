@@ -9,7 +9,7 @@ import typedlogic as tlog
 import typedlogic.pybridge
 from typedlogic import FactMixin, Variable
 from typedlogic.builtins import NUMERIC_BUILTINS
-from typedlogic.datamodel import DefinedType, PredicateDefinition, Sentence, Term
+from typedlogic.datamodel import CardinalityConstraint, DefinedType, PredicateDefinition, Sentence, Term
 from typedlogic.parsers.pyparser.python_ast_utils import logger
 from typedlogic.profiles import (
     AllowsComparisonTerms,
@@ -308,6 +308,9 @@ class Z3Solver(Solver):
                 return z3.Exists(args, inner_sentence)
             else:
                 return z3.ForAll(args, inner_sentence)
+        if isinstance(sentence, CardinalityConstraint):
+            # Must precede the generic Term branch, since CardinalityConstraint is a Term subclass.
+            return self._translate_cardinality(sentence, bindings)
         if isinstance(sentence, (tlog.Term, typedlogic.pybridge.FactMixin)):  # TODO: use Expression
             if isinstance(sentence, typedlogic.pybridge.FactMixin):
                 sentence = tlog.Term(fact_predicate(sentence), fact_arg_map(sentence))
@@ -370,6 +373,70 @@ class Z3Solver(Solver):
                 raise ValueError(f"Error translating {sentence} args: {pf_args} to Z3 using {pf}:\n{e}")
             return z3_expr
         raise NotImplementedError(f"Not implemented:{type(sentence)} :: {sentence}")
+
+    def _translate_cardinality(
+        self, cc: CardinalityConstraint, bindings: Optional[Dict[str, z3.SortRef]] = None
+    ) -> z3.ExprRef:
+        """
+        Translate a :class:`CardinalityConstraint` to an equivalent first-order Z3 formula.
+
+        Z3 has no native counting quantifier over an unbounded sort, so a cardinality
+        constraint is encoded using distinct existentials, which is the standard
+        first-order rendering of counting:
+
+        - *at least ``n``*: there exist ``n`` pairwise-distinct values satisfying the
+          template and conditions.
+        - *at most ``n``*: there do **not** exist ``n + 1`` pairwise-distinct values that
+          all satisfy the template and conditions (so ``at most 0`` reduces to
+          ``∀y. ¬(template ∧ conditions)``).
+
+        Global variables (bound by an enclosing quantifier) are read from ``bindings``;
+        the remaining (counted) variable is the aggregation key. Only a single counted
+        variable is supported.
+
+        :param cc: the cardinality constraint to translate
+        :param bindings: variable bindings from the surrounding context
+        :return: a boolean Z3 expression that holds iff the cardinality bounds are met
+        """
+        bindings = dict(bindings) if bindings else {}
+        already_bound = set(bindings) | set(self.constants or {})
+        counted = cc.counted_variables(bound=already_bound)
+        if len(counted) != 1:
+            raise NotImplementedError(
+                f"Z3 cardinality translation currently supports exactly one counted variable, "
+                f"got {[v.name for v in counted]} in {cc}"
+            )
+        counted_var = counted[0]
+        sort = self._sort(counted_var.domain)()
+        template = cc.template
+        conditions = cc.conditions
+        assert template is not None, f"Cardinality constraint has no template: {cc}"
+
+        def phi(const: z3.ExprRef) -> z3.ExprRef:
+            local_bindings = dict(bindings)
+            local_bindings[counted_var.name] = const
+            atoms = [self.translate(template, local_bindings)]
+            if conditions is not None and conditions != template:
+                atoms.append(self.translate(conditions, local_bindings))
+            return z3.And(*atoms)
+
+        def distinct_witnesses(count: int, tag: str) -> z3.ExprRef:
+            consts = [z3.Const(f"{counted_var.name}__card_{tag}{i}", sort) for i in range(count)]
+            body = [phi(c) for c in consts]
+            if len(consts) > 1:
+                body.append(z3.Distinct(*consts))
+            return z3.Exists(consts, z3.And(*body))
+
+        conjuncts = []
+        if cc.minimum_number is not None and cc.minimum_number > 0:
+            conjuncts.append(distinct_witnesses(cc.minimum_number, "ge"))
+        if cc.maximum_number is not None:
+            conjuncts.append(z3.Not(distinct_witnesses(cc.maximum_number + 1, "le")))
+        if not conjuncts:
+            return z3.BoolVal(True)
+        if len(conjuncts) == 1:
+            return conjuncts[0]
+        return z3.And(*conjuncts)
 
     def dump(self) -> str:
         return str(self.wrapped_solver)

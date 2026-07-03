@@ -39,7 +39,7 @@ import types
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Mapping, Optional, Tuple, Type, Union, _SpecialForm, get_origin, Iterable, Iterator
+from typing import Any, Collection, Dict, List, Mapping, Optional, Tuple, Type, Union, _SpecialForm, get_origin, Iterable, Iterator
 
 SExpressionAtom = Any
 SExpressionTerm = List["SExpression"]
@@ -939,10 +939,45 @@ class Exists(QuantifiedSentence):
         return hash((self.quantifier, self._bindings_str(), self.sentence))
 
 
+def _collect_variables(sentence: Any) -> List["Variable"]:
+    """
+    Recursively collect the :class:`Variable` objects occurring in a sentence.
+
+    Order is preserved and duplicates are retained (callers that want a de-duplicated
+    view should key on :attr:`Variable.name`).
+
+        >>> x = Variable("X")
+        >>> y = Variable("Y")
+        >>> [v.name for v in _collect_variables(And(Term("HasPart", x, y), Term("Wing", y)))]
+        ['X', 'Y', 'Y']
+
+    :param sentence: any Sentence (or nested Term/BooleanSentence/QuantifiedSentence)
+    :return: the variables found, in traversal order
+    """
+    result: List[Variable] = []
+    if isinstance(sentence, Term):
+        for v in sentence.values:
+            if isinstance(v, Variable):
+                result.append(v)
+            elif isinstance(v, Term):
+                result.extend(_collect_variables(v))
+    elif isinstance(sentence, BooleanSentence):
+        for op in sentence.operands:
+            result.extend(_collect_variables(op))
+    elif isinstance(sentence, QuantifiedSentence):
+        result.extend(_collect_variables(sentence.sentence))
+    return result
+
+
 @dataclass
 class CardinalityConstraint(Term):
     """
     A constraint on the cardinality of a set of terms.
+
+    A cardinality constraint asserts that the number of distinct bindings of the
+    *counted* variables for which ``template`` holds (restricted to those that also
+    satisfy ``conditions``) lies between ``minimum_number`` and ``maximum_number``
+    (inclusive). Either bound may be ``None`` to leave it unconstrained.
 
     Example:
 
@@ -951,14 +986,19 @@ class CardinalityConstraint(Term):
         >>> hp = Term("has_part", h, f)
         >>> s = Forall([h], CardinalityConstraint(Term("has_part", h, f), Term("has_part", h, f), 5, 5))
 
+    Extension strategy: rather than adding dataclass fields (which do not compose
+    cleanly with :class:`Term`'s positional/keyword ``bindings`` machinery), the four
+    logical fields are stored inside :attr:`Term.bindings` under fixed keys and exposed
+    through read-only properties. This keeps a ``CardinalityConstraint`` usable anywhere
+    a :class:`Term` is expected while giving it named accessors.
     """
 
     def __init__(self, template: Optional[Sentence], conditions: Sentence, minimum_number: Optional[int] = None, maximum_number: Optional[int] = None):
         """
         Initialize a CardinalityConstraint.
 
-        :param template: The template sentence that defines the terms.
-        :param conditions: The conditions that the terms must satisfy.
+        :param template: The template sentence that defines the terms being counted.
+        :param conditions: The conditions that the counted terms must satisfy.
         :param minimum_number: The minimum number of terms that must satisfy the conditions.
         :param maximum_number: The maximum number of terms that can satisfy the conditions.
         """
@@ -968,19 +1008,12 @@ class CardinalityConstraint(Term):
                          dict(template=template, conditions=conditions,
                               minimum_number=minimum_number, maximum_number=maximum_number))
 
-    # TODO: decide on general strategy for extending Terms
-
-    #template: Sentence
-    #conditions: Sentence
-    #minimum_number: Optional[int] = None
-    #maximum_number: Optional[int] = None
-
     @property
-    def template(self):
+    def template(self) -> Optional[Sentence]:
         return self.bindings.get("template")
 
     @property
-    def conditions(self):
+    def conditions(self) -> Optional[Sentence]:
         return self.bindings.get("conditions")
 
     @property
@@ -990,6 +1023,35 @@ class CardinalityConstraint(Term):
     @property
     def maximum_number(self) -> Optional[int]:
         return self.bindings.get("maximum_number")
+
+    def counted_variables(self, bound: Optional[Collection[str]] = None) -> List["Variable"]:
+        """
+        Return the variables that are *counted* by this constraint.
+
+        These are the variables occurring in ``template`` or ``conditions`` that are not
+        already bound in the surrounding context (e.g. by an enclosing rule body or
+        quantifier). They form the aggregation key: the constraint counts the distinct
+        assignments of these variables.
+
+            >>> x = Variable("X")
+            >>> y = Variable("Y")
+            >>> cc = CardinalityConstraint(Term("HasPart", x, y), Term("Wing", y), 0, 2)
+            >>> [v.name for v in cc.counted_variables(bound=["X"])]
+            ['Y']
+
+        :param bound: names of variables already bound in the surrounding context
+        :return: the counted (locally-bound) variables, de-duplicated by name in first-seen order
+        """
+        bound_names = set(bound or [])
+        seen: Dict[str, Variable] = {}
+        for part in (self.template, self.conditions):
+            if part is None:
+                continue
+            for v in _collect_variables(part):
+                if v.name in bound_names:
+                    continue
+                seen.setdefault(v.name, v)
+        return list(seen.values())
 
     def __str__(self):
         return f"{self.minimum_number} <= {{ {self.template} : {self.conditions} }} <= {self.maximum_number}"
