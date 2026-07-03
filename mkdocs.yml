@@ -36,6 +36,8 @@ plugins:
             toc_depth: 1
             members_order: source
             docstring_style: sphinx
+            filters:
+              - "!^_[^_]"
   - mermaid2:
       version: 9.3.0
   - with-pdf
