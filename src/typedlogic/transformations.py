@@ -252,6 +252,16 @@ def _grounded_variable_names(sentence: Sentence) -> Set[str]:
     return set()
 
 
+def _validate_counterexample_head_grounded(body: Sentence, head: Term, sentence: Sentence) -> None:
+    """Reject counterexample transforms whose head variables are not grounded by the body."""
+    grounded_variable_names = _grounded_variable_names(body)
+    head_variable_names = {variable.name for variable in _variables_in_order(head)}
+    ungrounded_head_variables = sorted(head_variable_names - grounded_variable_names)
+    if ungrounded_head_variables:
+        names = ", ".join(ungrounded_head_variables)
+        raise NotInProfileError(f"Head variable(s) {names} are not grounded by body {sentence}")
+
+
 def counterexample_sentence(sentence: Sentence, predicate: str = "counterexample") -> Sentence:
     """
     Convert a universally quantified implication into a counterexample rule.
@@ -288,14 +298,10 @@ def counterexample_sentence(sentence: Sentence, predicate: str = "counterexample
     if not isinstance(head, Term):
         raise NotInProfileError(f"Counterexample transform requires an atomic implication head, got {head}")
 
-    grounded_variable_names = _grounded_variable_names(body)
-    head_variable_names = {variable.name for variable in _variables_in_order(head)}
-    ungrounded_head_variables = sorted(head_variable_names - grounded_variable_names)
-    if ungrounded_head_variables:
-        names = ", ".join(ungrounded_head_variables)
-        raise NotInProfileError(f"Head variable(s) {names} are not grounded by body {sentence}")
+    _validate_counterexample_head_grounded(body, head, sentence)
 
     used_variable_names = {variable.name for variable in _variables_in_order(And(body, head))}
+    grounded_variable_names = _grounded_variable_names(body)
     counterexample_variables = [
         variable
         for variable in variables
@@ -339,6 +345,7 @@ def counterexample_proof_sentences(sentence: Sentence, predicate: str = "counter
     head = sentence.consequent
     if not isinstance(head, Term) or head.predicate in NAME_TO_INFIX_OP:
         raise NotInProfileError(f"Counterexample proof transform requires an atomic implication head, got {head}")
+    _validate_counterexample_head_grounded(sentence.antecedent, head, sentence)
 
     constants = {variable.name: f"__{predicate}_{variable.name}" for variable in variables}
     grounded_body = replace_constants(sentence.antecedent, constants)

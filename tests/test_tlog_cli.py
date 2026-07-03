@@ -354,6 +354,26 @@ def test_tlog_prove_command_clingo_does_not_prove_vacuous_universal_horn_lemmas(
     check("1 obligation(s), 1 failed, 0 unknown" in result.stdout, result.stdout)
 
 
+def test_tlog_prove_command_clingo_reports_unsafe_universal_horn_lemmas_unknown(tmp_path: Path) -> None:
+    """Clingo does not attempt counterexample proofs for ungrounded-head lemmas."""
+    pytest.importorskip("clingo")
+    tlog_path = tmp_path / "unsafe.tlog"
+    tlog_path.write_text(
+        """
+        pred source(id: str).
+        pred target(id: str).
+        lemma("ungrounded_head", that(all x, y | source(x) -> target(y))).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "clingo", "--target", "lemmas"])
+
+    check(result.exit_code == 1, result.stdout)
+    check("UNKNOWN lemma ungrounded_head" in result.stdout, result.stdout)
+    check("1 obligation(s), 0 failed, 1 unknown" in result.stdout, result.stdout)
+
+
 def test_tlog_prove_command_problog_proves_universal_horn_lemmas_without_facts(tmp_path: Path) -> None:
     """ProbLog proves deterministic universal Horn lemmas as a 0/1-probability case."""
     pytest.importorskip("problog")

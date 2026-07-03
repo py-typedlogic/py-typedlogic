@@ -262,6 +262,14 @@ def test_counterexample_sentence_rejects_ungrounded_head_variables():
         counterexample_sentence(sentence)
 
 
+def test_counterexample_proof_sentences_reject_ungrounded_head_variables():
+    """Proof fixtures must reject lemmas that are not Datalog-safe."""
+    sentence = Forall([X, Y], Implies(P1x, Term("Q", Y)))
+
+    with pytest.raises(NotInProfileError, match="not grounded"):
+        counterexample_proof_sentences(sentence)
+
+
 def test_counterexample_proof_sentences_assume_positive_antecedents():
     """The proof fixture grounds antecedent atoms as assumptions before querying the head."""
     sentence = Forall([X, Y], Implies(And(P1x, Q1xy), P2x))
