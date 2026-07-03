@@ -143,8 +143,8 @@ all i: Node, e1: ElementID, e2: ElementID | DirectInstantiation(e1, i), DirectIn
 ```tlog
 pred EntailedInstantiation(el: ElementID, inst: Node).
 
-all i, e  | DirectInstantiation(e, i) -> EntailedInstantiation(e, i).
-all i, e, p  | parent(e, p) & DirectInstantiation(e, i) -> EntailedInstantiation(e, i).
+all i, e | DirectInstantiation(e, i) -> EntailedInstantiation(e, i).
+all i, e, p | parent(e, p) & EntailedInstantiation(e, i) -> EntailedInstantiation(p, i).
 ```
 
 ### Slot Values
