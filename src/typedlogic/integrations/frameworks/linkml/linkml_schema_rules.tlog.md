@@ -168,7 +168,7 @@ pred V_str(valLoc: Node, val: str).
 ### Any
 
 ```tlog
-all i | I(I) -> DirectInstantiation("linkml:Any", i).
+all i | I(i) -> DirectInstantiation("linkml:Any", i).
 ```
 
 ### ABox Rules
