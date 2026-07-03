@@ -735,7 +735,8 @@ class TLogMarkdownParser(TLogParser):
             stripped = line.strip()
             if not in_block and self._starts_fence(stripped):
                 fence = stripped[:3]
-                language = stripped[3:].strip().split(maxsplit=1)[0].lower()
+                info = stripped[3:].strip().split(maxsplit=1)
+                language = info[0].lower() if info else ""
                 collecting = language in self.code_block_languages
                 in_block = True
                 lines.append("")
