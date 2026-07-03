@@ -3,6 +3,7 @@
 # ruff: noqa: S101
 
 import pytest
+
 import typedlogic.integrations.frameworks.owlstar as owlstar_package
 from typedlogic.integrations.frameworks.owlstar import owlstar
 from typedlogic.integrations.solvers.souffle.souffle_compiler import SouffleCompiler
