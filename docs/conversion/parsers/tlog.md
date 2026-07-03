@@ -126,8 +126,9 @@ test_case(
 ).
 ```
 
-`solve` ignores lemmas and test cases by default. Use dedicated commands when
-you want to interpret this metadata:
+`solve` ignores lemmas and test cases by default. Use `test` when you want a
+one-stop validation command for both test cases and proof obligations; use
+`prove` when you only want goals and lemmas:
 
 ```bash
 typedlogic test theory.tlog --solver clingo
@@ -138,6 +139,8 @@ The test runner treats `given(that(S))` as a temporary assertion for that test
 case. `expect(that(E))` checks the expected sentence. In expectations,
 `satisfiable()` is a built-in check for fixture satisfiability, conjunction
 means all expectations must hold, and `not P` means `P` is not entailed.
+After running test cases, `test` also proves matching goals and lemmas unless
+`--no-proofs` is used.
 
 ## HiLog-Style Predicate Variables
 
@@ -200,14 +203,14 @@ typedlogic solve docs/examples/tlog/ancestor.tlog --solver clingo
 ```
 
 Lemmas and test cases are metadata, so `solve` does not run or assert them.
-Run quoted test cases explicitly:
+Run validation explicitly with `test`:
 
 ```bash
 typedlogic test docs/examples/tlog/mortality.tlog --solver clingo
 typedlogic test docs/examples/tlog/mortality.tlog --solver clingo --test socrates_mortality
 ```
 
-Prove goals and lemmas explicitly:
+`test` also proves goals and lemmas by default. Use `prove` for proof-only runs:
 
 ```bash
 typedlogic prove docs/examples/tlog/mortality.tlog --solver z3
