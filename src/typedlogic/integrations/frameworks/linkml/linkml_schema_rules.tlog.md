@@ -185,6 +185,6 @@ all c, s, r | class_slot_range(c, s, r) ->
 TODO: entailed S
 
 ```tlog
-all c, s, r | class_slot_required(c, s) ->
-  (all i | EntailedInstantiation(c, i) -> (exists j, s2 |  ancestor(s2, s) & DirectAssertion(s, i, j))).
+all c, s | class_slot_required(c, s) ->
+  (all i | EntailedInstantiation(c, i) -> (exists j, s2 | ancestor(s2, s) & DirectAssertion(s2, i, j))).
 ```
