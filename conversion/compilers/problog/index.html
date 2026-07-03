@@ -1186,6 +1186,42 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#typedlogic.integrations.solvers.problog.ProbLogCompiler.prolog_config" class="md-nav__link">
+    <span class="md-ellipsis">
+      prolog_config
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.integrations.solvers.problog.ProbLogCompiler.false_predicate_declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      false_predicate_declarations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.integrations.solvers.problog.ProbLogCompiler._comparison_head_to_constraint" class="md-nav__link">
+    <span class="md-ellipsis">
+      _comparison_head_to_constraint
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.integrations.solvers.problog.ProbLogCompiler._rule_to_problog" class="md-nav__link">
+    <span class="md-ellipsis">
+      _rule_to_problog
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1913,6 +1949,42 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#typedlogic.integrations.solvers.problog.ProbLogCompiler.prolog_config" class="md-nav__link">
+    <span class="md-ellipsis">
+      prolog_config
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.integrations.solvers.problog.ProbLogCompiler.false_predicate_declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      false_predicate_declarations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.integrations.solvers.problog.ProbLogCompiler._comparison_head_to_constraint" class="md-nav__link">
+    <span class="md-ellipsis">
+      _comparison_head_to_constraint
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.integrations.solvers.problog.ProbLogCompiler._rule_to_problog" class="md-nav__link">
+    <span class="md-ellipsis">
+      _rule_to_problog
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1958,17 +2030,7 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/integrations/solvers/problog/problog_compiler.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 22</span>
-<span class="normal"> 23</span>
-<span class="normal"> 24</span>
-<span class="normal"> 25</span>
-<span class="normal"> 26</span>
-<span class="normal"> 27</span>
-<span class="normal"> 28</span>
-<span class="normal"> 29</span>
-<span class="normal"> 30</span>
-<span class="normal"> 31</span>
-<span class="normal"> 32</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 32</span>
 <span class="normal"> 33</span>
 <span class="normal"> 34</span>
 <span class="normal"> 35</span>
@@ -2106,7 +2168,85 @@
 <span class="normal">167</span>
 <span class="normal">168</span>
 <span class="normal">169</span>
-<span class="normal">170</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ProbLogCompiler</span><span class="p">(</span><span class="n">Compiler</span><span class="p">):</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ProbLogCompiler</span><span class="p">(</span><span class="n">Compiler</span><span class="p">):</span>
     <span class="n">default_suffix</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;problog&quot;</span>
     <span class="n">_predicate_mappings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -2144,7 +2284,8 @@
 <span class="sd">        :param kwargs:</span>
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">prolog_config</span> <span class="o">=</span> <span class="n">PrologConfig</span><span class="p">(</span><span class="n">disjunctive_datalog</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">double_quote_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_nesting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_ungrounded_vars_in_head</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">include_queries</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;include_queries&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">prolog_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prolog_config</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_mappings</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_mappings</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">:</span>
@@ -2153,18 +2294,54 @@
                 <span class="n">prolog_pd</span> <span class="o">=</span> <span class="n">prolog_pd</span><span class="p">[:</span> <span class="n">prolog_pd</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">)]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_mappings</span><span class="p">[</span><span class="n">prolog_pd</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">predicate</span>
         <span class="n">clauses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">clauses</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">false_predicate_declarations</span><span class="p">(</span><span class="n">theory</span><span class="p">,</span> <span class="n">prolog_config</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">sentences</span> <span class="o">+</span> <span class="n">theory</span><span class="o">.</span><span class="n">ground_terms</span><span class="p">:</span>
             <span class="n">clause</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sentence_to_problog</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">prolog_config</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">clause</span><span class="p">:</span>
                 <span class="n">clauses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">predicate</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Probability</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">That</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">Evidence</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]:</span>
-                <span class="k">continue</span>
-            <span class="n">query_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">Variable</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
-            <span class="n">term</span> <span class="o">=</span> <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="n">Term</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">predicate</span><span class="p">,</span> <span class="o">*</span><span class="n">query_vars</span><span class="p">))</span>
-            <span class="n">clause</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sentence_to_problog</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">prolog_config</span><span class="p">)</span>
-            <span class="n">clauses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">include_queries</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">predicate</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Probability</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">That</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">Evidence</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]:</span>
+                    <span class="k">continue</span>
+                <span class="n">query_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">Variable</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+                <span class="n">term</span> <span class="o">=</span> <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="n">Term</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">predicate</span><span class="p">,</span> <span class="o">*</span><span class="n">query_vars</span><span class="p">))</span>
+                <span class="n">clause</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sentence_to_problog</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">prolog_config</span><span class="p">)</span>
+                <span class="n">clauses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">clauses</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prolog_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">PrologConfig</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return Prolog rendering configuration for ProbLog syntax.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">PrologConfig</span><span class="p">(</span>
+            <span class="n">disjunctive_datalog</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">double_quote_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">operator_map</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;eq&quot;</span><span class="p">:</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;ne&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\=&quot;</span><span class="p">},</span>
+            <span class="n">allow_nesting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">allow_ungrounded_vars_in_head</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">false_predicate_declarations</span><span class="p">(</span><span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">prolog_config</span><span class="p">:</span> <span class="n">PrologConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return false clauses for declared predicates that may otherwise be empty.&quot;&quot;&quot;</span>
+        <span class="n">declarations</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">seen</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">predicate_definition</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">predicate_definition</span><span class="o">.</span><span class="n">predicate</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Probability</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">That</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">Evidence</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]:</span>
+                <span class="k">continue</span>
+            <span class="n">predicate</span> <span class="o">=</span> <span class="n">as_prolog</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="n">predicate_definition</span><span class="o">.</span><span class="n">predicate</span><span class="p">),</span> <span class="n">config</span><span class="o">=</span><span class="n">prolog_config</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;(&quot;</span> <span class="ow">in</span> <span class="n">predicate</span><span class="p">:</span>
+                <span class="n">predicate</span> <span class="o">=</span> <span class="n">predicate</span><span class="p">[:</span> <span class="n">predicate</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">)]</span>
+            <span class="n">arity</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predicate_definition</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">arity</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">arity</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">declarations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">predicate</span><span class="si">}</span><span class="s2"> :- fail.&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;_&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">arity</span><span class="p">))</span>
+            <span class="n">declarations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">predicate</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">) :- fail.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">declarations</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_sentence_to_problog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">prolog_config</span><span class="p">:</span> <span class="n">PrologConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">Forall</span><span class="p">):</span>
@@ -2185,7 +2362,10 @@
             <span class="n">rules</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">to_horn_rules</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">allow_disjunctions_in_head</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_goal_clauses</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-                    <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+                    <span class="n">rewritten_rule</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_comparison_head_to_constraint</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">rewritten_rule</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="n">rules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rewritten_rule</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">NotInProfileError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping sentence </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2"> due to </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">rules</span>
@@ -2196,7 +2376,9 @@
             <span class="n">inner_rules</span> <span class="o">=</span> <span class="n">_to_rules</span><span class="p">(</span><span class="n">inner</span><span class="p">)</span>
             <span class="n">strs</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">inner_rules</span><span class="p">:</span>
-                <span class="n">strs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pr</span><span class="si">}</span><span class="s2">::</span><span class="si">{</span><span class="n">as_prolog</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="o">=</span><span class="n">prolog_config</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">rendered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rule_to_problog</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">prolog_config</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">rendered</span><span class="p">:</span>
+                    <span class="n">strs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pr</span><span class="si">}</span><span class="s2">::</span><span class="si">{</span><span class="n">rendered</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">strs</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">Term</span><span class="p">)</span> <span class="ow">and</span> <span class="n">sentence</span><span class="o">.</span><span class="n">predicate</span> <span class="o">==</span> <span class="n">Evidence</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span>
             <span class="c1"># special treatment for evidence sentences</span>
@@ -2210,7 +2392,7 @@
             <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;evidence(</span><span class="si">{</span><span class="n">inner_prolog</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="s1">&#39;true&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">truth_value</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;false&#39;</span><span class="si">}</span><span class="s2">).&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">rules</span> <span class="o">=</span> <span class="n">_to_rules</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
-            <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">as_prolog</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">prolog_config</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">])</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">rendered</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rules</span> <span class="k">if</span> <span class="p">(</span><span class="n">rendered</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rule_to_problog</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">prolog_config</span><span class="p">))])</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_sentence_probability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">Sentence</span><span class="p">]]:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">Forall</span><span class="p">):</span>
@@ -2236,6 +2418,32 @@
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid inner reference: </span><span class="si">{</span><span class="n">inner_ref</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">pr</span><span class="p">,</span> <span class="n">inner_ref</span>
         <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_comparison_head_to_constraint</span><span class="p">(</span><span class="n">rule</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert implication heads like ``X != Y`` into ProbLog constraints.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">Implies</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">rule</span>
+        <span class="n">head</span> <span class="o">=</span> <span class="n">rule</span><span class="o">.</span><span class="n">consequent</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">Term</span><span class="p">)</span> <span class="ow">or</span> <span class="n">head</span><span class="o">.</span><span class="n">predicate</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">NAME_TO_INFIX_OP</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">rule</span>
+        <span class="n">negated_predicate</span> <span class="o">=</span> <span class="n">NEGATED_COMPARISON_PREDICATES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">head</span><span class="o">.</span><span class="n">predicate</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">negated_predicate</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping rule with built-in predicate in head: </span><span class="si">{</span><span class="n">rule</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">negated_comparison</span> <span class="o">=</span> <span class="n">Term</span><span class="p">(</span><span class="n">negated_predicate</span><span class="p">,</span> <span class="o">*</span><span class="n">head</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Implies</span><span class="p">(</span><span class="n">And</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">antecedent</span><span class="p">,</span> <span class="n">negated_comparison</span><span class="p">),</span> <span class="n">Or</span><span class="p">())</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_rule_to_problog</span><span class="p">(</span><span class="n">rule</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">prolog_config</span><span class="p">:</span> <span class="n">PrologConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render one rule, encoding goal clauses as ProbLog evidence.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">Implies</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">consequent</span><span class="p">,</span> <span class="n">Or</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">rule</span><span class="o">.</span><span class="n">consequent</span><span class="o">.</span><span class="n">operands</span><span class="p">:</span>
+            <span class="n">violation</span> <span class="o">=</span> <span class="n">Implies</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">antecedent</span><span class="p">,</span> <span class="n">Term</span><span class="p">(</span><span class="n">CONSTRAINT_VIOLATION_PREDICATE</span><span class="p">))</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">as_prolog</span><span class="p">(</span><span class="n">violation</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="o">=</span><span class="n">prolog_config</span><span class="p">,</span><span class="w"> </span><span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;evidence(</span><span class="si">{</span><span class="n">CONSTRAINT_VIOLATION_PREDICATE</span><span class="si">}</span><span class="s2">, false).&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">as_prolog</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">prolog_config</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">decompile_term</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">compiled_term</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Term</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">compiled_term</span><span class="p">,</span> <span class="n">pl</span><span class="o">.</span><span class="n">Term</span><span class="p">):</span>
@@ -2400,17 +2608,7 @@ compiling the problog program, feeding it to problog, and parsing results.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/integrations/solvers/problog/problog_compiler.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">36</span>
 <span class="normal">37</span>
 <span class="normal">38</span>
 <span class="normal">39</span>
@@ -2454,7 +2652,20 @@ compiling the problog program, feeding it to problog, and parsing results.</p>
 <span class="normal">77</span>
 <span class="normal">78</span>
 <span class="normal">79</span>
-<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">syntax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelSyntax</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">syntax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelSyntax</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compile a Theory object into ProbLog code.</span>
 
@@ -2488,7 +2699,8 @@ compiling the problog program, feeding it to problog, and parsing results.</p>
 <span class="sd">    :param kwargs:</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">prolog_config</span> <span class="o">=</span> <span class="n">PrologConfig</span><span class="p">(</span><span class="n">disjunctive_datalog</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">double_quote_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_nesting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_ungrounded_vars_in_head</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">include_queries</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;include_queries&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">prolog_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prolog_config</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_mappings</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_mappings</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">:</span>
@@ -2497,18 +2709,232 @@ compiling the problog program, feeding it to problog, and parsing results.</p>
             <span class="n">prolog_pd</span> <span class="o">=</span> <span class="n">prolog_pd</span><span class="p">[:</span> <span class="n">prolog_pd</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_mappings</span><span class="p">[</span><span class="n">prolog_pd</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">predicate</span>
     <span class="n">clauses</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">clauses</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">false_predicate_declarations</span><span class="p">(</span><span class="n">theory</span><span class="p">,</span> <span class="n">prolog_config</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">sentences</span> <span class="o">+</span> <span class="n">theory</span><span class="o">.</span><span class="n">ground_terms</span><span class="p">:</span>
         <span class="n">clause</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sentence_to_problog</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">prolog_config</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">clause</span><span class="p">:</span>
             <span class="n">clauses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">predicate</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Probability</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">That</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">Evidence</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]:</span>
-            <span class="k">continue</span>
-        <span class="n">query_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">Variable</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
-        <span class="n">term</span> <span class="o">=</span> <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="n">Term</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">predicate</span><span class="p">,</span> <span class="o">*</span><span class="n">query_vars</span><span class="p">))</span>
-        <span class="n">clause</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sentence_to_problog</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">prolog_config</span><span class="p">)</span>
-        <span class="n">clauses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">include_queries</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">predicate</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Probability</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">That</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">Evidence</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]:</span>
+                <span class="k">continue</span>
+            <span class="n">query_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">Variable</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+            <span class="n">term</span> <span class="o">=</span> <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="n">Term</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">predicate</span><span class="p">,</span> <span class="o">*</span><span class="n">query_vars</span><span class="p">))</span>
+            <span class="n">clause</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sentence_to_problog</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">prolog_config</span><span class="p">)</span>
+            <span class="n">clauses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clause</span><span class="p">)</span>
     <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">clauses</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="typedlogic.integrations.solvers.problog.ProbLogCompiler.prolog_config" class="doc doc-heading">
+            <code class=" language-python"><span class="n">prolog_config</span><span class="p">()</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return Prolog rendering configuration for ProbLog syntax.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/typedlogic/integrations/solvers/problog/problog_compiler.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">prolog_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">PrologConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return Prolog rendering configuration for ProbLog syntax.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">PrologConfig</span><span class="p">(</span>
+        <span class="n">disjunctive_datalog</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">double_quote_strings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">operator_map</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;eq&quot;</span><span class="p">:</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;ne&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\=&quot;</span><span class="p">},</span>
+        <span class="n">allow_nesting</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">allow_ungrounded_vars_in_head</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="typedlogic.integrations.solvers.problog.ProbLogCompiler.false_predicate_declarations" class="doc doc-heading">
+            <code class=" language-python"><span class="n">false_predicate_declarations</span><span class="p">(</span><span class="n">theory</span><span class="p">,</span> <span class="n">prolog_config</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return false clauses for declared predicates that may otherwise be empty.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/typedlogic/integrations/solvers/problog/problog_compiler.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">false_predicate_declarations</span><span class="p">(</span><span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">prolog_config</span><span class="p">:</span> <span class="n">PrologConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return false clauses for declared predicates that may otherwise be empty.&quot;&quot;&quot;</span>
+    <span class="n">declarations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">seen</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">predicate_definition</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">predicate_definition</span><span class="o">.</span><span class="n">predicate</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Probability</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">That</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">Evidence</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]:</span>
+            <span class="k">continue</span>
+        <span class="n">predicate</span> <span class="o">=</span> <span class="n">as_prolog</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="n">predicate_definition</span><span class="o">.</span><span class="n">predicate</span><span class="p">),</span> <span class="n">config</span><span class="o">=</span><span class="n">prolog_config</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;(&quot;</span> <span class="ow">in</span> <span class="n">predicate</span><span class="p">:</span>
+            <span class="n">predicate</span> <span class="o">=</span> <span class="n">predicate</span><span class="p">[:</span> <span class="n">predicate</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">)]</span>
+        <span class="n">arity</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predicate_definition</span><span class="o">.</span><span class="n">arguments</span><span class="p">)</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="n">arity</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">arity</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">declarations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">predicate</span><span class="si">}</span><span class="s2"> :- fail.&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;_&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">arity</span><span class="p">))</span>
+        <span class="n">declarations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">predicate</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">) :- fail.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">declarations</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="typedlogic.integrations.solvers.problog.ProbLogCompiler._comparison_head_to_constraint" class="doc doc-heading">
+            <code class=" language-python"><span class="n">_comparison_head_to_constraint</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Convert implication heads like <code>X != Y</code> into ProbLog constraints.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/typedlogic/integrations/solvers/problog/problog_compiler.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_comparison_head_to_constraint</span><span class="p">(</span><span class="n">rule</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert implication heads like ``X != Y`` into ProbLog constraints.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">Implies</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">rule</span>
+    <span class="n">head</span> <span class="o">=</span> <span class="n">rule</span><span class="o">.</span><span class="n">consequent</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">Term</span><span class="p">)</span> <span class="ow">or</span> <span class="n">head</span><span class="o">.</span><span class="n">predicate</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">NAME_TO_INFIX_OP</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">rule</span>
+    <span class="n">negated_predicate</span> <span class="o">=</span> <span class="n">NEGATED_COMPARISON_PREDICATES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">head</span><span class="o">.</span><span class="n">predicate</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">negated_predicate</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping rule with built-in predicate in head: </span><span class="si">{</span><span class="n">rule</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">negated_comparison</span> <span class="o">=</span> <span class="n">Term</span><span class="p">(</span><span class="n">negated_predicate</span><span class="p">,</span> <span class="o">*</span><span class="n">head</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Implies</span><span class="p">(</span><span class="n">And</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">antecedent</span><span class="p">,</span> <span class="n">negated_comparison</span><span class="p">),</span> <span class="n">Or</span><span class="p">())</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="typedlogic.integrations.solvers.problog.ProbLogCompiler._rule_to_problog" class="doc doc-heading">
+            <code class=" language-python"><span class="n">_rule_to_problog</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">prolog_config</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
+  </span>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Render one rule, encoding goal clauses as ProbLog evidence.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/typedlogic/integrations/solvers/problog/problog_compiler.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_rule_to_problog</span><span class="p">(</span><span class="n">rule</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">prolog_config</span><span class="p">:</span> <span class="n">PrologConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Render one rule, encoding goal clauses as ProbLog evidence.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">Implies</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">consequent</span><span class="p">,</span> <span class="n">Or</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">rule</span><span class="o">.</span><span class="n">consequent</span><span class="o">.</span><span class="n">operands</span><span class="p">:</span>
+        <span class="n">violation</span> <span class="o">=</span> <span class="n">Implies</span><span class="p">(</span><span class="n">rule</span><span class="o">.</span><span class="n">antecedent</span><span class="p">,</span> <span class="n">Term</span><span class="p">(</span><span class="n">CONSTRAINT_VIOLATION_PREDICATE</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">as_prolog</span><span class="p">(</span><span class="n">violation</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="o">=</span><span class="n">prolog_config</span><span class="p">,</span><span class="w"> </span><span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;evidence(</span><span class="si">{</span><span class="n">CONSTRAINT_VIOLATION_PREDICATE</span><span class="si">}</span><span class="s2">, false).&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">as_prolog</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">prolog_config</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

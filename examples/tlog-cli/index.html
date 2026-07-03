@@ -2149,7 +2149,8 @@ test_case(
   expect(that(satisfiable() &amp; mortal(&quot;socrates&quot;) &amp; not philosopher(&quot;socrates&quot;)))
 ).
 </code></pre></div>
-<p><code>solve</code> ignores these test cases. Run them explicitly with <code>test</code>:</p>
+<p><code>solve</code> ignores test cases, goals, and lemmas. Run validation explicitly with
+<code>test</code>; it checks test cases and also proves goals and lemmas:</p>
 <div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span><span class="nb">test</span><span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>clingo
 typedlogic<span class="w"> </span><span class="nb">test</span><span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>clingo<span class="w"> </span>--test<span class="w"> </span>socrates_mortality
 </code></pre></div>
@@ -2158,12 +2159,13 @@ typedlogic<span class="w"> </span><span class="nb">test</span><span class="w"> <
 1 test case(s), 0 failed, 0 unknown
 </code></pre></div>
 <p>Use <code>--dump-program</code> to print the generated solver program for each test fixture
-before expectations are checked.</p>
+before expectations are checked. Use <code>--no-proofs</code> when you only want test-case
+fixtures and expectations.</p>
 <h2 id="prove-lemmas">Prove Lemmas</h2>
 <p>Lemmas are quoted proof obligations, not axioms:</p>
 <div class="highlight"><pre><span></span><code>lemma(&quot;socrates_is_mortal&quot;, that(mortal(&quot;socrates&quot;))).
 </code></pre></div>
-<p>Run proof obligations explicitly:</p>
+<p><code>test</code> proves proof obligations by default. Use <code>prove</code> for proof-only runs:</p>
 <div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>prove<span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>z3
 typedlogic<span class="w"> </span>prove<span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--target<span class="w"> </span>lemmas
 typedlogic<span class="w"> </span>prove<span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--name<span class="w"> </span>socrates_is_mortal

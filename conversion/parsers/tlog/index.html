@@ -3658,15 +3658,18 @@ the solver as ordinary facts:</p>
   expect(that(satisfiable() &amp; mortal(&quot;socrates&quot;) &amp; not philosopher(&quot;socrates&quot;)))
 ).
 </code></pre></div>
-<p><code>solve</code> ignores lemmas and test cases by default. Use dedicated commands when
-you want to interpret this metadata:</p>
+<p><code>solve</code> ignores lemmas and test cases by default. Use <code>test</code> when you want a
+one-stop validation command for both test cases and proof obligations; use
+<code>prove</code> when you only want goals and lemmas:</p>
 <div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span><span class="nb">test</span><span class="w"> </span>theory.tlog<span class="w"> </span>--solver<span class="w"> </span>clingo
 typedlogic<span class="w"> </span>prove<span class="w"> </span>theory.tlog<span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--target<span class="w"> </span>lemmas
 </code></pre></div>
 <p>The test runner treats <code>given(that(S))</code> as a temporary assertion for that test
 case. <code>expect(that(E))</code> checks the expected sentence. In expectations,
 <code>satisfiable()</code> is a built-in check for fixture satisfiability, conjunction
-means all expectations must hold, and <code>not P</code> means <code>P</code> is not entailed.</p>
+means all expectations must hold, and <code>not P</code> means <code>P</code> is not entailed.
+After running test cases, <code>test</code> also proves matching goals and lemmas unless
+<code>--no-proofs</code> is used.</p>
 <h2 id="hilog-style-predicate-variables">HiLog-Style Predicate Variables</h2>
 <p>Use <code>@name(...)</code> to put a variable in predicate position:</p>
 <div class="highlight"><pre><span></span><code>all slot, i, v | @slot(i, v) -&gt; has_slot_value(i, slot).
@@ -3705,11 +3708,11 @@ auto-detection:</p>
 <div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>solve<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span>--solver<span class="w"> </span>clingo
 </code></pre></div>
 <p>Lemmas and test cases are metadata, so <code>solve</code> does not run or assert them.
-Run quoted test cases explicitly:</p>
+Run validation explicitly with <code>test</code>:</p>
 <div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span><span class="nb">test</span><span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>clingo
 typedlogic<span class="w"> </span><span class="nb">test</span><span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>clingo<span class="w"> </span>--test<span class="w"> </span>socrates_mortality
 </code></pre></div>
-<p>Prove goals and lemmas explicitly:</p>
+<p><code>test</code> also proves goals and lemmas by default. Use <code>prove</code> for proof-only runs:</p>
 <div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>prove<span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>z3
 typedlogic<span class="w"> </span>prove<span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--target<span class="w"> </span>lemmas
 typedlogic<span class="w"> </span>prove<span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--name<span class="w"> </span>socrates_is_mortal

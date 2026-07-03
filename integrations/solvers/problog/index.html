@@ -964,6 +964,18 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    ProbLog
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -974,6 +986,43 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.integrations.solvers.problog.ProbLogSolver._evaluate_program" class="md-nav__link">
+    <span class="md-ellipsis">
+      _evaluate_program
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.integrations.solvers.problog.ProbLogSolver.prove" class="md-nav__link">
+    <span class="md-ellipsis">
+      prove
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1858,6 +1907,32 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.integrations.solvers.problog.ProbLogSolver._evaluate_program" class="md-nav__link">
+    <span class="md-ellipsis">
+      _evaluate_program
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.integrations.solvers.problog.ProbLogSolver.prove" class="md-nav__link">
+    <span class="md-ellipsis">
+      prove
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1922,9 +1997,7 @@ probabilistic logic programming language.</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/integrations/solvers/problog/problog_solver.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 40</span>
-<span class="normal"> 41</span>
-<span class="normal"> 42</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 42</span>
 <span class="normal"> 43</span>
 <span class="normal"> 44</span>
 <span class="normal"> 45</span>
@@ -2014,7 +2087,49 @@ probabilistic logic programming language.</p>
 <span class="normal">129</span>
 <span class="normal">130</span>
 <span class="normal">131</span>
-<span class="normal">132</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ProbLogSolver</span><span class="p">(</span><span class="n">Solver</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A solver that uses problog.</span>
@@ -2048,22 +2163,7 @@ probabilistic logic programming language.</p>
     <span class="k">def</span><span class="w"> </span><span class="nf">models</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">ProbabilisticModel</span><span class="p">]:</span>
         <span class="n">compiler</span> <span class="o">=</span> <span class="n">ProbLogCompiler</span><span class="p">()</span>
         <span class="n">program</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_theory</span><span class="p">)</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">PrologString</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
-        <span class="n">ev</span> <span class="o">=</span> <span class="n">get_evaluatable</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">DEFAULT_PROBLOG_ARGS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-                <span class="n">kwargs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">problog_args</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">problog_args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-                    <span class="n">kwargs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">create_from</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span>
-        <span class="k">except</span> <span class="n">InconsistentEvidenceError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">UnsatisfiableEvidenceError</span><span class="p">(</span>
-                <span class="s2">&quot;ProbLog evidence is inconsistent; no probabilistic model can satisfy the asserted evidence. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;ProbLog reported: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate_program</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">ProbabilisticModel</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">term</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">plt_term</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">decompile_term</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
@@ -2074,6 +2174,23 @@ probabilistic logic programming language.</p>
             <span class="n">m</span><span class="o">.</span><span class="n">ground_terms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reified_as_term</span><span class="p">)</span>
             <span class="n">m</span><span class="o">.</span><span class="n">term_probabilities</span><span class="p">[</span><span class="n">plt_term</span><span class="p">]</span> <span class="o">=</span> <span class="n">prob</span>
         <span class="k">yield</span> <span class="n">m</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_evaluate_program</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">program</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate a ProbLog program and return query probabilities.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">DEFAULT_PROBLOG_ARGS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">problog_args</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">problog_args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                    <span class="n">kwargs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">get_evaluatable</span><span class="p">()</span><span class="o">.</span><span class="n">create_from</span><span class="p">(</span><span class="n">PrologString</span><span class="p">(</span><span class="n">program</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">InconsistentEvidenceError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnsatisfiableEvidenceError</span><span class="p">(</span>
+                <span class="s2">&quot;ProbLog evidence is inconsistent; no probabilistic model can satisfy the asserted evidence. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;ProbLog reported: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProbabilisticModel</span><span class="p">:</span>
         <span class="n">models</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">())</span>
@@ -2100,6 +2217,44 @@ probabilistic logic programming language.</p>
         <span class="n">compiler</span> <span class="o">=</span> <span class="n">ProbLogCompiler</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_theory</span><span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">prove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prove Datalog-safe implications by checking counterexample probability.&quot;&quot;&quot;</span>
+        <span class="n">compiler</span> <span class="o">=</span> <span class="n">ProbLogCompiler</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">counterexample_sentences</span> <span class="o">=</span> <span class="n">counterexample_proof_sentences</span><span class="p">(</span>
+                <span class="n">sentence</span><span class="p">,</span>
+                <span class="n">predicate</span><span class="o">=</span><span class="n">COUNTEREXAMPLE_PREDICATE</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="n">NotInProfileError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">program</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_theory</span><span class="p">,</span> <span class="n">include_queries</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">proof_clauses</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">prolog_config</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">prolog_config</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">proof_sentence</span> <span class="ow">in</span> <span class="n">counterexample_sentences</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">to_horn_rules</span><span class="p">(</span><span class="n">proof_sentence</span><span class="p">,</span> <span class="n">allow_disjunctions_in_head</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_goal_clauses</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="n">proof_clauses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">as_prolog</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">prolog_config</span><span class="p">))</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="n">Term</span><span class="p">(</span><span class="n">COUNTEREXAMPLE_PREDICATE</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">to_horn_rules</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">allow_disjunctions_in_head</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_goal_clauses</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                <span class="n">proof_clauses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">as_prolog</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">prolog_config</span><span class="p">))</span>
+        <span class="k">except</span> <span class="n">NotInProfileError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot prove sentence </span><span class="si">{</span><span class="n">sentence</span><span class="si">}</span><span class="s2"> with counterexample transform due to </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">proof_clauses</span><span class="p">:</span>
+            <span class="n">program</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">program</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proof_clauses</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate_program</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">UnsatisfiableEvidenceError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">counterexample</span> <span class="o">=</span> <span class="n">Term</span><span class="p">(</span><span class="n">COUNTEREXAMPLE_PREDICATE</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">term</span><span class="p">,</span> <span class="n">probability</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">compiler</span><span class="o">.</span><span class="n">decompile_term</span><span class="p">(</span><span class="n">term</span><span class="p">)</span> <span class="o">==</span> <span class="n">counterexample</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">probability</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">add_probabilistic_fact</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fact</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">probability</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">pr_sent</span> <span class="o">=</span> <span class="n">Probability</span><span class="p">(</span><span class="n">probability</span><span class="p">,</span> <span class="n">That</span><span class="p">(</span><span class="n">fact</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">pr_sent</span><span class="p">)</span>
@@ -2121,6 +2276,154 @@ probabilistic logic programming language.</p>
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="typedlogic.integrations.solvers.problog.ProbLogSolver._evaluate_program" class="doc doc-heading">
+            <code class=" language-python"><span class="n">_evaluate_program</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Evaluate a ProbLog program and return query probabilities.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/typedlogic/integrations/solvers/problog/problog_solver.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_evaluate_program</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">program</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate a ProbLog program and return query probabilities.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">DEFAULT_PROBLOG_ARGS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">problog_args</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">problog_args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">get_evaluatable</span><span class="p">()</span><span class="o">.</span><span class="n">create_from</span><span class="p">(</span><span class="n">PrologString</span><span class="p">(</span><span class="n">program</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">InconsistentEvidenceError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">UnsatisfiableEvidenceError</span><span class="p">(</span>
+            <span class="s2">&quot;ProbLog evidence is inconsistent; no probabilistic model can satisfy the asserted evidence. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;ProbLog reported: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="typedlogic.integrations.solvers.problog.ProbLogSolver.prove" class="doc doc-heading">
+            <code class=" language-python"><span class="n">prove</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Prove Datalog-safe implications by checking counterexample probability.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/typedlogic/integrations/solvers/problog/problog_solver.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">prove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prove Datalog-safe implications by checking counterexample probability.&quot;&quot;&quot;</span>
+    <span class="n">compiler</span> <span class="o">=</span> <span class="n">ProbLogCompiler</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">counterexample_sentences</span> <span class="o">=</span> <span class="n">counterexample_proof_sentences</span><span class="p">(</span>
+            <span class="n">sentence</span><span class="p">,</span>
+            <span class="n">predicate</span><span class="o">=</span><span class="n">COUNTEREXAMPLE_PREDICATE</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="n">NotInProfileError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">program</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_theory</span><span class="p">,</span> <span class="n">include_queries</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">proof_clauses</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">prolog_config</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">prolog_config</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">proof_sentence</span> <span class="ow">in</span> <span class="n">counterexample_sentences</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">to_horn_rules</span><span class="p">(</span><span class="n">proof_sentence</span><span class="p">,</span> <span class="n">allow_disjunctions_in_head</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_goal_clauses</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                <span class="n">proof_clauses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">as_prolog</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">prolog_config</span><span class="p">))</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="n">Term</span><span class="p">(</span><span class="n">COUNTEREXAMPLE_PREDICATE</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">to_horn_rules</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">allow_disjunctions_in_head</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_goal_clauses</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">proof_clauses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">as_prolog</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">prolog_config</span><span class="p">))</span>
+    <span class="k">except</span> <span class="n">NotInProfileError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot prove sentence </span><span class="si">{</span><span class="n">sentence</span><span class="si">}</span><span class="s2"> with counterexample transform due to </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">proof_clauses</span><span class="p">:</span>
+        <span class="n">program</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">program</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proof_clauses</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate_program</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">UnsatisfiableEvidenceError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">counterexample</span> <span class="o">=</span> <span class="n">Term</span><span class="p">(</span><span class="n">COUNTEREXAMPLE_PREDICATE</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">term</span><span class="p">,</span> <span class="n">probability</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">compiler</span><span class="o">.</span><span class="n">decompile_term</span><span class="p">(</span><span class="n">term</span><span class="p">)</span> <span class="o">==</span> <span class="n">counterexample</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">probability</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 
 

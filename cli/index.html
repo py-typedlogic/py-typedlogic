@@ -2031,10 +2031,11 @@ typedlogic<span class="w"> </span>solve<span class="w"> </span>theory.py<span cl
   --help                          Show this message and exit.
 </code></pre></div>
 <h2 id="test">test</h2>
-<p>Run quoted test_case(...) declarations embedded in a theory.</p>
+<p>Run quoted test_case(...) declarations and prove goals and lemmas embedded in a theory.</p>
 <p>Tests are off by default for <code>solve</code>. This command opts into test metadata:
 each <code>given(that(...))</code> is temporarily asserted, and each <code>expect(that(...))</code>
-is checked against the resulting solver state.</p>
+is checked against the resulting solver state. Goal and lemma metadata is
+also proved against the base theory unless <code>--no-proofs</code> is used.</p>
 <p><strong>Usage:</strong></p>
 <div class="highlight"><pre><span></span><code>typedlogic test [OPTIONS] THEORY_FILE [DATA_FILES]...
 </code></pre></div>
@@ -2042,6 +2043,8 @@ is checked against the resulting solver state.</p>
 <div class="highlight"><pre><span></span><code>  THEORY_FILE                     [required]
   -s, --solver TEXT               Solver to use (z3, souffle, clingo, etc.)
                                   [default: souffle]
+  --target [all|goals|lemmas]     Proof obligations to run after test cases:
+                                  all, goals, or lemmas.  [default: all]
   --validate-types / --no-validate-types
                                   Use mypy to validate types  [default:
                                   validate-types]
@@ -2050,6 +2053,10 @@ is checked against the resulting solver state.</p>
   -d, --data-input-format TEXT    Format for ground terms
   --test TEXT                     Only run a named test case. Repeat for
                                   multiple tests.
+  --name TEXT                     Only prove obligations from a named goal or
+                                  lemma group. Repeat for multiple names.
+  --proofs / --no-proofs          Also prove goal and lemma obligations.
+                                  [default: proofs]
   --dump-program, --show-program  Print the solver-specific generated program
                                   before solving.
   [DATA_FILES]...
