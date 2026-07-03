@@ -23,6 +23,7 @@ class StageAge(BaseModel, FactMixin):
 @axiom
 def facts():
     assert StageAge(stage="Adult", age=AGE_THRESHOLD)
+    assert PersonWithAge(name="Alice", age=25)
 
 
 @axiom

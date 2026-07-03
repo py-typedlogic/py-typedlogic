@@ -21,10 +21,9 @@ class Prover9Compiler(Compiler):
         lines = [f"% Problem: {theory.name}"]
         # Assumptions (axioms)
         lines.append("formulas(assumptions).")
-        for sg in theory.sentence_groups:
-            if sg.group_type != SentenceGroupType.GOAL:
-                for sentence in sg.sentences or []:
-                    lines.append(f"    {as_prover9(sentence)}.")
+        for sg in theory.asserted_sentence_groups:
+            for sentence in sg.sentences or []:
+                lines.append(f"    {as_prover9(sentence)}.")
         lines.append("end_of_list.")
         lines.append("")
 

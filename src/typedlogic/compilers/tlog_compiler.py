@@ -7,7 +7,7 @@ from typing import Any, ClassVar, Optional, Union
 
 from typedlogic import And, Exists, Forall, Iff, Implies, NegationAsFailure, Not, Or, Term, Theory
 from typedlogic.compiler import Compiler, ModelSyntax
-from typedlogic.datamodel import PredicateDefinition, Sentence, Variable
+from typedlogic.datamodel import PredicateDefinition, Sentence, SentenceGroup, SentenceGroupType, Variable
 from typedlogic.parsers.tlog_parser import TLogParser
 
 
@@ -35,6 +35,9 @@ class TLogCompiler(Compiler):
             if sentence_group.docstring:
                 for line in sentence_group.docstring.splitlines():
                     lines.append(f"# {line}")
+            if sentence_group.group_type == SentenceGroupType.LEMMA:
+                lines.extend(self._lemma_lines(sentence_group))
+                continue
             for sentence in sentence_group.sentences or []:
                 lines.extend(self._sentence_lines(sentence))
 
@@ -60,6 +63,12 @@ class TLogCompiler(Compiler):
                 lines.append(f"/// {line}")
         lines.append(f"{self._sentence(sentence)}.")
         return lines
+
+    def _lemma_lines(self, sentence_group: SentenceGroup) -> list[str]:
+        return [
+            f"{self._term(Term('lemma', sentence_group.name, Term('that', sentence)))}."
+            for sentence in sentence_group.sentences or []
+        ]
 
     def _sentence(self, sentence: Any, parenthesize: bool = False) -> str:
         if isinstance(sentence, Forall):
@@ -102,6 +111,9 @@ class TLogCompiler(Compiler):
         return separator.join(self._sentence(op, True) for op in sentence.operands)
 
     def _term(self, term: Term) -> str:
+        if term.predicate == "that" and len(term.values) == 1 and isinstance(term.values[0], Sentence):
+            return f"that({self._sentence(term.values[0])})"
+
         operator = {
             "eq": "=",
             "ne": "!=",

@@ -33,6 +33,11 @@ sentence_groups:
     - type: Variable
       arguments:
       - AGE_THRESHOLD
+  - type: Term
+    arguments:
+    - PersonWithAge
+    - Alice
+    - 25
 - type: SentenceGroup
   name: classifications
   group_type: axiom

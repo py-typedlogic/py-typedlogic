@@ -1,4 +1,3 @@
 StageAge('Adult', AGE_THRESHOLD)
+PersonWithAge('Alice', 25)
 ∀[name:Thing age:int]. age >= AGE_THRESHOLD → Adult(name)
-PersonWithAge('Alice', 25) → Adult('Alice')
-Adult('Bob') → ∃[age:int]. PersonWithAge('Alice', age)

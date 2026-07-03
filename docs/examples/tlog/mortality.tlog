@@ -1,0 +1,13 @@
+pred human(name: str).
+pred mortal(name: str).
+
+human("socrates").
+mortal(x) :- human(x).
+
+lemma("socrates_is_mortal", that(mortal("socrates"))).
+
+test_case(
+  "socrates_mortality",
+  given(that(human("socrates"))),
+  expect(that(satisfiable() & mortal("socrates") & not philosopher("socrates")))
+).

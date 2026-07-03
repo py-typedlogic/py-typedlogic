@@ -65,8 +65,26 @@ def test_expressions():
 
 def test_group_types():
     all_types = {x: x.value for x in SentenceGroupType}
-    assert len(all_types) == 2
+    assert len(all_types) == 4
     assert SentenceGroupType.AXIOM.value == "axiom"
+    assert SentenceGroupType.GOAL.value == "goal"
+    assert SentenceGroupType.LEMMA.value == "lemma"
+    assert SentenceGroupType.TEST.value == "test"
+
+
+def test_theory_sentences_are_asserted_sentences_only():
+    theory = Theory(
+        sentence_groups=[
+            SentenceGroup(name="axioms", group_type=SentenceGroupType.AXIOM, sentences=[Term("axiom_fact")]),
+            SentenceGroup(name="goals", group_type=SentenceGroupType.GOAL, sentences=[Term("goal_fact")]),
+            SentenceGroup(name="lemmas", group_type=SentenceGroupType.LEMMA, sentences=[Term("lemma_fact")]),
+            SentenceGroup(name="tests", group_type=SentenceGroupType.TEST, sentences=[Term("test_case", "example")]),
+        ]
+    )
+
+    assert theory.sentences == [Term("axiom_fact")]
+    assert theory.asserted_sentence_groups == [theory.sentence_groups[0]]
+    assert theory.goals == [Term("goal_fact")]
 
 
 def test_term():

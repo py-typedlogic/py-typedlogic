@@ -37,13 +37,15 @@ class TPTPCompiler(Compiler):
         """
         lines = [f"% Problem: {theory.name}"]
         grp_counts: Dict[str, int] = defaultdict(int)
-        for sg in theory.sentence_groups:
-            if sg.group_type == SentenceGroupType.GOAL:
-                typ = "conjecture"
-            else:
-                typ = "axiom"
+        for sg in theory.asserted_sentence_groups:
             for s in sg.sentences or []:
                 t = as_tptp(s)
-                grp_counts[typ] += 1
-                lines.append(f"fof(axiom{grp_counts[typ]}, axiom, {t}).")
+                grp_counts["axiom"] += 1
+                lines.append(f"fof(axiom{grp_counts['axiom']}, axiom, {t}).")
+        for sg in theory.sentence_groups:
+            if sg.group_type == SentenceGroupType.GOAL:
+                for s in sg.sentences or []:
+                    t = as_tptp(s)
+                    grp_counts["conjecture"] += 1
+                    lines.append(f"fof(conjecture{grp_counts['conjecture']}, conjecture, {t}).")
         return "\n".join(lines)

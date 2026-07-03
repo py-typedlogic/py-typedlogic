@@ -1,13 +1,33 @@
 """CLI tests for TLog parser/compiler integration."""
 
 from pathlib import Path
+from typing import Iterator, Optional
 
 import pytest
 from typer.testing import CliRunner
 
-from typedlogic.cli import app
+from typedlogic import Exists, Not, Term, Variable
+from typedlogic.cli import ExpectationContext, app
+from typedlogic.datamodel import Sentence
+from typedlogic.solver import Model, Solution, Solver
 
 runner = CliRunner()
+
+
+class OverrideReturningNoneSolver(Solver):
+    """Solver that overrides prove but delegates knowledge to model fallback."""
+
+    def check(self) -> Solution:
+        """Return a satisfiable solution."""
+        return Solution(satisfiable=True)
+
+    def models(self) -> Iterator[Model]:
+        """Return one model used by the entailment fallback."""
+        yield Model(ground_terms=[Term("edge", "a", "b")])
+
+    def prove(self, sentence: Sentence) -> Optional[bool]:
+        """Return no direct proof answer."""
+        return None
 
 
 def check(condition: bool, message: str) -> None:
@@ -73,3 +93,178 @@ def test_solve_tlog_with_selected_predicates_and_model_limit(tmp_path: Path) -> 
     check("selected(" in result.stdout, result.stdout)
     check("hidden(" not in result.stdout, result.stdout)
     check("Total models shown: 1" in result.stdout, result.stdout)
+
+
+def test_solve_tlog_can_dump_generated_clingo_program(tmp_path: Path) -> None:
+    """The solve command can print the generated solver program before solving."""
+    pytest.importorskip("clingo")
+    tlog_path = tmp_path / "constraints.tlog"
+    tlog_path.write_text(
+        """
+        pred person(id: str).
+        pred has_name(id: str).
+        :- person(x), not has_name(x).
+        person("p1").
+        has_name("p1").
+        test_case("person_has_name", given(that(person("p1"))), expect(that(has_name("p1")))).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["solve", str(tlog_path), "--solver", "clingo", "--dump-program"])
+
+    check(result.exit_code == 0, result.stdout)
+    check(":- person(X), not has_name(X)." in result.stdout, result.stdout)
+    check('person("p1").' in result.stdout, result.stdout)
+    check('has_name("p1").' in result.stdout, result.stdout)
+    check("test_case" not in result.stdout, result.stdout)
+    check("given(" not in result.stdout, result.stdout)
+    check("expect(" not in result.stdout, result.stdout)
+    check("Checking satisfiability" in result.stdout, result.stdout)
+    check("Satisfiable: True" in result.stdout, result.stdout)
+
+
+def test_tlog_test_command_runs_quoted_test_cases(tmp_path: Path) -> None:
+    """The test command runs quoted test_case metadata without asserting it globally."""
+    pytest.importorskip("clingo")
+    tlog_path = tmp_path / "mortality.tlog"
+    tlog_path.write_text(
+        """
+        pred human(name: str).
+        pred mortal(name: str).
+        mortal(x) :- human(x).
+
+        test_case(
+          "socrates_mortality",
+          given(that(human("socrates"))),
+          expect(that(satisfiable() & mortal("socrates") & not philosopher("socrates") & ~student("socrates")))
+        ).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["test", str(tlog_path), "--solver", "clingo"])
+
+    check(result.exit_code == 0, result.stdout)
+    check("PASS socrates_mortality" in result.stdout, result.stdout)
+    check("1 test case(s), 0 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_test_command_fails_when_expectation_is_not_entailed(tmp_path: Path) -> None:
+    """The test command exits non-zero when an expectation fails."""
+    pytest.importorskip("clingo")
+    tlog_path = tmp_path / "mortality.tlog"
+    tlog_path.write_text(
+        """
+        pred human(name: str).
+        pred mortal(name: str).
+
+        test_case(
+          "plato_mortality",
+          given(that(human("plato"))),
+          expect(that(mortal("plato")))
+        ).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["test", str(tlog_path), "--solver", "clingo"])
+
+    check(result.exit_code == 1, result.stdout)
+    check("FAIL plato_mortality" in result.stdout, result.stdout)
+    check("FAIL expect mortal('plato')" in result.stdout, result.stdout)
+
+
+def test_tlog_prove_command_proves_quoted_lemmas(tmp_path: Path) -> None:
+    """The prove command treats lemmas as proof obligations, not axioms."""
+    pytest.importorskip("z3")
+    tlog_path = tmp_path / "mortality.tlog"
+    tlog_path.write_text(
+        """
+        pred human(name: str).
+        pred mortal(name: str).
+        human("socrates").
+        all x | mortal(x) :- human(x).
+
+        lemma("socrates_is_mortal", that(mortal("socrates"))).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "z3", "--target", "lemmas"])
+
+    check(result.exit_code == 0, result.stdout)
+    check("PASS lemma socrates_is_mortal: mortal('socrates')" in result.stdout, result.stdout)
+    check("1 obligation(s), 0 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_prove_command_proves_negative_lemmas_with_model_fallback(tmp_path: Path) -> None:
+    """The prove command can use model entailment for negative proof obligations."""
+    pytest.importorskip("clingo")
+    tlog_path = tmp_path / "mortality.tlog"
+    tlog_path.write_text(
+        """
+        pred human(name: str).
+        human("socrates").
+
+        lemma("socrates_is_not_philosopher", that(~philosopher("socrates"))).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "clingo", "--target", "lemmas"])
+
+    check(result.exit_code == 0, result.stdout)
+    check("PASS lemma socrates_is_not_philosopher: ~philosopher('socrates')" in result.stdout, result.stdout)
+    check("1 obligation(s), 0 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_prove_command_does_not_match_variable_terms_with_different_arity(tmp_path: Path) -> None:
+    """Model entailment fallback does not match same-predicate terms of different arity."""
+    pytest.importorskip("clingo")
+    tlog_path = tmp_path / "edges.tlog"
+    tlog_path.write_text(
+        """
+        pred edge(source: str, target: str).
+        edge("a", "b").
+
+        lemma("one_arg_edge_is_not_entailed", that(exists x | edge(x))).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "clingo", "--target", "lemmas"])
+
+    check(result.exit_code == 1, result.stdout)
+    check("FAIL lemma one_arg_edge_is_not_entailed" in result.stdout, result.stdout)
+    check("1 obligation(s), 1 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_prove_command_respects_repeated_variable_bindings(tmp_path: Path) -> None:
+    """Model entailment fallback enforces repeated-variable equality."""
+    pytest.importorskip("clingo")
+    tlog_path = tmp_path / "edges.tlog"
+    tlog_path.write_text(
+        """
+        pred edge(source: str, target: str).
+        edge("a", "b").
+
+        lemma("self_edge_is_not_entailed", that(exists x | edge(x, x))).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "clingo", "--target", "lemmas"])
+
+    check(result.exit_code == 1, result.stdout)
+    check("FAIL lemma self_edge_is_not_entailed" in result.stdout, result.stdout)
+    check("1 obligation(s), 1 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_expectation_context_falls_back_when_solver_prove_returns_none() -> None:
+    """A solver prove override returning None still allows model entailment fallback."""
+    context = ExpectationContext(OverrideReturningNoneSolver())
+
+    check(context.prove(Term("edge", "a", "b")) is True, "Expected exact term proof by model fallback")
+    check(context.prove(Exists([Variable("x")], Term("edge", Variable("x"), "b"))) is True, "Expected exists proof")
+    check(context.prove(Not(Term("missing", "a"))) is True, "Expected negative proof by model fallback")

@@ -3,4 +3,4 @@
 .decl Adult(name: symbol)
 .decl StageAge(stage: symbol, age: number)
 StageAge("Adult", 18).
-Adult("Alice") :- PersonWithAge("Alice", 25).
+PersonWithAge("Alice", 25).

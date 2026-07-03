@@ -54,7 +54,7 @@ class PrologCompiler(Compiler):
         for pd in theory.predicate_definitions:
             args = ", ".join([f"{k}: {v}" for k, v in pd.arguments.items()])
             lines.append(f"% {pd.predicate}({args})")
-        for sg in theory.sentence_groups:
+        for sg in theory.asserted_sentence_groups:
             lines.append(f"\n%% {sg.name}\n")
             for s in sg.sentences or []:
                 try:
@@ -66,4 +66,4 @@ class PrologCompiler(Compiler):
                     lines.append(f"%% UNTRANSLATABLE: {fol}")
                     if self.strict:
                         raise e
-        return "\n".join(lines)
+        return "\n".join(lines).rstrip()

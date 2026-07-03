@@ -1004,6 +1004,8 @@ class CardinalityConstraint(Term):
 class SentenceGroupType(str, Enum):
     AXIOM = "axiom"
     GOAL = "goal"
+    LEMMA = "lemma"
+    TEST = "test"
     # PROBABILISTIC_AXIOM = "probabilistic_axiom"
 
 
@@ -1083,9 +1085,17 @@ class Theory:
 
         :return:
         """
-        if self.sentence_groups:
-            return [s for sg in self.sentence_groups for s in sg.sentences or []]
-        return []
+        return [s for sg in self.asserted_sentence_groups for s in sg.sentences or []]
+
+    @property
+    def asserted_sentence_groups(self) -> List[SentenceGroup]:
+        """
+        Return sentence groups that are asserted as part of the theory.
+
+        Goals, lemmas, and tests are metadata or proof obligations; they are not
+        assumptions for ordinary solving or conversion to executable logic.
+        """
+        return [sg for sg in self.sentence_groups if sg.group_type in (None, SentenceGroupType.AXIOM)]
 
     @property
     def goals(self) -> List[Sentence]:

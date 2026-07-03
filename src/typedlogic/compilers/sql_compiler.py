@@ -24,7 +24,6 @@ from typedlogic.datamodel import (
     Or,
     PredicateDefinition,
     Sentence,
-    SentenceGroupType,
     Term,
     Theory,
     Variable,
@@ -335,8 +334,7 @@ def horn_rules_for(theory: Theory) -> list[Implies]:
     rules: list[Implies] = []
     sentences = [
         sentence
-        for group in theory.sentence_groups
-        if group.group_type != SentenceGroupType.GOAL
+        for group in theory.asserted_sentence_groups
         for sentence in group.sentences or []
     ]
     for sentence in sentences:

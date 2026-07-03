@@ -8,8 +8,3 @@
 %% classifications
 
 %% UNTRANSLATABLE: ∀[name:Thing age:Age]. age >= 18 → Adult(name)
-
-%% goals
-
-adult('Alice') :- personwithage('Alice', 25).
-%% UNTRANSLATABLE: Adult('Bob') → ∃[age:int]. PersonWithAge('Alice', age)

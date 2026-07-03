@@ -70,6 +70,44 @@ If you need to disambiguate a variable without an explicit quantifier, use `?`:
 likes(?person, "tea") -> happy(?person).
 ```
 
+## Quoted Meta Statements
+
+Use `that(...)` to quote a sentence as data. Quoted sentences are not asserted
+unless a runner explicitly interprets them.
+
+Lemmas are named proof obligations:
+
+```tlog
+lemma(
+  "grandparent_implies_ancestor",
+  that(all x, y, z | parent(x, y) & parent(y, z) -> ancestor(x, z))
+).
+```
+
+Test cases can carry quoted fixtures and expectations without sending them to
+the solver as ordinary facts:
+
+```tlog
+test_case(
+  "socrates_mortality",
+  given(that(human("socrates"))),
+  expect(that(satisfiable() & mortal("socrates") & not philosopher("socrates")))
+).
+```
+
+`solve` ignores lemmas and test cases by default. Use dedicated commands when
+you want to interpret this metadata:
+
+```bash
+typedlogic test theory.tlog --solver clingo
+typedlogic prove theory.tlog --solver z3 --target lemmas
+```
+
+The test runner treats `given(that(S))` as a temporary assertion for that test
+case. `expect(that(E))` checks the expected sentence. In expectations,
+`satisfiable()` is a built-in check for fixture satisfiability, conjunction
+means all expectations must hold, and `not P` means `P` is not entailed.
+
 ## HiLog-Style Predicate Variables
 
 Use `@name(...)` to put a variable in predicate position:
@@ -130,6 +168,22 @@ Run inference with any installed solver:
 typedlogic solve docs/examples/tlog/ancestor.tlog --solver clingo
 ```
 
+Lemmas and test cases are metadata, so `solve` does not run or assert them.
+Run quoted test cases explicitly:
+
+```bash
+typedlogic test docs/examples/tlog/mortality.tlog --solver clingo
+typedlogic test docs/examples/tlog/mortality.tlog --solver clingo --test socrates_mortality
+```
+
+Prove goals and lemmas explicitly:
+
+```bash
+typedlogic prove docs/examples/tlog/mortality.tlog --solver z3
+typedlogic prove docs/examples/tlog/mortality.tlog --solver z3 --target lemmas
+typedlogic prove docs/examples/tlog/mortality.tlog --solver z3 --name socrates_is_mortal
+```
+
 Show only selected materialized predicates:
 
 ```bash
@@ -150,3 +204,11 @@ typedlogic solve docs/examples/tlog/worlds.tlog \
 
 The `--show` and `--max-models` options are generic `solve` options, not
 TLog-specific commands.
+
+Dump the generated solver program before solving:
+
+```bash
+typedlogic solve docs/examples/tlog/ancestor.tlog \
+  --solver clingo \
+  --dump-program
+```

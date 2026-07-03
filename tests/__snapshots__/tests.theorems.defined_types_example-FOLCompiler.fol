@@ -1,3 +1,1 @@
 ∀[name:Thing age:Age]. age >= 18 → Adult(name)
-PersonWithAge('Alice', 25) → Adult('Alice')
-Adult('Bob') → ∃[age:int]. PersonWithAge('Alice', age)
