@@ -121,11 +121,15 @@ class ExpectationContext:
         if _is_satisfiable_term(sentence):
             return self.satisfiable()
         if type(self.solver).prove is not Solver.prove:
-            return self.solver.prove(sentence)
+            result = self.solver.prove(sentence)
+            if result is not None:
+                return result
         if isinstance(sentence, Exists) and isinstance(sentence.sentence, Term):
             return self._models_entail(sentence.sentence)
         if isinstance(sentence, (Term, Not)):
             return self._models_entail(sentence)
+        if type(self.solver).prove is not Solver.prove:
+            return None
         return self.solver.prove(sentence)
 
     def _models_entail(self, sentence: Sentence) -> bool:

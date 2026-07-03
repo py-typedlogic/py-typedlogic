@@ -1,13 +1,33 @@
 """CLI tests for TLog parser/compiler integration."""
 
 from pathlib import Path
+from typing import Iterator, Optional
 
 import pytest
 from typer.testing import CliRunner
 
-from typedlogic.cli import app
+from typedlogic import Exists, Not, Term, Variable
+from typedlogic.cli import ExpectationContext, app
+from typedlogic.datamodel import Sentence
+from typedlogic.solver import Model, Solution, Solver
 
 runner = CliRunner()
+
+
+class OverrideReturningNoneSolver(Solver):
+    """Solver that overrides prove but delegates knowledge to model fallback."""
+
+    def check(self) -> Solution:
+        """Return a satisfiable solution."""
+        return Solution(satisfiable=True)
+
+    def models(self) -> Iterator[Model]:
+        """Return one model used by the entailment fallback."""
+        yield Model(ground_terms=[Term("edge", "a", "b")])
+
+    def prove(self, sentence: Sentence) -> Optional[bool]:
+        """Return no direct proof answer."""
+        return None
 
 
 def check(condition: bool, message: str) -> None:
@@ -239,3 +259,12 @@ def test_tlog_prove_command_respects_repeated_variable_bindings(tmp_path: Path) 
     check(result.exit_code == 1, result.stdout)
     check("FAIL lemma self_edge_is_not_entailed" in result.stdout, result.stdout)
     check("1 obligation(s), 1 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_expectation_context_falls_back_when_solver_prove_returns_none() -> None:
+    """A solver prove override returning None still allows model entailment fallback."""
+    context = ExpectationContext(OverrideReturningNoneSolver())
+
+    check(context.prove(Term("edge", "a", "b")) is True, "Expected exact term proof by model fallback")
+    check(context.prove(Exists([Variable("x")], Term("edge", Variable("x"), "b"))) is True, "Expected exists proof")
+    check(context.prove(Not(Term("missing", "a"))) is True, "Expected negative proof by model fallback")
