@@ -1,11 +1,27 @@
 from typing import List
 
 import pytest
-from typedlogic import And, Exists, Forall, Iff, Implies, Not, Or, PredicateDefinition, Term, Theory, Variable
+
+from typedlogic import (
+    And,
+    Exists,
+    Forall,
+    Iff,
+    Implies,
+    NegationAsFailure,
+    Not,
+    Or,
+    PredicateDefinition,
+    Term,
+    Theory,
+    Variable,
+)
 from typedlogic.datamodel import ExactlyOne, Implied, NotInProfileError
 from typedlogic.transformations import (
     PrologConfig,
     as_prolog,
+    counterexample_proof_sentences,
+    counterexample_sentence,
     expand_exactly_one,
     sentences_from_predicate_hierarchy,
     simple_prolog_transform,
@@ -226,6 +242,37 @@ def test_as_prolog_negated_goals_do_not_ground_head_vars():
     s = Implies(And(Term("A", Y), Not(Term("B", X))), Term("C", X))
     with pytest.raises(NotInProfileError):
         as_prolog(s)
+
+
+def test_counterexample_sentence_for_universal_implication():
+    """Universal implications can be transformed into Datalog counterexample rules."""
+    sentence = Forall([X, Y], Implies(And(P1x, Q1xy), P2x))
+    counterexample = counterexample_sentence(sentence)
+
+    assert counterexample == Implies(And(P1x, Q1xy, NegationAsFailure(P2x)), Term("counterexample", X, Y))
+    config = PrologConfig(negation_as_failure_symbol="not", allow_nesting=False)
+    assert as_prolog(counterexample, config) == "counterexample(X, Y) :- p1(X), q1(X, Y), not p2(X)."
+
+
+def test_counterexample_sentence_rejects_ungrounded_head_variables():
+    """Counterexample rules must not put ungrounded variables in the negated head."""
+    sentence = Forall([X, Y], Implies(P1x, Term("Q", Y)))
+
+    with pytest.raises(NotInProfileError, match="not grounded"):
+        counterexample_sentence(sentence)
+
+
+def test_counterexample_proof_sentences_assume_positive_antecedents():
+    """The proof fixture grounds antecedent atoms as assumptions before querying the head."""
+    sentence = Forall([X, Y], Implies(And(P1x, Q1xy), P2x))
+    proof_sentences = counterexample_proof_sentences(sentence)
+
+    config = PrologConfig(negation_as_failure_symbol="not", allow_nesting=False, double_quote_strings=True)
+    assert as_prolog(proof_sentences, config).splitlines() == [
+        'p1("__counterexample_x").',
+        'q1("__counterexample_x", "__counterexample_y").',
+        'counterexample :- not p2("__counterexample_x").',
+    ]
 
 
 def test_as_prolog_quotes_atoms_with_special_characters():

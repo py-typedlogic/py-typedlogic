@@ -1,11 +1,12 @@
 import logging
-from typing import ClassVar, Optional, Union, List, Tuple, Dict, Any
+from typing import Any, ClassVar, Dict, List, Optional, Tuple, Union
 
 import problog.logic as pl
 
-from typedlogic import Theory, Forall, Variable
+from typedlogic import Forall, Implies, Theory, Variable
+from typedlogic.builtins import NAME_TO_INFIX_OP
 from typedlogic.compiler import Compiler, ModelSyntax
-from typedlogic.datamodel import NotInProfileError, Sentence, Term, Extension
+from typedlogic.datamodel import Extension, NotInProfileError, Sentence, Term
 from typedlogic.extensions.probabilistic import Evidence, Probability, That
 from typedlogic.transformations import (
     PrologConfig,
@@ -57,7 +58,8 @@ class ProbLogCompiler(Compiler):
         :param kwargs:
         :return:
         """
-        prolog_config = PrologConfig(disjunctive_datalog=True, double_quote_strings=True, allow_nesting=False, allow_ungrounded_vars_in_head=True)
+        include_queries = kwargs.get("include_queries", True)
+        prolog_config = self.prolog_config()
         if not self._predicate_mappings:
             self._predicate_mappings = {}
         for pd in theory.predicate_definitions:
@@ -70,14 +72,25 @@ class ProbLogCompiler(Compiler):
             clause = self._sentence_to_problog(sentence, prolog_config)
             if clause:
                 clauses.append(clause)
-        for pd in theory.predicate_definitions:
-            if pd.predicate in [Probability.__name__, That.__name__, Evidence.__name__]:
-                continue
-            query_vars = [Variable(a) for a in pd.arguments.keys()]
-            term = Term("query", Term(pd.predicate, *query_vars))
-            clause = self._sentence_to_problog(term, prolog_config)
-            clauses.append(clause)
+        if include_queries:
+            for pd in theory.predicate_definitions:
+                if pd.predicate in [Probability.__name__, That.__name__, Evidence.__name__]:
+                    continue
+                query_vars = [Variable(a) for a in pd.arguments.keys()]
+                term = Term("query", Term(pd.predicate, *query_vars))
+                clause = self._sentence_to_problog(term, prolog_config)
+                clauses.append(clause)
         return "\n".join(clauses)
+
+    @staticmethod
+    def prolog_config() -> PrologConfig:
+        """Return Prolog rendering configuration for ProbLog syntax."""
+        return PrologConfig(
+            disjunctive_datalog=True,
+            double_quote_strings=True,
+            allow_nesting=False,
+            allow_ungrounded_vars_in_head=True,
+        )
 
     def _sentence_to_problog(self, sentence: Sentence, prolog_config: PrologConfig) -> str:
         if isinstance(sentence, Forall):
@@ -98,6 +111,11 @@ class ProbLogCompiler(Compiler):
             rules = []
             try:
                 for rule in to_horn_rules(s, allow_disjunctions_in_head=False, allow_goal_clauses=True):
+                    if isinstance(rule, Implies):
+                        head = rule.consequent
+                        if isinstance(head, Term) and head.predicate in NAME_TO_INFIX_OP:
+                            logger.info(f"Skipping rule with built-in predicate in head: {rule}")
+                            continue
                     rules.append(rule)
             except NotInProfileError as e:
                 logger.info(f"Skipping sentence {s} due to {e}")

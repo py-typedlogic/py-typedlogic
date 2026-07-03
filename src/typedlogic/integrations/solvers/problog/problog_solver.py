@@ -7,22 +7,24 @@ from problog.errors import InconsistentEvidenceError
 from problog.program import PrologString
 
 from typedlogic.datamodel import NotInProfileError, Sentence, Term
-from typedlogic.extensions.probabilistic import Probability, That, ProbabilisticModel, Evidence
+from typedlogic.extensions.probabilistic import Evidence, ProbabilisticModel, Probability, That
 from typedlogic.integrations.solvers.problog.problog_compiler import ProbLogCompiler
 from typedlogic.profiles import (
     AllowsComparisonTerms,
     MixedProfile,
     MultipleModelSemantics,
-    Profile,
     Probabilistic,
+    Profile,
 )
 from typedlogic.solver import Solution, Solver
+from typedlogic.transformations import as_prolog, counterexample_proof_sentences, to_horn_rules
 
 logger = logging.getLogger(__name__)
 
 DEFAULT_PROBLOG_ARGS = {
     "propagate_evidence": False,
 }
+COUNTEREXAMPLE_PREDICATE = "typedlogic_counterexample"
 
 
 class UnsatisfiableEvidenceError(NotInProfileError):
@@ -71,22 +73,7 @@ class ProbLogSolver(Solver):
     def models(self, **kwargs) -> Iterator[ProbabilisticModel]:
         compiler = ProbLogCompiler()
         program = compiler.compile(self.base_theory)
-        p = PrologString(program)
-        ev = get_evaluatable()
-        for k, v in DEFAULT_PROBLOG_ARGS.items():
-            if k not in kwargs:
-                kwargs[k] = v
-        if self.problog_args:
-            for k, v in self.problog_args.items():
-                if k not in kwargs:
-                    kwargs[k] = v
-        try:
-            result = ev.create_from(p, **kwargs).evaluate()
-        except InconsistentEvidenceError as e:
-            raise UnsatisfiableEvidenceError(
-                "ProbLog evidence is inconsistent; no probabilistic model can satisfy the asserted evidence. "
-                f"ProbLog reported: {e}"
-            ) from e
+        result = self._evaluate_program(program, **kwargs)
         m = ProbabilisticModel()
         for term, prob in result.items():
             plt_term = compiler.decompile_term(term)
@@ -97,6 +84,23 @@ class ProbLogSolver(Solver):
             m.ground_terms.append(reified_as_term)
             m.term_probabilities[plt_term] = prob
         yield m
+
+    def _evaluate_program(self, program: str, **kwargs) -> Dict[Any, float]:
+        """Evaluate a ProbLog program and return query probabilities."""
+        for k, v in DEFAULT_PROBLOG_ARGS.items():
+            if k not in kwargs:
+                kwargs[k] = v
+        if self.problog_args:
+            for k, v in self.problog_args.items():
+                if k not in kwargs:
+                    kwargs[k] = v
+        try:
+            return get_evaluatable().create_from(PrologString(program), **kwargs).evaluate()
+        except InconsistentEvidenceError as e:
+            raise UnsatisfiableEvidenceError(
+                "ProbLog evidence is inconsistent; no probabilistic model can satisfy the asserted evidence. "
+                f"ProbLog reported: {e}"
+            ) from e
 
     def model(self) -> ProbabilisticModel:
         models = list(self.models())
@@ -122,6 +126,66 @@ class ProbLogSolver(Solver):
     def dump(self) -> str:
         compiler = ProbLogCompiler()
         return compiler.compile(self.base_theory)
+
+    def prove(self, sentence: Sentence) -> Optional[bool]:
+        """Prove Datalog-safe implications by checking counterexample probability."""
+        compiler = ProbLogCompiler()
+        try:
+            counterexample_sentences = counterexample_proof_sentences(
+                sentence,
+                predicate=COUNTEREXAMPLE_PREDICATE,
+            )
+        except NotInProfileError:
+            return None
+
+        program = compiler.compile(self.base_theory, include_queries=False)
+        proof_clauses: list[str] = []
+        prolog_config = compiler.prolog_config()
+        proof_clauses.extend(self._false_predicate_declarations(compiler))
+        try:
+            for proof_sentence in counterexample_sentences:
+                for rule in to_horn_rules(proof_sentence, allow_disjunctions_in_head=False, allow_goal_clauses=True):
+                    proof_clauses.append(as_prolog(rule, config=prolog_config))
+            query = Term("query", Term(COUNTEREXAMPLE_PREDICATE))
+            for rule in to_horn_rules(query, allow_disjunctions_in_head=False, allow_goal_clauses=True):
+                proof_clauses.append(as_prolog(rule, config=prolog_config))
+        except NotInProfileError as e:
+            logger.info(f"Cannot prove sentence {sentence} with counterexample transform due to {e}")
+            return None
+
+        if proof_clauses:
+            program = f"{program}\n" + "\n".join(proof_clauses)
+        try:
+            result = self._evaluate_program(program)
+        except UnsatisfiableEvidenceError:
+            return None
+
+        counterexample = Term(COUNTEREXAMPLE_PREDICATE)
+        for term, probability in result.items():
+            if compiler.decompile_term(term) == counterexample:
+                return probability == 0
+        return None
+
+    def _false_predicate_declarations(self, compiler: ProbLogCompiler) -> Iterator[str]:
+        """Yield false clauses so declared empty predicates behave as false."""
+        seen: set[tuple[str, int]] = set()
+        prolog_config = compiler.prolog_config()
+        for predicate_definition in self.base_theory.predicate_definitions:
+            if predicate_definition.predicate in [Probability.__name__, That.__name__, Evidence.__name__]:
+                continue
+            predicate = as_prolog(Term(predicate_definition.predicate), config=prolog_config)
+            if "(" in predicate:
+                predicate = predicate[: predicate.index("(")]
+            arity = len(predicate_definition.arguments)
+            key = (predicate, arity)
+            if key in seen:
+                continue
+            seen.add(key)
+            if arity == 0:
+                yield f"{predicate} :- fail."
+                continue
+            args = ", ".join("_" for _ in range(arity))
+            yield f"{predicate}({args}) :- fail."
 
     def add_probabilistic_fact(self, fact: Sentence, probability: float) -> None:
         pr_sent = Probability(probability, That(fact))

@@ -114,6 +114,8 @@ def test_solve_tlog_can_dump_generated_clingo_program(tmp_path: Path) -> None:
     result = runner.invoke(app, ["solve", str(tlog_path), "--solver", "clingo", "--dump-program"])
 
     check(result.exit_code == 0, result.stdout)
+    check("#defined person/1." in result.stdout, result.stdout)
+    check("#defined has_name/1." in result.stdout, result.stdout)
     check(":- person(X), not has_name(X)." in result.stdout, result.stdout)
     check('person("p1").' in result.stdout, result.stdout)
     check('has_name("p1").' in result.stdout, result.stdout)
@@ -196,6 +198,102 @@ def test_tlog_prove_command_proves_quoted_lemmas(tmp_path: Path) -> None:
     check(result.exit_code == 0, result.stdout)
     check("PASS lemma socrates_is_mortal: mortal('socrates')" in result.stdout, result.stdout)
     check("1 obligation(s), 0 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_prove_command_clingo_proves_universal_horn_lemmas_without_facts(tmp_path: Path) -> None:
+    """Clingo proves universal Horn lemmas by assuming the antecedent for fresh constants."""
+    pytest.importorskip("clingo")
+    tlog_path = tmp_path / "ancestry.tlog"
+    tlog_path.write_text(
+        """
+        pred parent(parent: str, child: str).
+        pred ancestor(ancestor: str, descendant: str).
+        all x, y | parent(x, y) -> ancestor(x, y).
+        all x, y, z | parent(x, y) & ancestor(y, z) -> ancestor(x, z).
+
+        lemma(
+          "grandparent_implies_ancestor",
+          that(all x, y, z | parent(x, y) & parent(y, z) -> ancestor(x, z))
+        ).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "clingo", "--target", "lemmas"])
+
+    check(result.exit_code == 0, result.stdout)
+    check("PASS lemma grandparent_implies_ancestor" in result.stdout, result.stdout)
+    check("1 obligation(s), 0 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_prove_command_clingo_does_not_prove_vacuous_universal_horn_lemmas(tmp_path: Path) -> None:
+    """Clingo universal Horn proofs must fail when only the antecedent can be assumed."""
+    pytest.importorskip("clingo")
+    tlog_path = tmp_path / "ancestry.tlog"
+    tlog_path.write_text(
+        """
+        pred parent(parent: str, child: str).
+        pred ancestor(ancestor: str, descendant: str).
+        all x, y | parent(x, y) -> ancestor(x, y).
+
+        lemma("reverse_parent", that(all x, y | parent(x, y) -> ancestor(y, x))).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "clingo", "--target", "lemmas"])
+
+    check(result.exit_code == 1, result.stdout)
+    check("FAIL lemma reverse_parent" in result.stdout, result.stdout)
+    check("1 obligation(s), 1 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_prove_command_problog_proves_universal_horn_lemmas_without_facts(tmp_path: Path) -> None:
+    """ProbLog proves deterministic universal Horn lemmas as a 0/1-probability case."""
+    pytest.importorskip("problog")
+    tlog_path = tmp_path / "ancestry.tlog"
+    tlog_path.write_text(
+        """
+        pred parent(parent: str, child: str).
+        pred ancestor(ancestor: str, descendant: str).
+        all x, y | parent(x, y) -> ancestor(x, y).
+        all x, y, z | parent(x, y) & ancestor(y, z) -> ancestor(x, z).
+
+        lemma(
+          "grandparent_implies_ancestor",
+          that(all x, y, z | parent(x, y) & parent(y, z) -> ancestor(x, z))
+        ).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "problog", "--target", "lemmas"])
+
+    check(result.exit_code == 0, result.stdout)
+    check("PASS lemma grandparent_implies_ancestor" in result.stdout, result.stdout)
+    check("1 obligation(s), 0 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_prove_command_problog_does_not_prove_vacuous_universal_horn_lemmas(tmp_path: Path) -> None:
+    """ProbLog universal Horn proofs fail when the counterexample has probability one."""
+    pytest.importorskip("problog")
+    tlog_path = tmp_path / "ancestry.tlog"
+    tlog_path.write_text(
+        """
+        pred parent(parent: str, child: str).
+        pred ancestor(ancestor: str, descendant: str).
+        all x, y | parent(x, y) -> ancestor(x, y).
+
+        lemma("reverse_parent", that(all x, y | parent(x, y) -> ancestor(y, x))).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "problog", "--target", "lemmas"])
+
+    check(result.exit_code == 1, result.stdout)
+    check("FAIL lemma reverse_parent" in result.stdout, result.stdout)
+    check("1 obligation(s), 1 failed, 0 unknown" in result.stdout, result.stdout)
 
 
 def test_tlog_prove_command_proves_negative_lemmas_with_model_fallback(tmp_path: Path) -> None:

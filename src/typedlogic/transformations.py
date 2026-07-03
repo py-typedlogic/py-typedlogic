@@ -20,6 +20,7 @@ from typedlogic import (
 from typedlogic.builtins import NAME_TO_INFIX_OP
 from typedlogic.datamodel import (
     And,
+    CardinalityConstraint,
     ExactlyOne,
     Exists,
     Extension,
@@ -29,7 +30,7 @@ from typedlogic.datamodel import (
     NotInProfileError,
     Or,
     QuantifiedSentence,
-    Xor, CardinalityConstraint,
+    Xor,
 )
 from typedlogic.utils.detect_stratified_negation import analyze_datalog_program
 
@@ -130,6 +131,43 @@ def conjunction_as_list(sentence: Sentence) -> List[Sentence]:
     return [sentence]
 
 
+def _variables_in_order(sentence: Sentence) -> List[Variable]:
+    """
+    Collect variables from a sentence, preserving first occurrence by name.
+
+    :param sentence: the sentence to inspect
+    :return: variables in first-seen order
+    """
+    seen: Set[str] = set()
+    variables: List[Variable] = []
+
+    def collect(value: Any) -> None:
+        if isinstance(value, Variable):
+            if value.name not in seen:
+                seen.add(value.name)
+                variables.append(value)
+            return
+        if isinstance(value, Term):
+            for arg in value.values:
+                collect(arg)
+            return
+        if isinstance(value, QuantifiedSentence):
+            for variable in value.variables:
+                collect(variable)
+            collect(value.sentence)
+            return
+        if isinstance(value, BooleanSentence):
+            for operand in value.operands:
+                collect(operand)
+            return
+        if isinstance(value, CardinalityConstraint):
+            collect(value.template)
+            collect(value.conditions)
+
+    collect(sentence)
+    return variables
+
+
 @dataclass
 class PrologConfig:
     """
@@ -212,6 +250,118 @@ def _grounded_variable_names(sentence: Sentence) -> Set[str]:
         return set.intersection(*[_grounded_variable_names(op) for op in sentence.operands])
     # Not, NegationAsFailure, and anything else provide no grounding guarantees
     return set()
+
+
+def counterexample_sentence(sentence: Sentence, predicate: str = "counterexample") -> Sentence:
+    """
+    Convert a universally quantified implication into a counterexample rule.
+
+    A sentence of the form ``forall V | body -> head`` becomes the Datalog-style
+    rule ``counterexample(V_grounded) :- body, not head``. If the rule derives no
+    counterexamples, the original universal implication holds for the current model(s).
+
+        >>> from typedlogic import Forall, Term, Variable
+        >>> X = Variable("x")
+        >>> rule = counterexample_sentence(Forall([X], Term("P", X) >> Term("Q", X)))
+        >>> print(as_prolog(rule, PrologConfig(negation_as_failure_symbol="not", allow_nesting=False)))
+        counterexample(X) :- p(X), not q(X).
+
+    The implication head must be an atomic term whose variables are grounded by the body.
+
+    :param sentence: a universal implication, or an implication with free variables
+    :param predicate: predicate name to use for generated counterexample atoms
+    :return: a rule deriving counterexample witnesses
+    """
+    variables: Optional[List[Variable]] = None
+    if isinstance(sentence, Forall):
+        variables = sentence.variables
+        sentence = sentence.sentence
+    if isinstance(sentence, Implied):
+        sentence = Implies(sentence.antecedent, sentence.consequent)
+    if not isinstance(sentence, Implies):
+        raise NotInProfileError(f"Counterexample transform requires an implication, got {sentence}")
+    if variables is None:
+        variables = _variables_in_order(sentence)
+
+    body = sentence.antecedent
+    head = sentence.consequent
+    if not isinstance(head, Term):
+        raise NotInProfileError(f"Counterexample transform requires an atomic implication head, got {head}")
+
+    grounded_variable_names = _grounded_variable_names(body)
+    head_variable_names = {variable.name for variable in _variables_in_order(head)}
+    ungrounded_head_variables = sorted(head_variable_names - grounded_variable_names)
+    if ungrounded_head_variables:
+        names = ", ".join(ungrounded_head_variables)
+        raise NotInProfileError(f"Head variable(s) {names} are not grounded by body {sentence}")
+
+    used_variable_names = {variable.name for variable in _variables_in_order(And(body, head))}
+    counterexample_variables = [
+        variable
+        for variable in variables
+        if variable.name in used_variable_names and variable.name in grounded_variable_names
+    ]
+    counterexample_body = And(*conjunction_as_list(body), NegationAsFailure(head))
+    return Implies(counterexample_body, Term(predicate, *counterexample_variables))
+
+
+def counterexample_proof_sentences(sentence: Sentence, predicate: str = "counterexample") -> List[Sentence]:
+    """
+    Build ground proof-check sentences for a universally quantified implication.
+
+    This is useful for Datalog-style solvers that treat absent facts as false. Rather
+    than checking the implication only against the current facts, it replaces quantified
+    variables with fresh constants, asserts the positive antecedent atoms as assumptions,
+    and derives ``predicate`` when the consequent is not derivable.
+
+        >>> from typedlogic import Forall, Term, Variable
+        >>> X = Variable("x")
+        >>> sentences = counterexample_proof_sentences(Forall([X], Term("P", X) >> Term("Q", X)))
+        >>> print(as_prolog(sentences, PrologConfig(negation_as_failure_symbol="not", allow_nesting=False)))
+        p("__counterexample_x").
+        counterexample :- not q("__counterexample_x").
+
+    :param sentence: a universal implication, or an implication with free variables
+    :param predicate: predicate name to use for generated counterexample atoms
+    :return: assumption facts plus a counterexample query rule
+    """
+    variables: Optional[List[Variable]] = None
+    if isinstance(sentence, Forall):
+        variables = sentence.variables
+        sentence = sentence.sentence
+    if isinstance(sentence, Implied):
+        sentence = Implies(sentence.antecedent, sentence.consequent)
+    if not isinstance(sentence, Implies):
+        raise NotInProfileError(f"Counterexample proof transform requires an implication, got {sentence}")
+    if variables is None:
+        variables = _variables_in_order(sentence)
+
+    head = sentence.consequent
+    if not isinstance(head, Term) or head.predicate in NAME_TO_INFIX_OP:
+        raise NotInProfileError(f"Counterexample proof transform requires an atomic implication head, got {head}")
+
+    constants = {variable.name: f"__{predicate}_{variable.name}" for variable in variables}
+    grounded_body = replace_constants(sentence.antecedent, constants)
+    grounded_head = replace_constants(head, constants)
+
+    assumptions: List[Sentence] = []
+    counterexample_conditions: List[Sentence] = []
+    for conjunct in conjunction_as_list(grounded_body):
+        if isinstance(conjunct, Term) and conjunct.predicate not in NAME_TO_INFIX_OP:
+            assumptions.append(Implies(And(), conjunct))
+            continue
+        if isinstance(conjunct, (Not, NegationAsFailure)):
+            counterexample_conditions.append(conjunct)
+            continue
+        raise NotInProfileError(f"Unsupported antecedent in counterexample proof transform: {conjunct}")
+
+    counterexample_conditions.append(NegationAsFailure(grounded_head))
+    counterexample_body: Sentence
+    if len(counterexample_conditions) == 1:
+        counterexample_body = counterexample_conditions[0]
+    else:
+        counterexample_body = And(*counterexample_conditions)
+    return assumptions + [Implies(counterexample_body, Term(predicate))]
 
 
 def as_prolog(
@@ -1005,6 +1155,8 @@ def replace_constants(sentence: Sentence, constant_map: Dict[str, Any]) -> Sente
             if isinstance(v, Variable):
                 if v.name in constant_map:
                     return constant_map[v.name]
+            if isinstance(v, Term):
+                return replace_constants(v, constant_map)
             return v
 
         return Term(sentence.predicate, {k: _repl(v) for k, v in sentence.bindings.items()})
