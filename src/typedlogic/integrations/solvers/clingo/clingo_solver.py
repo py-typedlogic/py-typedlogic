@@ -148,11 +148,11 @@ class ClingoSolver(Solver):
                 yield model
 
     def prove(self, sentence: Sentence) -> Optional[bool]:
-        """Prove Datalog-safe implications by searching for counterexamples."""
+        """Prove terms from the current model and Datalog-safe implications by counterexample search."""
         if isinstance(sentence, Exists) and isinstance(sentence.sentence, Term):
-            return self._models_entail_term(sentence.sentence)
+            return self._model_entails_term(sentence.sentence)
         if isinstance(sentence, Term):
-            return self._models_entail_term(sentence)
+            return self._model_entails_term(sentence)
 
         try:
             counterexample_sentences = counterexample_proof_sentences(
@@ -184,12 +184,13 @@ class ClingoSolver(Solver):
             return None
         return True
 
-    def _models_entail_term(self, sentence: Term) -> bool:
-        """Return whether every model contains a term matching the query."""
-        models = list(self.models())
-        if not models:
+    def _model_entails_term(self, sentence: Term) -> bool:
+        """Return whether the materialized model contains a term matching the query."""
+        try:
+            model = self.model()
+        except StopIteration:
             return False
-        return all(self._model_contains_term(model, sentence) for model in models)
+        return self._model_contains_term(model, sentence)
 
     @staticmethod
     def _model_contains_term(model: Model, sentence: Term) -> bool:
