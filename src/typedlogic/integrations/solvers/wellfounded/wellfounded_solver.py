@@ -17,7 +17,8 @@ field:
     reference backend used in the documentation. It is intended for teaching and
     modestly-sized programs: grounding is by naive instantiation, so it is not a
     substitute for an industrial grounder on large or deeply-recursive programs
-    (use the ``xsb`` backend for those).
+    (use the ``xsb`` backend for those). See ``docs/integrations/solvers/
+    wellfounded-scaling.md`` for the plan to make this backend scale.
 
 ``problog``
     Delegates to `ProbLog <https://dtai.cs.kuleuven.be/problog/>`_, a mature

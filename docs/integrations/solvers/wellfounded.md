@@ -10,7 +10,9 @@ It ships three interchangeable backends, selected with the `backend` field:
 
 - `native` (default) — a dependency-free pure-Python implementation of the Van
   Gelder alternating fixpoint. Returns the full three-valued model. Best for
-  teaching and modestly-sized programs.
+  teaching and modestly-sized programs; it grounds naively and is not built for
+  large programs (see [Scaling the native well-founded solver](wellfounded-scaling.md)
+  for the plan to fix that).
 - `problog` — delegates to [ProbLog](problog.md), which evaluates the *two-valued*
   restriction of WFS. It agrees with `native` on stratified programs and raises
   `NegativeCycleError` on programs that are genuinely three-valued.
