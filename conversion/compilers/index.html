@@ -2169,9 +2169,12 @@ Animal(&#39;fido&#39;, &#39;dog&#39;)
 <span class="o">&lt;</span><span class="nv">BLANKLINE</span><span class="o">&gt;</span>
 <span class="nf">likes</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="s s-Atom">&#39;Fred&#39;</span><span class="p">)</span> <span class="o">:-</span> <span class="nf">animal</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Species</span><span class="p">).</span>
 <span class="nf">likes</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="s s-Atom">&#39;Jie&#39;</span><span class="p">)</span> <span class="o">:-</span> <span class="nf">animal</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="s s-Atom">&#39;cat&#39;</span><span class="p">).</span>
-<span class="o">&lt;</span><span class="nv">BLANKLINE</span><span class="o">&gt;</span>
+<span class="c1">%% UNTRANSLATABLE: ∀[x:Thing species:Thing]. Animal(x, &#39;dog&#39;) → ¬Likes(&#39;Fred&#39;, x)</span>
 </code></pre></div>
 
+<p>Note that sentences that cannot be expressed as Horn rules (such as the constraint
+above, which has no positive literal) are marked as untranslatable rather than
+being silently dropped.</p>
 <p>There are multiple variants of Prolog syntax, the <code>PrologConfig</code> object can be used to control the output.
 Config arguments can be passed as kwargs to the <code>compile</code> method.</p>
 
@@ -2319,7 +2322,11 @@ Config arguments can be passed as kwargs to the <code>compile</code> method.</p>
 <span class="normal">172</span>
 <span class="normal">173</span>
 <span class="normal">174</span>
-<span class="normal">175</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Compiler</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An engine for compiling from the internal logical model representation to an external format.</span>
@@ -2386,7 +2393,11 @@ Config arguments can be passed as kwargs to the <code>compile</code> method.</p>
 <span class="sd">        &lt;BLANKLINE&gt;</span>
 <span class="sd">        likes(X, &#39;Fred&#39;) :- animal(X, Species).</span>
 <span class="sd">        likes(X, &#39;Jie&#39;) :- animal(X, &#39;cat&#39;).</span>
-<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        %% UNTRANSLATABLE: ∀[x:Thing species:Thing]. Animal(x, &#39;dog&#39;) → ¬Likes(&#39;Fred&#39;, x)</span>
+
+<span class="sd">    Note that sentences that cannot be expressed as Horn rules (such as the constraint</span>
+<span class="sd">    above, which has no positive literal) are marked as untranslatable rather than</span>
+<span class="sd">    being silently dropped.</span>
 
 <span class="sd">    There are multiple variants of Prolog syntax, the `PrologConfig` object can be used to control the output.</span>
 <span class="sd">    Config arguments can be passed as kwargs to the `compile` method.</span>
@@ -2626,17 +2637,17 @@ Config arguments can be passed as kwargs to the <code>compile</code> method.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/compiler.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">120</span>
 <span class="normal">121</span>
 <span class="normal">122</span>
 <span class="normal">123</span>
 <span class="normal">124</span>
 <span class="normal">125</span>
-<span class="normal">126</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@abstractmethod</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@abstractmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">syntax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelSyntax</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compile a theory into an external representation.</span>
@@ -2774,11 +2785,7 @@ Config arguments can be passed as kwargs to the <code>compile</code> method.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/compiler.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">132</span>
 <span class="normal">133</span>
 <span class="normal">134</span>
 <span class="normal">135</span>
@@ -2796,7 +2803,11 @@ Config arguments can be passed as kwargs to the <code>compile</code> method.</p>
 <span class="normal">147</span>
 <span class="normal">148</span>
 <span class="normal">149</span>
-<span class="normal">150</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compile_to_target</span><span class="p">(</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compile_to_target</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span>
     <span class="n">target</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">],</span>
@@ -2926,18 +2937,18 @@ Config arguments can be passed as kwargs to the <code>compile</code> method.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/compiler.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">156</span>
 <span class="normal">157</span>
 <span class="normal">158</span>
 <span class="normal">159</span>
 <span class="normal">160</span>
 <span class="normal">161</span>
 <span class="normal">162</span>
-<span class="normal">163</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compile_sentence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">syntax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelSyntax</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compile_sentence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">syntax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelSyntax</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compiles an individual sentence</span>
 

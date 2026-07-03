@@ -2005,7 +2005,16 @@
 <span class="normal">66</span>
 <span class="normal">67</span>
 <span class="normal">68</span>
-<span class="normal">69</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PrologCompiler</span><span class="p">(</span><span class="n">Compiler</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A Compiler that generates Prolog code from a Theory object.&quot;&quot;&quot;</span>
 
@@ -2052,11 +2061,20 @@
         <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">:</span>
             <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;% </span><span class="si">{</span><span class="n">pd</span><span class="o">.</span><span class="n">predicate</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">theory</span><span class="o">.</span><span class="n">ground_terms</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">%%</span><span class="s2"> Ground Terms</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">ground_terms</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">as_prolog</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">translate</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">sg</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">asserted_sentence_groups</span><span class="p">:</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">%% </span><span class="si">{</span><span class="n">sg</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sg</span><span class="o">.</span><span class="n">sentences</span> <span class="ow">or</span> <span class="p">[]:</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">as_prolog</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">translate</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+                    <span class="n">translated</span> <span class="o">=</span> <span class="n">as_prolog</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">translate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">translated</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                        <span class="c1"># all clauses were dropped, e.g. an integrity constraint</span>
+                        <span class="c1"># that cannot be expressed as a Horn rule</span>
+                        <span class="k">raise</span> <span class="n">NotInProfileError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No Horn rule translation for: </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">translated</span><span class="p">)</span>
                 <span class="k">except</span> <span class="n">NotInProfileError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_add_untranslatable</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
                     <span class="n">fol</span> <span class="o">=</span> <span class="n">as_fol</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
@@ -2259,7 +2277,16 @@ Config arguments can be passed as kwargs to the <code>compile</code> method.</p>
 <span class="normal">66</span>
 <span class="normal">67</span>
 <span class="normal">68</span>
-<span class="normal">69</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">syntax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelSyntax</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">syntax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelSyntax</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compile a Theory object into Prolog code.</span>
 
@@ -2299,11 +2326,20 @@ Config arguments can be passed as kwargs to the <code>compile</code> method.</p>
     <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">:</span>
         <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">arguments</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;% </span><span class="si">{</span><span class="n">pd</span><span class="o">.</span><span class="n">predicate</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">theory</span><span class="o">.</span><span class="n">ground_terms</span><span class="p">:</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">%%</span><span class="s2"> Ground Terms</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">ground_terms</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">as_prolog</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">translate</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">sg</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">asserted_sentence_groups</span><span class="p">:</span>
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">%% </span><span class="si">{</span><span class="n">sg</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sg</span><span class="o">.</span><span class="n">sentences</span> <span class="ow">or</span> <span class="p">[]:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">as_prolog</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">translate</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+                <span class="n">translated</span> <span class="o">=</span> <span class="n">as_prolog</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">translate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">translated</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                    <span class="c1"># all clauses were dropped, e.g. an integrity constraint</span>
+                    <span class="c1"># that cannot be expressed as a Horn rule</span>
+                    <span class="k">raise</span> <span class="n">NotInProfileError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No Horn rule translation for: </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">translated</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">NotInProfileError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_add_untranslatable</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
                 <span class="n">fol</span> <span class="o">=</span> <span class="n">as_fol</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
