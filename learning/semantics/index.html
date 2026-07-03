@@ -1,0 +1,3659 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/learning/semantics/">
+      
+      
+        <link rel="prev" href="../../examples/tlog-cli/">
+      
+      
+        <link rel="next" href="../multiple-models/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
+    
+    
+      
+        <title>Semantics (open/closed world, NAF, WFS, ASP) - py-typedlogic</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8608ea7d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../../css/pandas-dataframe.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#semantics-open-vs-closed-world-naf-wfs-and-asp" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="py-typedlogic" class="md-header__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            py-typedlogic
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Semantics (open/closed world, NAF, WFS, ASP)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/py-typedlogic/py-typedlogic/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="py-typedlogic" class="md-nav__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    py-typedlogic
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/py-typedlogic/py-typedlogic/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Tutorial
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Tutorial
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/01-first-program" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1. First program
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/02-using-python-data-model" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2. Using the Python Data Model
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/03-probabilistic-logic" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    3. Probabilistic Logic
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/04-owldl" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    4. OWL-DL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/05-cli" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    5. Command Line
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Gallery
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Gallery
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/synbio-design-checks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Synthetic biology design checks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/sql-compiler/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQL goal compiler
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/tlog-cli/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TLog CLI workflow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/tlog-cli/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TLog CLI notebook
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Learning
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Learning
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Semantics (open/closed world, NAF, WFS, ASP)
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Semantics (open/closed world, NAF, WFS, ASP)
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-open-world-vs-closed-world" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Open world vs closed world
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Open world vs closed world">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#closed-world-clingo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Closed world (Clingo)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#open-world-z3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Open world (Z3)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-negation-as-failure-and-non-monotonicity" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Negation as failure, and non-monotonicity
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Negation as failure, and non-monotonicity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-same-rule-read-classically-z3" class="md-nav__link">
+    <span class="md-ellipsis">
+      The same rule, read classically (Z3)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-when-naf-loops-stable-models-asp" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. When NAF loops: stable models (ASP)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. When NAF loops: stable models (ASP)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#even-loop-two-worlds" class="md-nav__link">
+    <span class="md-ellipsis">
+      Even loop → two worlds
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#odd-loop-no-world" class="md-nav__link">
+    <span class="md-ellipsis">
+      Odd loop → no world
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-a-gentler-answer-well-founded-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. A gentler answer: well-founded semantics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. A gentler answer: well-founded semantics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#should-we-just-wrap-an-existing-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      "Should we just wrap an existing engine?"
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#putting-it-together-the-typedlogic-profiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Putting it together: the typedlogic profiles
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Putting it together: the typedlogic profiles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      Takeaways
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-to-go-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      Where to go next
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multiple-models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multiple models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Concepts
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Concepts
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Core concepts
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/datamodel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Data Model
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/decorators/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Decorators
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/generators/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Generators
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/solvers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Solvers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/benchmarks.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Benchmarks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Solvers
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Solvers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Solver overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/clingo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Clingo
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/z3/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Z3
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/souffle/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Souffle
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/prover9/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prover9
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/snakelog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SnakeLog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/problog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ProbLog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/wellfounded/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Well-Founded Semantics
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/solvers/llm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    LLM Solver
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Compilers
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Compilers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compiler overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/yaml/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAML
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/tlog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TLog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/prolog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prolog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/problog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ProbLog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/tptp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TPTP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/clif/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CLIF
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/fol/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FOL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/sql/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/compilers/sexpr/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    S-Expression
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Parsers
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Parsers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parser overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/python/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Python
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/tlog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    TLog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/clif/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CLIF
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/yaml/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    YAML
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/dataframe/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    DataFrame
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/catalog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Catalog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/owlpy/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OWLPy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../conversion/parsers/rdf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDF
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Frameworks
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Frameworks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_9_1" id="__nav_9_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    OWL-DL
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_9_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9_1">
+            <span class="md-nav__icon md-icon"></span>
+            OWL-DL
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/owldl/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OWL-DL
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/owldl/owldl-tutorial" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tutorial
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/owldl/owltop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Classes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/owldl/reasoner/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reasoner
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/pydantic" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pydantic
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/sqlmodel.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    SQLModel
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../integrations/frameworks/rdf/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RDF
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Command Line
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roadmap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing.md" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-open-world-vs-closed-world" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Open world vs closed world
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Open world vs closed world">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#closed-world-clingo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Closed world (Clingo)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#open-world-z3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Open world (Z3)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-negation-as-failure-and-non-monotonicity" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Negation as failure, and non-monotonicity
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Negation as failure, and non-monotonicity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-same-rule-read-classically-z3" class="md-nav__link">
+    <span class="md-ellipsis">
+      The same rule, read classically (Z3)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-when-naf-loops-stable-models-asp" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. When NAF loops: stable models (ASP)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. When NAF loops: stable models (ASP)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#even-loop-two-worlds" class="md-nav__link">
+    <span class="md-ellipsis">
+      Even loop → two worlds
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#odd-loop-no-world" class="md-nav__link">
+    <span class="md-ellipsis">
+      Odd loop → no world
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-a-gentler-answer-well-founded-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. A gentler answer: well-founded semantics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. A gentler answer: well-founded semantics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#should-we-just-wrap-an-existing-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      "Should we just wrap an existing engine?"
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#putting-it-together-the-typedlogic-profiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Putting it together: the typedlogic profiles
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Putting it together: the typedlogic profiles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      Takeaways
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-to-go-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      Where to go next
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+(function() {
+  function addWidgetsRenderer() {
+    var requireJsScript = document.createElement('script');
+    requireJsScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js';
+
+    var mimeElement = document.querySelector('script[type="application/vnd.jupyter.widget-view+json"]');
+    var jupyterWidgetsScript = document.createElement('script');
+    var widgetRendererSrc = 'https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js';
+    var widgetState;
+
+    // Fallback for older version:
+    try {
+      widgetState = mimeElement && JSON.parse(mimeElement.innerHTML);
+
+      if (widgetState && (widgetState.version_major < 2 || !widgetState.version_major)) {
+        widgetRendererSrc = 'jupyter-js-widgets@*/dist/embed.js';
+      }
+    } catch(e) {}
+
+    jupyterWidgetsScript.src = widgetRendererSrc;
+
+    document.body.appendChild(requireJsScript);
+    document.body.appendChild(jupyterWidgetsScript);
+  }
+
+  document.addEventListener('DOMContentLoaded', addWidgetsRenderer);
+}());
+</script>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="semantics-open-vs-closed-world-naf-wfs-and-asp">Semantics: open vs closed world, NAF, WFS, and ASP</h1>
+<p>One innocent-looking symbol — <em>negation</em> — hides some of the deepest design choices in logic
+programming. When you write "<strong>not</strong> <code>Flies(tweety)</code>", what does it mean?</p>
+<ul>
+<li>Is it <strong>false</strong>, or merely <strong>not known to be true</strong>?</li>
+<li>If you learn a new fact tomorrow, can a conclusion you drew today be <strong>withdrawn</strong>?</li>
+<li>If two conclusions are locked in a mutual "each is true unless the other is", is the answer
+  <strong>two possible worlds</strong>, <strong>no world at all</strong>, or <strong>"undefined"</strong>?</li>
+</ul>
+<p>Different logics answer these questions differently. This notebook is an <em>executable</em> tour of
+those answers. Every claim below is backed by a solver you can re-run — no hand-waving.</p>
+<p>We author each theory in <strong><a href="../../conversion/parsers/tlog/">TLog</a></strong>, the compact text syntax for
+typedlogic, so the logic reads directly instead of hiding inside Python strings. The same theory
+files are loaded and handed to different solvers.</p>
+<p>We cover four ideas and the relationships between them:</p>
+<table>
+<thead>
+<tr>
+<th>Idea</th>
+<th>One-line intuition</th>
+<th>Illustrated with</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Open-World Assumption (OWA)</strong></td>
+<td>absence of a fact means <em>unknown</em></td>
+<td>Z3 (classical FOL)</td>
+</tr>
+<tr>
+<td><strong>Closed-World Assumption (CWA)</strong></td>
+<td>absence of a fact means <em>false</em></td>
+<td>Clingo, Datalog</td>
+</tr>
+<tr>
+<td><strong>Negation as Failure (NAF)</strong></td>
+<td><code>not p</code> succeeds if <code>p</code> can't be proven</td>
+<td>Clingo</td>
+</tr>
+<tr>
+<td><strong>Answer Set Programming (ASP)</strong></td>
+<td>stable models: enumerate self-consistent worlds</td>
+<td>Clingo</td>
+</tr>
+<tr>
+<td><strong>Well-Founded Semantics (WFS)</strong></td>
+<td>three-valued: true / false / <strong>undefined</strong></td>
+<td><code>WellFoundedSolver</code></td>
+</tr>
+</tbody>
+</table>
+<p>These correspond directly to profile classes shipped in <code>typedlogic.profiles</code>
+(<code>OpenWorld</code>, <code>ClosedWorld</code>, <code>WellFoundedSemantics</code>, <code>ClassicPrologNegationAsFailure</code>,
+<code>AnswerSetProgramming</code>), which we revisit at the end.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="setup">Setup</h2>
+<p>This notebook uses the Z3, Clingo, and ProbLog integrations:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;typedlogic[z3,clingo,problog]&#39;</span>
+</code></pre></div>
+<p>Z3 is a classical first-order theorem prover — it embodies the <strong>open-world</strong>, <strong>monotonic</strong>
+view. Clingo is an <strong>Answer Set Programming</strong> solver — the <strong>closed-world</strong>, <strong>non-monotonic</strong>
+view. Putting them side by side is the whole point; <code>WellFoundedSolver</code> (built in) adds the
+three-valued middle ground.</p>
+<p>Each theory lives in a <code>.tlog</code> file next to this notebook. Two tiny helpers let us <em>show</em> a
+theory (with syntax highlighting) and <em>load</em> it for a solver.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Code</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Term</span><span class="p">,</span> <span class="n">Not</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.parsers.tlog_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">TLogParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.integrations.solvers.z3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Z3Solver</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.integrations.solvers.clingo</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClingoSolver</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.integrations.solvers.wellfounded</span><span class="w"> </span><span class="kn">import</span> <span class="n">WellFoundedSolver</span><span class="p">,</span> <span class="n">NegativeCycleError</span>
+
+<span class="n">HERE</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;semantics&quot;</span><span class="p">)</span>  <span class="c1"># the .tlog theory files live here</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">show</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="s2">&quot;Display a .tlog theory with syntax highlighting.&quot;</span>
+    <span class="k">return</span> <span class="n">Code</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">HERE</span> <span class="o">/</span> <span class="n">name</span><span class="p">),</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;prolog&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="s2">&quot;Parse a .tlog theory file into a Theory.&quot;</span>
+    <span class="k">return</span> <span class="n">TLogParser</span><span class="p">()</span><span class="o">.</span><span class="n">parse</span><span class="p">((</span><span class="n">HERE</span> <span class="o">/</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+</code></pre></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="1-open-world-vs-closed-world">1. Open world vs closed world</h2>
+<p>Consider a tiny flight database. There is a direct flight SFO→JFK and JFK→LHR. There is <strong>no</strong>
+row for SFO→LHR.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">show</span><span class="p">(</span><span class="s1">&#39;flights.tlog&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result">
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.output_html .hll { background-color: #ffffcc }
+.output_html { background: #f8f8f8; }
+.output_html .c { color: #3D7B7B; font-style: italic } /* Comment */
+.output_html .err { border: 1px solid #F00 } /* Error */
+.output_html .k { color: #008000; font-weight: bold } /* Keyword */
+.output_html .o { color: #666 } /* Operator */
+.output_html .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.output_html .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.output_html .cp { color: #9C6500 } /* Comment.Preproc */
+.output_html .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.output_html .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.output_html .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.output_html .gd { color: #A00000 } /* Generic.Deleted */
+.output_html .ge { font-style: italic } /* Generic.Emph */
+.output_html .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.output_html .gr { color: #E40000 } /* Generic.Error */
+.output_html .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.output_html .gi { color: #008400 } /* Generic.Inserted */
+.output_html .go { color: #717171 } /* Generic.Output */
+.output_html .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.output_html .gs { font-weight: bold } /* Generic.Strong */
+.output_html .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.output_html .gt { color: #04D } /* Generic.Traceback */
+.output_html .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.output_html .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.output_html .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.output_html .kp { color: #008000 } /* Keyword.Pseudo */
+.output_html .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.output_html .kt { color: #B00040 } /* Keyword.Type */
+.output_html .m { color: #666 } /* Literal.Number */
+.output_html .s { color: #BA2121 } /* Literal.String */
+.output_html .na { color: #687822 } /* Name.Attribute */
+.output_html .nb { color: #008000 } /* Name.Builtin */
+.output_html .nc { color: #00F; font-weight: bold } /* Name.Class */
+.output_html .no { color: #800 } /* Name.Constant */
+.output_html .nd { color: #A2F } /* Name.Decorator */
+.output_html .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.output_html .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.output_html .nf { color: #00F } /* Name.Function */
+.output_html .nl { color: #767600 } /* Name.Label */
+.output_html .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+.output_html .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.output_html .nv { color: #19177C } /* Name.Variable */
+.output_html .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.output_html .w { color: #BBB } /* Text.Whitespace */
+.output_html .mb { color: #666 } /* Literal.Number.Bin */
+.output_html .mf { color: #666 } /* Literal.Number.Float */
+.output_html .mh { color: #666 } /* Literal.Number.Hex */
+.output_html .mi { color: #666 } /* Literal.Number.Integer */
+.output_html .mo { color: #666 } /* Literal.Number.Oct */
+.output_html .sa { color: #BA2121 } /* Literal.String.Affix */
+.output_html .sb { color: #BA2121 } /* Literal.String.Backtick */
+.output_html .sc { color: #BA2121 } /* Literal.String.Char */
+.output_html .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.output_html .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.output_html .s2 { color: #BA2121 } /* Literal.String.Double */
+.output_html .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.output_html .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.output_html .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.output_html .sx { color: #008000 } /* Literal.String.Other */
+.output_html .sr { color: #A45A77 } /* Literal.String.Regex */
+.output_html .s1 { color: #BA2121 } /* Literal.String.Single */
+.output_html .ss { color: #19177C } /* Literal.String.Symbol */
+.output_html .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.output_html .fm { color: #00F } /* Name.Function.Magic */
+.output_html .vc { color: #19177C } /* Name.Variable.Class */
+.output_html .vg { color: #19177C } /* Name.Variable.Global */
+.output_html .vi { color: #19177C } /* Name.Variable.Instance */
+.output_html .vm { color: #19177C } /* Name.Variable.Magic */
+.output_html .il { color: #666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre><span></span><span class="s s-Atom">pred</span> <span class="nv">DirectFlight</span><span class="p">(</span><span class="nn">src</span><span class="p">:</span> <span class="s s-Atom">str</span><span class="p">,</span> <span class="nn">dst</span><span class="p">:</span> <span class="s s-Atom">str</span><span class="p">).</span>
+
+<span class="nv">DirectFlight</span><span class="p">(</span><span class="s2">"sfo"</span><span class="p">,</span> <span class="s2">"jfk"</span><span class="p">).</span>
+<span class="nv">DirectFlight</span><span class="p">(</span><span class="s2">"jfk"</span><span class="p">,</span> <span class="s2">"lhr"</span><span class="p">).</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>The question:</strong> <em>Is there a direct flight from SFO to LHR?</em> We never asserted one. What should
+a reasoner say?</p>
+<h3 id="closed-world-clingo">Closed world (Clingo)</h3>
+<p>A closed-world reasoner treats the database as complete. Anything not derivable is taken to be
+false. Clingo returns exactly one model — the facts we gave it — and <code>DirectFlight(sfo, lhr)</code>
+is simply absent, i.e. <strong>false</strong>.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">solver</span> <span class="o">=</span> <span class="n">ClingoSolver</span><span class="p">()</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;flights.tlog&quot;</span><span class="p">))</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">solver</span><span class="o">.</span><span class="n">models</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">present</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="o">.</span><span class="n">values</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;DirectFlight&quot;</span><span class="p">)}</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Direct flights in the (single) closed-world model:&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">present</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  &quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Is DirectFlight(sfo, lhr) in the model?&quot;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;sfo&quot;</span><span class="p">,</span> <span class="s2">&quot;lhr&quot;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">present</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&amp;gt; Under CWA, &#39;no row&#39; means FALSE.&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Direct flights in the (single) closed-world model:
+   ('jfk', 'lhr')
+   ('sfo', 'jfk')
+
+Is DirectFlight(sfo, lhr) in the model? False
+=&gt; Under CWA, 'no row' means FALSE.
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="open-world-z3">Open world (Z3)</h3>
+<p>A classical, open-world reasoner treats the database as <em>partial</em>. The absence of SFO→LHR tells
+us nothing. We can prove this operationally: a fact is <strong>entailed</strong> only if its negation is
+<em>inconsistent</em> with the knowledge base. So we check satisfiability <strong>both ways</strong>.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">flights</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s2">&quot;flights.tlog&quot;</span><span class="p">)</span>
+
+<span class="c1"># KB + DirectFlight(sfo,lhr): is it consistent?</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">Z3Solver</span><span class="p">();</span> <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">flights</span><span class="p">);</span> <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;DirectFlight&quot;</span><span class="p">,</span> <span class="s2">&quot;sfo&quot;</span><span class="p">,</span> <span class="s2">&quot;lhr&quot;</span><span class="p">))</span>
+<span class="n">with_flight</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span><span class="o">.</span><span class="n">satisfiable</span>
+
+<span class="c1"># KB + NOT DirectFlight(sfo,lhr): is it consistent?</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">Z3Solver</span><span class="p">();</span> <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">flights</span><span class="p">);</span> <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;DirectFlight&quot;</span><span class="p">,</span> <span class="s2">&quot;sfo&quot;</span><span class="p">,</span> <span class="s2">&quot;lhr&quot;</span><span class="p">)))</span>
+<span class="n">without_flight</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span><span class="o">.</span><span class="n">satisfiable</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KB +  DirectFlight(sfo,lhr) is satisfiable:&quot;</span><span class="p">,</span> <span class="n">with_flight</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KB + ~DirectFlight(sfo,lhr) is satisfiable:&quot;</span><span class="p">,</span> <span class="n">without_flight</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Both are satisfiable =&amp;gt; neither the flight nor its absence is entailed.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&amp;gt; Under OWA, &#39;no row&#39; means UNKNOWN.&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>KB +  DirectFlight(sfo,lhr) is satisfiable: True
+KB + ~DirectFlight(sfo,lhr) is satisfiable: True
+
+Both are satisfiable =&gt; neither the flight nor its absence is entailed.
+=&gt; Under OWA, 'no row' means UNKNOWN.
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This is the fundamental split:</p>
+<ul>
+<li><strong>Closed world</strong>: what is not known to be true is <strong>false</strong>. Great for databases, configuration,
+  policy checks — settings where you <em>do</em> have all the relevant facts.</li>
+<li><strong>Open world</strong>: what is not known to be true is <strong>unknown</strong>. Right for the semantic web,
+  ontologies, and incomplete knowledge — where new facts can always arrive (this is the OWL/RDF
+  world; see the <a href="../../tutorial/04-owldl/">OWL-DL tutorial</a>).</li>
+</ul>
+<p>Neither is "correct" in the abstract; they answer different questions. The bugs happen when you
+assume one and your tool implements the other.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2-negation-as-failure-and-non-monotonicity">2. Negation as failure, and non-monotonicity</h2>
+<p>The closed-world assumption gives us a <em>cheap</em> form of negation: <code>not p</code> succeeds precisely when
+we <strong>fail to prove</strong> <code>p</code>. This is <strong>negation as failure (NAF)</strong> — the negation of Prolog, Datalog,
+and ASP. In TLog, <code>not</code> is negation-as-failure, while <code>~</code> is classical/strong negation.</p>
+<p>The classic use is <strong>default reasoning</strong>: <em>birds fly, unless they are abnormal.</em></p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">show</span><span class="p">(</span><span class="s1">&#39;birds.tlog&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result">
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.output_html .hll { background-color: #ffffcc }
+.output_html { background: #f8f8f8; }
+.output_html .c { color: #3D7B7B; font-style: italic } /* Comment */
+.output_html .err { border: 1px solid #F00 } /* Error */
+.output_html .k { color: #008000; font-weight: bold } /* Keyword */
+.output_html .o { color: #666 } /* Operator */
+.output_html .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.output_html .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.output_html .cp { color: #9C6500 } /* Comment.Preproc */
+.output_html .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.output_html .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.output_html .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.output_html .gd { color: #A00000 } /* Generic.Deleted */
+.output_html .ge { font-style: italic } /* Generic.Emph */
+.output_html .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.output_html .gr { color: #E40000 } /* Generic.Error */
+.output_html .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.output_html .gi { color: #008400 } /* Generic.Inserted */
+.output_html .go { color: #717171 } /* Generic.Output */
+.output_html .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.output_html .gs { font-weight: bold } /* Generic.Strong */
+.output_html .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.output_html .gt { color: #04D } /* Generic.Traceback */
+.output_html .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.output_html .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.output_html .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.output_html .kp { color: #008000 } /* Keyword.Pseudo */
+.output_html .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.output_html .kt { color: #B00040 } /* Keyword.Type */
+.output_html .m { color: #666 } /* Literal.Number */
+.output_html .s { color: #BA2121 } /* Literal.String */
+.output_html .na { color: #687822 } /* Name.Attribute */
+.output_html .nb { color: #008000 } /* Name.Builtin */
+.output_html .nc { color: #00F; font-weight: bold } /* Name.Class */
+.output_html .no { color: #800 } /* Name.Constant */
+.output_html .nd { color: #A2F } /* Name.Decorator */
+.output_html .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.output_html .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.output_html .nf { color: #00F } /* Name.Function */
+.output_html .nl { color: #767600 } /* Name.Label */
+.output_html .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+.output_html .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.output_html .nv { color: #19177C } /* Name.Variable */
+.output_html .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.output_html .w { color: #BBB } /* Text.Whitespace */
+.output_html .mb { color: #666 } /* Literal.Number.Bin */
+.output_html .mf { color: #666 } /* Literal.Number.Float */
+.output_html .mh { color: #666 } /* Literal.Number.Hex */
+.output_html .mi { color: #666 } /* Literal.Number.Integer */
+.output_html .mo { color: #666 } /* Literal.Number.Oct */
+.output_html .sa { color: #BA2121 } /* Literal.String.Affix */
+.output_html .sb { color: #BA2121 } /* Literal.String.Backtick */
+.output_html .sc { color: #BA2121 } /* Literal.String.Char */
+.output_html .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.output_html .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.output_html .s2 { color: #BA2121 } /* Literal.String.Double */
+.output_html .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.output_html .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.output_html .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.output_html .sx { color: #008000 } /* Literal.String.Other */
+.output_html .sr { color: #A45A77 } /* Literal.String.Regex */
+.output_html .s1 { color: #BA2121 } /* Literal.String.Single */
+.output_html .ss { color: #19177C } /* Literal.String.Symbol */
+.output_html .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.output_html .fm { color: #00F } /* Name.Function.Magic */
+.output_html .vc { color: #19177C } /* Name.Variable.Class */
+.output_html .vg { color: #19177C } /* Name.Variable.Global */
+.output_html .vi { color: #19177C } /* Name.Variable.Instance */
+.output_html .vm { color: #19177C } /* Name.Variable.Magic */
+.output_html .il { color: #666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre><span></span><span class="s s-Atom">pred</span> <span class="nv">Bird</span><span class="p">(</span><span class="nn">name</span><span class="p">:</span> <span class="s s-Atom">str</span><span class="p">).</span>
+<span class="s s-Atom">pred</span> <span class="nv">Penguin</span><span class="p">(</span><span class="nn">name</span><span class="p">:</span> <span class="s s-Atom">str</span><span class="p">).</span>
+<span class="s s-Atom">pred</span> <span class="nv">Abnormal</span><span class="p">(</span><span class="nn">name</span><span class="p">:</span> <span class="s s-Atom">str</span><span class="p">).</span>
+<span class="s s-Atom">pred</span> <span class="nv">Flies</span><span class="p">(</span><span class="nn">name</span><span class="p">:</span> <span class="s s-Atom">str</span><span class="p">).</span>
+
+<span class="nv">Bird</span><span class="p">(</span><span class="s2">"tweety"</span><span class="p">).</span>
+<span class="nv">Bird</span><span class="p">(</span><span class="s2">"opus"</span><span class="p">).</span>
+<span class="nv">Penguin</span><span class="p">(</span><span class="s2">"opus"</span><span class="p">).</span>
+
+<span class="s s-Atom">///</span> <span class="nv">Penguins</span> <span class="s s-Atom">are</span> <span class="s s-Atom">abnormal</span> <span class="s s-Atom">birds</span><span class="p">.</span>
+<span class="nv">Abnormal</span><span class="p">(</span><span class="s s-Atom">x</span><span class="p">)</span> <span class="p">:-</span> <span class="nv">Penguin</span><span class="p">(</span><span class="s s-Atom">x</span><span class="p">).</span>
+
+<span class="s s-Atom">///</span> <span class="nv">A</span> <span class="s s-Atom">bird</span> <span class="s s-Atom">flies</span> <span class="nv">UNLESS</span> <span class="s s-Atom">it</span> <span class="s s-Atom">can</span> <span class="s s-Atom">be</span> <span class="s s-Atom">shown</span> <span class="s s-Atom">abnormal</span><span class="p">.</span>
+<span class="s s-Atom">///</span> <span class="err">`</span><span class="o">not</span><span class="err">`</span> <span class="s s-Atom">here</span> <span class="o">is</span> <span class="s s-Atom">negation</span><span class="o">-</span><span class="s s-Atom">as</span><span class="o">-</span><span class="s s-Atom">failure</span><span class="p">.</span>
+<span class="nv">Flies</span><span class="p">(</span><span class="s s-Atom">x</span><span class="p">)</span> <span class="p">:-</span> <span class="nv">Bird</span><span class="p">(</span><span class="s s-Atom">x</span><span class="p">),</span> <span class="o">not</span> <span class="nv">Abnormal</span><span class="p">(</span><span class="s s-Atom">x</span><span class="p">).</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's ask Clingo who flies.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">who_flies</span><span class="p">(</span><span class="n">extra_facts</span><span class="o">=</span><span class="p">()):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">ClingoSolver</span><span class="p">()</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;birds.tlog&quot;</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">extra_facts</span><span class="p">:</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">models</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;Flies&quot;</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Who flies by default?&quot;</span><span class="p">,</span> <span class="n">who_flies</span><span class="p">())</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Who flies by default? ['tweety']
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>tweety</code> flies; <code>opus</code> does not (it's a penguin, hence abnormal). Nobody told us tweety is
+<em>normal</em> — the reasoner <strong>assumed</strong> it because it couldn't prove otherwise. That assumption is
+the closed world at work.</p>
+<p>Now the crucial property. Watch what happens when we <em>add</em> a fact.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Before: &quot;</span><span class="p">,</span> <span class="n">who_flies</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Add Penguin(tweety) ...&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;After:  &quot;</span><span class="p">,</span> <span class="n">who_flies</span><span class="p">(</span><span class="n">extra_facts</span><span class="o">=</span><span class="p">[</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Penguin&quot;</span><span class="p">,</span> <span class="s2">&quot;tweety&quot;</span><span class="p">)]))</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Learning MORE made us conclude LESS. This is NON-MONOTONICITY.&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Before:  ['tweety']
+Add Penguin(tweety) ...
+After:   []
+
+Learning MORE made us conclude LESS. This is NON-MONOTONICITY.
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Adding knowledge <strong>retracted</strong> a conclusion. Classical logic can never do this: it is
+<strong>monotonic</strong> — the set of entailed facts only ever grows. NAF buys expressiveness (defaults,
+exceptions, common-sense reasoning) at the price of monotonicity.</p>
+<h3 id="the-same-rule-read-classically-z3">The same rule, read classically (Z3)</h3>
+<p>What if we read "birds fly unless abnormal" with <em>classical</em> negation (<code>~</code>) instead of NAF?</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">show</span><span class="p">(</span><span class="s1">&#39;birds_classical.tlog&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result">
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.output_html .hll { background-color: #ffffcc }
+.output_html { background: #f8f8f8; }
+.output_html .c { color: #3D7B7B; font-style: italic } /* Comment */
+.output_html .err { border: 1px solid #F00 } /* Error */
+.output_html .k { color: #008000; font-weight: bold } /* Keyword */
+.output_html .o { color: #666 } /* Operator */
+.output_html .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.output_html .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.output_html .cp { color: #9C6500 } /* Comment.Preproc */
+.output_html .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.output_html .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.output_html .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.output_html .gd { color: #A00000 } /* Generic.Deleted */
+.output_html .ge { font-style: italic } /* Generic.Emph */
+.output_html .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.output_html .gr { color: #E40000 } /* Generic.Error */
+.output_html .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.output_html .gi { color: #008400 } /* Generic.Inserted */
+.output_html .go { color: #717171 } /* Generic.Output */
+.output_html .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.output_html .gs { font-weight: bold } /* Generic.Strong */
+.output_html .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.output_html .gt { color: #04D } /* Generic.Traceback */
+.output_html .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.output_html .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.output_html .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.output_html .kp { color: #008000 } /* Keyword.Pseudo */
+.output_html .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.output_html .kt { color: #B00040 } /* Keyword.Type */
+.output_html .m { color: #666 } /* Literal.Number */
+.output_html .s { color: #BA2121 } /* Literal.String */
+.output_html .na { color: #687822 } /* Name.Attribute */
+.output_html .nb { color: #008000 } /* Name.Builtin */
+.output_html .nc { color: #00F; font-weight: bold } /* Name.Class */
+.output_html .no { color: #800 } /* Name.Constant */
+.output_html .nd { color: #A2F } /* Name.Decorator */
+.output_html .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.output_html .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.output_html .nf { color: #00F } /* Name.Function */
+.output_html .nl { color: #767600 } /* Name.Label */
+.output_html .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+.output_html .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.output_html .nv { color: #19177C } /* Name.Variable */
+.output_html .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.output_html .w { color: #BBB } /* Text.Whitespace */
+.output_html .mb { color: #666 } /* Literal.Number.Bin */
+.output_html .mf { color: #666 } /* Literal.Number.Float */
+.output_html .mh { color: #666 } /* Literal.Number.Hex */
+.output_html .mi { color: #666 } /* Literal.Number.Integer */
+.output_html .mo { color: #666 } /* Literal.Number.Oct */
+.output_html .sa { color: #BA2121 } /* Literal.String.Affix */
+.output_html .sb { color: #BA2121 } /* Literal.String.Backtick */
+.output_html .sc { color: #BA2121 } /* Literal.String.Char */
+.output_html .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.output_html .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.output_html .s2 { color: #BA2121 } /* Literal.String.Double */
+.output_html .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.output_html .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.output_html .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.output_html .sx { color: #008000 } /* Literal.String.Other */
+.output_html .sr { color: #A45A77 } /* Literal.String.Regex */
+.output_html .s1 { color: #BA2121 } /* Literal.String.Single */
+.output_html .ss { color: #19177C } /* Literal.String.Symbol */
+.output_html .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.output_html .fm { color: #00F } /* Name.Function.Magic */
+.output_html .vc { color: #19177C } /* Name.Variable.Class */
+.output_html .vg { color: #19177C } /* Name.Variable.Global */
+.output_html .vi { color: #19177C } /* Name.Variable.Instance */
+.output_html .vm { color: #19177C } /* Name.Variable.Magic */
+.output_html .il { color: #666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre><span></span><span class="s s-Atom">pred</span> <span class="nv">Bird</span><span class="p">(</span><span class="nn">name</span><span class="p">:</span> <span class="s s-Atom">str</span><span class="p">).</span>
+<span class="s s-Atom">pred</span> <span class="nv">Abnormal</span><span class="p">(</span><span class="nn">name</span><span class="p">:</span> <span class="s s-Atom">str</span><span class="p">).</span>
+<span class="s s-Atom">pred</span> <span class="nv">Flies</span><span class="p">(</span><span class="nn">name</span><span class="p">:</span> <span class="s s-Atom">str</span><span class="p">).</span>
+
+<span class="nv">Bird</span><span class="p">(</span><span class="s2">"tweety"</span><span class="p">).</span>
+
+<span class="s s-Atom">///</span> <span class="nv">The</span> <span class="nv">SAME</span> <span class="s s-Atom">rule</span><span class="p">,</span> <span class="s s-Atom">read</span> <span class="s s-Atom">with</span> <span class="nf">classical</span> <span class="p">(</span><span class="s s-Atom">strong</span><span class="p">)</span> <span class="s s-Atom">negation</span> <span class="err">`</span><span class="s s-Atom">~</span><span class="err">`</span>
+<span class="s s-Atom">///</span> <span class="s s-Atom">instead</span> <span class="s s-Atom">of</span> <span class="s s-Atom">negation</span><span class="o">-</span><span class="s s-Atom">as</span><span class="o">-</span><span class="s s-Atom">failure</span><span class="p">.</span> <span class="nv">Now</span> <span class="err">`</span><span class="s s-Atom">~</span><span class="nv">Abnormal</span><span class="p">(</span><span class="s s-Atom">x</span><span class="p">)</span><span class="err">`</span> <span class="s s-Atom">must</span> <span class="s s-Atom">be</span>
+<span class="s s-Atom">///</span> <span class="o">*</span><span class="s s-Atom">proven*</span><span class="p">,</span> <span class="o">not</span> <span class="s s-Atom">merely</span> <span class="s s-Atom">assumed</span><span class="p">.</span>
+<span class="nv">Flies</span><span class="p">(</span><span class="s s-Atom">x</span><span class="p">)</span> <span class="p">:-</span> <span class="nv">Bird</span><span class="p">(</span><span class="s s-Atom">x</span><span class="p">),</span> <span class="s s-Atom">~</span><span class="nv">Abnormal</span><span class="p">(</span><span class="s s-Atom">x</span><span class="p">).</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Under the open world, we <em>cannot</em> conclude <code>Flies(tweety)</code> from <code>Bird(tweety)</code> alone — because
+<code>~Abnormal(tweety)</code> is not entailed (it's merely unknown). We have to supply it.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">bc</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s2">&quot;birds_classical.tlog&quot;</span><span class="p">)</span>
+
+<span class="c1"># Is Flies(tweety) entailed from Bird(tweety) alone?</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">Z3Solver</span><span class="p">();</span> <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bc</span><span class="p">);</span> <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Flies&quot;</span><span class="p">,</span> <span class="s2">&quot;tweety&quot;</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KB + ~Flies(tweety) satisfiable?&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span><span class="o">.</span><span class="n">satisfiable</span><span class="p">,</span>
+      <span class="s2">&quot; =&amp;gt; Flies(tweety) NOT entailed (abnormality is unknown, not false)&quot;</span><span class="p">)</span>
+
+<span class="c1"># Now assert tweety is not abnormal, classically:</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">Z3Solver</span><span class="p">();</span> <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bc</span><span class="p">)</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Abnormal&quot;</span><span class="p">,</span> <span class="s2">&quot;tweety&quot;</span><span class="p">)))</span>
+<span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Flies&quot;</span><span class="p">,</span> <span class="s2">&quot;tweety&quot;</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KB + ~Abnormal(tweety) + ~Flies(tweety) satisfiable?&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span><span class="o">.</span><span class="n">satisfiable</span><span class="p">,</span>
+      <span class="s2">&quot; =&amp;gt; now Flies(tweety) IS entailed&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>KB + ~Flies(tweety) satisfiable? True  =&gt; Flies(tweety) NOT entailed (abnormality is unknown, not false)
+KB + ~Abnormal(tweety) + ~Flies(tweety) satisfiable? False  =&gt; now Flies(tweety) IS entailed
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So the <em>very same English sentence</em> means different things depending on the negation you pick:</p>
+<ul>
+<li><strong>NAF</strong> (<code>not Abnormal</code>): "assume normal unless proven abnormal" → concludes <code>Flies(tweety)</code>
+  immediately, but retracts it later. Non-monotonic.</li>
+<li><strong>Classical</strong> (<code>~Abnormal</code>): "flies only if <em>provably</em> not abnormal" → stays agnostic until you
+  supply the missing premise. Monotonic.</li>
+</ul>
+<p>Choosing the wrong one is a real and common modelling bug.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="3-when-naf-loops-stable-models-asp">3. When NAF loops: stable models (ASP)</h2>
+<p>Default reasoning was <em>stratified</em> — negation never depended on itself. Once we allow negation to
+loop back on itself, "what does <code>not p</code> mean" stops having an obvious answer, and the different
+semantics genuinely diverge. This is where <strong>ASP</strong> and <strong>WFS</strong> part ways.</p>
+<p><strong>Answer Set Programming</strong> answers with <strong>stable models</strong> (answer sets): each is a self-consistent
+world — a set of atoms that reproduces exactly itself when you apply the rules under its own
+negative assumptions. There can be several, or none.</p>
+<h3 id="even-loop-two-worlds">Even loop → two worlds</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">show</span><span class="p">(</span><span class="s1">&#39;even_loop.tlog&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result">
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.output_html .hll { background-color: #ffffcc }
+.output_html { background: #f8f8f8; }
+.output_html .c { color: #3D7B7B; font-style: italic } /* Comment */
+.output_html .err { border: 1px solid #F00 } /* Error */
+.output_html .k { color: #008000; font-weight: bold } /* Keyword */
+.output_html .o { color: #666 } /* Operator */
+.output_html .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.output_html .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.output_html .cp { color: #9C6500 } /* Comment.Preproc */
+.output_html .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.output_html .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.output_html .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.output_html .gd { color: #A00000 } /* Generic.Deleted */
+.output_html .ge { font-style: italic } /* Generic.Emph */
+.output_html .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.output_html .gr { color: #E40000 } /* Generic.Error */
+.output_html .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.output_html .gi { color: #008400 } /* Generic.Inserted */
+.output_html .go { color: #717171 } /* Generic.Output */
+.output_html .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.output_html .gs { font-weight: bold } /* Generic.Strong */
+.output_html .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.output_html .gt { color: #04D } /* Generic.Traceback */
+.output_html .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.output_html .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.output_html .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.output_html .kp { color: #008000 } /* Keyword.Pseudo */
+.output_html .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.output_html .kt { color: #B00040 } /* Keyword.Type */
+.output_html .m { color: #666 } /* Literal.Number */
+.output_html .s { color: #BA2121 } /* Literal.String */
+.output_html .na { color: #687822 } /* Name.Attribute */
+.output_html .nb { color: #008000 } /* Name.Builtin */
+.output_html .nc { color: #00F; font-weight: bold } /* Name.Class */
+.output_html .no { color: #800 } /* Name.Constant */
+.output_html .nd { color: #A2F } /* Name.Decorator */
+.output_html .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.output_html .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.output_html .nf { color: #00F } /* Name.Function */
+.output_html .nl { color: #767600 } /* Name.Label */
+.output_html .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+.output_html .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.output_html .nv { color: #19177C } /* Name.Variable */
+.output_html .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.output_html .w { color: #BBB } /* Text.Whitespace */
+.output_html .mb { color: #666 } /* Literal.Number.Bin */
+.output_html .mf { color: #666 } /* Literal.Number.Float */
+.output_html .mh { color: #666 } /* Literal.Number.Hex */
+.output_html .mi { color: #666 } /* Literal.Number.Integer */
+.output_html .mo { color: #666 } /* Literal.Number.Oct */
+.output_html .sa { color: #BA2121 } /* Literal.String.Affix */
+.output_html .sb { color: #BA2121 } /* Literal.String.Backtick */
+.output_html .sc { color: #BA2121 } /* Literal.String.Char */
+.output_html .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.output_html .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.output_html .s2 { color: #BA2121 } /* Literal.String.Double */
+.output_html .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.output_html .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.output_html .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.output_html .sx { color: #008000 } /* Literal.String.Other */
+.output_html .sr { color: #A45A77 } /* Literal.String.Regex */
+.output_html .s1 { color: #BA2121 } /* Literal.String.Single */
+.output_html .ss { color: #19177C } /* Literal.String.Symbol */
+.output_html .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.output_html .fm { color: #00F } /* Name.Function.Magic */
+.output_html .vc { color: #19177C } /* Name.Variable.Class */
+.output_html .vg { color: #19177C } /* Name.Variable.Global */
+.output_html .vi { color: #19177C } /* Name.Variable.Instance */
+.output_html .vm { color: #19177C } /* Name.Variable.Magic */
+.output_html .il { color: #666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre><span></span><span class="s s-Atom">pred</span> <span class="nf">p</span><span class="p">().</span>
+<span class="s s-Atom">pred</span> <span class="nf">q</span><span class="p">().</span>
+
+<span class="s s-Atom">///</span> <span class="s s-Atom">p</span> <span class="s s-Atom">holds</span> <span class="s s-Atom">unless</span> <span class="s s-Atom">q</span> <span class="s s-Atom">does</span><span class="p">,</span> <span class="s s-Atom">and</span> <span class="s s-Atom">q</span> <span class="s s-Atom">holds</span> <span class="s s-Atom">unless</span> <span class="s s-Atom">p</span> <span class="s s-Atom">does</span><span class="p">.</span>
+<span class="nf">p</span><span class="p">()</span> <span class="p">:-</span> <span class="o">not</span> <span class="nf">q</span><span class="p">().</span>
+<span class="nf">q</span><span class="p">()</span> <span class="p">:-</span> <span class="o">not</span> <span class="nf">p</span><span class="p">().</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>"p holds unless q does, and q holds unless p does." Two coherent stories: <em>p and not q</em>, or
+<em>q and not p</em>.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">solver</span> <span class="o">=</span> <span class="n">ClingoSolver</span><span class="p">()</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;even_loop.tlog&quot;</span><span class="p">))</span>
+<span class="n">models</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">solver</span><span class="o">.</span><span class="n">models</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of stable models (answer sets):&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">models</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">models</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  model </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">ground_terms</span><span class="p">))</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Number of stable models (answer sets): 2
+  model 0: ['q']
+  model 1: ['p']
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="odd-loop-no-world">Odd loop → no world</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">show</span><span class="p">(</span><span class="s1">&#39;odd_loop.tlog&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result">
+<style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.output_html .hll { background-color: #ffffcc }
+.output_html { background: #f8f8f8; }
+.output_html .c { color: #3D7B7B; font-style: italic } /* Comment */
+.output_html .err { border: 1px solid #F00 } /* Error */
+.output_html .k { color: #008000; font-weight: bold } /* Keyword */
+.output_html .o { color: #666 } /* Operator */
+.output_html .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.output_html .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.output_html .cp { color: #9C6500 } /* Comment.Preproc */
+.output_html .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.output_html .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.output_html .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.output_html .gd { color: #A00000 } /* Generic.Deleted */
+.output_html .ge { font-style: italic } /* Generic.Emph */
+.output_html .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.output_html .gr { color: #E40000 } /* Generic.Error */
+.output_html .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.output_html .gi { color: #008400 } /* Generic.Inserted */
+.output_html .go { color: #717171 } /* Generic.Output */
+.output_html .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.output_html .gs { font-weight: bold } /* Generic.Strong */
+.output_html .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.output_html .gt { color: #04D } /* Generic.Traceback */
+.output_html .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.output_html .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.output_html .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.output_html .kp { color: #008000 } /* Keyword.Pseudo */
+.output_html .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.output_html .kt { color: #B00040 } /* Keyword.Type */
+.output_html .m { color: #666 } /* Literal.Number */
+.output_html .s { color: #BA2121 } /* Literal.String */
+.output_html .na { color: #687822 } /* Name.Attribute */
+.output_html .nb { color: #008000 } /* Name.Builtin */
+.output_html .nc { color: #00F; font-weight: bold } /* Name.Class */
+.output_html .no { color: #800 } /* Name.Constant */
+.output_html .nd { color: #A2F } /* Name.Decorator */
+.output_html .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.output_html .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.output_html .nf { color: #00F } /* Name.Function */
+.output_html .nl { color: #767600 } /* Name.Label */
+.output_html .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+.output_html .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.output_html .nv { color: #19177C } /* Name.Variable */
+.output_html .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.output_html .w { color: #BBB } /* Text.Whitespace */
+.output_html .mb { color: #666 } /* Literal.Number.Bin */
+.output_html .mf { color: #666 } /* Literal.Number.Float */
+.output_html .mh { color: #666 } /* Literal.Number.Hex */
+.output_html .mi { color: #666 } /* Literal.Number.Integer */
+.output_html .mo { color: #666 } /* Literal.Number.Oct */
+.output_html .sa { color: #BA2121 } /* Literal.String.Affix */
+.output_html .sb { color: #BA2121 } /* Literal.String.Backtick */
+.output_html .sc { color: #BA2121 } /* Literal.String.Char */
+.output_html .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.output_html .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.output_html .s2 { color: #BA2121 } /* Literal.String.Double */
+.output_html .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.output_html .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.output_html .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.output_html .sx { color: #008000 } /* Literal.String.Other */
+.output_html .sr { color: #A45A77 } /* Literal.String.Regex */
+.output_html .s1 { color: #BA2121 } /* Literal.String.Single */
+.output_html .ss { color: #19177C } /* Literal.String.Symbol */
+.output_html .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.output_html .fm { color: #00F } /* Name.Function.Magic */
+.output_html .vc { color: #19177C } /* Name.Variable.Class */
+.output_html .vg { color: #19177C } /* Name.Variable.Global */
+.output_html .vi { color: #19177C } /* Name.Variable.Instance */
+.output_html .vm { color: #19177C } /* Name.Variable.Magic */
+.output_html .il { color: #666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre><span></span><span class="s s-Atom">pred</span> <span class="nf">p</span><span class="p">().</span>
+
+<span class="s s-Atom">///</span> <span class="s s-Atom">p</span> <span class="s s-Atom">holds</span> <span class="s s-Atom">if</span> <span class="s s-Atom">p</span> <span class="s s-Atom">does</span> <span class="o">not</span><span class="s s-Atom">:</span> <span class="s s-Atom">a</span> <span class="s s-Atom">paradoxical</span> <span class="s s-Atom">negative</span> <span class="s s-Atom">self</span><span class="o">-</span><span class="s s-Atom">loop</span><span class="p">.</span>
+<span class="nf">p</span><span class="p">()</span> <span class="p">:-</span> <span class="o">not</span> <span class="nf">p</span><span class="p">().</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>"p holds if p does not." No set of atoms can reproduce itself: assume <code>p</code> false and the rule
+forces it true; assume it true and the rule no longer fires. <strong>Zero</strong> stable models — the program
+is <em>inconsistent</em> in ASP.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="n">solver</span> <span class="o">=</span> <span class="n">ClingoSolver</span><span class="p">()</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;odd_loop.tlog&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Satisfiable?&quot;</span><span class="p">,</span> <span class="n">solver</span><span class="o">.</span><span class="n">check</span><span class="p">()</span><span class="o">.</span><span class="n">satisfiable</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of stable models:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">solver</span><span class="o">.</span><span class="n">models</span><span class="p">())))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&amp;gt; An odd negative loop has NO answer set.&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>Satisfiable? False
+Number of stable models: 0
+=&gt; An odd negative loop has NO answer set.
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Stable-model semantics is decisive and credulous: it hands you every self-consistent world, or
+refuses when none exists. That's ideal for combinatorial search (planning, configuration,
+graph coloring), but the "all or nothing" reaction to a loop can be surprisingly brittle.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="4-a-gentler-answer-well-founded-semantics">4. A gentler answer: well-founded semantics</h2>
+<p><strong>Well-founded semantics (WFS)</strong> refuses to guess. Instead of enumerating worlds it computes a
+<em>single</em> <strong>three-valued</strong> model: every atom is <strong>true</strong>, <strong>false</strong>, or <strong>undefined</strong>. Paradoxical
+loops land in <em>undefined</em> rather than exploding into many models or none.</p>
+<p>typedlogic ships a <a href="../../integrations/solvers/wellfounded/"><code>WellFoundedSolver</code></a> for exactly this.
+Its default <code>native</code> backend computes the well-founded model directly (via the standard Van Gelder
+alternating fixpoint) and reports the three-valued result. Run it on the same loops that gave ASP
+two models / zero models:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">well_founded</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+    <span class="n">solver</span> <span class="o">=</span> <span class="n">WellFoundedSolver</span><span class="p">()</span>            <span class="c1"># backend=&quot;native&quot; by default</span>
+    <span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">load</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+    <span class="n">true</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">ground_terms</span><span class="p">)</span>
+    <span class="n">undefined</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">undefined_terms</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">true</span><span class="p">,</span> <span class="n">undefined</span>
+
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;even_loop.tlog&quot;</span><span class="p">,</span> <span class="s2">&quot;odd_loop.tlog&quot;</span><span class="p">]:</span>
+    <span class="n">true</span><span class="p">,</span> <span class="n">undefined</span> <span class="o">=</span> <span class="n">well_founded</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">16</span><span class="si">}</span><span class="s2"> TRUE=</span><span class="si">{</span><span class="n">true</span><span class="si">}</span><span class="s2">  UNDEFINED=</span><span class="si">{</span><span class="n">undefined</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>even_loop.tlog   TRUE=[]  UNDEFINED=['p', 'q']
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>odd_loop.tlog    TRUE=[]  UNDEFINED=['p']
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Compare the two semantics on the identical programs:</p>
+<table>
+<thead>
+<tr>
+<th>Program</th>
+<th>ASP (stable models)</th>
+<th>WFS (well-founded model)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>p:-not q. q:-not p.</code></td>
+<td><strong>two</strong> models: <code>{p}</code> and <code>{q}</code></td>
+<td>one model: <code>p</code>, <code>q</code> both <strong>undefined</strong></td>
+</tr>
+<tr>
+<td><code>p:-not p.</code></td>
+<td><strong>no</strong> model (inconsistent)</td>
+<td>one model: <code>p</code> <strong>undefined</strong></td>
+</tr>
+</tbody>
+</table>
+<p>ASP is <em>credulous and brave</em>: it commits to concrete worlds and enumerates them. WFS is <em>skeptical
+and cautious</em>: where the program is genuinely ambiguous or paradoxical, it declines to decide and
+marks the atom undefined — always yielding exactly one model, computable in polynomial time.</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="should-we-just-wrap-an-existing-engine">"Should we just wrap an existing engine?"</h3>
+<p>A fair question — WFS is well studied and has mature engines. The honest answer is <em>it depends on
+the fragment</em>, and the <code>WellFoundedSolver</code> backends make the trade-off concrete:</p>
+<ul>
+<li>The <strong><code>problog</code></strong> backend delegates to <a href="../../integrations/solvers/problog/">ProbLog</a>, a mature,
+  wrapped engine. But ProbLog implements only the <strong>two-valued</strong> restriction of WFS: it agrees
+  with the native backend on stratified programs, and <strong>refuses</strong> genuinely three-valued programs
+  with a <code>NegativeCycle</code> error rather than reporting <em>undefined</em>.</li>
+<li>The <strong><code>xsb</code></strong> backend is meant to drive <a href="https://xsb.sourceforge.net/">XSB Prolog</a> — the
+  reference SLG/tabling engine — for large or deeply-recursive programs (requires the external
+  <code>xsb</code> binary). It is <strong>experimental and not yet validated against a live XSB</strong>, so prefer
+  <code>native</code> for now.</li>
+<li>The <strong><code>native</code></strong> backend has no dependencies and returns the full three-valued model; it is the
+  right tool for teaching and modestly-sized programs (grounding is naive, so it is not meant to
+  compete with XSB on scale).</li>
+</ul>
+<p>Watch ProbLog agree on the stratified default program, then refuse the negative loop:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="c1"># On a stratified program, the wrapped ProbLog engine and the native engine agree exactly.</span>
+<span class="n">native</span> <span class="o">=</span> <span class="n">WellFoundedSolver</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="s2">&quot;native&quot;</span><span class="p">);</span> <span class="n">native</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;birds.tlog&quot;</span><span class="p">))</span>
+<span class="n">problog</span> <span class="o">=</span> <span class="n">WellFoundedSolver</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="s2">&quot;problog&quot;</span><span class="p">);</span> <span class="n">problog</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;birds.tlog&quot;</span><span class="p">))</span>
+<span class="n">native_flies</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">native</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;Flies&quot;</span><span class="p">))</span>
+<span class="n">problog_flies</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">problog</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;Flies&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;native  Flies:&quot;</span><span class="p">,</span> <span class="n">native_flies</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;problog Flies:&quot;</span><span class="p">,</span> <span class="n">problog_flies</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;agree?&quot;</span><span class="p">,</span> <span class="n">native_flies</span> <span class="o">==</span> <span class="n">problog_flies</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+
+<span class="c1"># On the even loop, ProbLog refuses rather than reporting &#39;undefined&#39;.</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">WellFoundedSolver</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="s2">&quot;problog&quot;</span><span class="p">);</span> <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;even_loop.tlog&quot;</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+<span class="k">except</span> <span class="n">NegativeCycleError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;problog on even_loop -&amp;gt; NegativeCycleError:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>native  Flies: ['Flies(tweety)']
+problog Flies: ['Flies(tweety)']
+agree? True
+
+problog on even_loop -&gt; NegativeCycleError:
+  The 'problog' backend only supports programs with a total (two-valued) well-founded model; this program is genuinely three-valued.
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>That is the whole reason the native three-valued backend exists: no pip-installable engine returns
+<code>undefined</code> for these programs. WFS and the other semantics agree whenever the program is
+well-behaved (stratified) — here is the tweety/opus default program under all three, for
+confirmation:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="c1"># clingo (ASP), WFS native, WFS via problog -- all agree on the stratified program.</span>
+<span class="n">clingo</span> <span class="o">=</span> <span class="n">ClingoSolver</span><span class="p">();</span> <span class="n">clingo</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;birds.tlog&quot;</span><span class="p">))</span>
+<span class="n">asp_flies</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">clingo</span><span class="o">.</span><span class="n">models</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;Flies&quot;</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ASP (clingo)        Flies:&quot;</span><span class="p">,</span> <span class="n">asp_flies</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WFS (native)        Flies:&quot;</span><span class="p">,</span> <span class="n">native_flies</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WFS (problog)       Flies:&quot;</span><span class="p">,</span> <span class="n">problog_flies</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All agree: on stratified programs WFS, ASP and Datalog coincide.&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>ASP (clingo)        Flies: ['tweety']
+WFS (native)        Flies: ['Flies(tweety)']
+WFS (problog)       Flies: ['Flies(tweety)']
+
+All agree: on stratified programs WFS, ASP and Datalog coincide.
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="putting-it-together-the-typedlogic-profiles">Putting it together: the <code>typedlogic</code> profiles</h2>
+<p><code>typedlogic</code> reifies these semantic choices as <strong>profile</strong> classes in <code>typedlogic.profiles</code>, so a
+theory or solver can declare which assumptions it makes. The hierarchy encodes the relationships
+we just demonstrated — e.g. <code>WellFoundedSemantics</code> and <code>ClassicPrologNegationAsFailure</code> are both
+kinds of <code>ClosedWorld</code>, and <code>AnswerSetProgramming</code> is a <code>WellFoundedSemantics</code> that also permits
+<code>MultipleModelSemantics</code> (the several answer sets we saw). Each solver advertises its profile:</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.profiles</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">OpenWorld</span><span class="p">,</span> <span class="n">ClosedWorld</span><span class="p">,</span> <span class="n">SingleModelSemantics</span><span class="p">,</span> <span class="n">MultipleModelSemantics</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">solvers</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;Z3 (classical FOL)&quot;</span><span class="p">,</span>   <span class="n">Z3Solver</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;Clingo (ASP)&quot;</span><span class="p">,</span>         <span class="n">ClingoSolver</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;WellFoundedSolver&quot;</span><span class="p">,</span>    <span class="n">WellFoundedSolver</span><span class="p">()),</span>
+<span class="p">]</span>
+
+<span class="n">hdr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;solver&#39;</span><span class="si">:</span><span class="s2">22</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;closed?&#39;</span><span class="si">:</span><span class="s2">8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;open?&#39;</span><span class="si">:</span><span class="s2">6</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;single?&#39;</span><span class="si">:</span><span class="s2">8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;multi?&#39;</span><span class="si">:</span><span class="s2">7</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">hdr</span><span class="p">);</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">hdr</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">solvers</span><span class="p">:</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">profile</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">label</span><span class="si">:</span><span class="s2">22</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">impl</span><span class="p">(</span><span class="n">ClosedWorld</span><span class="p">))</span><span class="si">:</span><span class="s2">8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">impl</span><span class="p">(</span><span class="n">OpenWorld</span><span class="p">))</span><span class="si">:</span><span class="s2">6</span><span class="si">}</span><span class="s2"> &quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">impl</span><span class="p">(</span><span class="n">SingleModelSemantics</span><span class="p">))</span><span class="si">:</span><span class="s2">8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">impl</span><span class="p">(</span><span class="n">MultipleModelSemantics</span><span class="p">))</span><span class="si">:</span><span class="s2">7</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>solver                 closed?  open?  single?  multi? 
+-------------------------------------------------------
+Z3 (classical FOL)     False    True   False    True   
+Clingo (ASP)           True     False  False    True   
+WellFoundedSolver      True     False  True     False  
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="takeaways">Takeaways</h3>
+<ul>
+<li><strong>Open vs closed world</strong> decides what <em>silence</em> means: unknown, or false. Pick by whether your
+  data is complete.</li>
+<li><strong>Negation as failure</strong> gives cheap, powerful default reasoning — and with it
+  <strong>non-monotonicity</strong>: new facts can retract old conclusions. Classical negation stays monotonic
+  but can't express defaults.</li>
+<li>When negation loops, <strong>ASP</strong> enumerates stable worlds (two, or none), while <strong>WFS</strong> computes a
+  single three-valued model that marks the ambiguity <strong>undefined</strong>. They coincide on stratified
+  programs.</li>
+<li>The <a href="../../integrations/solvers/wellfounded/"><code>WellFoundedSolver</code></a> gives you WFS directly, with a
+  native three-valued engine, a wrapped ProbLog backend for the two-valued fragment, and an
+  (experimental) XSB backend for scale.</li>
+<li><code>typedlogic.profiles</code> lets you <em>name</em> the assumption you rely on, so a mismatch between what you
+  meant and what your solver does becomes explicit rather than a silent bug.</li>
+</ul>
+<h3 id="where-to-go-next">Where to go next</h3>
+<ul>
+<li><strong>Multiple models</strong> — the <a href="../multiple-models/">multiple-models notebook</a> explores enumerating
+  worlds with Clingo in more depth.</li>
+<li><strong>Open-world modelling</strong> — the <a href="../../tutorial/04-owldl/">OWL-DL tutorial</a> is the open-world
+  assumption applied to ontologies.</li>
+<li><strong>TLog syntax</strong> — the <a href="../../conversion/parsers/tlog/">TLog parser docs</a> document the text syntax
+  used for the theories here.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.tabs.link"], "search": "../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -245,11 +245,19 @@
          <lastmod>2026-07-03</lastmod>
     </url>
     <url>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/wellfounded/</loc>
+         <lastmod>2026-07-03</lastmod>
+    </url>
+    <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/z3/</loc>
          <lastmod>2026-07-03</lastmod>
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/learning/multiple-models/</loc>
+         <lastmod>2026-07-03</lastmod>
+    </url>
+    <url>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/learning/semantics/</loc>
          <lastmod>2026-07-03</lastmod>
     </url>
     <url>
