@@ -226,6 +226,7 @@ def test_tlog_prove_command_does_not_match_variable_terms_with_different_arity(t
     tlog_path.write_text(
         """
         pred edge(source: str, target: str).
+        pred edge/1.
         edge("a", "b").
 
         lemma("one_arg_edge_is_not_entailed", that(exists x | edge(x))).
