@@ -177,6 +177,34 @@ def test_tlog_test_command_fails_when_expectation_is_not_entailed(tmp_path: Path
     check("FAIL expect mortal('plato')" in result.stdout, result.stdout)
 
 
+def test_tlog_test_command_problog_enforces_constraints(tmp_path: Path) -> None:
+    """The ProbLog test command treats violated constraints as unsatisfiable."""
+    pytest.importorskip("problog")
+    tlog_path = tmp_path / "ancestry.tlog"
+    tlog_path.write_text(
+        """
+        pred parent(parent: str, child: str).
+        pred ancestor(ancestor: str, descendant: str).
+        all x, y | parent(x, y) -> ancestor(x, y).
+        all x, y, z | parent(x, y) & ancestor(y, z) -> ancestor(x, z).
+        all x, y | ancestor(x, y) -> x != y.
+
+        test_case(
+          "cycle",
+          given(that(parent("a", "b"), parent("b", "a"))),
+          expect(that(not satisfiable()))
+        ).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["test", str(tlog_path), "--solver", "problog"])
+
+    check(result.exit_code == 0, result.stdout)
+    check("PASS cycle" in result.stdout, result.stdout)
+    check("1 test case(s), 0 failed, 0 unknown" in result.stdout, result.stdout)
+
+
 def test_tlog_prove_command_proves_quoted_lemmas(tmp_path: Path) -> None:
     """The prove command treats lemmas as proof obligations, not axioms."""
     pytest.importorskip("z3")

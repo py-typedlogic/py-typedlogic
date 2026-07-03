@@ -1,21 +1,21 @@
-from collections import defaultdict
 import random
 import timeit
+from collections import defaultdict
 from typing import Dict, Union
 
 import pytest
 from problog import get_evaluatable
 from problog.program import PrologString
+
+import tests.theorems.probabilistic.diagnosis as diagnosis
 from tests import OUTPUT_DIR, tree_edges
+from tests.theorems.probabilistic import coins, coins2, smokers
 from typedlogic import Theory
-from typedlogic.datamodel import Forall, Variable, Implies, PredicateDefinition, Term
+from typedlogic.datamodel import Forall, Implies, PredicateDefinition, Term, Variable
 from typedlogic.extensions.probabilistic import Evidence, ProbabilisticModel, Probability, That
 from typedlogic.integrations.solvers.problog.problog_compiler import ProbLogCompiler
 from typedlogic.integrations.solvers.problog.problog_solver import ProbLogSolver, UnsatisfiableEvidenceError
 from typedlogic.parsers.pyparser.introspection import translate_module_to_theory
-
-from tests.theorems.probabilistic import coins, coins2, smokers
-import tests.theorems.probabilistic.diagnosis as diagnosis
 
 
 def as_simple_dict(result: Dict[Union[Term, str], float], precision=3) -> Dict[str, float]:
@@ -104,6 +104,28 @@ def test_compiler_negation_in_body():
     compiler = ProbLogCompiler()
     compiled = compiler.compile(theory)
     assert compiled == r"q :- \+ p."
+
+
+def test_compiler_comparison_head_becomes_constraint():
+    x = Variable("x")
+    theory = Theory(predicate_definitions=[PredicateDefinition(predicate="P", arguments={"value": "str"})])
+    theory.add(Forall([x], Implies(Term("P", x), Term("ne", x, "bad"))))
+
+    compiled = ProbLogCompiler().compile(theory)
+
+    assert 'typedlogic_constraint_violation :- p(X), X = "bad".' in compiled
+    assert "evidence(typedlogic_constraint_violation, false)." in compiled
+
+
+def test_solver_reports_unsatisfiable_constraints():
+    theory = Theory(predicate_definitions=[PredicateDefinition(predicate="P", arguments={"value": "str"})])
+    theory.add(Term("P", "bad"))
+    theory.add(Forall([Variable("x")], Implies(Term("P", Variable("x")), Term("ne", Variable("x"), "bad"))))
+
+    solver = ProbLogSolver()
+    solver.add(theory)
+
+    assert solver.check().satisfiable is False
 
 
 

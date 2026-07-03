@@ -141,7 +141,6 @@ class ProbLogSolver(Solver):
         program = compiler.compile(self.base_theory, include_queries=False)
         proof_clauses: list[str] = []
         prolog_config = compiler.prolog_config()
-        proof_clauses.extend(self._false_predicate_declarations(compiler))
         try:
             for proof_sentence in counterexample_sentences:
                 for rule in to_horn_rules(proof_sentence, allow_disjunctions_in_head=False, allow_goal_clauses=True):
@@ -165,27 +164,6 @@ class ProbLogSolver(Solver):
             if compiler.decompile_term(term) == counterexample:
                 return probability == 0
         return None
-
-    def _false_predicate_declarations(self, compiler: ProbLogCompiler) -> Iterator[str]:
-        """Yield false clauses so declared empty predicates behave as false."""
-        seen: set[tuple[str, int]] = set()
-        prolog_config = compiler.prolog_config()
-        for predicate_definition in self.base_theory.predicate_definitions:
-            if predicate_definition.predicate in [Probability.__name__, That.__name__, Evidence.__name__]:
-                continue
-            predicate = as_prolog(Term(predicate_definition.predicate), config=prolog_config)
-            if "(" in predicate:
-                predicate = predicate[: predicate.index("(")]
-            arity = len(predicate_definition.arguments)
-            key = (predicate, arity)
-            if key in seen:
-                continue
-            seen.add(key)
-            if arity == 0:
-                yield f"{predicate} :- fail."
-                continue
-            args = ", ".join("_" for _ in range(arity))
-            yield f"{predicate}({args}) :- fail."
 
     def add_probabilistic_fact(self, fact: Sentence, probability: float) -> None:
         pr_sent = Probability(probability, That(fact))
