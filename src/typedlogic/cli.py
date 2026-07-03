@@ -486,7 +486,7 @@ def _model_satisfies(model: Model, sentence: Sentence) -> bool:
     if isinstance(sentence, Term):
         return _model_contains_term(model, sentence)
     if isinstance(sentence, Not):
-        return any(term == sentence for term in model.ground_terms)
+        return not _model_satisfies(model, sentence.negated)
     return False
 
 

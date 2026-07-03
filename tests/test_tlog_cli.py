@@ -176,3 +176,24 @@ def test_tlog_prove_command_proves_quoted_lemmas(tmp_path: Path) -> None:
     check(result.exit_code == 0, result.stdout)
     check("PASS lemma socrates_is_mortal: mortal('socrates')" in result.stdout, result.stdout)
     check("1 obligation(s), 0 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_prove_command_proves_negative_lemmas_with_model_fallback(tmp_path: Path) -> None:
+    """The prove command can use model entailment for negative proof obligations."""
+    pytest.importorskip("clingo")
+    tlog_path = tmp_path / "mortality.tlog"
+    tlog_path.write_text(
+        """
+        pred human(name: str).
+        human("socrates").
+
+        lemma("socrates_is_not_philosopher", that(~philosopher("socrates"))).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "clingo", "--target", "lemmas"])
+
+    check(result.exit_code == 0, result.stdout)
+    check("PASS lemma socrates_is_not_philosopher: ~philosopher('socrates')" in result.stdout, result.stdout)
+    check("1 obligation(s), 0 failed, 0 unknown" in result.stdout, result.stdout)
