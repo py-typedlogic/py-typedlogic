@@ -517,7 +517,7 @@ class TLogParser(Parser):
     def _named_quoted_sentence(self, sentence: Term, predicate: str) -> tuple[str, Sentence]:
         """Return the name and quoted sentence from a meta term."""
         if len(sentence.values) != 2:
-            raise ValueError(f"{predicate} expects a name and that(sentence): {sentence}")
+            raise LarkError(f"{predicate} expects a name and that(sentence): {sentence}")
         name, quoted = sentence.values
         inner = self._quoted_sentence_value(quoted)
         return str(name), inner
@@ -525,10 +525,10 @@ class TLogParser(Parser):
     def _quoted_sentence_value(self, value: Any) -> Sentence:
         """Return the sentence wrapped by a that(...) term."""
         if not isinstance(value, Term) or value.predicate != "that" or len(value.values) != 1:
-            raise ValueError(f"Expected that(sentence), got {value}")
+            raise LarkError(f"Expected that(sentence), got {value}")
         quoted = value.values[0]
         if not isinstance(quoted, Sentence):
-            raise ValueError(f"Expected quoted sentence, got {quoted}")
+            raise LarkError(f"Expected quoted sentence, got {quoted}")
         return quoted
 
     def _lower_statement(self, node: Any) -> Sentence:
