@@ -27,18 +27,26 @@ field:
     :class:`NegativeCycleError` on programs whose well-founded model is genuinely
     three-valued. It therefore never reports ``undefined`` -- it refuses instead.
 
-``xsb``
+``xsb`` (experimental, unverified)
     Drives `XSB Prolog <https://xsb.sourceforge.net/>`_, the reference SLG /
-    tabling engine for the well-founded semantics, as an external subprocess.
-    This is the backend to reach for on large or recursive programs. Like the
-    other external-binary integrations (Souffle, Prover9) it requires the ``xsb``
+    tabling engine for the well-founded semantics, as an external subprocess --
+    the backend to reach for on large or recursive programs. Like the other
+    external-binary integrations (Souffle, Prover9) it requires the ``xsb``
     executable on ``PATH``; when it is absent a clear error is raised.
+
+    .. warning::
+       This backend is **experimental and has not been executed against a live
+       XSB install** -- it is written to XSB's documented ``call_tv/2`` API but
+       is not exercised in CI (the tests skip when ``xsb`` is not on ``PATH``).
+       It emits a :class:`UserWarning` when used. Prefer the ``native`` backend
+       until the ``xsb`` path has been validated against real XSB output.
 """
 
 import logging
 import shutil
 import subprocess
 import tempfile
+import warnings
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import ClassVar, Dict, FrozenSet, Iterator, List, Set, Tuple
@@ -339,6 +347,12 @@ class WellFoundedSolver(Solver):
     # -- xsb backend: the reference WFS engine as an external subprocess ----
 
     def _xsb_model(self) -> WellFoundedModel:
+        warnings.warn(
+            "The 'xsb' WellFoundedSolver backend is experimental and has not been validated "
+            "against a live XSB install; verify its output or use backend='native'.",
+            UserWarning,
+            stacklevel=2,
+        )
         exe = shutil.which(self.exec_name)
         if exe is None:  # pragma: no cover - environment dependent
             raise FileNotFoundError(

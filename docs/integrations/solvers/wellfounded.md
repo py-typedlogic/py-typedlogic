@@ -14,9 +14,11 @@ It ships three interchangeable backends, selected with the `backend` field:
 - `problog` — delegates to [ProbLog](problog.md), which evaluates the *two-valued*
   restriction of WFS. It agrees with `native` on stratified programs and raises
   `NegativeCycleError` on programs that are genuinely three-valued.
-- `xsb` — drives [XSB Prolog](https://xsb.sourceforge.net/), the reference
-  SLG/tabling engine, as an external subprocess (requires the `xsb` executable on
-  `PATH`). Best for large or deeply-recursive programs.
+- `xsb` — **experimental, unverified.** Drives [XSB Prolog](https://xsb.sourceforge.net/),
+  the reference SLG/tabling engine, as an external subprocess (requires the `xsb`
+  executable on `PATH`). Intended for large or deeply-recursive programs, but it
+  has not yet been validated against a live XSB install and is not exercised in
+  CI; it emits a warning when used. Prefer `native` until it is validated.
 
 For a worked comparison of the well-founded semantics against closed-world
 Datalog and Answer Set Programming, see the
