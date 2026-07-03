@@ -17,3 +17,4 @@ animal('fido', 'dog').
 
 likes(X, 'Fred') :- animal(X, Species).
 likes(X, 'Jie') :- animal(X, 'cat').
+%% UNTRANSLATABLE: ∀[x:Thing species:Thing]. Animal(x, 'dog') → ¬Likes('Fred', x)

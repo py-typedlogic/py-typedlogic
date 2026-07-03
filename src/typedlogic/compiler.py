@@ -103,7 +103,11 @@ class Compiler(ABC):
         <BLANKLINE>
         likes(X, 'Fred') :- animal(X, Species).
         likes(X, 'Jie') :- animal(X, 'cat').
-        <BLANKLINE>
+        %% UNTRANSLATABLE: ∀[x:Thing species:Thing]. Animal(x, 'dog') → ¬Likes('Fred', x)
+
+    Note that sentences that cannot be expressed as Horn rules (such as the constraint
+    above, which has no positive literal) are marked as untranslatable rather than
+    being silently dropped.
 
     There are multiple variants of Prolog syntax, the `PrologConfig` object can be used to control the output.
     Config arguments can be passed as kwargs to the `compile` method.

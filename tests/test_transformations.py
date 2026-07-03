@@ -1,10 +1,14 @@
 from typing import List
 
 import pytest
-from typedlogic import And, Exists, Forall, Iff, Not, Or, Term, Variable
+from typedlogic import And, Exists, Forall, Iff, Implies, Not, Or, PredicateDefinition, Term, Theory, Variable
+from typedlogic.datamodel import ExactlyOne, Implied, NotInProfileError
 from typedlogic.transformations import (
     PrologConfig,
     as_prolog,
+    expand_exactly_one,
+    sentences_from_predicate_hierarchy,
+    simple_prolog_transform,
     simplify,
     to_cnf,
     to_cnf_lol,
@@ -64,6 +68,9 @@ Q1xy = Term("Q1", X, Y)
         (Forall([X], (~P3x & P1x) >> P2x), r"p2(X) :- p1(X), \+ (p3(X)).", False),
         (Forall([X], P1x >> P2x), "p2(X) :- p1(X).", False),
         (Forall([X], ((P1x & Exists([Y], Term("Q", X, Y))) >> P2x)), "p2(X) :- p1(X), q(X, Y).", False),
+        (Forall([X], (P1x | P2x) >> P3x), "p3(X) :- p1(X). p3(X) :- p2(X).", False),
+        (Forall([X], Term("P", Term("f", X)) >> P2x), "p2(X) :- p(f(X)).", False),
+        (Not(P & Q), ":- p, q.", True),
     ],
 )
 def test_to_horn_rule_syntax(expression, program, disjunctive):
@@ -136,3 +143,128 @@ def test_to_cnf(expression, expected):
     """
     cnf = to_cnf(expression)
     assert cnf == expected, f"Expected {expected} but got {cnf}"
+
+
+@pytest.mark.parametrize(
+    "expression,expected",
+    [
+        (ExactlyOne(P), P),
+        (ExactlyOne(P, Q), And(Or(P, Q), Not(And(P, Q)))),
+        (
+            ExactlyOne(P, Q, R),
+            Or(
+                And(P, Not(Or(Q, R))),
+                And(Q, Not(Or(P, R))),
+                And(R, Not(Or(P, Q))),
+            ),
+        ),
+    ],
+)
+def test_expand_exactly_one(expression, expected):
+    """ExactlyOne should expand to a disjunction of one-holds-others-do-not conjunctions."""
+    assert expand_exactly_one(expression) == expected
+
+
+def test_exactly_one_translates_to_horn_rules():
+    """ExactlyOne with more than two operands should survive the full Horn translation."""
+    rules = to_horn_rules(ExactlyOne(P, Q, R), allow_disjunctions_in_head=True)
+    assert rules, "expected at least one rule"
+    lines = as_prolog(rules, PrologConfig(disjunctive_datalog=True)).splitlines()
+    # exactly one clause is the unconditional at-least-one disjunction
+    [at_least_one] = [line for line in lines if ":-" not in line]
+    assert sorted(at_least_one.rstrip(".").split("; ")) == ["p", "q", "r"]
+
+
+def test_goal_clauses_dropped_unless_allowed():
+    """Constraints (clauses with no positive literal) are only emitted when allow_goal_clauses is set."""
+    assert to_horn_rules(Not(P)) == []
+    assert to_horn_rules(Not(And(P, Q))) == []
+    rules = to_horn_rules(Not(And(P, Q)), allow_goal_clauses=True)
+    assert as_prolog(rules) == ":- p, q."
+
+
+def test_empty_clause_respects_allow_goal_clauses():
+    """The empty clause (false) is itself a goal clause and must respect the flag."""
+    assert to_horn_rules(Or()) == []
+    rules = to_horn_rules(Or(), allow_goal_clauses=True)
+    assert as_prolog(rules) == ":- true."
+
+
+def test_simple_prolog_transform_strict_handles_implied():
+    """Implied sentences are supported and must not raise in strict mode."""
+    [rule] = simple_prolog_transform(Implied(P, Q), strict=True)
+    assert as_prolog(rule) == "p :- q."
+
+
+def test_simple_prolog_transform_strict_handles_iff():
+    """Iff sentences are rewritten to two implications and must not raise in strict mode."""
+    rules = simple_prolog_transform(Iff(P, Q), strict=True)
+    assert sorted(as_prolog(r) for r in rules) == ["p :- q.", "q :- p."]
+
+
+def test_as_prolog_grounds_head_vars_from_disjunctive_body():
+    """A head variable bound in every branch of a disjunctive body is grounded."""
+    s = Implies(Or(Term("A", X), Term("B", X)), Term("C", X))
+    assert as_prolog(s) == "c(X) :- (a(X); b(X))."
+
+
+def test_as_prolog_rejects_head_var_missing_from_a_body_branch():
+    """A head variable bound in only one branch of a disjunctive body is not safe."""
+    s = Implies(Or(Term("A", X), Term("B", Y)), Term("C", X))
+    with pytest.raises(NotInProfileError):
+        as_prolog(s)
+
+
+def test_as_prolog_grounds_head_vars_from_nested_function_terms():
+    """A head variable bound inside a body function term is grounded."""
+    s = Implies(Term("A", Term("f", X)), Term("B", X))
+    assert as_prolog(s) == "b(X) :- a(f(X))."
+
+
+def test_as_prolog_negated_goals_do_not_ground_head_vars():
+    """A variable appearing only under negation in the body cannot ground a head variable."""
+    s = Implies(And(Term("A", Y), Not(Term("B", X))), Term("C", X))
+    with pytest.raises(NotInProfileError):
+        as_prolog(s)
+
+
+def test_as_prolog_quotes_atoms_with_special_characters():
+    """String values containing quotes or backslashes must render as valid quoted atoms."""
+    assert as_prolog(Term("p", "plain")) == "p('plain')"
+    assert as_prolog(Term("p", "O'Brien")) == r"p('O\'Brien')"
+    assert as_prolog(Term("p", "a\\b")) == r"p('a\\b')"
+
+
+def test_hierarchy_implications_match_parent_args_by_name():
+    """Child predicates may declare extra arguments; parent arguments are matched by name."""
+    theory = Theory(
+        predicate_definitions=[
+            PredicateDefinition("Employee", {"name": "str", "salary": "int"}, parents=["Person"]),
+            PredicateDefinition("Person", {"name": "str"}),
+        ],
+    )
+    [s] = sentences_from_predicate_hierarchy(theory)
+    assert as_prolog(s, translate=True) == "person(Name) :- employee(Name, Salary)."
+
+
+def test_hierarchy_rejects_parent_args_missing_from_child():
+    """A parent argument absent from the child would leave an unbound head variable."""
+    theory = Theory(
+        predicate_definitions=[
+            PredicateDefinition("Dog", {"name": "str"}, parents=["Animal"]),
+            PredicateDefinition("Animal", {"id": "str"}),
+        ],
+    )
+    with pytest.raises(ValueError, match="not present in child"):
+        sentences_from_predicate_hierarchy(theory)
+
+
+def test_hierarchy_rejects_unknown_parent():
+    """A parent predicate with no definition should raise a clear error."""
+    theory = Theory(
+        predicate_definitions=[
+            PredicateDefinition("Dog", {"name": "str"}, parents=["Animal"]),
+        ],
+    )
+    with pytest.raises(ValueError, match="Unknown parent"):
+        sentences_from_predicate_hierarchy(theory)

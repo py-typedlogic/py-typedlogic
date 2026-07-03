@@ -1,4 +1,6 @@
 import pytest
+from typedlogic import Forall, Implies, Not, PredicateDefinition, Term, Theory, Variable
+from typedlogic.datamodel import NotInProfileError
 from typedlogic.compilers.fol_compiler import FOLCompiler
 from typedlogic.compilers.prolog_compiler import PrologCompiler
 from typedlogic.compilers.prover9_compiler import Prover9Compiler
@@ -101,3 +103,40 @@ def test_compiler(compiler_class, theory_module):
                 pass
             else:
                 assert compiled2 == compiled
+
+
+def _person_robot_theory():
+    """Build a small theory containing a constraint with no Horn-rule translation."""
+    x = Variable("x", "str")
+    theory = Theory(
+        name="people",
+        predicate_definitions=[
+            PredicateDefinition("Person", {"name": "str"}),
+            PredicateDefinition("Robot", {"name": "str"}),
+        ],
+    )
+    theory.add(Forall([x], Implies(Term("Person", x), Not(Term("Robot", x)))))
+    return theory
+
+
+def test_prolog_compiler_emits_ground_terms():
+    """Ground terms attached directly to the theory must appear in the Prolog output."""
+    theory = _person_robot_theory()
+    theory.ground_terms.append(Term("Person", "Fred"))
+    compiled = PrologCompiler().compile(theory)
+    assert "person('Fred')." in compiled
+
+
+def test_prolog_compiler_marks_dropped_constraints_untranslatable():
+    """A constraint with no Horn-rule translation is marked rather than silently dropped."""
+    theory = _person_robot_theory()
+    compiled = PrologCompiler().compile(theory)
+    assert "%% UNTRANSLATABLE" in compiled
+    assert "¬Robot" in compiled
+
+
+def test_prolog_compiler_strict_raises_on_dropped_constraints():
+    """In strict mode, untranslatable sentences raise instead of being commented out."""
+    theory = _person_robot_theory()
+    with pytest.raises(NotInProfileError):
+        PrologCompiler(strict=True).compile(theory)

@@ -1,0 +1,6 @@
+mortal(X) :- person(X).
+ancestorof(X, Y) :- ancestorof(X, Z), ancestorof(Z, Y).
+:- ancestorof(X, Y), ancestorof(Y, X).
+query(person(Name)).
+query(mortal(Name)).
+query(ancestorof(Ancestor, Descendant)).

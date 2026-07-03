@@ -1,0 +1,10 @@
+person("Fred").
+person("Jie").
+animal("corky", "cat").
+animal("fido", "dog").
+likes(X, "Fred") :- animal(X, Species).
+likes(X, "Jie") :- animal(X, "cat").
+:- animal(X, "dog"), likes("Fred", X).
+query(likes(Subject, Object)).
+query(person(Name)).
+query(animal(Name, Species)).
