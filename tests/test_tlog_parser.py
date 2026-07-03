@@ -240,6 +240,30 @@ def test_validate_iter_reports_syntax_errors() -> None:
 
     check(len(messages) == 1, repr(messages))
     check("Expected" in messages[0].message, messages[0].message)
+    check(messages[0].line == 1, repr(messages[0]))
+    check(messages[0].column is not None, repr(messages[0]))
+    check("line None" not in str(messages[0]), str(messages[0]))
+
+
+def test_markdown_validate_iter_reports_source_line_numbers() -> None:
+    """Markdown validation reports source line numbers, not compacted TLog block line numbers."""
+    source = "\n".join(
+        [
+            "Markdown prose.",
+            "",
+            "```tlog",
+            "p(a).",
+            "q(x) ->.",
+            "```",
+        ]
+    )
+
+    messages = list(TLogMarkdownParser().validate_iter(source))
+
+    check(len(messages) == 1, repr(messages))
+    check(messages[0].line == 5, repr(messages[0]))
+    check(messages[0].column is not None, repr(messages[0]))
+    check("line None" not in str(messages[0]), str(messages[0]))
 
 
 def test_validate_iter_reports_malformed_quoted_metadata() -> None:
@@ -248,6 +272,7 @@ def test_validate_iter_reports_malformed_quoted_metadata() -> None:
 
     check(len(messages) == 1, repr(messages))
     check("Expected that(sentence)" in messages[0].message, messages[0].message)
+    check("line None" not in str(messages[0]), str(messages[0]))
 
 
 def test_registry_discovers_tlog_parser() -> None:

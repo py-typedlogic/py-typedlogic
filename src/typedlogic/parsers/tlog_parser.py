@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, TextIO, Union
@@ -12,6 +13,8 @@ from lark.exceptions import LarkError
 from typedlogic import And, Exists, Forall, Iff, Implies, NegationAsFailure, Not, Or, PredicateDefinition, Term, Theory
 from typedlogic.datamodel import Sentence, SentenceGroup, SentenceGroupType, Variable
 from typedlogic.parser import Parser, ValidationMessage
+
+_LARK_LOCATION_RE = re.compile(r" at line \d+, column \d+\.?")
 
 GRAMMAR = r"""
 start: statement*
@@ -456,7 +459,9 @@ class TLogParser(Parser):
         try:
             self.parse(source, **kwargs)
         except (LarkError, ValueError) as e:
-            yield ValidationMessage(message=str(e))
+            line = getattr(e, "line", None)
+            column = getattr(e, "column", None)
+            yield ValidationMessage(message=_LARK_LOCATION_RE.sub(".", str(e), count=1), line=line, column=column)
 
     def _read_source(self, source: Union[Path, str, TextIO]) -> str:
         if isinstance(source, Path):
@@ -650,8 +655,7 @@ class TLogMarkdownParser(TLogParser):
         return super().parse(self._extract_tlog_blocks(text), **kwargs)
 
     def _extract_tlog_blocks(self, text: str) -> str:
-        blocks: list[str] = []
-        block_lines: list[str] = []
+        lines: list[str] = []
         in_block = False
         collecting = False
         fence = ""
@@ -663,23 +667,20 @@ class TLogMarkdownParser(TLogParser):
                 language = stripped[3:].strip().split(maxsplit=1)[0].lower()
                 collecting = language in self.code_block_languages
                 in_block = True
-                block_lines = []
+                lines.append("")
                 continue
             if in_block and stripped.startswith(fence):
-                if collecting:
-                    blocks.append("\n".join(block_lines))
                 in_block = False
                 collecting = False
                 fence = ""
-                block_lines = []
+                lines.append("")
                 continue
             if collecting:
-                block_lines.append(line)
+                lines.append(line)
+                continue
+            lines.append("")
 
-        if in_block and collecting:
-            blocks.append("\n".join(block_lines))
-
-        return "\n\n".join(blocks)
+        return "\n".join(lines)
 
     def _starts_fence(self, stripped: str) -> bool:
         return stripped.startswith("```") or stripped.startswith("~~~")
