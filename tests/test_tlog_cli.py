@@ -218,3 +218,24 @@ def test_tlog_prove_command_does_not_match_variable_terms_with_different_arity(t
     check(result.exit_code == 1, result.stdout)
     check("FAIL lemma one_arg_edge_is_not_entailed" in result.stdout, result.stdout)
     check("1 obligation(s), 1 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_prove_command_respects_repeated_variable_bindings(tmp_path: Path) -> None:
+    """Model entailment fallback enforces repeated-variable equality."""
+    pytest.importorskip("clingo")
+    tlog_path = tmp_path / "edges.tlog"
+    tlog_path.write_text(
+        """
+        pred edge(source: str, target: str).
+        edge("a", "b").
+
+        lemma("self_edge_is_not_entailed", that(exists x | edge(x, x))).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "clingo", "--target", "lemmas"])
+
+    check(result.exit_code == 1, result.stdout)
+    check("FAIL lemma self_edge_is_not_entailed" in result.stdout, result.stdout)
+    check("1 obligation(s), 1 failed, 0 unknown" in result.stdout, result.stdout)

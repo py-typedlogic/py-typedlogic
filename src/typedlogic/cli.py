@@ -506,10 +506,18 @@ def _term_matches_with_variables(term: Term, sentence_values: tuple[Any, ...]) -
     """Return whether a ground term matches expected values containing variables."""
     if len(term.values) != len(sentence_values):
         return False
-    return all(
-        isinstance(expected, Variable) or expected == actual
-        for expected, actual in zip(sentence_values, term.values)
-    )
+    bindings: dict[str, Any] = {}
+    for expected, actual in zip(sentence_values, term.values):
+        if not isinstance(expected, Variable):
+            if expected != actual:
+                return False
+            continue
+        if expected.name in bindings:
+            if bindings[expected.name] != actual:
+                return False
+            continue
+        bindings[expected.name] = actual
+    return True
 
 
 def _is_satisfiable_term(sentence: Sentence) -> bool:
