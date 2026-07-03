@@ -1,22 +1,9 @@
 import pytest
-from typedlogic import Forall, Implies, Not, PredicateDefinition, Term, Theory, Variable
-from typedlogic.compilers.clif_compiler import ClifCompiler
-from typedlogic.datamodel import NotInProfileError
-from typedlogic.compilers.fol_compiler import FOLCompiler
-from typedlogic.compilers.prolog_compiler import PrologCompiler
-from typedlogic.compilers.prover9_compiler import Prover9Compiler
-from typedlogic.compilers.sexpr_compiler import SExprCompiler
-from typedlogic.compilers.tptp_compiler import TPTPCompiler
-from typedlogic.compilers.yaml_compiler import YAMLCompiler
-from typedlogic.integrations.solvers.problog.problog_compiler import ProbLogCompiler
-from typedlogic.integrations.solvers.souffle.souffle_compiler import SouffleCompiler
-from typedlogic.integrations.solvers.z3.z3_compiler import Z3Compiler, Z3FunctionalCompiler, Z3SExprCompiler
-from typedlogic.parsers.pyparser.introspection import translate_module_to_theory
-import typedlogic.integrations.frameworks.linkml.meta as linkml_meta
-import typedlogic.integrations.frameworks.linkml.meta_axioms as linkml_meta_axioms
 
 import tests.theorems.animals as animals
 import tests.theorems.defined_types_example as defined_types_example
+import tests.theorems.ehr_phenotyping as ehr_phenotyping
+import tests.theorems.enums_example as enums_example
 import tests.theorems.gluconeogenesis as gluconeogenesis
 import tests.theorems.import_test.ext as import_test_ext
 import tests.theorems.mortals as mortals
@@ -24,15 +11,27 @@ import tests.theorems.numbers as numbers
 import tests.theorems.optional_example as optional_example
 import tests.theorems.paths as paths
 import tests.theorems.paths_with_distance as pwd
+import tests.theorems.signaling_pathways as signaling_pathways
 import tests.theorems.simple_contradiction as simple_contradiction
 import tests.theorems.types_example as types_example
-import tests.theorems.enums_example as enums_example
-import tests.theorems.signaling_pathways as signaling_pathways
-import tests.theorems.ehr_phenotyping as ehr_phenotyping
-
+import typedlogic.integrations.frameworks.linkml.meta as linkml_meta
+import typedlogic.integrations.frameworks.linkml.meta_axioms as linkml_meta_axioms
 from tests import SNAPSHOTS_DIR
 from tests.theorems import barbers, unary_predicates
-from typedlogic.registry import all_parser_classes, all_compiler_classes
+from typedlogic import Forall, Implies, Not, PredicateDefinition, Term, Theory, Variable
+from typedlogic.compilers.clif_compiler import ClifCompiler
+from typedlogic.compilers.fol_compiler import FOLCompiler
+from typedlogic.compilers.prolog_compiler import PrologCompiler
+from typedlogic.compilers.prover9_compiler import Prover9Compiler
+from typedlogic.compilers.sexpr_compiler import SExprCompiler
+from typedlogic.compilers.tptp_compiler import TPTPCompiler
+from typedlogic.compilers.yaml_compiler import YAMLCompiler
+from typedlogic.datamodel import NotInProfileError
+from typedlogic.integrations.solvers.problog.problog_compiler import ProbLogCompiler
+from typedlogic.integrations.solvers.souffle.souffle_compiler import SouffleCompiler
+from typedlogic.integrations.solvers.z3.z3_compiler import Z3Compiler, Z3FunctionalCompiler, Z3SExprCompiler
+from typedlogic.parsers.pyparser.introspection import translate_module_to_theory
+from typedlogic.registry import all_compiler_classes, all_parser_classes
 
 
 @pytest.mark.parametrize(

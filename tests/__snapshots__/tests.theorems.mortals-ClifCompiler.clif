@@ -2,5 +2,4 @@
   (forall ((x NameType)) (if (Person x) (Mortal x)))
   (forall ((x TreeNodeType) (y TreeNodeType) (z TreeNodeType)) (if (and (AncestorOf x z) (AncestorOf z y)) (AncestorOf x y)))
   (forall ((x TreeNodeType) (y TreeNodeType)) (not (and (AncestorOf x y) (AncestorOf y x))))
-  (if (and (AncestorOf p1 p2) (AncestorOf p2 p3)) (AncestorOf p1 p3))
 )

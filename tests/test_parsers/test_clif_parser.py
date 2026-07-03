@@ -1,7 +1,8 @@
 import pytest
+
 from typedlogic import And, Exists, Forall, Iff, Implies, Not, Or, Term, Variable
 from typedlogic.compilers.clif_compiler import ClifCompiler, as_clif
-from typedlogic.datamodel import NotInProfileError, Xor
+from typedlogic.datamodel import ExactlyOne, NotInProfileError, Xor
 from typedlogic.parsers.clif_parser import ClifParser, ClifSyntaxError
 
 
@@ -154,6 +155,18 @@ def test_compile_xor_expands():
     p = Term("P")
     q = Term("Q")
     assert as_clif(Xor(p, q)) == "(and (or (P) (Q)) (not (and (P) (Q))))"
+
+
+def test_compile_exactly_one_expands_three_operands():
+    """ExactlyOne with more than two operands should compile through CLIF expansion."""
+    p = Term("P")
+    q = Term("Q")
+    r = Term("R")
+    assert as_clif(ExactlyOne(p, q, r)) == (
+        "(or (and (P) (not (or (Q) (R)))) "
+        "(and (Q) (not (or (P) (R)))) "
+        "(and (R) (not (or (P) (Q)))))"
+    )
 
 
 def test_compile_negation_as_failure_not_in_profile(compiler):
