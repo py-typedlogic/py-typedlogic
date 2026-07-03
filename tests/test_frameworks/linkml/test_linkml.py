@@ -111,7 +111,7 @@ def test_schema_rules_and_macro_rules_are_parseable_tlog_markdown() -> None:
         "slot": "SlotID",
     }
     assert len(schema_rules.sentences) > 30
-    assert len(macro_rules.sentences) == 6
+    assert len(macro_rules.sentences) == 12
     assert "@c(" in TLogCompiler().compile(macro_rules)
 
 
@@ -644,6 +644,137 @@ def test_compile_schema_to_abox_checks_enum_permissible_values() -> None:
             Term("status", "s1", "BOGUS"),
         ],
     )
+
+
+def test_compile_schema_to_abox_enforces_identifier_uniqueness() -> None:
+    """Identifier slots compile to per-class uniqueness constraints and imply required."""
+    schema = {
+        "slots": {"pid": {"identifier": True, "range": "string"}},
+        "classes": {"Person": {"slots": ["pid"]}},
+    }
+    materialized = set(materialize_schema(schema).materialized_facts)
+
+    assert has_term(materialized, "effective_identifier", "Person", "pid")
+    assert has_term(materialized, "effective_minimum_cardinality", "Person", "pid", 1)
+    assert has_term(materialized, "effective_maximum_cardinality", "Person", "pid", 1)
+    assert validate_abox(
+        schema,
+        [
+            Term("Person", "p1"),
+            Term("pid", "p1", "id1"),
+            Term("string", "id1"),
+            Term("Person", "p2"),
+            Term("pid", "p2", "id2"),
+            Term("string", "id2"),
+        ],
+    )
+    assert not validate_abox(
+        schema,
+        [
+            Term("Person", "p1"),
+            Term("pid", "p1", "id1"),
+            Term("string", "id1"),
+            Term("Person", "p2"),
+            Term("pid", "p2", "id1"),
+        ],
+    )
+    assert not validate_abox(schema, [Term("Person", "p1")])
+
+
+def test_compile_schema_to_abox_enforces_equals_string() -> None:
+    """equals_string compiles to a fixed-value constraint; conflicting declarations are rejected."""
+    schema = {
+        "slots": {"status": {"equals_string": "fixed"}},
+        "classes": {"Thing": {"slots": ["status"]}},
+    }
+
+    assert validate_abox(
+        schema,
+        [
+            Term("Thing", "t1"),
+            Term("status", "t1", "fixed"),
+            Term("string", "fixed"),
+        ],
+    )
+    assert not validate_abox(
+        schema,
+        [
+            Term("Thing", "t1"),
+            Term("status", "t1", "other"),
+            Term("string", "other"),
+        ],
+    )
+
+    conflicting = {
+        "slots": {"status": {"equals_string": "a"}},
+        "classes": {
+            "Thing": {"slots": ["status"], "slot_usage": {"status": {"equals_string": "b"}}},
+        },
+    }
+    assert not check_schema(conflicting)
+
+
+def test_equals_string_in_sets_are_intersected() -> None:
+    """Applicable equals_string_in sets intersect; an empty intersection is a schema error."""
+    schema = {
+        "slots": {"code": {"equals_string_in": ["a", "b"]}},
+        "classes": {
+            "Thing": {"slots": ["code"], "slot_usage": {"code": {"equals_string_in": ["b", "c"]}}},
+        },
+    }
+    materialized = set(materialize_schema(schema).materialized_facts)
+
+    assert has_term(materialized, "effective_equals_string_in", "Thing", "code", "b")
+    assert not has_term(materialized, "effective_equals_string_in", "Thing", "code", "a")
+    assert not has_term(materialized, "effective_equals_string_in", "Thing", "code", "c")
+    assert validate_abox(
+        schema,
+        [
+            Term("Thing", "t1"),
+            Term("code", "t1", "b"),
+            Term("string", "b"),
+        ],
+    )
+    assert not validate_abox(
+        schema,
+        [
+            Term("Thing", "t1"),
+            Term("code", "t1", "a"),
+            Term("string", "a"),
+        ],
+    )
+
+    disjoint = {
+        "slots": {"code": {"equals_string_in": ["a"]}},
+        "classes": {
+            "Thing": {"slots": ["code"], "slot_usage": {"code": {"equals_string_in": ["b"]}}},
+        },
+    }
+    assert not check_schema(disjoint)
+
+
+def test_compile_schema_to_abox_materializes_transitive_slots() -> None:
+    """Transitive slots compile to closure rules over the slot predicate."""
+    schema = {
+        "slots": {"part_of": {"range": "Part", "transitive": True, "multivalued": True}},
+        "classes": {"Part": {"slots": ["part_of"]}},
+    }
+    theory = compile_schema_to_abox(schema)
+    theory.ground_terms.extend(
+        [
+            Term("Part", "p1"),
+            Term("Part", "p2"),
+            Term("Part", "p3"),
+            Term("part_of", "p1", "p2"),
+            Term("part_of", "p2", "p3"),
+        ]
+    )
+
+    solver = ClingoSolver()
+    solver.add(theory)
+    assert solver.check().satisfiable
+    model = next(solver.models())
+    assert Term("part_of", "p1", "p3") in model.ground_terms
 
 
 def test_compile_schema_to_abox_dump_contains_closed_world_aggregate_constraints() -> None:

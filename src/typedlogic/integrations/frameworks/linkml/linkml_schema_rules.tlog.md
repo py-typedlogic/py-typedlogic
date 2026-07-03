@@ -57,6 +57,12 @@ pred effective_multivalued(cls: ElementID, slot: SlotID).
 pred effective_minimum_cardinality(cls: ElementID, slot: SlotID, count: Count).
 pred effective_maximum_cardinality(cls: ElementID, slot: SlotID, count: Count).
 pred effective_exact_cardinality(cls: ElementID, slot: SlotID, count: Count).
+pred effective_identifier(cls: ElementID, slot: SlotID).
+pred effective_key(cls: ElementID, slot: SlotID).
+pred effective_equals_string(cls: ElementID, slot: SlotID, value: str).
+pred effective_equals_number(cls: ElementID, slot: SlotID, value: Count).
+pred effective_equals_string_in(cls: ElementID, slot: SlotID, value: str).
+pred has_equals_string_in_constraint(cls: ElementID, slot: SlotID).
 ```
 
 ## Element Closure And Schema Validity
@@ -132,6 +138,27 @@ applicable_slot_usage_maximum_cardinality(c, s, n) :- class_parent(c, p), applic
 
 applicable_slot_usage_exact_cardinality(c, s, n) :- slot_usage_exact_cardinality(c, s, n).
 applicable_slot_usage_exact_cardinality(c, s, n) :- class_parent(c, p), applicable_slot_usage_exact_cardinality(p, s, n).
+
+applicable_slot_usage_identifier(c, s) :- slot_usage_identifier(c, s).
+applicable_slot_usage_identifier(c, s) :- class_parent(c, p), applicable_slot_usage_identifier(p, s).
+
+applicable_slot_usage_key(c, s) :- slot_usage_key(c, s).
+applicable_slot_usage_key(c, s) :- class_parent(c, p), applicable_slot_usage_key(p, s).
+
+applicable_slot_usage_equals_string(c, s, v) :- slot_usage_equals_string(c, s, v).
+applicable_slot_usage_equals_string(c, s, v) :- class_parent(c, p), applicable_slot_usage_equals_string(p, s, v).
+
+applicable_slot_usage_equals_number(c, s, v) :- slot_usage_equals_number(c, s, v).
+applicable_slot_usage_equals_number(c, s, v) :- class_parent(c, p), applicable_slot_usage_equals_number(p, s, v).
+```
+
+Each `equals_string_in` declaration is a *set* of allowed values, so its
+propagation keeps the declaring class as a source: intersection needs to know
+which values belong to which declaration.
+
+```tlog
+applicable_slot_usage_equals_string_in(c, s, c, v) :- slot_usage_equals_string_in(c, s, v).
+applicable_slot_usage_equals_string_in(c, s, d, v) :- class_parent(c, p), applicable_slot_usage_equals_string_in(p, s, d, v).
 ```
 
 ## Ranges
@@ -174,6 +201,68 @@ declared_singlevalued(c, s) :- effective_class_slot(c, s), applicable_slot_usage
 effective_singlevalued(c, s) :- declared_singlevalued(c, s).
 effective_singlevalued(c, s) :- effective_class_slot(c, s), not declared_multivalued(c, s).
 effective_multivalued(c, s) :- effective_class_slot(c, s), not effective_singlevalued(c, s).
+```
+
+## Identifier And Key Slots
+
+`identifier` and `key` mark a slot whose value is unique across the instances
+of a class; the ABox compile-away layer expands them to uniqueness
+constraints.  Both imply that the slot is required and single-valued, which is
+expressed monotonically by contributing the corresponding constraints.
+`identifier: false` and `key: false` contribute nothing.
+
+```tlog
+effective_identifier(c, s) :- effective_class_slot(c, s), slot_identifier(s).
+effective_identifier(c, s) :- effective_class_slot(c, s), applicable_slot_usage_identifier(c, s).
+
+effective_key(c, s) :- effective_class_slot(c, s), slot_key(s).
+effective_key(c, s) :- effective_class_slot(c, s), applicable_slot_usage_key(c, s).
+
+effective_required(c, s) :- effective_identifier(c, s).
+effective_required(c, s) :- effective_key(c, s).
+effective_maximum_cardinality(c, s, 1) :- effective_identifier(c, s).
+effective_maximum_cardinality(c, s, 1) :- effective_key(c, s).
+```
+
+## Fixed And Enumerated Values
+
+`equals_string` and `equals_number` fix a slot's value.  Every applicable
+declaration applies, so two applicable declarations with different values are
+an unsatisfiable schema and are rejected.  `equals_string_in` declarations are
+sets of allowed values and are *intersected*: a value is effective only if it
+appears in the slot-level set (when one exists) and in every applicable
+`slot_usage` set.  An empty intersection is a schema error.
+
+```tlog
+effective_equals_string(c, s, v) :- effective_class_slot(c, s), slot_equals_string(s, v).
+effective_equals_string(c, s, v) :- effective_class_slot(c, s), applicable_slot_usage_equals_string(c, s, v).
+
+effective_equals_number(c, s, v) :- effective_class_slot(c, s), slot_equals_number(s, v).
+effective_equals_number(c, s, v) :- effective_class_slot(c, s), applicable_slot_usage_equals_number(c, s, v).
+
+invalid_equals_string_conflict(c, s, v1, v2) :- effective_equals_string(c, s, v1), effective_equals_string(c, s, v2), v1 != v2.
+invalid_equals_number_conflict(c, s, v1, v2) :- effective_equals_number(c, s, v1), effective_equals_number(c, s, v2), v1 != v2.
+
+has_slot_equals_string_in(s) :- slot_equals_string_in(s, v).
+equals_string_in_source(c, s, d) :- applicable_slot_usage_equals_string_in(c, s, d, v), effective_class_slot(c, s).
+
+has_equals_string_in_constraint(c, s) :- effective_class_slot(c, s), has_slot_equals_string_in(s).
+has_equals_string_in_constraint(c, s) :- equals_string_in_source(c, s, d).
+
+candidate_equals_string_in(c, s, v) :- effective_class_slot(c, s), slot_equals_string_in(s, v).
+candidate_equals_string_in(c, s, v) :- effective_class_slot(c, s), applicable_slot_usage_equals_string_in(c, s, d, v).
+
+excluded_equals_string_in(c, s, v) :- candidate_equals_string_in(c, s, v), has_slot_equals_string_in(s), not slot_equals_string_in(s, v).
+excluded_equals_string_in(c, s, v) :- candidate_equals_string_in(c, s, v), equals_string_in_source(c, s, d), not applicable_slot_usage_equals_string_in(c, s, d, v).
+
+effective_equals_string_in(c, s, v) :- candidate_equals_string_in(c, s, v), not excluded_equals_string_in(c, s, v).
+
+has_effective_equals_string_in(c, s) :- effective_equals_string_in(c, s, v).
+invalid_equals_string_in_empty(c, s) :- has_equals_string_in_constraint(c, s), not has_effective_equals_string_in(c, s).
+
+:- invalid_equals_string_conflict(c, s, v1, v2).
+:- invalid_equals_number_conflict(c, s, v1, v2).
+:- invalid_equals_string_in_empty(c, s).
 ```
 
 ## Cardinality Normalization

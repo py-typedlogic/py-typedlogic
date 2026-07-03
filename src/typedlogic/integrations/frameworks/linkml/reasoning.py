@@ -141,6 +141,23 @@ def compile_schema_to_abox(schema: SchemaSource) -> Theory:
         if maximum_int >= 0:
             _add_once(theory, _maximum_cardinality_constraint(cls, slot, maximum_int))
 
+    for predicate in ("effective_identifier", "effective_key"):
+        for cls, slot in sorted(_tuples(facts, predicate)):
+            _add_once(theory, _uniqueness_constraint(cls, slot))
+
+    for predicate in ("effective_equals_string", "effective_equals_number"):
+        for cls, slot, value in sorted(_tuples(facts, predicate)):
+            _add_once(theory, _allowed_values_constraint(cls, slot, [value]))
+
+    allowed_values: dict[tuple[str, str], list[Any]] = defaultdict(list)
+    for cls, slot, value in sorted(_tuples(facts, "effective_equals_string_in")):
+        allowed_values[(cls, slot)].append(value)
+    for (cls, slot), values in sorted(allowed_values.items()):
+        _add_once(theory, _allowed_values_constraint(cls, slot, values))
+
+    for (slot_name,) in sorted(_tuples(facts, "slot_transitive")):
+        _add_once(theory, _transitive_rule(str(slot_name)))
+
     return theory
 
 
@@ -175,6 +192,40 @@ def _binary_rule(child: str, parent: str) -> Sentence:
     instance = Variable("I")
     value = Variable("V")
     return Forall([instance, value], Implies(Term(child, instance, value), Term(parent, instance, value)))
+
+
+def _transitive_rule(slot: str) -> Sentence:
+    x = Variable("X")
+    y = Variable("Y")
+    z = Variable("Z")
+    return Forall([x, y, z], Implies(And(Term(slot, x, y), Term(slot, y, z)), Term(slot, x, z)))
+
+
+def _uniqueness_constraint(cls: str, slot: str) -> Sentence:
+    first = Variable("I1")
+    second = Variable("I2")
+    value = Variable("V")
+    return Forall(
+        [first, second, value],
+        Implies(
+            And(
+                Term(cls, first),
+                Term(cls, second),
+                Term(slot, first, value),
+                Term(slot, second, value),
+                Term("ne", first, second),
+            ),
+            Or(),
+        ),
+    )
+
+
+def _allowed_values_constraint(cls: str, slot: str, values: Iterable[Any]) -> Sentence:
+    instance = Variable("I")
+    value = Variable("V")
+    conditions = [Term(cls, instance), Term(slot, instance, value)]
+    conditions.extend(Term("ne", value, allowed) for allowed in values)
+    return Forall([instance, value], Implies(And(*conditions), Or()))
 
 
 def _range_constraint(cls: str, slot: str, range_name: str) -> Sentence:
