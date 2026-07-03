@@ -74,7 +74,7 @@ lemma(
 ).
 ```
 
-Cycles are forbidden (proper ancestor is reflexive)
+Cycles are forbidden (proper ancestor is irreflexive)
 
 ```tlog
 all e: ElementID, p: ElementID | proper_ancestor(e, p) -> e != p.
