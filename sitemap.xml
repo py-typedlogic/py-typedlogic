@@ -77,6 +77,10 @@
          <lastmod>2026-07-03</lastmod>
     </url>
     <url>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/compilers/clif/</loc>
+         <lastmod>2026-07-03</lastmod>
+    </url>
+    <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/compilers/fol/</loc>
          <lastmod>2026-07-03</lastmod>
     </url>
@@ -114,6 +118,10 @@
     </url>
     <url>
          <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/parsers/catalog/</loc>
+         <lastmod>2026-07-03</lastmod>
+    </url>
+    <url>
+         <loc>https://py-typedlogic.github.io/py-typedlogic/conversion/parsers/clif/</loc>
          <lastmod>2026-07-03</lastmod>
     </url>
     <url>

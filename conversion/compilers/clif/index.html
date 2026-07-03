@@ -8,24 +8,28 @@
       
       
       
-        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/integrations/frameworks/rdf/rdfs/">
+        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/conversion/compilers/clif/">
       
       
+        <link rel="prev" href="../tptp/">
       
       
-      <link rel="icon" href="../../../../assets/images/favicon.png">
+        <link rel="next" href="../fol/">
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.7">
     
     
       
-        <title>RDFS - py-typedlogic</title>
+        <title>CLIF - py-typedlogic</title>
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.8608ea7d.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.8608ea7d.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -44,15 +48,15 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../../../css/ansi-colours.css">
+      <link rel="stylesheet" href="../../../css/ansi-colours.css">
     
-      <link rel="stylesheet" href="../../../../css/jupyter-cells.css">
+      <link rel="stylesheet" href="../../../css/jupyter-cells.css">
     
-      <link rel="stylesheet" href="../../../../css/pandas-dataframe.css">
+      <link rel="stylesheet" href="../../../css/pandas-dataframe.css">
     
-    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rdfs" class="md-skip">
+        <a href="#clif-compiler" class="md-skip">
           Skip to content
         </a>
       
@@ -94,7 +98,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../../.." title="py-typedlogic" class="md-header__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+    <a href="../../.." title="py-typedlogic" class="md-header__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -114,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              RDFS
+              CLIF
             
           </span>
         </div>
@@ -227,7 +231,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../../.." title="py-typedlogic" class="md-nav__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
+    <a href="../../.." title="py-typedlogic" class="md-nav__button md-logo" aria-label="py-typedlogic" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -257,7 +261,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -314,7 +318,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../tutorial/01-first-program" class="md-nav__link">
+      <a href="../../../tutorial/01-first-program" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -336,7 +340,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../tutorial/02-using-python-data-model" class="md-nav__link">
+      <a href="../../../tutorial/02-using-python-data-model" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -358,7 +362,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../tutorial/03-probabilistic-logic" class="md-nav__link">
+      <a href="../../../tutorial/03-probabilistic-logic" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -380,7 +384,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../tutorial/04-owldl" class="md-nav__link">
+      <a href="../../../tutorial/04-owldl" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -402,7 +406,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../tutorial/05-cli" class="md-nav__link">
+      <a href="../../../tutorial/05-cli" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -467,7 +471,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../examples/" class="md-nav__link">
+      <a href="../../../examples/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -489,7 +493,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../examples/synbio-design-checks/" class="md-nav__link">
+      <a href="../../../examples/synbio-design-checks/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -511,7 +515,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../examples/sql-compiler/" class="md-nav__link">
+      <a href="../../../examples/sql-compiler/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -533,7 +537,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../examples/tlog-cli/" class="md-nav__link">
+      <a href="../../../examples/tlog-cli/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -555,7 +559,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../examples/tlog-cli/" class="md-nav__link">
+      <a href="../../../examples/tlog-cli/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -620,7 +624,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../concepts/" class="md-nav__link">
+      <a href="../../../concepts/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -642,7 +646,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../concepts/datamodel/" class="md-nav__link">
+      <a href="../../../concepts/datamodel/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -664,7 +668,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../concepts/decorators/" class="md-nav__link">
+      <a href="../../../concepts/decorators/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -686,7 +690,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../concepts/generators/" class="md-nav__link">
+      <a href="../../../concepts/generators/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -708,7 +712,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../concepts/solvers/" class="md-nav__link">
+      <a href="../../../concepts/solvers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -730,7 +734,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../concepts/models/" class="md-nav__link">
+      <a href="../../../concepts/models/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -752,7 +756,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../concepts/benchmarks.md" class="md-nav__link">
+      <a href="../../../concepts/benchmarks.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -817,7 +821,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../solvers/" class="md-nav__link">
+      <a href="../../../integrations/solvers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -839,7 +843,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../solvers/clingo/" class="md-nav__link">
+      <a href="../../../integrations/solvers/clingo/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -861,7 +865,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../solvers/z3/" class="md-nav__link">
+      <a href="../../../integrations/solvers/z3/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -883,7 +887,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../solvers/souffle/" class="md-nav__link">
+      <a href="../../../integrations/solvers/souffle/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -905,7 +909,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../solvers/prover9/" class="md-nav__link">
+      <a href="../../../integrations/solvers/prover9/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -927,7 +931,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../solvers/snakelog/" class="md-nav__link">
+      <a href="../../../integrations/solvers/snakelog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -949,7 +953,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../solvers/problog/" class="md-nav__link">
+      <a href="../../../integrations/solvers/problog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -971,7 +975,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../solvers/llm/" class="md-nav__link">
+      <a href="../../../integrations/solvers/llm/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -997,17 +1001,19 @@
       
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -1022,7 +1028,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             Compilers
@@ -1036,7 +1042,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/compilers/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1058,7 +1064,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/compilers/yaml/" class="md-nav__link">
+      <a href="../yaml/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1080,7 +1086,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/compilers/tlog/" class="md-nav__link">
+      <a href="../tlog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1102,7 +1108,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/compilers/prolog/" class="md-nav__link">
+      <a href="../prolog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1124,7 +1130,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/compilers/problog/" class="md-nav__link">
+      <a href="../problog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1146,7 +1152,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/compilers/tptp/" class="md-nav__link">
+      <a href="../tptp/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1165,10 +1171,31 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../../../conversion/compilers/clif/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    CLIF
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1178,6 +1205,53 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.compilers.clif_compiler.ClifCompiler--example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example:
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.compilers.clif_compiler.ClifCompiler.compile" class="md-nav__link">
+    <span class="md-ellipsis">
+      compile
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.compilers.clif_compiler.ClifCompiler.compile_sentence" class="md-nav__link">
+    <span class="md-ellipsis">
+      compile_sentence
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1190,7 +1264,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/compilers/fol/" class="md-nav__link">
+      <a href="../fol/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1212,7 +1286,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/compilers/sql/" class="md-nav__link">
+      <a href="../sql/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1234,7 +1308,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/compilers/sexpr/" class="md-nav__link">
+      <a href="../sexpr/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1299,7 +1373,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/parsers/" class="md-nav__link">
+      <a href="../../parsers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1321,7 +1395,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/parsers/python/" class="md-nav__link">
+      <a href="../../parsers/python/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1343,7 +1417,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/parsers/tlog/" class="md-nav__link">
+      <a href="../../parsers/tlog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1365,7 +1439,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/parsers/clif/" class="md-nav__link">
+      <a href="../../parsers/clif/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1387,7 +1461,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/parsers/yaml/" class="md-nav__link">
+      <a href="../../parsers/yaml/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1409,7 +1483,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/parsers/dataframe/" class="md-nav__link">
+      <a href="../../parsers/dataframe/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1431,7 +1505,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/parsers/catalog/" class="md-nav__link">
+      <a href="../../parsers/catalog/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1453,7 +1527,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/parsers/owlpy/" class="md-nav__link">
+      <a href="../../parsers/owlpy/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1475,7 +1549,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../conversion/parsers/rdf/" class="md-nav__link">
+      <a href="../../parsers/rdf/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1576,7 +1650,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../owldl/" class="md-nav__link">
+      <a href="../../../integrations/frameworks/owldl/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1598,7 +1672,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../owldl/owldl-tutorial" class="md-nav__link">
+      <a href="../../../integrations/frameworks/owldl/owldl-tutorial" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1620,7 +1694,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../owldl/owltop/" class="md-nav__link">
+      <a href="../../../integrations/frameworks/owldl/owltop/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1642,7 +1716,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../owldl/reasoner/" class="md-nav__link">
+      <a href="../../../integrations/frameworks/owldl/reasoner/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1672,7 +1746,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../pydantic" class="md-nav__link">
+      <a href="../../../integrations/frameworks/pydantic" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1694,7 +1768,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sqlmodel.md" class="md-nav__link">
+      <a href="../../../integrations/frameworks/sqlmodel.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1716,7 +1790,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../../integrations/frameworks/rdf/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1745,7 +1819,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../cli/" class="md-nav__link">
+      <a href="../../../cli/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1766,7 +1840,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../faq/" class="md-nav__link">
+      <a href="../../../faq/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1787,7 +1861,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../roadmap/" class="md-nav__link">
+      <a href="../../../roadmap/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1808,7 +1882,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../contributing.md" class="md-nav__link">
+      <a href="../../../contributing.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1849,81 +1923,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#typedlogic.integrations.frameworks.rdflib.rdfs.OWLClass" class="md-nav__link">
+  <a href="#typedlogic.compilers.clif_compiler.ClifCompiler--example" class="md-nav__link">
     <span class="md-ellipsis">
-      OWLClass
+      Example:
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#typedlogic.integrations.frameworks.rdflib.rdfs.RDFProperty" class="md-nav__link">
+  <a href="#typedlogic.compilers.clif_compiler.ClifCompiler.compile" class="md-nav__link">
     <span class="md-ellipsis">
-      RDFProperty
+      compile
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#typedlogic.integrations.frameworks.rdflib.rdfs.SubClassOf" class="md-nav__link">
+  <a href="#typedlogic.compilers.clif_compiler.ClifCompiler.compile_sentence" class="md-nav__link">
     <span class="md-ellipsis">
-      SubClassOf
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#typedlogic.integrations.frameworks.rdflib.rdfs.SubPropertyOf" class="md-nav__link">
-    <span class="md-ellipsis">
-      SubPropertyOf
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#typedlogic.integrations.frameworks.rdflib.rdfs.Type" class="md-nav__link">
-    <span class="md-ellipsis">
-      Type
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#typedlogic.integrations.frameworks.rdflib.rdfs.Domain" class="md-nav__link">
-    <span class="md-ellipsis">
-      Domain
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#typedlogic.integrations.frameworks.rdflib.rdfs.Range" class="md-nav__link">
-    <span class="md-ellipsis">
-      Range
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#typedlogic.integrations.frameworks.rdflib.rdfs.transitivity_and_reflexivity" class="md-nav__link">
-    <span class="md-ellipsis">
-      transitivity_and_reflexivity
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#typedlogic.integrations.frameworks.rdflib.rdfs.type_propagation" class="md-nav__link">
-    <span class="md-ellipsis">
-      type_propagation
+      compile_sentence
     </span>
   </a>
   
@@ -1948,58 +1968,40 @@
   
 
 
-<h1 id="rdfs">RDFS</h1>
+<h1 id="clif-compiler">CLIF Compiler</h1>
 
 
-<div class="doc doc-object doc-module">
+<div class="doc doc-object doc-class">
 
 
 
 
     <div class="doc doc-contents first">
-
-        <p>Theory corresponding to RDF-Schema (RDFS)</p>
-
-
-
-
-
-
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="typedlogic.integrations.frameworks.rdflib.rdfs.OWLClass" class="doc doc-heading">
-            <code>OWLClass</code>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-</h2>
-
-
-    <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="typedlogic.FactMixin">FactMixin</span></code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="Compiler
 
 
-        <p>True if node is an OWL Class</p>
-<p>Note that even though OWL predicates are typically defined in owlfull.py,
-owl:Class is considered part of RDFS.</p>
+  
+      dataclass
+   (typedlogic.compiler.Compiler)" href="../#typedlogic.compiler.Compiler">Compiler</a></code></p>
+
+
+        <p>Compiles a Theory to the Common Logic Interchange Format (CLIF).</p>
+<h3 id="typedlogic.compilers.clif_compiler.ClifCompiler--example">Example:</h3>
+<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Forall</span><span class="p">,</span> <span class="n">Implies</span><span class="p">,</span> <span class="n">PredicateDefinition</span><span class="p">,</span> <span class="n">Term</span><span class="p">,</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">Variable</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">theory</span> <span class="o">=</span> <span class="n">Theory</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;friends&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">x</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span> <span class="o">=</span> <span class="p">[</span><span class="n">PredicateDefinition</span><span class="p">(</span><span class="s2">&quot;FriendOf&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">})]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">theory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;FriendOf&quot;</span><span class="p">,</span> <span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">theory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Forall</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">Implies</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;FriendOf&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;FriendOf&quot;</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">))))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">compiler</span> <span class="o">=</span> <span class="n">ClifCompiler</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">theory</span><span class="p">))</span>
+<span class="p">(</span><span class="n">cl</span><span class="o">-</span><span class="n">text</span> <span class="n">friends</span>
+  <span class="p">(</span><span class="n">FriendOf</span> <span class="n">Alice</span> <span class="n">Bob</span><span class="p">)</span>
+  <span class="p">(</span><span class="n">forall</span> <span class="p">(</span><span class="n">x</span> <span class="n">y</span><span class="p">)</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="n">FriendOf</span> <span class="n">x</span> <span class="n">y</span><span class="p">)</span> <span class="p">(</span><span class="n">FriendOf</span> <span class="n">y</span> <span class="n">x</span><span class="p">)))</span>
+<span class="p">)</span>
+</code></pre></div>
 
 
 
@@ -2008,26 +2010,112 @@ owl:Class is considered part of RDFS.</p>
 
 
               <details class="quote">
-                <summary>Source code in <code>src/typedlogic/integrations/frameworks/rdflib/rdfs.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">OWLClass</span><span class="p">(</span><span class="n">FactMixin</span><span class="p">):</span>
+                <summary>Source code in <code>src/typedlogic/compilers/clif_compiler.py</code></summary>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClifCompiler</span><span class="p">(</span><span class="n">Compiler</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    True if node is an OWL Class</span>
+<span class="sd">    Compiles a Theory to the Common Logic Interchange Format (CLIF).</span>
 
-<span class="sd">    Note that even though OWL predicates are typically defined in owlfull.py,</span>
-<span class="sd">    owl:Class is considered part of RDFS.</span>
+<span class="sd">    Example:</span>
+<span class="sd">    -------</span>
+<span class="sd">        &gt;&gt;&gt; from typedlogic import Forall, Implies, PredicateDefinition, Term, Theory, Variable</span>
+<span class="sd">        &gt;&gt;&gt; theory = Theory(name=&quot;friends&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; x = Variable(&quot;x&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; y = Variable(&quot;y&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; theory.predicate_definitions = [PredicateDefinition(&quot;FriendOf&quot;, {&quot;x&quot;: &quot;str&quot;, &quot;y&quot;: &quot;str&quot;})]</span>
+<span class="sd">        &gt;&gt;&gt; theory.add(Term(&quot;FriendOf&quot;, &quot;Alice&quot;, &quot;Bob&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; theory.add(Forall([x, y], Implies(Term(&quot;FriendOf&quot;, x, y), Term(&quot;FriendOf&quot;, y, x))))</span>
+<span class="sd">        &gt;&gt;&gt; compiler = ClifCompiler()</span>
+<span class="sd">        &gt;&gt;&gt; print(compiler.compile(theory))</span>
+<span class="sd">        (cl-text friends</span>
+<span class="sd">          (FriendOf Alice Bob)</span>
+<span class="sd">          (forall (x y) (if (FriendOf x y) (FriendOf y x)))</span>
+<span class="sd">        )</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">node</span><span class="p">:</span> <span class="n">Node</span>
+    <span class="n">default_suffix</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;clif&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">syntax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelSyntax</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compile a Theory object into a CLIF document.</span>
+
+<span class="sd">        :param theory: the theory to compile</span>
+<span class="sd">        :param syntax: unused</span>
+<span class="sd">        :param kwargs: unused</span>
+<span class="sd">        :return: CLIF representation of the theory</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">theory</span><span class="o">.</span><span class="n">sentences</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">theory</span><span class="o">.</span><span class="n">ground_terms</span><span class="p">)</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">as_clif</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sentences</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">theory</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="n">body</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">body</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;(cl-text </span><span class="si">{</span><span class="n">render_name</span><span class="p">(</span><span class="n">theory</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">body</span><span class="si">}</span><span class="se">\n</span><span class="s2">)&quot;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;(cl-text </span><span class="si">{</span><span class="n">render_name</span><span class="p">(</span><span class="n">theory</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compile_sentence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">syntax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelSyntax</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compile an individual sentence to CLIF.</span>
+
+<span class="sd">        :param sentence: the sentence to compile</span>
+<span class="sd">        :param syntax: unused</span>
+<span class="sd">        :param kwargs: unused</span>
+<span class="sd">        :return: CLIF representation of the sentence</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">as_clif</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -2041,435 +2129,20 @@ owl:Class is considered part of RDFS.</p>
 
 
 
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="typedlogic.integrations.frameworks.rdflib.rdfs.RDFProperty" class="doc doc-heading">
-            <code>RDFProperty</code>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="typedlogic.FactMixin">FactMixin</span></code></p>
-
-
-        <p>RDF.Property axiom</p>
-
-
-
-
-
-
-
-              <details class="quote">
-                <summary>Source code in <code>src/typedlogic/integrations/frameworks/rdflib/rdfs.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">RDFProperty</span><span class="p">(</span><span class="n">FactMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    RDF.Property axiom</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">node</span><span class="p">:</span> <span class="n">Node</span>
-</code></pre></div></td></tr></table></div>
-              </details>
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="typedlogic.integrations.frameworks.rdflib.rdfs.SubClassOf" class="doc doc-heading">
-            <code>SubClassOf</code>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="typedlogic.FactMixin">FactMixin</span></code></p>
-
-
-        <p>SubClassOf axiom</p>
-
-
-
-
-
-
-
-              <details class="quote">
-                <summary>Source code in <code>src/typedlogic/integrations/frameworks/rdflib/rdfs.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">SubClassOf</span><span class="p">(</span><span class="n">FactMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    SubClassOf axiom</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">subject</span><span class="p">:</span> <span class="n">Node</span>
-    <span class="nb">object</span><span class="p">:</span> <span class="n">Node</span>
-</code></pre></div></td></tr></table></div>
-              </details>
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="typedlogic.integrations.frameworks.rdflib.rdfs.SubPropertyOf" class="doc doc-heading">
-            <code>SubPropertyOf</code>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="typedlogic.FactMixin">FactMixin</span></code></p>
-
-
-        <p>SubPropertyOf axiom</p>
-
-
-
-
-
-
-
-              <details class="quote">
-                <summary>Source code in <code>src/typedlogic/integrations/frameworks/rdflib/rdfs.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">SubPropertyOf</span><span class="p">(</span><span class="n">FactMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    SubPropertyOf axiom</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">subject</span><span class="p">:</span> <span class="n">Node</span>
-    <span class="nb">object</span><span class="p">:</span> <span class="n">Node</span>
-</code></pre></div></td></tr></table></div>
-              </details>
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="typedlogic.integrations.frameworks.rdflib.rdfs.Type" class="doc doc-heading">
-            <code>Type</code>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="typedlogic.FactMixin">FactMixin</span></code></p>
-
-
-        <p>rdf.Type axiom</p>
-
-
-
-
-
-
-
-              <details class="quote">
-                <summary>Source code in <code>src/typedlogic/integrations/frameworks/rdflib/rdfs.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Type</span><span class="p">(</span><span class="n">FactMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    rdf.Type axiom</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">subject</span><span class="p">:</span> <span class="n">Node</span>
-    <span class="nb">object</span><span class="p">:</span> <span class="n">Node</span>
-</code></pre></div></td></tr></table></div>
-              </details>
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="typedlogic.integrations.frameworks.rdflib.rdfs.Domain" class="doc doc-heading">
-            <code>Domain</code>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="typedlogic.FactMixin">FactMixin</span></code></p>
-
-
-        <p>property domain axiom</p>
-
-
-
-
-
-
-
-              <details class="quote">
-                <summary>Source code in <code>src/typedlogic/integrations/frameworks/rdflib/rdfs.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Domain</span><span class="p">(</span><span class="n">FactMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    property domain axiom</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">subject</span><span class="p">:</span> <span class="n">Node</span>
-    <span class="nb">object</span><span class="p">:</span> <span class="n">Node</span>
-</code></pre></div></td></tr></table></div>
-              </details>
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="typedlogic.integrations.frameworks.rdflib.rdfs.Range" class="doc doc-heading">
-            <code>Range</code>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-</h2>
-
-
-    <div class="doc doc-contents ">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="typedlogic.FactMixin">FactMixin</span></code></p>
-
-
-        <p>property range axiom</p>
-
-
-
-
-
-
-
-              <details class="quote">
-                <summary>Source code in <code>src/typedlogic/integrations/frameworks/rdflib/rdfs.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Range</span><span class="p">(</span><span class="n">FactMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    property range axiom</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">subject</span><span class="p">:</span> <span class="n">Node</span>
-    <span class="nb">object</span><span class="p">:</span> <span class="n">Node</span>
-</code></pre></div></td></tr></table></div>
-              </details>
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
 
 
 <div class="doc doc-object doc-function">
 
 
-<h2 id="typedlogic.integrations.frameworks.rdflib.rdfs.transitivity_and_reflexivity" class="doc doc-heading">
-            <code class=" language-python"><span class="n">transitivity_and_reflexivity</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span></code>
+<h2 id="typedlogic.compilers.clif_compiler.ClifCompiler.compile" class="doc doc-heading">
+            <code class=" language-python"><span class="nb">compile</span><span class="p">(</span><span class="n">theory</span><span class="p">,</span> <span class="n">syntax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 </h2>
 
 
     <div class="doc doc-contents ">
 
-        <p>Axioms for transitivity and reflexivity.</p>
+        <p>Compile a Theory object into a CLIF document.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -2485,14 +2158,19 @@ owl:Class is considered part of RDFS.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>s</code>
+                <code>theory</code>
             </td>
             <td>
-                  <code><span title="typedlogic.integrations.frameworks.rdflib.rdf.Node">Node</span></code>
+                  <code><a class="autorefs autorefs-internal" title="Theory
+
+
+  
+      dataclass
+   (typedlogic.Theory)" href="../../../concepts/datamodel/#typedlogic.datamodel.Theory">Theory</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>subject</p>
+                <p>the theory to compile</p>
               </div>
             </td>
             <td>
@@ -2501,34 +2179,33 @@ owl:Class is considered part of RDFS.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>z</code>
+                <code>syntax</code>
             </td>
             <td>
-                  <code><span title="typedlogic.integrations.frameworks.rdflib.rdf.Node">Node</span></code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Union">Union</span>[<span title="str">str</span>, <a class="autorefs autorefs-internal" title="ModelSyntax (typedlogic.compiler.ModelSyntax)" href="../#typedlogic.compiler.ModelSyntax">ModelSyntax</a>]]</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>intermediate</p>
+                <p>unused</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>o</code>
+                <code>kwargs</code>
             </td>
             <td>
-                  <code><span title="typedlogic.integrations.frameworks.rdflib.rdf.Node">Node</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>object</p>
+                <p>unused</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>{}</code>
             </td>
           </tr>
       </tbody>
@@ -2546,10 +2223,11 @@ owl:Class is considered part of RDFS.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                
+                <p>CLIF representation of the theory</p>
               </div>
             </td>
           </tr>
@@ -2558,42 +2236,40 @@ owl:Class is considered part of RDFS.</p>
 
 
             <details class="quote">
-              <summary>Source code in <code>src/typedlogic/integrations/frameworks/rdflib/rdfs.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@axiom</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">transitivity_and_reflexivity</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">Node</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">Node</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="n">Node</span><span class="p">):</span>
+              <summary>Source code in <code>src/typedlogic/compilers/clif_compiler.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">syntax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelSyntax</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Axioms for transitivity and reflexivity.</span>
+<span class="sd">    Compile a Theory object into a CLIF document.</span>
 
-<span class="sd">    :param s: subject</span>
-<span class="sd">    :param z: intermediate</span>
-<span class="sd">    :param o: object</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :param theory: the theory to compile</span>
+<span class="sd">    :param syntax: unused</span>
+<span class="sd">    :param kwargs: unused</span>
+<span class="sd">    :return: CLIF representation of the theory</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">SubClassOf</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="ow">and</span> <span class="n">SubClassOf</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="n">SubClassOf</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">OWLClass</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="n">SubClassOf</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">RDFProperty</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="n">SubPropertyOf</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">SubPropertyOf</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="ow">and</span> <span class="n">SubPropertyOf</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="n">SubPropertyOf</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+    <span class="n">sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">theory</span><span class="o">.</span><span class="n">sentences</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">theory</span><span class="o">.</span><span class="n">ground_terms</span><span class="p">)</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">as_clif</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sentences</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">theory</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+        <span class="n">body</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">body</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;(cl-text </span><span class="si">{</span><span class="n">render_name</span><span class="p">(</span><span class="n">theory</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">body</span><span class="si">}</span><span class="se">\n</span><span class="s2">)&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;(cl-text </span><span class="si">{</span><span class="n">render_name</span><span class="p">(</span><span class="n">theory</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2603,15 +2279,15 @@ owl:Class is considered part of RDFS.</p>
 <div class="doc doc-object doc-function">
 
 
-<h2 id="typedlogic.integrations.frameworks.rdflib.rdfs.type_propagation" class="doc doc-heading">
-            <code class=" language-python"><span class="n">type_propagation</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span></code>
+<h2 id="typedlogic.compilers.clif_compiler.ClifCompiler.compile_sentence" class="doc doc-heading">
+            <code class=" language-python"><span class="n">compile_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">syntax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 </h2>
 
 
     <div class="doc doc-contents ">
 
-        <p>Propagation of rdf:type up class hierarchy</p>
+        <p>Compile an individual sentence to CLIF.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -2627,14 +2303,14 @@ owl:Class is considered part of RDFS.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>s</code>
+                <code>sentence</code>
             </td>
             <td>
-                  <code><span title="typedlogic.integrations.frameworks.rdflib.rdf.Node">Node</span></code>
+                  <code><a class="autorefs autorefs-internal" title="Sentence (typedlogic.datamodel.Sentence)" href="../../../concepts/datamodel/#typedlogic.datamodel.Sentence">Sentence</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>subject</p>
+                <p>the sentence to compile</p>
               </div>
             </td>
             <td>
@@ -2643,34 +2319,33 @@ owl:Class is considered part of RDFS.</p>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>c</code>
+                <code>syntax</code>
             </td>
             <td>
-                  <code><span title="typedlogic.integrations.frameworks.rdflib.rdf.Node">Node</span></code>
+                  <code><span title="typing.Optional">Optional</span>[<span title="typing.Union">Union</span>[<span title="str">str</span>, <a class="autorefs autorefs-internal" title="ModelSyntax (typedlogic.compiler.ModelSyntax)" href="../#typedlogic.compiler.ModelSyntax">ModelSyntax</a>]]</code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>asserted class</p>
+                <p>unused</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>None</code>
             </td>
           </tr>
           <tr class="doc-section-item">
             <td>
-                <code>d</code>
+                <code>kwargs</code>
             </td>
             <td>
-                  <code><span title="typedlogic.integrations.frameworks.rdflib.rdf.Node">Node</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>inferred class</p>
+                <p>unused</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>{}</code>
             </td>
           </tr>
       </tbody>
@@ -2688,10 +2363,11 @@ owl:Class is considered part of RDFS.</p>
       <tbody>
           <tr class="doc-section-item">
             <td>
+                  <code><span title="str">str</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                
+                <p>CLIF representation of the sentence</p>
               </div>
             </td>
           </tr>
@@ -2700,30 +2376,26 @@ owl:Class is considered part of RDFS.</p>
 
 
             <details class="quote">
-              <summary>Source code in <code>src/typedlogic/integrations/frameworks/rdflib/rdfs.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@axiom</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">type_propagation</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">Node</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Node</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">Node</span><span class="p">):</span>
+              <summary>Source code in <code>src/typedlogic/compilers/clif_compiler.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compile_sentence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">syntax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelSyntax</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Propagation of rdf:type up class hierarchy</span>
+<span class="sd">    Compile an individual sentence to CLIF.</span>
 
-<span class="sd">    :param s: subject</span>
-<span class="sd">    :param c: asserted class</span>
-<span class="sd">    :param d: inferred class</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :param sentence: the sentence to compile</span>
+<span class="sd">    :param syntax: unused</span>
+<span class="sd">    :param kwargs: unused</span>
+<span class="sd">    :return: CLIF representation of the sentence</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">Type</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="ow">and</span> <span class="n">SubClassOf</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="n">Type</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">as_clif</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2785,10 +2457,10 @@ owl:Class is considered part of RDFS.</p>
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "../../../..", "features": ["content.tabs.link"], "search": "../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.tabs.link"], "search": "../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.c8b220af.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.c8b220af.min.js"></script>
       
     
   </body>
