@@ -307,6 +307,11 @@ class Z3Solver(Solver):
             for v in sentence.variables:
                 var_name = v.name
                 domain = v.domain
+                if domain is None:
+                    # An untyped quantified variable otherwise defaults to a string sort, which
+                    # mis-sorts it against typed predicates. Infer its type from the declared
+                    # predicates it is used in (e.g. an int column) before falling back.
+                    domain = self._infer_variable_domain(var_name, sentence.sentence)
                 s = self._sort(domain)
                 arg = z3.Const(var_name, s())  ## TODO
                 bindings[var_name] = arg
@@ -347,6 +352,55 @@ class Z3Solver(Solver):
                 raise ValueError(f"Error translating {sentence} args: {pf_args} to Z3 using {pf}:\n{e}")
             return z3_expr
         raise NotImplementedError(f"Not implemented:{type(sentence)} :: {sentence}")
+
+    def _infer_variable_domain(self, var_name: str, sentence: Any) -> Optional[str]:
+        """
+        Infer an untyped quantified variable's type from its use in declared predicates.
+
+        Walks the quantifier body and returns the declared argument type at the first
+        position where the variable appears as a direct argument of a declared predicate.
+        Returns ``None`` when no such use exists, leaving the caller to fall back to the
+        default sort.
+
+        :param var_name: The name of the quantified variable.
+        :param sentence: The body of the quantified sentence.
+        :return: The inferred type name, or ``None`` if it cannot be determined.
+        """
+        if not self.predicate_definitions:
+            return None
+        for term in self._iter_terms(sentence):
+            pd = self.predicate_definitions.get(term.predicate)
+            if pd is None:
+                continue
+            arg_names = list(pd.arguments.keys())
+            arg_types = list(pd.arguments.values())
+            for i, (key, value) in enumerate(term.bindings.items()):
+                if not (isinstance(value, Variable) and value.name == var_name):
+                    continue
+                idx = i if term.positional else (arg_names.index(key) if key in arg_names else i)
+                if idx < len(arg_types):
+                    return arg_types[idx]
+        return None
+
+    def _iter_terms(self, node: Any) -> Iterator[Term]:
+        """
+        Yield every ``Term`` atom in a sentence tree, recursing into nested terms.
+
+        :param node: A sentence or sub-expression.
+        :return: An iterator over the contained terms.
+        """
+        if isinstance(node, Term):
+            yield node
+            for value in node.values:
+                yield from self._iter_terms(value)
+            return
+        if isinstance(node, (tlog.Forall, tlog.Exists)):
+            yield from self._iter_terms(node.sentence)
+            return
+        operands = getattr(node, "operands", None)
+        if operands is not None:
+            for operand in operands:
+                yield from self._iter_terms(operand)
 
     def dump(self) -> str:
         return str(self.wrapped_solver)

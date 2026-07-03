@@ -247,3 +247,36 @@ def test_reasoning_with_existential_subformula():
     solver.add_fact(Term("Edge", {"src": 1, "tgt": 2}))
     assert solver.check().satisfiable
     assert solver.prove(Term("HasOut", {"src": 1}))
+
+
+def test_untyped_quantified_variables_infer_type_from_declared_predicate():
+    """Untyped tlog quantifier variables get their sort from the predicate they are used in.
+
+    Without inference, quantified variables default to a string sort and mis-sort against an
+    int-typed predicate, so a functional-dependency constraint fails to fire.
+    """
+    from typedlogic.parsers.tlog_parser import TLogParser
+
+    inconsistent = TLogParser().parse(
+        """
+        pred foo(x: int, y: int).
+        foo(1, 1).
+        foo(1, 2).
+        all x, y1, y2 | foo(x, y1), foo(x, y2) -> y1 = y2.
+        """
+    )
+    solver = Z3Solver()
+    solver.add(inconsistent)
+    assert not solver.check().satisfiable
+
+    consistent = TLogParser().parse(
+        """
+        pred foo(x: int, y: int).
+        foo(1, 1).
+        foo(2, 2).
+        all x, y1, y2 | foo(x, y1), foo(x, y2) -> y1 = y2.
+        """
+    )
+    solver = Z3Solver()
+    solver.add(consistent)
+    assert solver.check().satisfiable
