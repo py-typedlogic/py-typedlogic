@@ -154,7 +154,8 @@ all i, e, p | parent(e, p) & EntailedInstantiation(e, i) -> EntailedInstantiatio
 pred  DirectAssertion(slot: SlotID, inst: Node, valLoc: Node).
 
 pred  EntailedAssertion(slot: SlotID, inst: Node, valLoc: Node).
-all s, s2, i, v | DirectAssertion(s,i,v), ancestor(s, s2) -> EntailedAssertion(s,i,v).
+all s, i, v | DirectAssertion(s, i, v) -> EntailedAssertion(s, i, v).
+all s, s2, i, v | DirectAssertion(s, i, v), ancestor(s, s2) -> EntailedAssertion(s2, i, v).
 ```
 
 ```tlog
