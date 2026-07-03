@@ -6,7 +6,10 @@ import pytest
 
 from typedlogic import Exists, Forall, Iff, Implies, NegationAsFailure, Not, Or, Term, Variable
 from typedlogic.compilers.prolog_compiler import PrologCompiler
+from typedlogic.compilers.prover9_compiler import Prover9Compiler
+from typedlogic.compilers.sql_compiler import horn_rules_for
 from typedlogic.compilers.tlog_compiler import TLogCompiler
+from typedlogic.compilers.tptp_compiler import TPTPCompiler
 from typedlogic.datamodel import SentenceGroupType
 from typedlogic.integrations.solvers.souffle.souffle_compiler import SouffleCompiler
 from typedlogic.parsers.tlog_parser import TLogMarkdownParser, TLogParser
@@ -382,6 +385,31 @@ def test_tlog_compiler_roundtrips_quoted_meta_groups() -> None:
         [g.group_type for g in roundtripped.sentence_groups] == [SentenceGroupType.LEMMA, SentenceGroupType.TEST],
         compiled,
     )
+
+
+def test_logic_compilers_ignore_quoted_meta_groups() -> None:
+    """Logic compilers do not treat quoted lemmas and tests as asserted axioms."""
+    theory = TLogParser().parse(
+        """
+        pred base(id: str).
+        base("a").
+        lemma("hidden_lemma", that(hidden("a"))).
+        test_case("hidden_test", given(that(base("a"))), expect(that(hidden("a")))).
+        """
+    )
+
+    for compiled in (
+        PrologCompiler().compile(theory),
+        Prover9Compiler().compile(theory),
+        TPTPCompiler().compile(theory),
+    ):
+        check("base" in compiled, compiled)
+        check("hidden" not in compiled, compiled)
+        check("test_case" not in compiled, compiled)
+
+    rules = horn_rules_for(theory)
+    check(bool(rules), repr(rules))
+    check(all("hidden" not in repr(rule) for rule in rules), repr(rules))
 
 
 def test_tlog_type_annotations_export_to_typed_souffle_compiler() -> None:

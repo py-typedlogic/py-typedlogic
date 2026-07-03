@@ -83,6 +83,7 @@ def test_theory_sentences_are_asserted_sentences_only():
     )
 
     assert theory.sentences == [Term("axiom_fact")]
+    assert theory.asserted_sentence_groups == [theory.sentence_groups[0]]
     assert theory.goals == [Term("goal_fact")]
 
 
