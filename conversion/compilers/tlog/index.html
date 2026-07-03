@@ -2068,7 +2068,19 @@ It is available as the generic <code>tlog</code> output format.</p>
 <span class="normal">143</span>
 <span class="normal">144</span>
 <span class="normal">145</span>
-<span class="normal">146</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TLogCompiler</span><span class="p">(</span><span class="n">Compiler</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compile a theory into TLog syntax.&quot;&quot;&quot;</span>
 
@@ -2092,6 +2104,9 @@ It is available as the generic <code>tlog</code> output format.</p>
             <span class="k">if</span> <span class="n">sentence_group</span><span class="o">.</span><span class="n">docstring</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">sentence_group</span><span class="o">.</span><span class="n">docstring</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
                     <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">sentence_group</span><span class="o">.</span><span class="n">group_type</span> <span class="o">==</span> <span class="n">SentenceGroupType</span><span class="o">.</span><span class="n">LEMMA</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lemma_lines</span><span class="p">(</span><span class="n">sentence_group</span><span class="p">))</span>
+                <span class="k">continue</span>
             <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">sentence_group</span><span class="o">.</span><span class="n">sentences</span> <span class="ow">or</span> <span class="p">[]:</span>
                 <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sentence_lines</span><span class="p">(</span><span class="n">sentence</span><span class="p">))</span>
 
@@ -2117,6 +2132,12 @@ It is available as the generic <code>tlog</code> output format.</p>
                 <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/// </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">lines</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_lemma_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence_group</span><span class="p">:</span> <span class="n">SentenceGroup</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_term</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s1">&#39;lemma&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">sentence_group</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">Term</span><span class="p">(</span><span class="s1">&#39;that&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">sentence</span><span class="p">)))</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">sentence_group</span><span class="o">.</span><span class="n">sentences</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_sentence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">parenthesize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">Forall</span><span class="p">):</span>
@@ -2159,6 +2180,9 @@ It is available as the generic <code>tlog</code> output format.</p>
         <span class="k">return</span> <span class="n">separator</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sentence</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">sentence</span><span class="o">.</span><span class="n">operands</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_term</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">term</span><span class="p">:</span> <span class="n">Term</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">term</span><span class="o">.</span><span class="n">predicate</span> <span class="o">==</span> <span class="s2">&quot;that&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">term</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">term</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Sentence</span><span class="p">):</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;that(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_sentence</span><span class="p">(</span><span class="n">term</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">)&quot;</span>
+
         <span class="n">operator</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;eq&quot;</span><span class="p">:</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span>
             <span class="s2">&quot;ne&quot;</span><span class="p">:</span> <span class="s2">&quot;!=&quot;</span><span class="p">,</span>
@@ -2258,7 +2282,10 @@ It is available as the generic <code>tlog</code> output format.</p>
 <span class="normal">44</span>
 <span class="normal">45</span>
 <span class="normal">46</span>
-<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">syntax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelSyntax</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">syntax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModelSyntax</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compile a Theory object into TLog syntax.&quot;&quot;&quot;</span>
     <span class="n">lines</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">type_definitions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -2275,6 +2302,9 @@ It is available as the generic <code>tlog</code> output format.</p>
         <span class="k">if</span> <span class="n">sentence_group</span><span class="o">.</span><span class="n">docstring</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">sentence_group</span><span class="o">.</span><span class="n">docstring</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
                 <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sentence_group</span><span class="o">.</span><span class="n">group_type</span> <span class="o">==</span> <span class="n">SentenceGroupType</span><span class="o">.</span><span class="n">LEMMA</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lemma_lines</span><span class="p">(</span><span class="n">sentence_group</span><span class="p">))</span>
+            <span class="k">continue</span>
         <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">sentence_group</span><span class="o">.</span><span class="n">sentences</span> <span class="ow">or</span> <span class="p">[]:</span>
             <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sentence_lines</span><span class="p">(</span><span class="n">sentence</span><span class="p">))</span>
 

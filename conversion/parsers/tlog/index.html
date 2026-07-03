@@ -1402,6 +1402,33 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#typedlogic.parsers.tlog_parser.TLogParser._add_meta_statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      _add_meta_statement
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.parsers.tlog_parser.TLogParser._named_quoted_sentence" class="md-nav__link">
+    <span class="md-ellipsis">
+      _named_quoted_sentence
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.parsers.tlog_parser.TLogParser._quoted_sentence_value" class="md-nav__link">
+    <span class="md-ellipsis">
+      _quoted_sentence_value
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#typedlogic.parsers.tlog_parser.TLogMarkdownParser.parse" class="md-nav__link">
     <span class="md-ellipsis">
       parse
@@ -1423,6 +1450,15 @@
   <a href="#quantifiers" class="md-nav__link">
     <span class="md-ellipsis">
       Quantifiers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quoted-meta-statements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quoted Meta Statements
     </span>
   </a>
   
@@ -1960,6 +1996,33 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#typedlogic.parsers.tlog_parser.TLogParser._add_meta_statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      _add_meta_statement
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.parsers.tlog_parser.TLogParser._named_quoted_sentence" class="md-nav__link">
+    <span class="md-ellipsis">
+      _named_quoted_sentence
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.parsers.tlog_parser.TLogParser._quoted_sentence_value" class="md-nav__link">
+    <span class="md-ellipsis">
+      _quoted_sentence_value
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#typedlogic.parsers.tlog_parser.TLogMarkdownParser.parse" class="md-nav__link">
     <span class="md-ellipsis">
       parse
@@ -1981,6 +2044,15 @@
   <a href="#quantifiers" class="md-nav__link">
     <span class="md-ellipsis">
       Quantifiers
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quoted-meta-statements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quoted Meta Statements
     </span>
   </a>
   
@@ -2063,24 +2135,7 @@ and <code>solve</code> commands work with it.</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">411</span>
-<span class="normal">412</span>
-<span class="normal">413</span>
-<span class="normal">414</span>
-<span class="normal">415</span>
-<span class="normal">416</span>
-<span class="normal">417</span>
-<span class="normal">418</span>
-<span class="normal">419</span>
-<span class="normal">420</span>
-<span class="normal">421</span>
-<span class="normal">422</span>
-<span class="normal">423</span>
-<span class="normal">424</span>
-<span class="normal">425</span>
-<span class="normal">426</span>
-<span class="normal">427</span>
-<span class="normal">428</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">428</span>
 <span class="normal">429</span>
 <span class="normal">430</span>
 <span class="normal">431</span>
@@ -2222,7 +2277,75 @@ and <code>solve</code> commands work with it.</p>
 <span class="normal">567</span>
 <span class="normal">568</span>
 <span class="normal">569</span>
-<span class="normal">570</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TLogParser</span><span class="p">(</span><span class="n">Parser</span><span class="p">):</span>
+<span class="normal">570</span>
+<span class="normal">571</span>
+<span class="normal">572</span>
+<span class="normal">573</span>
+<span class="normal">574</span>
+<span class="normal">575</span>
+<span class="normal">576</span>
+<span class="normal">577</span>
+<span class="normal">578</span>
+<span class="normal">579</span>
+<span class="normal">580</span>
+<span class="normal">581</span>
+<span class="normal">582</span>
+<span class="normal">583</span>
+<span class="normal">584</span>
+<span class="normal">585</span>
+<span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span>
+<span class="normal">589</span>
+<span class="normal">590</span>
+<span class="normal">591</span>
+<span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span>
+<span class="normal">598</span>
+<span class="normal">599</span>
+<span class="normal">600</span>
+<span class="normal">601</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span>
+<span class="normal">607</span>
+<span class="normal">608</span>
+<span class="normal">609</span>
+<span class="normal">610</span>
+<span class="normal">611</span>
+<span class="normal">612</span>
+<span class="normal">613</span>
+<span class="normal">614</span>
+<span class="normal">615</span>
+<span class="normal">616</span>
+<span class="normal">617</span>
+<span class="normal">618</span>
+<span class="normal">619</span>
+<span class="normal">620</span>
+<span class="normal">621</span>
+<span class="normal">622</span>
+<span class="normal">623</span>
+<span class="normal">624</span>
+<span class="normal">625</span>
+<span class="normal">626</span>
+<span class="normal">627</span>
+<span class="normal">628</span>
+<span class="normal">629</span>
+<span class="normal">630</span>
+<span class="normal">631</span>
+<span class="normal">632</span>
+<span class="normal">633</span>
+<span class="normal">634</span>
+<span class="normal">635</span>
+<span class="normal">636</span>
+<span class="normal">637</span>
+<span class="normal">638</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TLogParser</span><span class="p">(</span><span class="n">Parser</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse ergonomic TypedLogic rules into the core datamodel.&quot;&quot;&quot;</span>
 
     <span class="n">default_suffix</span> <span class="o">=</span> <span class="s2">&quot;tlog&quot;</span>
@@ -2252,7 +2375,7 @@ and <code>solve</code> commands work with it.</p>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate source syntax.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">LarkError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">LarkError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">ValidationMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_read_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -2277,9 +2400,56 @@ and <code>solve</code> commands work with it.</p>
             <span class="k">return</span>
 
         <span class="n">sentence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lower_statement</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_meta_statement</span><span class="p">(</span><span class="n">theory</span><span class="p">,</span> <span class="n">sentence</span><span class="p">,</span> <span class="n">statement</span><span class="o">.</span><span class="n">comments</span><span class="p">):</span>
+            <span class="k">return</span>
         <span class="k">if</span> <span class="n">statement</span><span class="o">.</span><span class="n">comments</span><span class="p">:</span>
             <span class="n">sentence</span><span class="o">.</span><span class="n">add_annotation</span><span class="p">(</span><span class="s2">&quot;comment&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">statement</span><span class="o">.</span><span class="n">comments</span><span class="p">))</span>
         <span class="n">theory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_meta_statement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">comments</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add top-level quoted meta statements as sentence groups.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">Term</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">sentence</span><span class="o">.</span><span class="n">predicate</span> <span class="o">==</span> <span class="s2">&quot;lemma&quot;</span><span class="p">:</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">quoted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_named_quoted_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="s2">&quot;lemma&quot;</span><span class="p">)</span>
+            <span class="n">theory</span><span class="o">.</span><span class="n">sentence_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">SentenceGroup</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">group_type</span><span class="o">=</span><span class="n">SentenceGroupType</span><span class="o">.</span><span class="n">LEMMA</span><span class="p">,</span>
+                    <span class="n">docstring</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">comments</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">sentences</span><span class="o">=</span><span class="p">[</span><span class="n">quoted</span><span class="p">],</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">sentence</span><span class="o">.</span><span class="n">predicate</span> <span class="o">==</span> <span class="s2">&quot;test_case&quot;</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sentence</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">sentence</span><span class="o">.</span><span class="n">values</span> <span class="k">else</span> <span class="s2">&quot;test_case&quot;</span>
+            <span class="n">theory</span><span class="o">.</span><span class="n">sentence_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">SentenceGroup</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">group_type</span><span class="o">=</span><span class="n">SentenceGroupType</span><span class="o">.</span><span class="n">TEST</span><span class="p">,</span>
+                    <span class="n">docstring</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">comments</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">sentences</span><span class="o">=</span><span class="p">[</span><span class="n">sentence</span><span class="p">],</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_named_quoted_sentence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Term</span><span class="p">,</span> <span class="n">predicate</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sentence</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the name and quoted sentence from a meta term.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentence</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LarkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">predicate</span><span class="si">}</span><span class="s2"> expects a name and that(sentence): </span><span class="si">{</span><span class="n">sentence</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">quoted</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">inner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_quoted_sentence_value</span><span class="p">(</span><span class="n">quoted</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">inner</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_quoted_sentence_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the sentence wrapped by a that(...) term.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Term</span><span class="p">)</span> <span class="ow">or</span> <span class="n">value</span><span class="o">.</span><span class="n">predicate</span> <span class="o">!=</span> <span class="s2">&quot;that&quot;</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LarkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected that(sentence), got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">quoted</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">quoted</span><span class="p">,</span> <span class="n">Sentence</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">LarkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected quoted sentence, got </span><span class="si">{</span><span class="n">quoted</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">quoted</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_lower_statement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
         <span class="n">explicit_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_explicit_vars</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
@@ -2306,6 +2476,8 @@ and <code>solve</code> commands work with it.</p>
             <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">operator</span> <span class="o">==</span> <span class="s2">&quot;naf&quot;</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">NegationAsFailure</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">Not</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ThatNode</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;that&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lower_statement</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">sentence</span><span class="p">))</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">BinaryNode</span><span class="p">):</span>
             <span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lower</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">bound_vars</span><span class="p">,</span> <span class="n">bare_names_as_variables</span><span class="p">)</span>
             <span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lower</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">bound_vars</span><span class="p">,</span> <span class="n">bare_names_as_variables</span><span class="p">)</span>
@@ -2366,6 +2538,8 @@ and <code>solve</code> commands work with it.</p>
                     <span class="n">variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
                 <span class="k">return</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Term</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">predicate</span> <span class="o">==</span> <span class="s2">&quot;that&quot;</span><span class="p">:</span>
+                    <span class="k">return</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">predicate</span><span class="p">,</span> <span class="n">Variable</span><span class="p">):</span>
                     <span class="n">visit</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">predicate</span><span class="p">)</span>
                 <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
@@ -2460,16 +2634,16 @@ and <code>solve</code> commands work with it.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">416</span>
-<span class="normal">417</span>
-<span class="normal">418</span>
-<span class="normal">419</span>
-<span class="normal">420</span>
-<span class="normal">421</span>
-<span class="normal">422</span>
-<span class="normal">423</span>
-<span class="normal">424</span>
-<span class="normal">425</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">implicit_universal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">implicit_universal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a parser.</span>
 
@@ -2501,15 +2675,15 @@ and <code>solve</code> commands work with it.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">427</span>
-<span class="normal">428</span>
-<span class="normal">429</span>
-<span class="normal">430</span>
-<span class="normal">431</span>
-<span class="normal">432</span>
-<span class="normal">433</span>
-<span class="normal">434</span>
-<span class="normal">435</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Theory</span><span class="p">:</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Theory</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse a TLog source into a theory.&quot;&quot;&quot;</span>
     <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_source</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
     <span class="n">tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
@@ -2540,17 +2714,164 @@ and <code>solve</code> commands work with it.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">437</span>
-<span class="normal">438</span>
-<span class="normal">439</span>
-<span class="normal">440</span>
-<span class="normal">441</span>
-<span class="normal">442</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]:</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate source syntax.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">LarkError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">except</span> <span class="p">(</span><span class="n">LarkError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">yield</span> <span class="n">ValidationMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="typedlogic.parsers.tlog_parser.TLogParser._add_meta_statement" class="doc doc-heading">
+            <code class=" language-python"><span class="n">_add_meta_statement</span><span class="p">(</span><span class="n">theory</span><span class="p">,</span> <span class="n">sentence</span><span class="p">,</span> <span class="n">comments</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Add top-level quoted meta statements as sentence groups.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_add_meta_statement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">comments</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add top-level quoted meta statements as sentence groups.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">Term</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">sentence</span><span class="o">.</span><span class="n">predicate</span> <span class="o">==</span> <span class="s2">&quot;lemma&quot;</span><span class="p">:</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">quoted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_named_quoted_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="s2">&quot;lemma&quot;</span><span class="p">)</span>
+        <span class="n">theory</span><span class="o">.</span><span class="n">sentence_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">SentenceGroup</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">group_type</span><span class="o">=</span><span class="n">SentenceGroupType</span><span class="o">.</span><span class="n">LEMMA</span><span class="p">,</span>
+                <span class="n">docstring</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">comments</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">sentences</span><span class="o">=</span><span class="p">[</span><span class="n">quoted</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">sentence</span><span class="o">.</span><span class="n">predicate</span> <span class="o">==</span> <span class="s2">&quot;test_case&quot;</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sentence</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">sentence</span><span class="o">.</span><span class="n">values</span> <span class="k">else</span> <span class="s2">&quot;test_case&quot;</span>
+        <span class="n">theory</span><span class="o">.</span><span class="n">sentence_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">SentenceGroup</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">group_type</span><span class="o">=</span><span class="n">SentenceGroupType</span><span class="o">.</span><span class="n">TEST</span><span class="p">,</span>
+                <span class="n">docstring</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">comments</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">sentences</span><span class="o">=</span><span class="p">[</span><span class="n">sentence</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="typedlogic.parsers.tlog_parser.TLogParser._named_quoted_sentence" class="doc doc-heading">
+            <code class=" language-python"><span class="n">_named_quoted_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">predicate</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return the name and quoted sentence from a meta term.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_named_quoted_sentence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Term</span><span class="p">,</span> <span class="n">predicate</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sentence</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the name and quoted sentence from a meta term.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentence</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">LarkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">predicate</span><span class="si">}</span><span class="s2"> expects a name and that(sentence): </span><span class="si">{</span><span class="n">sentence</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">name</span><span class="p">,</span> <span class="n">quoted</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">inner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_quoted_sentence_value</span><span class="p">(</span><span class="n">quoted</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">inner</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="typedlogic.parsers.tlog_parser.TLogParser._quoted_sentence_value" class="doc doc-heading">
+            <code class=" language-python"><span class="n">_quoted_sentence_value</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return the sentence wrapped by a that(...) term.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_quoted_sentence_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the sentence wrapped by a that(...) term.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Term</span><span class="p">)</span> <span class="ow">or</span> <span class="n">value</span><span class="o">.</span><span class="n">predicate</span> <span class="o">!=</span> <span class="s2">&quot;that&quot;</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">LarkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected that(sentence), got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">quoted</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">quoted</span><span class="p">,</span> <span class="n">Sentence</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">LarkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected quoted sentence, got </span><span class="si">{</span><span class="n">quoted</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">quoted</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2585,51 +2906,51 @@ and <code>solve</code> commands work with it.</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">573</span>
-<span class="normal">574</span>
-<span class="normal">575</span>
-<span class="normal">576</span>
-<span class="normal">577</span>
-<span class="normal">578</span>
-<span class="normal">579</span>
-<span class="normal">580</span>
-<span class="normal">581</span>
-<span class="normal">582</span>
-<span class="normal">583</span>
-<span class="normal">584</span>
-<span class="normal">585</span>
-<span class="normal">586</span>
-<span class="normal">587</span>
-<span class="normal">588</span>
-<span class="normal">589</span>
-<span class="normal">590</span>
-<span class="normal">591</span>
-<span class="normal">592</span>
-<span class="normal">593</span>
-<span class="normal">594</span>
-<span class="normal">595</span>
-<span class="normal">596</span>
-<span class="normal">597</span>
-<span class="normal">598</span>
-<span class="normal">599</span>
-<span class="normal">600</span>
-<span class="normal">601</span>
-<span class="normal">602</span>
-<span class="normal">603</span>
-<span class="normal">604</span>
-<span class="normal">605</span>
-<span class="normal">606</span>
-<span class="normal">607</span>
-<span class="normal">608</span>
-<span class="normal">609</span>
-<span class="normal">610</span>
-<span class="normal">611</span>
-<span class="normal">612</span>
-<span class="normal">613</span>
-<span class="normal">614</span>
-<span class="normal">615</span>
-<span class="normal">616</span>
-<span class="normal">617</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TLogMarkdownParser</span><span class="p">(</span><span class="n">TLogParser</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">641</span>
+<span class="normal">642</span>
+<span class="normal">643</span>
+<span class="normal">644</span>
+<span class="normal">645</span>
+<span class="normal">646</span>
+<span class="normal">647</span>
+<span class="normal">648</span>
+<span class="normal">649</span>
+<span class="normal">650</span>
+<span class="normal">651</span>
+<span class="normal">652</span>
+<span class="normal">653</span>
+<span class="normal">654</span>
+<span class="normal">655</span>
+<span class="normal">656</span>
+<span class="normal">657</span>
+<span class="normal">658</span>
+<span class="normal">659</span>
+<span class="normal">660</span>
+<span class="normal">661</span>
+<span class="normal">662</span>
+<span class="normal">663</span>
+<span class="normal">664</span>
+<span class="normal">665</span>
+<span class="normal">666</span>
+<span class="normal">667</span>
+<span class="normal">668</span>
+<span class="normal">669</span>
+<span class="normal">670</span>
+<span class="normal">671</span>
+<span class="normal">672</span>
+<span class="normal">673</span>
+<span class="normal">674</span>
+<span class="normal">675</span>
+<span class="normal">676</span>
+<span class="normal">677</span>
+<span class="normal">678</span>
+<span class="normal">679</span>
+<span class="normal">680</span>
+<span class="normal">681</span>
+<span class="normal">682</span>
+<span class="normal">683</span>
+<span class="normal">684</span>
+<span class="normal">685</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TLogMarkdownParser</span><span class="p">(</span><span class="n">TLogParser</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse TLog blocks embedded in Markdown prose.&quot;&quot;&quot;</span>
 
     <span class="n">default_suffix</span> <span class="o">=</span> <span class="s2">&quot;tlog.md&quot;</span>
@@ -2705,10 +3026,10 @@ and <code>solve</code> commands work with it.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">579</span>
-<span class="normal">580</span>
-<span class="normal">581</span>
-<span class="normal">582</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Theory</span><span class="p">:</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">647</span>
+<span class="normal">648</span>
+<span class="normal">649</span>
+<span class="normal">650</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Theory</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse fenced TLog code blocks from Markdown into a theory.&quot;&quot;&quot;</span>
     <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_source</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_tlog_blocks</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -2763,6 +3084,32 @@ exists witness | observed(witness).
 <p>If you need to disambiguate a variable without an explicit quantifier, use <code>?</code>:</p>
 <div class="highlight"><pre><span></span><code>likes(?person, &quot;tea&quot;) -&gt; happy(?person).
 </code></pre></div>
+<h2 id="quoted-meta-statements">Quoted Meta Statements</h2>
+<p>Use <code>that(...)</code> to quote a sentence as data. Quoted sentences are not asserted
+unless a runner explicitly interprets them.</p>
+<p>Lemmas are named proof obligations:</p>
+<div class="highlight"><pre><span></span><code>lemma(
+  &quot;grandparent_implies_ancestor&quot;,
+  that(all x, y, z | parent(x, y) &amp; parent(y, z) -&gt; ancestor(x, z))
+).
+</code></pre></div>
+<p>Test cases can carry quoted fixtures and expectations without sending them to
+the solver as ordinary facts:</p>
+<div class="highlight"><pre><span></span><code>test_case(
+  &quot;socrates_mortality&quot;,
+  given(that(human(&quot;socrates&quot;))),
+  expect(that(satisfiable() &amp; mortal(&quot;socrates&quot;) &amp; not philosopher(&quot;socrates&quot;)))
+).
+</code></pre></div>
+<p><code>solve</code> ignores lemmas and test cases by default. Use dedicated commands when
+you want to interpret this metadata:</p>
+<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span><span class="nb">test</span><span class="w"> </span>theory.tlog<span class="w"> </span>--solver<span class="w"> </span>clingo
+typedlogic<span class="w"> </span>prove<span class="w"> </span>theory.tlog<span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--target<span class="w"> </span>lemmas
+</code></pre></div>
+<p>The test runner treats <code>given(that(S))</code> as a temporary assertion for that test
+case. <code>expect(that(E))</code> checks the expected sentence. In expectations,
+<code>satisfiable()</code> is a built-in check for fixture satisfiability, conjunction
+means all expectations must hold, and <code>not P</code> means <code>P</code> is not entailed.</p>
 <h2 id="hilog-style-predicate-variables">HiLog-Style Predicate Variables</h2>
 <p>Use <code>@name(...)</code> to put a variable in predicate position:</p>
 <div class="highlight"><pre><span></span><code>all slot, i, v | @slot(i, v) -&gt; has_slot_value(i, slot).
@@ -2800,6 +3147,16 @@ auto-detection:</p>
 <p>Run inference with any installed solver:</p>
 <div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>solve<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span>--solver<span class="w"> </span>clingo
 </code></pre></div>
+<p>Lemmas and test cases are metadata, so <code>solve</code> does not run or assert them.
+Run quoted test cases explicitly:</p>
+<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span><span class="nb">test</span><span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>clingo
+typedlogic<span class="w"> </span><span class="nb">test</span><span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>clingo<span class="w"> </span>--test<span class="w"> </span>socrates_mortality
+</code></pre></div>
+<p>Prove goals and lemmas explicitly:</p>
+<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>prove<span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>z3
+typedlogic<span class="w"> </span>prove<span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--target<span class="w"> </span>lemmas
+typedlogic<span class="w"> </span>prove<span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--name<span class="w"> </span>socrates_is_mortal
+</code></pre></div>
 <p>Show only selected materialized predicates:</p>
 <div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>solve<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--solver<span class="w"> </span>clingo<span class="w"> </span><span class="se">\</span>
@@ -2814,6 +3171,11 @@ auto-detection:</p>
 </code></pre></div>
 <p>The <code>--show</code> and <code>--max-models</code> options are generic <code>solve</code> options, not
 TLog-specific commands.</p>
+<p>Dump the generated solver program before solving:</p>
+<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>solve<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--solver<span class="w"> </span>clingo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dump-program
+</code></pre></div>
 
 
 

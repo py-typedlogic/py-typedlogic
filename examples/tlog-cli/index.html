@@ -631,6 +631,24 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#run-quoted-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run Quoted Tests
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prove-lemmas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prove Lemmas
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1941,6 +1959,24 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#run-quoted-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run Quoted Tests
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prove-lemmas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prove Lemmas
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1967,6 +2003,8 @@ generic commands:</p>
 <li><code>convert</code> for one input theory to one output format</li>
 <li><code>dump</code> for combining and exporting inputs</li>
 <li><code>solve</code> for satisfiability, materialization, and answer-set enumeration</li>
+<li><code>test</code> for quoted <code>test_case(...)</code> metadata</li>
+<li><code>prove</code> for quoted goals and lemmas</li>
 </ul>
 <h2 id="convert-tlog-to-other-formats">Convert TLog To Other Formats</h2>
 <div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>convert<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span>-t<span class="w"> </span>prolog
@@ -2028,6 +2066,12 @@ Total models shown: 1
 </code></pre></div>
 <p><code>--show ancestor</code> filters materialized output to selected predicates. It is a
 generic <code>solve</code> option and works for other syntaxes too.</p>
+<p>To inspect the generated solver-specific program before solving, use
+<code>--dump-program</code>:</p>
+<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>solve<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--solver<span class="w"> </span>clingo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dump-program
+</code></pre></div>
 <h2 id="show-multiple-worlds">Show Multiple Worlds</h2>
 <p>Answer-set solvers such as Clingo can produce multiple models:</p>
 <div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>solve<span class="w"> </span>docs/examples/tlog/worlds.tlog<span class="w"> </span><span class="se">\</span>
@@ -2048,6 +2092,42 @@ Total models shown: 2
 </code></pre></div>
 <p>The input syntax is still just TLog; the multiple-world behavior comes from the
 chosen solver.</p>
+<h2 id="run-quoted-tests">Run Quoted Tests</h2>
+<p>TLog files can include test cases as quoted metadata:</p>
+<div class="highlight"><pre><span></span><code>pred human(name: str).
+pred mortal(name: str).
+
+mortal(x) :- human(x).
+
+test_case(
+  &quot;socrates_mortality&quot;,
+  given(that(human(&quot;socrates&quot;))),
+  expect(that(satisfiable() &amp; mortal(&quot;socrates&quot;) &amp; not philosopher(&quot;socrates&quot;)))
+).
+</code></pre></div>
+<p><code>solve</code> ignores these test cases. Run them explicitly with <code>test</code>:</p>
+<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span><span class="nb">test</span><span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>clingo
+typedlogic<span class="w"> </span><span class="nb">test</span><span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>clingo<span class="w"> </span>--test<span class="w"> </span>socrates_mortality
+</code></pre></div>
+<p>Example output:</p>
+<div class="highlight"><pre><span></span><code>PASS socrates_mortality
+1 test case(s), 0 failed, 0 unknown
+</code></pre></div>
+<p>Use <code>--dump-program</code> to print the generated solver program for each test fixture
+before expectations are checked.</p>
+<h2 id="prove-lemmas">Prove Lemmas</h2>
+<p>Lemmas are quoted proof obligations, not axioms:</p>
+<div class="highlight"><pre><span></span><code>lemma(&quot;socrates_is_mortal&quot;, that(mortal(&quot;socrates&quot;))).
+</code></pre></div>
+<p>Run proof obligations explicitly:</p>
+<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>prove<span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>z3
+typedlogic<span class="w"> </span>prove<span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--target<span class="w"> </span>lemmas
+typedlogic<span class="w"> </span>prove<span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--name<span class="w"> </span>socrates_is_mortal
+</code></pre></div>
+<p>Example output:</p>
+<div class="highlight"><pre><span></span><code>PASS lemma socrates_is_mortal: mortal(&#39;socrates&#39;)
+1 obligation(s), 0 failed, 0 unknown
+</code></pre></div>
 
 
 

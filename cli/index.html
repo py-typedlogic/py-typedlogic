@@ -1919,6 +1919,32 @@ typedlogic<span class="w"> </span>dump<span class="w"> </span>theory1.py<span cl
 <p><strong>Options:</strong></p>
 <div class="highlight"><pre><span></span><code>  --help  Show this message and exit.
 </code></pre></div>
+<h2 id="prove">prove</h2>
+<p>Prove goal and lemma obligations embedded in a theory.</p>
+<p>Goals and lemmas are not asserted as axioms. This command loads the base
+theory and asks the selected solver to prove each quoted obligation.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>typedlogic prove [OPTIONS] THEORY_FILE [DATA_FILES]...
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<div class="highlight"><pre><span></span><code>  THEORY_FILE                     [required]
+  -s, --solver TEXT               Solver to use (z3, prover9, clingo, etc.)
+                                  [default: z3]
+  --target [all|goals|lemmas]     Proof obligations to run: all, goals, or
+                                  lemmas.  [default: all]
+  --validate-types / --no-validate-types
+                                  Use mypy to validate types  [default:
+                                  validate-types]
+  -f, --input-format TEXT         Input format; inferred from file suffix if
+                                  omitted
+  -d, --data-input-format TEXT    Format for ground terms
+  --name TEXT                     Only prove obligations from a named goal or
+                                  lemma group. Repeat for multiple names.
+  --dump-program, --show-program  Print the solver-specific generated program
+                                  before solving.
+  [DATA_FILES]...
+  --help                          Show this message and exit.
+</code></pre></div>
 <h2 id="solve">solve</h2>
 <p>Solve logical theories with facts using the specified solver.</p>
 <p>Accepts a theory file and optional data files containing facts.
@@ -1955,6 +1981,33 @@ typedlogic<span class="w"> </span>solve<span class="w"> </span>theory.py<span cl
                                   these predicates. Repeat for multiple
                                   predicates.
   --max-models INTEGER            Stop after showing this many models
+  --dump-program, --show-program  Print the solver-specific generated program
+                                  before solving.
+  [DATA_FILES]...
+  --help                          Show this message and exit.
+</code></pre></div>
+<h2 id="test">test</h2>
+<p>Run quoted test_case(...) declarations embedded in a theory.</p>
+<p>Tests are off by default for <code>solve</code>. This command opts into test metadata:
+each <code>given(that(...))</code> is temporarily asserted, and each <code>expect(that(...))</code>
+is checked against the resulting solver state.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>typedlogic test [OPTIONS] THEORY_FILE [DATA_FILES]...
+</code></pre></div>
+<p><strong>Options:</strong></p>
+<div class="highlight"><pre><span></span><code>  THEORY_FILE                     [required]
+  -s, --solver TEXT               Solver to use (z3, souffle, clingo, etc.)
+                                  [default: souffle]
+  --validate-types / --no-validate-types
+                                  Use mypy to validate types  [default:
+                                  validate-types]
+  -f, --input-format TEXT         Input format; inferred from file suffix if
+                                  omitted
+  -d, --data-input-format TEXT    Format for ground terms
+  --test TEXT                     Only run a named test case. Repeat for
+                                  multiple tests.
+  --dump-program, --show-program  Print the solver-specific generated program
+                                  before solving.
   [DATA_FILES]...
   --help                          Show this message and exit.
 </code></pre></div>
