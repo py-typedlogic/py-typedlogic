@@ -1,0 +1,4 @@
+pred DirectFlight(src: str, dst: str).
+
+DirectFlight("sfo", "jfk").
+DirectFlight("jfk", "lhr").

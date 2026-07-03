@@ -1,0 +1,6 @@
+pred p().
+pred q().
+
+/// p holds unless q does, and q holds unless p does.
+p() :- not q().
+q() :- not p().
