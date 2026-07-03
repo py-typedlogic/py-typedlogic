@@ -239,6 +239,14 @@ def test_validate_iter_reports_syntax_errors() -> None:
     check("Expected" in messages[0].message, messages[0].message)
 
 
+def test_validate_iter_reports_malformed_quoted_metadata() -> None:
+    """Validation reports malformed quoted metadata without raising."""
+    messages = list(TLogParser().validate_iter('lemma("bad", mortal("socrates")).'))
+
+    check(len(messages) == 1, repr(messages))
+    check("Expected that(sentence)" in messages[0].message, messages[0].message)
+
+
 def test_registry_discovers_tlog_parser() -> None:
     """The parser registry discovers TLogParser by class name."""
     parser = get_parser("tlog")

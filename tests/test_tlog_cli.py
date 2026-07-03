@@ -117,7 +117,7 @@ def test_tlog_test_command_runs_quoted_test_cases(tmp_path: Path) -> None:
         test_case(
           "socrates_mortality",
           given(that(human("socrates"))),
-          expect(that(satisfiable() & mortal("socrates") & not philosopher("socrates")))
+          expect(that(satisfiable() & mortal("socrates") & not philosopher("socrates") & ~student("socrates")))
         ).
         """,
         encoding="utf-8",

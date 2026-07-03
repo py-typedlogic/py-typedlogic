@@ -455,7 +455,7 @@ class TLogParser(Parser):
         """Validate source syntax."""
         try:
             self.parse(source, **kwargs)
-        except LarkError as e:
+        except (LarkError, ValueError) as e:
             yield ValidationMessage(message=str(e))
 
     def _read_source(self, source: Union[Path, str, TextIO]) -> str:

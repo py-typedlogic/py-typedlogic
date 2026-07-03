@@ -473,6 +473,11 @@ def _evaluate_expectation(context: ExpectationContext, sentence: Sentence) -> Op
         if result is None:
             return None
         return not result
+    if isinstance(sentence, Not):
+        result = _evaluate_expectation(context, sentence.negated)
+        if result is None:
+            return None
+        return not result
     return context.prove(sentence)
 
 
