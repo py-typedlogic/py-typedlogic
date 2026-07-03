@@ -1,11 +1,12 @@
 import logging
-from typing import ClassVar, Optional, Union, List, Tuple, Dict, Any
+from typing import Any, ClassVar, Dict, List, Optional, Tuple, Union
 
 import problog.logic as pl
 
-from typedlogic import Theory, Forall, Variable
+from typedlogic import And, Forall, Implies, Or, Theory, Variable
+from typedlogic.builtins import NAME_TO_INFIX_OP
 from typedlogic.compiler import Compiler, ModelSyntax
-from typedlogic.datamodel import NotInProfileError, Sentence, Term, Extension
+from typedlogic.datamodel import Extension, NotInProfileError, Sentence, Term
 from typedlogic.extensions.probabilistic import Evidence, Probability, That
 from typedlogic.transformations import (
     PrologConfig,
@@ -17,6 +18,15 @@ logger = logging.getLogger(__name__)
 
 PROBABILITY_PREDICATE = "Probability"
 THAT_PREDICATE = "That"
+CONSTRAINT_VIOLATION_PREDICATE = "typedlogic_constraint_violation"
+NEGATED_COMPARISON_PREDICATES = {
+    "eq": "ne",
+    "ne": "eq",
+    "lt": "ge",
+    "le": "gt",
+    "gt": "le",
+    "ge": "lt",
+}
 
 
 class ProbLogCompiler(Compiler):
@@ -57,7 +67,8 @@ class ProbLogCompiler(Compiler):
         :param kwargs:
         :return:
         """
-        prolog_config = PrologConfig(disjunctive_datalog=True, double_quote_strings=True, allow_nesting=False, allow_ungrounded_vars_in_head=True)
+        include_queries = kwargs.get("include_queries", True)
+        prolog_config = self.prolog_config()
         if not self._predicate_mappings:
             self._predicate_mappings = {}
         for pd in theory.predicate_definitions:
@@ -66,18 +77,54 @@ class ProbLogCompiler(Compiler):
                 prolog_pd = prolog_pd[: prolog_pd.index("(")]
             self._predicate_mappings[prolog_pd] = pd.predicate
         clauses = []
+        clauses.extend(self.false_predicate_declarations(theory, prolog_config))
         for sentence in theory.sentences + theory.ground_terms:
             clause = self._sentence_to_problog(sentence, prolog_config)
             if clause:
                 clauses.append(clause)
-        for pd in theory.predicate_definitions:
-            if pd.predicate in [Probability.__name__, That.__name__, Evidence.__name__]:
-                continue
-            query_vars = [Variable(a) for a in pd.arguments.keys()]
-            term = Term("query", Term(pd.predicate, *query_vars))
-            clause = self._sentence_to_problog(term, prolog_config)
-            clauses.append(clause)
+        if include_queries:
+            for pd in theory.predicate_definitions:
+                if pd.predicate in [Probability.__name__, That.__name__, Evidence.__name__]:
+                    continue
+                query_vars = [Variable(a) for a in pd.arguments.keys()]
+                term = Term("query", Term(pd.predicate, *query_vars))
+                clause = self._sentence_to_problog(term, prolog_config)
+                clauses.append(clause)
         return "\n".join(clauses)
+
+    @staticmethod
+    def prolog_config() -> PrologConfig:
+        """Return Prolog rendering configuration for ProbLog syntax."""
+        return PrologConfig(
+            disjunctive_datalog=True,
+            double_quote_strings=True,
+            operator_map={"eq": "=", "ne": r"\="},
+            allow_nesting=False,
+            allow_ungrounded_vars_in_head=True,
+        )
+
+    @staticmethod
+    def false_predicate_declarations(theory: Theory, prolog_config: PrologConfig) -> List[str]:
+        """Return false clauses for declared predicates that may otherwise be empty."""
+        declarations = []
+        seen: set[tuple[str, int]] = set()
+        for predicate_definition in theory.predicate_definitions:
+            if predicate_definition.predicate in [Probability.__name__, That.__name__, Evidence.__name__]:
+                continue
+            predicate = as_prolog(Term(predicate_definition.predicate), config=prolog_config)
+            if "(" in predicate:
+                predicate = predicate[: predicate.index("(")]
+            arity = len(predicate_definition.arguments)
+            key = (predicate, arity)
+            if key in seen:
+                continue
+            seen.add(key)
+            if arity == 0:
+                declarations.append(f"{predicate} :- fail.")
+                continue
+            args = ", ".join("_" for _ in range(arity))
+            declarations.append(f"{predicate}({args}) :- fail.")
+        return declarations
 
     def _sentence_to_problog(self, sentence: Sentence, prolog_config: PrologConfig) -> str:
         if isinstance(sentence, Forall):
@@ -98,7 +145,10 @@ class ProbLogCompiler(Compiler):
             rules = []
             try:
                 for rule in to_horn_rules(s, allow_disjunctions_in_head=False, allow_goal_clauses=True):
-                    rules.append(rule)
+                    rewritten_rule = self._comparison_head_to_constraint(rule)
+                    if rewritten_rule is None:
+                        continue
+                    rules.append(rewritten_rule)
             except NotInProfileError as e:
                 logger.info(f"Skipping sentence {s} due to {e}")
             return rules
@@ -109,7 +159,9 @@ class ProbLogCompiler(Compiler):
             inner_rules = _to_rules(inner)
             strs = []
             for r in inner_rules:
-                strs.append(f"{pr}::{as_prolog(r, config=prolog_config)}")
+                rendered = self._rule_to_problog(r, prolog_config)
+                if rendered:
+                    strs.append(f"{pr}::{rendered}")
             return "\n".join(strs)
         elif isinstance(sentence, Term) and sentence.predicate == Evidence.__name__:
             # special treatment for evidence sentences
@@ -123,7 +175,7 @@ class ProbLogCompiler(Compiler):
             return f"evidence({inner_prolog}, {'true' if truth_value else 'false'})."
         else:
             rules = _to_rules(sentence)
-            return "\n".join([as_prolog(r, config=prolog_config, strict=False) for r in rules])
+            return "\n".join([rendered for r in rules if (rendered := self._rule_to_problog(r, prolog_config))])
 
     def _sentence_probability(self, sentence: Sentence) -> Optional[Tuple[Union[float, int], Sentence]]:
         if isinstance(sentence, Forall):
@@ -149,6 +201,32 @@ class ProbLogCompiler(Compiler):
                     raise ValueError(f"Invalid inner reference: {inner_ref}")
                 return pr, inner_ref
         return None
+
+    @staticmethod
+    def _comparison_head_to_constraint(rule: Sentence) -> Optional[Sentence]:
+        """Convert implication heads like ``X != Y`` into ProbLog constraints."""
+        if not isinstance(rule, Implies):
+            return rule
+        head = rule.consequent
+        if not isinstance(head, Term) or head.predicate not in NAME_TO_INFIX_OP:
+            return rule
+        negated_predicate = NEGATED_COMPARISON_PREDICATES.get(head.predicate)
+        if not negated_predicate:
+            logger.info(f"Skipping rule with built-in predicate in head: {rule}")
+            return None
+        negated_comparison = Term(negated_predicate, *head.values)
+        return Implies(And(rule.antecedent, negated_comparison), Or())
+
+    @staticmethod
+    def _rule_to_problog(rule: Sentence, prolog_config: PrologConfig) -> str:
+        """Render one rule, encoding goal clauses as ProbLog evidence."""
+        if isinstance(rule, Implies) and isinstance(rule.consequent, Or) and not rule.consequent.operands:
+            violation = Implies(rule.antecedent, Term(CONSTRAINT_VIOLATION_PREDICATE))
+            return (
+                f"{as_prolog(violation, config=prolog_config, strict=False)}\n"
+                f"evidence({CONSTRAINT_VIOLATION_PREDICATE}, false)."
+            )
+        return as_prolog(rule, config=prolog_config, strict=False)
 
     def decompile_term(self, compiled_term: Any) -> Term:
         if isinstance(compiled_term, pl.Term):
