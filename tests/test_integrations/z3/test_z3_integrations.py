@@ -208,6 +208,20 @@ def test_nested_builtin_terms(op, py_result):
     assert z3.simplify(expr.arg(0)) == z3.simplify(z3.IntVal(py_result))
 
 
+def test_deeply_nested_builtin_terms():
+    """Nested arithmetic terms should recurse through arbitrary builtin subterms."""
+    import z3
+
+    solver = Z3Solver()
+    solver.add(PredicateDefinition(predicate="R", arguments={"a": "int"}))
+    a = Variable("a", "int")
+    b = Variable("b", "int")
+    c = Variable("c", "int")
+    solver.constants.update({"a": 4, "b": 3, "c": 2})
+    expr = solver.translate(Term("R", {"a": Term("add", Term("sub", a, b), c)}))
+    assert z3.simplify(expr.arg(0)) == z3.simplify(z3.IntVal(3))
+
+
 def test_quantifier_variable_not_captured_across_siblings():
     """A variable bound only inside one subformula must not leak into a sibling."""
     solver = Z3Solver()

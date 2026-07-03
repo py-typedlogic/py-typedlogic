@@ -213,6 +213,11 @@ class Z3Solver(Solver):
             else:
                 pf_arg = bindings[var.name]
             return pf_arg
+        if isinstance(var, Term):
+            if var.predicate not in NUMERIC_BUILTINS:
+                raise NotImplementedError(f"Term not implemented: p: {var.predicate} {type(var)} v: {var}")
+            args = [self._tr(a, bindings) for a in var.values]
+            return NUMERIC_BUILTINS[var.predicate](*args)
         py_typ = type(var).__name__
         z3_typ = self._sort(py_typ)
         t2m_map = {
@@ -333,43 +338,9 @@ class Z3Solver(Solver):
                 # TODO: more elegant way to do this
                 sentence = copy(sentence)
                 sentence.make_keyword_indexed(list(pd.arguments.keys()))
-            pf_args = []
-            for arg_name, var in sentence.bindings.items():
-                if not bindings:
-                    bindings = {}
-                if isinstance(var, Variable):
-                    if var.name not in bindings:
-                        if var.name in self.constants:
-                            pf_arg = self.constants[var.name]
-                        else:
-                            raise ValueError(f"Variable {var.name} not bound in {bindings} or {self.constants}")
-                    else:
-                        pf_arg = bindings[var.name]
-                    pf_args.append(pf_arg)
-                elif isinstance(var, Term):
-                    args = [self._tr(a, bindings) for a in var.values]
-                    p = var.predicate
-                    # Reuse the same builtin table as the top-level predicate path so
-                    # nested function terms (e.g. sub, mul, comparisons) map correctly
-                    # and consistently, instead of a hand-picked subset.
-                    if p in NUMERIC_BUILTINS:
-                        pf_args.append(NUMERIC_BUILTINS[p](*args))
-                    else:
-                        raise NotImplementedError(f"Term not implemented: p: {p} {type(var)} v: {var}")
-                elif var is None:
-                    pf_args.append(z3.StringVal("None"))
-                else:
-                    py_typ = type(var).__name__
-                    z3_typ = self._sort(py_typ)
-                    t2m_map = {
-                        z3.StringSort: z3.StringVal,
-                        z3.IntSort: z3.IntVal,
-                        z3.BoolSort: z3.BoolVal,
-                        z3.RealSort: z3.RealVal,
-                    }
-                    z3_valf = t2m_map.get(z3_typ, z3.StringVal)
-                    pf_arg = z3_valf(var)
-                    pf_args.append(pf_arg)
+            if not bindings:
+                bindings = {}
+            pf_args = [self._tr(var, bindings) for var in sentence.bindings.values()]
             try:
                 z3_expr = pf(*pf_args)
             except Exception as e:
