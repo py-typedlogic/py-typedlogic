@@ -8,4 +8,3 @@
 .decl StageAge(stage: symbol, age: symbol)
 .decl PersonWithAge2(name: symbol, age_in_years: number)
 .decl PersonWithAddress(name: symbol, zip_code: symbol)
-Adult("Alice") :- PersonWithAge("Alice", 25).

@@ -1004,6 +1004,8 @@ class CardinalityConstraint(Term):
 class SentenceGroupType(str, Enum):
     AXIOM = "axiom"
     GOAL = "goal"
+    LEMMA = "lemma"
+    TEST = "test"
     # PROBABILISTIC_AXIOM = "probabilistic_axiom"
 
 
@@ -1084,7 +1086,12 @@ class Theory:
         :return:
         """
         if self.sentence_groups:
-            return [s for sg in self.sentence_groups for s in sg.sentences or []]
+            return [
+                s
+                for sg in self.sentence_groups
+                if sg.group_type in (None, SentenceGroupType.AXIOM)
+                for s in sg.sentences or []
+            ]
         return []
 
     @property

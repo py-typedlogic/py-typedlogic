@@ -275,11 +275,15 @@ class Solver(ABC):
         self.base_theory.ground_terms.append(fact_to_term(fact))
 
     def add_sentence_group(self, sentence_group: SentenceGroup) -> None:
-        self.base_theory.sentence_groups.append(sentence_group)
         if sentence_group.group_type == SentenceGroupType.GOAL:
             if not self.goals:
                 self.goals = []
             self.goals.append(sentence_group)
+            return
+        if sentence_group.group_type in {SentenceGroupType.LEMMA, SentenceGroupType.TEST}:
+            return
+
+        self.base_theory.sentence_groups.append(sentence_group)
         if sentence_group.sentences:
             for sentence in sentence_group.sentences:
                 self._register_sentence(sentence)

@@ -10,7 +10,7 @@ from lark import Lark, Transformer
 from lark.exceptions import LarkError
 
 from typedlogic import And, Exists, Forall, Iff, Implies, NegationAsFailure, Not, Or, PredicateDefinition, Term, Theory
-from typedlogic.datamodel import Sentence, Variable
+from typedlogic.datamodel import Sentence, SentenceGroup, SentenceGroupType, Variable
 from typedlogic.parser import Parser, ValidationMessage
 
 GRAMMAR = r"""
@@ -88,7 +88,8 @@ var_decl: var_name [":" type_expr]
 ?power: atom_expr
       | atom_expr "**" power                 -> pow
 
-?atom_expr: atom
+?atom_expr: quoted_sentence
+          | atom
           | value
           | "(" sentence ")"
 
@@ -122,9 +123,12 @@ arg_list: arg_expr ("," arg_expr)*
 ?arg_power: arg_atom_expr
           | arg_atom_expr "**" arg_power      -> pow
 
-?arg_atom_expr: atom
+?arg_atom_expr: quoted_sentence
+              | atom
               | value
               | "(" arg_expr ")"
+
+quoted_sentence: THAT "(" sentence ")"
 
 ?value: QVAR                                 -> marked_variable
       | NAME                                 -> bare_name
@@ -146,6 +150,7 @@ LARROW: "<-"
 IFF: "<->" | "<=>"
 TRUE.2: "true"
 FALSE.2: "false"
+THAT.2: "that"
 
 HILOG_NAME: "@" NAME
 QVAR: "?" NAME
@@ -153,6 +158,7 @@ NAME: /[A-Za-z_][A-Za-z0-9_]*/
 SINGLE_QUOTED_STRING: /'([^'\\]|\\.)*'/
 DOC_COMMENT: /\/\/\/[^\n]*/
 COMMENT: /#[^\n]*/
+LINE_COMMENT: /\/\/(?!\/)[^\n]*/
 
 %import common.SIGNED_NUMBER
 %import common.INT
@@ -160,6 +166,7 @@ COMMENT: /#[^\n]*/
 %import common.WS
 %ignore WS
 %ignore COMMENT
+%ignore LINE_COMMENT
 """
 
 
@@ -218,6 +225,13 @@ class ConstraintNode:
     """A constraint of the form `:- body` before lowering."""
 
     body: Any
+
+
+@dataclass(frozen=True)
+class ThatNode:
+    """A quoted sentence before lowering."""
+
+    sentence: Any
 
 
 @dataclass(frozen=True)
@@ -385,6 +399,9 @@ class _TreeToNodes(Transformer):
             arguments = tuple(items[1])
         return AtomNode(predicate, arguments)
 
+    def quoted_sentence(self, items: list[Any]) -> ThatNode:
+        return ThatNode(items[-1])
+
     def marked_variable(self, items: list[Any]) -> NameRef:
         return NameRef(str(items[0])[1:], variable=True)
 
@@ -463,9 +480,56 @@ class TLogParser(Parser):
             return
 
         sentence = self._lower_statement(body)
+        if self._add_meta_statement(theory, sentence, statement.comments):
+            return
         if statement.comments:
             sentence.add_annotation("comment", "\n".join(statement.comments))
         theory.add(sentence)
+
+    def _add_meta_statement(self, theory: Theory, sentence: Sentence, comments: tuple[str, ...]) -> bool:
+        """Add top-level quoted meta statements as sentence groups."""
+        if not isinstance(sentence, Term):
+            return False
+        if sentence.predicate == "lemma":
+            name, quoted = self._named_quoted_sentence(sentence, "lemma")
+            theory.sentence_groups.append(
+                SentenceGroup(
+                    name=name,
+                    group_type=SentenceGroupType.LEMMA,
+                    docstring="\n".join(comments) or None,
+                    sentences=[quoted],
+                )
+            )
+            return True
+        if sentence.predicate == "test_case":
+            name = str(sentence.values[0]) if sentence.values else "test_case"
+            theory.sentence_groups.append(
+                SentenceGroup(
+                    name=name,
+                    group_type=SentenceGroupType.TEST,
+                    docstring="\n".join(comments) or None,
+                    sentences=[sentence],
+                )
+            )
+            return True
+        return False
+
+    def _named_quoted_sentence(self, sentence: Term, predicate: str) -> tuple[str, Sentence]:
+        """Return the name and quoted sentence from a meta term."""
+        if len(sentence.values) != 2:
+            raise ValueError(f"{predicate} expects a name and that(sentence): {sentence}")
+        name, quoted = sentence.values
+        inner = self._quoted_sentence_value(quoted)
+        return str(name), inner
+
+    def _quoted_sentence_value(self, value: Any) -> Sentence:
+        """Return the sentence wrapped by a that(...) term."""
+        if not isinstance(value, Term) or value.predicate != "that" or len(value.values) != 1:
+            raise ValueError(f"Expected that(sentence), got {value}")
+        quoted = value.values[0]
+        if not isinstance(quoted, Sentence):
+            raise ValueError(f"Expected quoted sentence, got {quoted}")
+        return quoted
 
     def _lower_statement(self, node: Any) -> Sentence:
         explicit_vars = self._explicit_vars(node)
@@ -492,6 +556,8 @@ class TLogParser(Parser):
             if node.operator == "naf":
                 return NegationAsFailure(operand)
             return Not(operand)
+        if isinstance(node, ThatNode):
+            return Term("that", self._lower_statement(node.sentence))
         if isinstance(node, BinaryNode):
             left = self._lower(node.left, bound_vars, bare_names_as_variables)
             right = self._lower(node.right, bound_vars, bare_names_as_variables)
@@ -552,6 +618,8 @@ class TLogParser(Parser):
                     variables.append(value)
                 return
             if isinstance(value, Term):
+                if value.predicate == "that":
+                    return
                 if isinstance(value.predicate, Variable):
                     visit(value.predicate)
                 for arg in value.values:

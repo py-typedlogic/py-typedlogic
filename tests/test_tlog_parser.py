@@ -7,6 +7,7 @@ import pytest
 from typedlogic import Exists, Forall, Iff, Implies, NegationAsFailure, Not, Or, Term, Variable
 from typedlogic.compilers.prolog_compiler import PrologCompiler
 from typedlogic.compilers.tlog_compiler import TLogCompiler
+from typedlogic.datamodel import SentenceGroupType
 from typedlogic.integrations.solvers.souffle.souffle_compiler import SouffleCompiler
 from typedlogic.parsers.tlog_parser import TLogMarkdownParser, TLogParser
 from typedlogic.registry import get_compiler, get_parser
@@ -210,6 +211,26 @@ def test_doc_comments_attach_to_next_sentence() -> None:
     )
 
 
+def test_double_slash_comments_are_ignored() -> None:
+    """Double-slash comments are ignored without swallowing doc comments."""
+    theory = TLogParser().parse(
+        """
+        // ignored file comment
+        parent("Alice", "Bob"). // ignored trailing comment
+
+        /// Preserved rule comment.
+        ancestor(x, y) :- parent(x, y).
+        """
+    )
+
+    check(len(theory.sentences) == 2, repr(theory.sentences))
+    check(theory.sentences[0].annotations == {}, repr(theory.sentences[0].annotations))
+    check(
+        theory.sentences[1].annotations == {"comment": "Preserved rule comment."},
+        repr(theory.sentences[1].annotations),
+    )
+
+
 def test_validate_iter_reports_syntax_errors() -> None:
     """Validation reports parser errors without raising."""
     messages = list(TLogParser().validate_iter("p(x) ->."))
@@ -298,6 +319,61 @@ def test_tlog_compiler_roundtrips_core_tlog_constructs() -> None:
     check(roundtripped.type_definitions == theory.type_definitions, repr(roundtripped.type_definitions))
     check(roundtripped.predicate_definitions == theory.predicate_definitions, repr(roundtripped.predicate_definitions))
     check(len(roundtripped.sentences) == len(theory.sentences), repr(roundtripped.sentences))
+
+
+def test_parse_quoted_lemma_and_test_case_groups() -> None:
+    """Quoted meta statements are grouped without flattening quoted sentences."""
+    theory = TLogParser().parse(
+        """
+        lemma(
+          "grandparent_implies_ancestor",
+          that(all x, y, z | parent(x, y) & parent(y, z) -> ancestor(x, z))
+        ).
+
+        test_case(
+          "socrates_mortality",
+          given(that(human(socrates))),
+          expect(that(satisfiable() & mortal(socrates) & not philosopher(socrates)))
+        ).
+        """
+    )
+
+    lemma_group = theory.sentence_groups[0]
+    test_group = theory.sentence_groups[1]
+    check(lemma_group.group_type == SentenceGroupType.LEMMA, repr(lemma_group))
+    check(lemma_group.name == "grandparent_implies_ancestor", lemma_group.name)
+    check(isinstance(lemma_group.sentences[0], Forall), repr(lemma_group.sentences))
+    check(test_group.group_type == SentenceGroupType.TEST, repr(test_group))
+    check(test_group.name == "socrates_mortality", test_group.name)
+
+    test_case = test_group.sentences[0]
+    check(test_case.predicate == "test_case", repr(test_case))
+    given = test_case.values[1]
+    expect = test_case.values[2]
+    check(given.predicate == "given", repr(given))
+    check(given.values[0].predicate == "that", repr(given.values))
+    check(given.values[0].values[0] == Term("human", "socrates"), repr(given.values[0].values[0]))
+    check(expect.predicate == "expect", repr(expect))
+    check(expect.values[0].predicate == "that", repr(expect.values))
+
+
+def test_tlog_compiler_roundtrips_quoted_meta_groups() -> None:
+    """The TLog compiler preserves lemma and test groups."""
+    theory = TLogParser().parse(
+        """
+        lemma("modus_ponens_instance", that(all x | p(x) & implies_p_q(x) -> q(x))).
+        test_case("p_implies_q", given(that(p(socrates))), expect(that(q(socrates)))).
+        """
+    )
+
+    compiled = TLogCompiler().compile(theory)
+    roundtripped = TLogParser().parse(compiled)
+    check("lemma('modus_ponens_instance', that(all x | q(x) :- (p(x) & implies_p_q(x))))." in compiled, compiled)
+    check("test_case('p_implies_q', given(that(p('socrates'))), expect(that(q('socrates'))))." in compiled, compiled)
+    check(
+        [g.group_type for g in roundtripped.sentence_groups] == [SentenceGroupType.LEMMA, SentenceGroupType.TEST],
+        compiled,
+    )
 
 
 def test_tlog_type_annotations_export_to_typed_souffle_compiler() -> None:

@@ -6,6 +6,8 @@ generic commands:
 - `convert` for one input theory to one output format
 - `dump` for combining and exporting inputs
 - `solve` for satisfiability, materialization, and answer-set enumeration
+- `test` for quoted `test_case(...)` metadata
+- `prove` for quoted goals and lemmas
 
 ## Convert TLog To Other Formats
 
@@ -95,6 +97,15 @@ Total models shown: 1
 `--show ancestor` filters materialized output to selected predicates. It is a
 generic `solve` option and works for other syntaxes too.
 
+To inspect the generated solver-specific program before solving, use
+`--dump-program`:
+
+```bash
+typedlogic solve docs/examples/tlog/ancestor.tlog \
+  --solver clingo \
+  --dump-program
+```
+
 ## Show Multiple Worlds
 
 Answer-set solvers such as Clingo can produce multiple models:
@@ -122,3 +133,60 @@ Total models shown: 2
 
 The input syntax is still just TLog; the multiple-world behavior comes from the
 chosen solver.
+
+## Run Quoted Tests
+
+TLog files can include test cases as quoted metadata:
+
+```tlog
+pred human(name: str).
+pred mortal(name: str).
+
+mortal(x) :- human(x).
+
+test_case(
+  "socrates_mortality",
+  given(that(human("socrates"))),
+  expect(that(satisfiable() & mortal("socrates") & not philosopher("socrates")))
+).
+```
+
+`solve` ignores these test cases. Run them explicitly with `test`:
+
+```bash
+typedlogic test docs/examples/tlog/mortality.tlog --solver clingo
+typedlogic test docs/examples/tlog/mortality.tlog --solver clingo --test socrates_mortality
+```
+
+Example output:
+
+```text
+PASS socrates_mortality
+1 test case(s), 0 failed, 0 unknown
+```
+
+Use `--dump-program` to print the generated solver program for each test fixture
+before expectations are checked.
+
+## Prove Lemmas
+
+Lemmas are quoted proof obligations, not axioms:
+
+```tlog
+lemma("socrates_is_mortal", that(mortal("socrates"))).
+```
+
+Run proof obligations explicitly:
+
+```bash
+typedlogic prove docs/examples/tlog/mortality.tlog --solver z3
+typedlogic prove docs/examples/tlog/mortality.tlog --solver z3 --target lemmas
+typedlogic prove docs/examples/tlog/mortality.tlog --solver z3 --name socrates_is_mortal
+```
+
+Example output:
+
+```text
+PASS lemma socrates_is_mortal: mortal('socrates')
+1 obligation(s), 0 failed, 0 unknown
+```

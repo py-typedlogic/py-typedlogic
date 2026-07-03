@@ -18,6 +18,7 @@ from typedlogic.datamodel import (
     Sentence,
     PredicateDefinition,
     SentenceGroup,
+    SentenceGroupType,
     Variable,
 )
 from typedlogic.pybridge import FactMixin, Fact
@@ -44,6 +45,7 @@ __all__ = [
     "Variable",
     "PredicateDefinition",
     "SentenceGroup",
+    "SentenceGroupType",
     "Fact",
     "FactMixin",
     "gen",
@@ -55,4 +57,6 @@ __all__ = [
     "gen_list",
     "gen_const",
     "gen_product",
+    "axiom",
+    "goal",
 ]

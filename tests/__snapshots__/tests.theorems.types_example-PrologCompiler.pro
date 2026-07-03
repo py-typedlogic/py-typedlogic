@@ -6,6 +6,7 @@
 %% facts
 
 %% UNTRANSLATABLE: StageAge('Adult', AGE_THRESHOLD)
+personwithage('Alice', 25).
 
 %% classifications
 

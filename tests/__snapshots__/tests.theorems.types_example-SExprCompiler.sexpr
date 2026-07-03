@@ -46,7 +46,8 @@
         (docstring null) 
         (sentences 
           ((StageAge "Adult" 
-              (Variable "AGE_THRESHOLD")))) 
+              (Variable "AGE_THRESHOLD"))
+            (PersonWithAge "Alice" 25)))
         (_annotations null)) 
       (SentenceGroup 
         (name "classifications") 
