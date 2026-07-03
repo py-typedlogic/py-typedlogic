@@ -11,6 +11,7 @@ from lark import Lark, Transformer
 from lark.exceptions import LarkError
 
 from typedlogic import And, Exists, Forall, Iff, Implies, NegationAsFailure, Not, Or, PredicateDefinition, Term, Theory
+from typedlogic.builtins import NUMERIC_BUILTINS
 from typedlogic.datamodel import Sentence, SentenceGroup, SentenceGroupType, Variable
 from typedlogic.parser import Parser, ValidationMessage
 
@@ -445,8 +446,27 @@ class TLogParser(Parser):
         self._parser = Lark(GRAMMAR, parser="lalr", propagate_positions=True, maybe_placeholders=False)
 
     def parse(self, source: Union[Path, str, TextIO], **kwargs: Any) -> Theory:
-        """Parse a TLog source into a theory."""
-        text = self._read_source(source)
+        """
+        Parse a TLog source into a theory.
+
+        Parsing is permissive: an *undeclared* predicate may be used at any arity, mirroring
+        Prolog where ``person/1`` and ``person/2`` are distinct relations. If ``auto_validate``
+        is set, a *declared* predicate used at an arity no declaration matches raises an error
+        (see :meth:`validate_iter`).
+        """
+        theory = self._build_theory(self._prepare_text(source))
+        if self.auto_validate:
+            errors = [m for m in self._arity_messages(theory) if m.level == "error"]
+            if errors:
+                raise ValueError("Validation errors: " + "; ".join(m.message for m in errors))
+        return theory
+
+    def _prepare_text(self, source: Union[Path, str, TextIO]) -> str:
+        """Return the TLog text to parse from a source. Subclasses may preprocess here."""
+        return self._read_source(source)
+
+    def _build_theory(self, text: str) -> Theory:
+        """Parse already-prepared TLog text into a theory, without validation side effects."""
         tree = self._parser.parse(text)
         statement_nodes = _TreeToNodes().transform(tree)
         theory = Theory()
@@ -455,13 +475,65 @@ class TLogParser(Parser):
         return theory
 
     def validate_iter(self, source: Union[Path, str, TextIO], **kwargs: Any) -> Iterable[ValidationMessage]:
-        """Validate source syntax."""
+        """
+        Validate source syntax and predicate-arity usage.
+
+        Reports a syntax error for unparsable input, and an error for any *declared* predicate
+        used at an arity that no declaration provides. Undeclared predicates are not checked, so
+        the same name may still be used at multiple arities when no ``pred`` declaration exists.
+        """
         try:
-            self.parse(source, **kwargs)
+            theory = self._build_theory(self._prepare_text(source))
         except (LarkError, ValueError) as e:
             line = getattr(e, "line", None)
             column = getattr(e, "column", None)
             yield ValidationMessage(message=_LARK_LOCATION_RE.sub(".", str(e), count=1), line=line, column=column)
+            return
+        yield from self._arity_messages(theory)
+
+    def _arity_messages(self, theory: Theory) -> Iterable[ValidationMessage]:
+        """Yield an error for each declared predicate used at an undeclared arity."""
+        declared: dict[str, set[int]] = {}
+        for pd in theory.predicate_definitions:
+            declared.setdefault(pd.predicate, set()).add(len(pd.arguments))
+        if not declared:
+            return
+        reported: set[tuple[str, int]] = set()
+        for sentence in self._validation_sentences(theory):
+            for name, arity in self._predicate_usages(sentence):
+                if name not in declared or arity in declared[name] or (name, arity) in reported:
+                    continue
+                reported.add((name, arity))
+                expected = ", ".join(f"{name}/{a}" for a in sorted(declared[name]))
+                yield ValidationMessage(
+                    message=(
+                        f"Predicate '{name}' used with arity {arity}, but declared as {expected}. "
+                        f"Add 'pred {name}/{arity}.' if the {arity}-ary use is intentional."
+                    ),
+                    level="error",
+                )
+
+    def _validation_sentences(self, theory: Theory) -> Iterable[Sentence]:
+        """Yield every sentence represented by the source, including metadata groups."""
+        for group in theory.sentence_groups:
+            yield from group.sentences or []
+
+    def _predicate_usages(self, node: Any) -> Iterable[tuple[str, int]]:
+        """Yield ``(predicate_name, arity)`` for every non-builtin atom in a sentence tree."""
+        if isinstance(node, Term):
+            predicate = node.predicate
+            if isinstance(predicate, str) and predicate not in NUMERIC_BUILTINS:
+                yield (predicate, len(node.values))
+            for value in node.values:
+                yield from self._predicate_usages(value)
+            return
+        if isinstance(node, (Forall, Exists)):
+            yield from self._predicate_usages(node.sentence)
+            return
+        operands = getattr(node, "operands", None)
+        if operands is not None:
+            for operand in operands:
+                yield from self._predicate_usages(operand)
 
     def _read_source(self, source: Union[Path, str, TextIO]) -> str:
         if isinstance(source, Path):
@@ -649,10 +721,9 @@ class TLogMarkdownParser(TLogParser):
     default_suffix = "tlog.md"
     code_block_languages = frozenset({"tlog", "typedlogic", "logic"})
 
-    def parse(self, source: Union[Path, str, TextIO], **kwargs: Any) -> Theory:
-        """Parse fenced TLog code blocks from Markdown into a theory."""
-        text = self._read_source(source)
-        return super().parse(self._extract_tlog_blocks(text), **kwargs)
+    def _prepare_text(self, source: Union[Path, str, TextIO]) -> str:
+        """Extract fenced TLog code blocks from Markdown before parsing/validation."""
+        return self._extract_tlog_blocks(self._read_source(source))
 
     def _extract_tlog_blocks(self, text: str) -> str:
         lines: list[str] = []
