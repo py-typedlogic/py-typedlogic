@@ -1,0 +1,15 @@
+pred Bird(name: str).
+pred Penguin(name: str).
+pred Abnormal(name: str).
+pred Flies(name: str).
+
+Bird("tweety").
+Bird("opus").
+Penguin("opus").
+
+/// Penguins are abnormal birds.
+Abnormal(x) :- Penguin(x).
+
+/// A bird flies UNLESS it can be shown abnormal.
+/// `not` here is negation-as-failure.
+Flies(x) :- Bird(x), not Abnormal(x).

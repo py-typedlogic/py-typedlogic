@@ -1,0 +1,10 @@
+pred Bird(name: str).
+pred Abnormal(name: str).
+pred Flies(name: str).
+
+Bird("tweety").
+
+/// The SAME rule, read with classical (strong) negation `~`
+/// instead of negation-as-failure. Now `~Abnormal(x)` must be
+/// *proven*, not merely assumed.
+Flies(x) :- Bird(x), ~Abnormal(x).
