@@ -1415,9 +1415,54 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#typedlogic.parsers.tlog_parser.TLogParser._prepare_text" class="md-nav__link">
+    <span class="md-ellipsis">
+      _prepare_text
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.parsers.tlog_parser.TLogParser._build_theory" class="md-nav__link">
+    <span class="md-ellipsis">
+      _build_theory
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#typedlogic.parsers.tlog_parser.TLogParser.validate_iter" class="md-nav__link">
     <span class="md-ellipsis">
       validate_iter
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.parsers.tlog_parser.TLogParser._arity_messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      _arity_messages
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.parsers.tlog_parser.TLogParser._validation_sentences" class="md-nav__link">
+    <span class="md-ellipsis">
+      _validation_sentences
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.parsers.tlog_parser.TLogParser._predicate_usages" class="md-nav__link">
+    <span class="md-ellipsis">
+      _predicate_usages
     </span>
   </a>
   
@@ -1451,9 +1496,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#typedlogic.parsers.tlog_parser.TLogMarkdownParser.parse" class="md-nav__link">
+  <a href="#typedlogic.parsers.tlog_parser.TLogMarkdownParser._prepare_text" class="md-nav__link">
     <span class="md-ellipsis">
-      parse
+      _prepare_text
     </span>
   </a>
   
@@ -1463,6 +1508,15 @@
   <a href="#syntax" class="md-nav__link">
     <span class="md-ellipsis">
       Syntax
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#predicate-arity-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Predicate Arity Validation
     </span>
   </a>
   
@@ -2031,9 +2085,54 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#typedlogic.parsers.tlog_parser.TLogParser._prepare_text" class="md-nav__link">
+    <span class="md-ellipsis">
+      _prepare_text
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.parsers.tlog_parser.TLogParser._build_theory" class="md-nav__link">
+    <span class="md-ellipsis">
+      _build_theory
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#typedlogic.parsers.tlog_parser.TLogParser.validate_iter" class="md-nav__link">
     <span class="md-ellipsis">
       validate_iter
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.parsers.tlog_parser.TLogParser._arity_messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      _arity_messages
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.parsers.tlog_parser.TLogParser._validation_sentences" class="md-nav__link">
+    <span class="md-ellipsis">
+      _validation_sentences
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedlogic.parsers.tlog_parser.TLogParser._predicate_usages" class="md-nav__link">
+    <span class="md-ellipsis">
+      _predicate_usages
     </span>
   </a>
   
@@ -2067,9 +2166,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#typedlogic.parsers.tlog_parser.TLogMarkdownParser.parse" class="md-nav__link">
+  <a href="#typedlogic.parsers.tlog_parser.TLogMarkdownParser._prepare_text" class="md-nav__link">
     <span class="md-ellipsis">
-      parse
+      _prepare_text
     </span>
   </a>
   
@@ -2079,6 +2178,15 @@
   <a href="#syntax" class="md-nav__link">
     <span class="md-ellipsis">
       Syntax
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#predicate-arity-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Predicate Arity Validation
     </span>
   </a>
   
@@ -2179,8 +2287,7 @@ and <code>solve</code> commands work with it.</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">431</span>
-<span class="normal">432</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">432</span>
 <span class="normal">433</span>
 <span class="normal">434</span>
 <span class="normal">435</span>
@@ -2391,7 +2498,79 @@ and <code>solve</code> commands work with it.</p>
 <span class="normal">640</span>
 <span class="normal">641</span>
 <span class="normal">642</span>
-<span class="normal">643</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TLogParser</span><span class="p">(</span><span class="n">Parser</span><span class="p">):</span>
+<span class="normal">643</span>
+<span class="normal">644</span>
+<span class="normal">645</span>
+<span class="normal">646</span>
+<span class="normal">647</span>
+<span class="normal">648</span>
+<span class="normal">649</span>
+<span class="normal">650</span>
+<span class="normal">651</span>
+<span class="normal">652</span>
+<span class="normal">653</span>
+<span class="normal">654</span>
+<span class="normal">655</span>
+<span class="normal">656</span>
+<span class="normal">657</span>
+<span class="normal">658</span>
+<span class="normal">659</span>
+<span class="normal">660</span>
+<span class="normal">661</span>
+<span class="normal">662</span>
+<span class="normal">663</span>
+<span class="normal">664</span>
+<span class="normal">665</span>
+<span class="normal">666</span>
+<span class="normal">667</span>
+<span class="normal">668</span>
+<span class="normal">669</span>
+<span class="normal">670</span>
+<span class="normal">671</span>
+<span class="normal">672</span>
+<span class="normal">673</span>
+<span class="normal">674</span>
+<span class="normal">675</span>
+<span class="normal">676</span>
+<span class="normal">677</span>
+<span class="normal">678</span>
+<span class="normal">679</span>
+<span class="normal">680</span>
+<span class="normal">681</span>
+<span class="normal">682</span>
+<span class="normal">683</span>
+<span class="normal">684</span>
+<span class="normal">685</span>
+<span class="normal">686</span>
+<span class="normal">687</span>
+<span class="normal">688</span>
+<span class="normal">689</span>
+<span class="normal">690</span>
+<span class="normal">691</span>
+<span class="normal">692</span>
+<span class="normal">693</span>
+<span class="normal">694</span>
+<span class="normal">695</span>
+<span class="normal">696</span>
+<span class="normal">697</span>
+<span class="normal">698</span>
+<span class="normal">699</span>
+<span class="normal">700</span>
+<span class="normal">701</span>
+<span class="normal">702</span>
+<span class="normal">703</span>
+<span class="normal">704</span>
+<span class="normal">705</span>
+<span class="normal">706</span>
+<span class="normal">707</span>
+<span class="normal">708</span>
+<span class="normal">709</span>
+<span class="normal">710</span>
+<span class="normal">711</span>
+<span class="normal">712</span>
+<span class="normal">713</span>
+<span class="normal">714</span>
+<span class="normal">715</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TLogParser</span><span class="p">(</span><span class="n">Parser</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse ergonomic TypedLogic rules into the core datamodel.&quot;&quot;&quot;</span>
 
     <span class="n">default_suffix</span> <span class="o">=</span> <span class="s2">&quot;tlog&quot;</span>
@@ -2408,8 +2587,27 @@ and <code>solve</code> commands work with it.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span> <span class="o">=</span> <span class="n">Lark</span><span class="p">(</span><span class="n">GRAMMAR</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="s2">&quot;lalr&quot;</span><span class="p">,</span> <span class="n">propagate_positions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">maybe_placeholders</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Theory</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse a TLog source into a theory.&quot;&quot;&quot;</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_source</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse a TLog source into a theory.</span>
+
+<span class="sd">        Parsing is permissive: an *undeclared* predicate may be used at any arity, mirroring</span>
+<span class="sd">        Prolog where ``person/1`` and ``person/2`` are distinct relations. If ``auto_validate``</span>
+<span class="sd">        is set, a *declared* predicate used at an arity no declaration matches raises an error</span>
+<span class="sd">        (see :meth:`validate_iter`).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">theory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_theory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prepare_text</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_validate</span><span class="p">:</span>
+            <span class="n">errors</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arity_messages</span><span class="p">(</span><span class="n">theory</span><span class="p">)</span> <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">level</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Validation errors: &quot;</span> <span class="o">+</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">message</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">theory</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the TLog text to parse from a source. Subclasses may preprocess here.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_source</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_build_theory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Theory</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse already-prepared TLog text into a theory, without validation side effects.&quot;&quot;&quot;</span>
         <span class="n">tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
         <span class="n">statement_nodes</span> <span class="o">=</span> <span class="n">_TreeToNodes</span><span class="p">()</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
         <span class="n">theory</span> <span class="o">=</span> <span class="n">Theory</span><span class="p">()</span>
@@ -2418,13 +2616,65 @@ and <code>solve</code> commands work with it.</p>
         <span class="k">return</span> <span class="n">theory</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">validate_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate source syntax.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate source syntax and predicate-arity usage.</span>
+
+<span class="sd">        Reports a syntax error for unparsable input, and an error for any *declared* predicate</span>
+<span class="sd">        used at an arity that no declaration provides. Undeclared predicates are not checked, so</span>
+<span class="sd">        the same name may still be used at multiple arities when no ``pred`` declaration exists.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">theory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_theory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prepare_text</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
         <span class="k">except</span> <span class="p">(</span><span class="n">LarkError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">line</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s2">&quot;line&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="n">column</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">yield</span> <span class="n">ValidationMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">_LARK_LOCATION_RE</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">line</span><span class="o">=</span><span class="n">line</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arity_messages</span><span class="p">(</span><span class="n">theory</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_arity_messages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Yield an error for each declared predicate used at an undeclared arity.&quot;&quot;&quot;</span>
+        <span class="n">declared</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">:</span>
+            <span class="n">declared</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">predicate</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">arguments</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">declared</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">reported</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validation_sentences</span><span class="p">(</span><span class="n">theory</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">arity</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_usages</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">declared</span> <span class="ow">or</span> <span class="n">arity</span> <span class="ow">in</span> <span class="n">declared</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="ow">or</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arity</span><span class="p">)</span> <span class="ow">in</span> <span class="n">reported</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">reported</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">arity</span><span class="p">))</span>
+                <span class="n">expected</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">declared</span><span class="p">[</span><span class="n">name</span><span class="p">]))</span>
+                <span class="k">yield</span> <span class="n">ValidationMessage</span><span class="p">(</span>
+                    <span class="n">message</span><span class="o">=</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Predicate &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; used with arity </span><span class="si">{</span><span class="n">arity</span><span class="si">}</span><span class="s2">, but declared as </span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s2">. &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Add &#39;pred </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">arity</span><span class="si">}</span><span class="s2">.&#39; if the </span><span class="si">{</span><span class="n">arity</span><span class="si">}</span><span class="s2">-ary use is intentional.&quot;</span>
+                    <span class="p">),</span>
+                    <span class="n">level</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validation_sentences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Yield every sentence represented by the source, including metadata groups.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">sentence_groups</span><span class="p">:</span>
+            <span class="k">yield from</span> <span class="n">group</span><span class="o">.</span><span class="n">sentences</span> <span class="ow">or</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_predicate_usages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Yield ``(predicate_name, arity)`` for every non-builtin atom in a sentence tree.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">Term</span><span class="p">):</span>
+            <span class="n">predicate</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">predicate</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">predicate</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">NUMERIC_BUILTINS</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+                <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_usages</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="p">(</span><span class="n">Forall</span><span class="p">,</span> <span class="n">Exists</span><span class="p">)):</span>
+            <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_usages</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">sentence</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">operands</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s2">&quot;operands&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">operands</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">operand</span> <span class="ow">in</span> <span class="n">operands</span><span class="p">:</span>
+                <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_usages</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_read_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
@@ -2682,8 +2932,7 @@ and <code>solve</code> commands work with it.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">436</span>
-<span class="normal">437</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">437</span>
 <span class="normal">438</span>
 <span class="normal">439</span>
 <span class="normal">440</span>
@@ -2691,7 +2940,8 @@ and <code>solve</code> commands work with it.</p>
 <span class="normal">442</span>
 <span class="normal">443</span>
 <span class="normal">444</span>
-<span class="normal">445</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">implicit_universal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="normal">445</span>
+<span class="normal">446</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">implicit_universal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a parser.</span>
 
@@ -2719,21 +2969,101 @@ and <code>solve</code> commands work with it.</p>
     <div class="doc doc-contents ">
 
         <p>Parse a TLog source into a theory.</p>
+<p>Parsing is permissive: an <em>undeclared</em> predicate may be used at any arity, mirroring
+Prolog where <code>person/1</code> and <code>person/2</code> are distinct relations. If <code>auto_validate</code>
+is set, a <em>declared</em> predicate used at an arity no declaration matches raises an error
+(see :meth:<code>validate_iter</code>).</p>
 
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">447</span>
-<span class="normal">448</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">448</span>
 <span class="normal">449</span>
 <span class="normal">450</span>
 <span class="normal">451</span>
 <span class="normal">452</span>
 <span class="normal">453</span>
 <span class="normal">454</span>
-<span class="normal">455</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Theory</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse a TLog source into a theory.&quot;&quot;&quot;</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_source</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Theory</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse a TLog source into a theory.</span>
+
+<span class="sd">    Parsing is permissive: an *undeclared* predicate may be used at any arity, mirroring</span>
+<span class="sd">    Prolog where ``person/1`` and ``person/2`` are distinct relations. If ``auto_validate``</span>
+<span class="sd">    is set, a *declared* predicate used at an arity no declaration matches raises an error</span>
+<span class="sd">    (see :meth:`validate_iter`).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">theory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_theory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prepare_text</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_validate</span><span class="p">:</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arity_messages</span><span class="p">(</span><span class="n">theory</span><span class="p">)</span> <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">level</span> <span class="o">==</span> <span class="s2">&quot;error&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Validation errors: &quot;</span> <span class="o">+</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">message</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">theory</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="typedlogic.parsers.tlog_parser.TLogParser._prepare_text" class="doc doc-heading">
+            <code class=" language-python"><span class="n">_prepare_text</span><span class="p">(</span><span class="n">source</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Return the TLog text to parse from a source. Subclasses may preprocess here.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_prepare_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the TLog text to parse from a source. Subclasses may preprocess here.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_source</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="typedlogic.parsers.tlog_parser.TLogParser._build_theory" class="doc doc-heading">
+            <code class=" language-python"><span class="n">_build_theory</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Parse already-prepared TLog text into a theory, without validation side effects.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_build_theory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Theory</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse already-prepared TLog text into a theory, without validation side effects.&quot;&quot;&quot;</span>
     <span class="n">tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
     <span class="n">statement_nodes</span> <span class="o">=</span> <span class="n">_TreeToNodes</span><span class="p">()</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span>
     <span class="n">theory</span> <span class="o">=</span> <span class="n">Theory</span><span class="p">()</span>
@@ -2757,26 +3087,45 @@ and <code>solve</code> commands work with it.</p>
 
     <div class="doc doc-contents ">
 
-        <p>Validate source syntax.</p>
+        <p>Validate source syntax and predicate-arity usage.</p>
+<p>Reports a syntax error for unparsable input, and an error for any <em>declared</em> predicate
+used at an arity that no declaration provides. Undeclared predicates are not checked, so
+the same name may still be used at multiple arities when no <code>pred</code> declaration exists.</p>
 
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">457</span>
-<span class="normal">458</span>
-<span class="normal">459</span>
-<span class="normal">460</span>
-<span class="normal">461</span>
-<span class="normal">462</span>
-<span class="normal">463</span>
-<span class="normal">464</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate source syntax.&quot;&quot;&quot;</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate source syntax and predicate-arity usage.</span>
+
+<span class="sd">    Reports a syntax error for unparsable input, and an error for any *declared* predicate</span>
+<span class="sd">    used at an arity that no declaration provides. Undeclared predicates are not checked, so</span>
+<span class="sd">    the same name may still be used at multiple arities when no ``pred`` declaration exists.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">theory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_theory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_prepare_text</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
     <span class="k">except</span> <span class="p">(</span><span class="n">LarkError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">line</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s2">&quot;line&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">column</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">yield</span> <span class="n">ValidationMessage</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">_LARK_LOCATION_RE</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">line</span><span class="o">=</span><span class="n">line</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">column</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arity_messages</span><span class="p">(</span><span class="n">theory</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2786,15 +3135,15 @@ and <code>solve</code> commands work with it.</p>
 <div class="doc doc-object doc-function">
 
 
-<h2 id="typedlogic.parsers.tlog_parser.TLogParser._add_meta_statement" class="doc doc-heading">
-            <code class=" language-python"><span class="n">_add_meta_statement</span><span class="p">(</span><span class="n">theory</span><span class="p">,</span> <span class="n">sentence</span><span class="p">,</span> <span class="n">comments</span><span class="p">)</span></code>
+<h2 id="typedlogic.parsers.tlog_parser.TLogParser._arity_messages" class="doc doc-heading">
+            <code class=" language-python"><span class="n">_arity_messages</span><span class="p">(</span><span class="n">theory</span><span class="p">)</span></code>
 
 </h2>
 
 
     <div class="doc doc-contents ">
 
-        <p>Add top-level quoted meta statements as sentence groups.</p>
+        <p>Yield an error for each declared predicate used at an undeclared arity.</p>
 
 
             <details class="quote">
@@ -2819,13 +3168,158 @@ and <code>solve</code> commands work with it.</p>
 <span class="normal">511</span>
 <span class="normal">512</span>
 <span class="normal">513</span>
-<span class="normal">514</span>
-<span class="normal">515</span>
-<span class="normal">516</span>
+<span class="normal">514</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_arity_messages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ValidationMessage</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Yield an error for each declared predicate used at an undeclared arity.&quot;&quot;&quot;</span>
+    <span class="n">declared</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">:</span>
+        <span class="n">declared</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">predicate</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">arguments</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">declared</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">reported</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validation_sentences</span><span class="p">(</span><span class="n">theory</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">arity</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_usages</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">declared</span> <span class="ow">or</span> <span class="n">arity</span> <span class="ow">in</span> <span class="n">declared</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="ow">or</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arity</span><span class="p">)</span> <span class="ow">in</span> <span class="n">reported</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">reported</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">arity</span><span class="p">))</span>
+            <span class="n">expected</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">declared</span><span class="p">[</span><span class="n">name</span><span class="p">]))</span>
+            <span class="k">yield</span> <span class="n">ValidationMessage</span><span class="p">(</span>
+                <span class="n">message</span><span class="o">=</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Predicate &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; used with arity </span><span class="si">{</span><span class="n">arity</span><span class="si">}</span><span class="s2">, but declared as </span><span class="si">{</span><span class="n">expected</span><span class="si">}</span><span class="s2">. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Add &#39;pred </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">arity</span><span class="si">}</span><span class="s2">.&#39; if the </span><span class="si">{</span><span class="n">arity</span><span class="si">}</span><span class="s2">-ary use is intentional.&quot;</span>
+                <span class="p">),</span>
+                <span class="n">level</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="typedlogic.parsers.tlog_parser.TLogParser._validation_sentences" class="doc doc-heading">
+            <code class=" language-python"><span class="n">_validation_sentences</span><span class="p">(</span><span class="n">theory</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Yield every sentence represented by the source, including metadata groups.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">516</span>
 <span class="normal">517</span>
 <span class="normal">518</span>
-<span class="normal">519</span>
-<span class="normal">520</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_add_meta_statement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">comments</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="normal">519</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_validation_sentences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Sentence</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Yield every sentence represented by the source, including metadata groups.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">theory</span><span class="o">.</span><span class="n">sentence_groups</span><span class="p">:</span>
+        <span class="k">yield from</span> <span class="n">group</span><span class="o">.</span><span class="n">sentences</span> <span class="ow">or</span> <span class="p">[]</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="typedlogic.parsers.tlog_parser.TLogParser._predicate_usages" class="doc doc-heading">
+            <code class=" language-python"><span class="n">_predicate_usages</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Yield <code>(predicate_name, arity)</code> for every non-builtin atom in a sentence tree.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_predicate_usages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Yield ``(predicate_name, arity)`` for every non-builtin atom in a sentence tree.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">Term</span><span class="p">):</span>
+        <span class="n">predicate</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">predicate</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">predicate</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">NUMERIC_BUILTINS</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="p">(</span><span class="n">predicate</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+            <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_usages</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="p">(</span><span class="n">Forall</span><span class="p">,</span> <span class="n">Exists</span><span class="p">)):</span>
+        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_usages</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">sentence</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">operands</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="s2">&quot;operands&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">operands</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">operand</span> <span class="ow">in</span> <span class="n">operands</span><span class="p">:</span>
+            <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_usages</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="typedlogic.parsers.tlog_parser.TLogParser._add_meta_statement" class="doc doc-heading">
+            <code class=" language-python"><span class="n">_add_meta_statement</span><span class="p">(</span><span class="n">theory</span><span class="p">,</span> <span class="n">sentence</span><span class="p">,</span> <span class="n">comments</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Add top-level quoted meta statements as sentence groups.</p>
+
+
+            <details class="quote">
+              <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">566</span>
+<span class="normal">567</span>
+<span class="normal">568</span>
+<span class="normal">569</span>
+<span class="normal">570</span>
+<span class="normal">571</span>
+<span class="normal">572</span>
+<span class="normal">573</span>
+<span class="normal">574</span>
+<span class="normal">575</span>
+<span class="normal">576</span>
+<span class="normal">577</span>
+<span class="normal">578</span>
+<span class="normal">579</span>
+<span class="normal">580</span>
+<span class="normal">581</span>
+<span class="normal">582</span>
+<span class="normal">583</span>
+<span class="normal">584</span>
+<span class="normal">585</span>
+<span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span>
+<span class="normal">589</span>
+<span class="normal">590</span>
+<span class="normal">591</span>
+<span class="normal">592</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_add_meta_statement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theory</span><span class="p">:</span> <span class="n">Theory</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Sentence</span><span class="p">,</span> <span class="n">comments</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add top-level quoted meta statements as sentence groups.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">Term</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
@@ -2874,13 +3368,13 @@ and <code>solve</code> commands work with it.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">522</span>
-<span class="normal">523</span>
-<span class="normal">524</span>
-<span class="normal">525</span>
-<span class="normal">526</span>
-<span class="normal">527</span>
-<span class="normal">528</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_named_quoted_sentence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Term</span><span class="p">,</span> <span class="n">predicate</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sentence</span><span class="p">]:</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">594</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span>
+<span class="normal">598</span>
+<span class="normal">599</span>
+<span class="normal">600</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_named_quoted_sentence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentence</span><span class="p">:</span> <span class="n">Term</span><span class="p">,</span> <span class="n">predicate</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Sentence</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the name and quoted sentence from a meta term.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentence</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">LarkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">predicate</span><span class="si">}</span><span class="s2"> expects a name and that(sentence): </span><span class="si">{</span><span class="n">sentence</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -2909,14 +3403,14 @@ and <code>solve</code> commands work with it.</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">530</span>
-<span class="normal">531</span>
-<span class="normal">532</span>
-<span class="normal">533</span>
-<span class="normal">534</span>
-<span class="normal">535</span>
-<span class="normal">536</span>
-<span class="normal">537</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_quoted_sentence_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span>
+<span class="normal">607</span>
+<span class="normal">608</span>
+<span class="normal">609</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_quoted_sentence_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sentence</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the sentence wrapped by a that(...) term.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Term</span><span class="p">)</span> <span class="ow">or</span> <span class="n">value</span><span class="o">.</span><span class="n">predicate</span> <span class="o">!=</span> <span class="s2">&quot;that&quot;</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">LarkError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected that(sentence), got </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -2958,56 +3452,54 @@ and <code>solve</code> commands work with it.</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">646</span>
-<span class="normal">647</span>
-<span class="normal">648</span>
-<span class="normal">649</span>
-<span class="normal">650</span>
-<span class="normal">651</span>
-<span class="normal">652</span>
-<span class="normal">653</span>
-<span class="normal">654</span>
-<span class="normal">655</span>
-<span class="normal">656</span>
-<span class="normal">657</span>
-<span class="normal">658</span>
-<span class="normal">659</span>
-<span class="normal">660</span>
-<span class="normal">661</span>
-<span class="normal">662</span>
-<span class="normal">663</span>
-<span class="normal">664</span>
-<span class="normal">665</span>
-<span class="normal">666</span>
-<span class="normal">667</span>
-<span class="normal">668</span>
-<span class="normal">669</span>
-<span class="normal">670</span>
-<span class="normal">671</span>
-<span class="normal">672</span>
-<span class="normal">673</span>
-<span class="normal">674</span>
-<span class="normal">675</span>
-<span class="normal">676</span>
-<span class="normal">677</span>
-<span class="normal">678</span>
-<span class="normal">679</span>
-<span class="normal">680</span>
-<span class="normal">681</span>
-<span class="normal">682</span>
-<span class="normal">683</span>
-<span class="normal">684</span>
-<span class="normal">685</span>
-<span class="normal">686</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TLogMarkdownParser</span><span class="p">(</span><span class="n">TLogParser</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">718</span>
+<span class="normal">719</span>
+<span class="normal">720</span>
+<span class="normal">721</span>
+<span class="normal">722</span>
+<span class="normal">723</span>
+<span class="normal">724</span>
+<span class="normal">725</span>
+<span class="normal">726</span>
+<span class="normal">727</span>
+<span class="normal">728</span>
+<span class="normal">729</span>
+<span class="normal">730</span>
+<span class="normal">731</span>
+<span class="normal">732</span>
+<span class="normal">733</span>
+<span class="normal">734</span>
+<span class="normal">735</span>
+<span class="normal">736</span>
+<span class="normal">737</span>
+<span class="normal">738</span>
+<span class="normal">739</span>
+<span class="normal">740</span>
+<span class="normal">741</span>
+<span class="normal">742</span>
+<span class="normal">743</span>
+<span class="normal">744</span>
+<span class="normal">745</span>
+<span class="normal">746</span>
+<span class="normal">747</span>
+<span class="normal">748</span>
+<span class="normal">749</span>
+<span class="normal">750</span>
+<span class="normal">751</span>
+<span class="normal">752</span>
+<span class="normal">753</span>
+<span class="normal">754</span>
+<span class="normal">755</span>
+<span class="normal">756</span>
+<span class="normal">757</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">TLogMarkdownParser</span><span class="p">(</span><span class="n">TLogParser</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse TLog blocks embedded in Markdown prose.&quot;&quot;&quot;</span>
 
     <span class="n">default_suffix</span> <span class="o">=</span> <span class="s2">&quot;tlog.md&quot;</span>
     <span class="n">code_block_languages</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">&quot;tlog&quot;</span><span class="p">,</span> <span class="s2">&quot;typedlogic&quot;</span><span class="p">,</span> <span class="s2">&quot;logic&quot;</span><span class="p">})</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Theory</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse fenced TLog code blocks from Markdown into a theory.&quot;&quot;&quot;</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_source</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_tlog_blocks</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract fenced TLog code blocks from Markdown before parsing/validation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_tlog_blocks</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_read_source</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_extract_tlog_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">lines</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -3057,26 +3549,24 @@ and <code>solve</code> commands work with it.</p>
 <div class="doc doc-object doc-function">
 
 
-<h2 id="typedlogic.parsers.tlog_parser.TLogMarkdownParser.parse" class="doc doc-heading">
-            <code class=" language-python"><span class="n">parse</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<h2 id="typedlogic.parsers.tlog_parser.TLogMarkdownParser._prepare_text" class="doc doc-heading">
+            <code class=" language-python"><span class="n">_prepare_text</span><span class="p">(</span><span class="n">source</span><span class="p">)</span></code>
 
 </h2>
 
 
     <div class="doc doc-contents ">
 
-        <p>Parse fenced TLog code blocks from Markdown into a theory.</p>
+        <p>Extract fenced TLog code blocks from Markdown before parsing/validation.</p>
 
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/parsers/tlog_parser.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">652</span>
-<span class="normal">653</span>
-<span class="normal">654</span>
-<span class="normal">655</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Theory</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse fenced TLog code blocks from Markdown into a theory.&quot;&quot;&quot;</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_source</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_extract_tlog_blocks</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">724</span>
+<span class="normal">725</span>
+<span class="normal">726</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_prepare_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">TextIO</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract fenced TLog code blocks from Markdown before parsing/validation.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_tlog_blocks</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_read_source</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3106,6 +3596,29 @@ ancestor(x, z) :- ancestor(x, y), ancestor(y, z).
 </code></pre></div>
 <p>Types are optional. Untyped targets can ignore them; typed targets such as
 Souffle can use them.</p>
+<h2 id="predicate-arity-validation">Predicate Arity Validation</h2>
+<p>Parsing is permissive: an <em>undeclared</em> predicate may be used at any arity, just
+as Prolog treats <code>person/1</code> and <code>person/2</code> as distinct relations. Declaring a
+predicate signals intent, so once a name is declared with <code>pred</code>, using it at an
+arity that no declaration matches is reported as a validation error. This catches
+a common mistake — writing a constraint against the wrong arity, which silently
+refers to a different (empty) relation instead of the declared facts:</p>
+<div class="highlight"><pre><span></span><code>pred foo(x: int, y: int).
+foo(1, 1).
+foo(1, 2).
+
+/// BUG: foo/1 here is a different relation from the declared foo/2, so this
+/// constraint is vacuously true and never contradicts the facts above.
+all i, j | foo(i), foo(j) -&gt; i = j.
+</code></pre></div>
+<p>Validation reports an error for the <code>foo/1</code> use. The intended functional-dependency
+constraint compares the second column for a shared first column:</p>
+<div class="highlight"><pre><span></span><code>all x, y1, y2 | foo(x, y1), foo(x, y2) -&gt; y1 = y2.
+</code></pre></div>
+<p>If a name genuinely needs multiple arities, declare each one (<code>pred foo/1.</code> and
+<code>pred foo(x: int, y: int).</code>). Errors surface through <code>parser.validate(...)</code>, the
+CLI (e.g. <code>convert --validate-types</code>), or eagerly at parse time when the parser is
+constructed with <code>auto_validate=True</code>.</p>
 <p>Predicate and variable names are case-preserving. Variables are not inferred from
 capitalization. In a rule or explicit quantifier, bare names are variables:</p>
 <div class="highlight"><pre><span></span><code>ancestor(x, Y) :- parent(x, z), ancestor(z, Y).
