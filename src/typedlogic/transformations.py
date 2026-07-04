@@ -5,7 +5,7 @@ import json
 import re
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional, Set, Tuple, Type, Union
+from typing import Any, Callable, Collection, Dict, Iterable, List, Mapping, Optional, Set, Tuple, Type, Union
 
 from typedlogic import (
     BooleanSentence,
@@ -21,6 +21,7 @@ from typedlogic import (
 from typedlogic.builtins import NAME_TO_INFIX_OP
 from typedlogic.datamodel import (
     And,
+    CardinalityConstraint,
     ExactlyOne,
     Exists,
     Extension,
@@ -30,19 +31,38 @@ from typedlogic.datamodel import (
     NotInProfileError,
     Or,
     QuantifiedSentence,
-    Xor, CardinalityConstraint,
+    Xor,
 )
 from typedlogic.utils.detect_stratified_negation import analyze_datalog_program
 
 
 def sentences_from_predicate_hierarchy(theory: Theory) -> List[Sentence]:
+    """
+    Generate subclass implication sentences from predicate parent declarations.
+
+    For each predicate definition with parents, a ``Forall ... child -> parent`` implication
+    is generated. Parent arguments are matched to child arguments by name, so each parent
+    argument name must also be an argument of the child (as with Python class inheritance);
+    otherwise the implication head would contain an unbound variable and a ValueError is raised.
+
+    :param theory: The theory whose predicate definitions are examined
+    :return: New implication sentences (excluding any already present in the theory)
+    """
     new_sentences: List[Sentence] = []
     if not theory.predicate_definitions:
         raise ValueError("Theory must have predicate definitions")
     for pd in theory.predicate_definitions:
         if pd.parents:
             for parent in pd.parents:
+                if parent not in theory.predicate_definition_map:
+                    raise ValueError(f"Unknown parent predicate '{parent}' for predicate '{pd.predicate}'")
                 parent_pred = theory.predicate_definition_map[parent]
+                missing = [arg for arg in parent_pred.arguments if arg not in pd.arguments]
+                if missing:
+                    raise ValueError(
+                        f"Cannot generate implication {pd.predicate} -> {parent}: "
+                        f"parent argument(s) {missing} not present in child arguments {list(pd.arguments)}"
+                    )
                 # bindings = {arg: Variable(arg, domain=typ) for arg, typ in pd.arguments.items()}
                 vars = [Variable(arg, domain=typ) for arg, typ in pd.arguments.items()]
                 args = [Variable(arg) for arg in pd.arguments]
@@ -112,6 +132,43 @@ def conjunction_as_list(sentence: Sentence) -> List[Sentence]:
     return [sentence]
 
 
+def _variables_in_order(sentence: Sentence) -> List[Variable]:
+    """
+    Collect variables from a sentence, preserving first occurrence by name.
+
+    :param sentence: the sentence to inspect
+    :return: variables in first-seen order
+    """
+    seen: Set[str] = set()
+    variables: List[Variable] = []
+
+    def collect(value: Any) -> None:
+        if isinstance(value, Variable):
+            if value.name not in seen:
+                seen.add(value.name)
+                variables.append(value)
+            return
+        if isinstance(value, Term):
+            for arg in value.values:
+                collect(arg)
+            return
+        if isinstance(value, QuantifiedSentence):
+            for variable in value.variables:
+                collect(variable)
+            collect(value.sentence)
+            return
+        if isinstance(value, BooleanSentence):
+            for operand in value.operands:
+                collect(operand)
+            return
+        if isinstance(value, CardinalityConstraint):
+            collect(value.template)
+            collect(value.conditions)
+
+    collect(sentence)
+    return variables
+
+
 @dataclass
 class PrologConfig:
     """
@@ -152,7 +209,7 @@ def _render_asp_variable(v: Variable, config: PrologConfig) -> str:
 def _cardinality_head_to_asp(
     cc: "CardinalityConstraint",
     antecedent: Sentence,
-    body_vars: List[str],
+    body_vars: Collection[str],
     config: "PrologConfig",
     depth: int,
 ) -> str:
@@ -202,6 +259,185 @@ def _cardinality_head_to_asp(
     if cc.maximum_number is not None:
         lines.append(f":- {prefix}{agg} > {cc.maximum_number}.")
     return "\n".join(lines)
+
+
+def _prolog_quote_atom(value: str) -> str:
+    r"""
+    Render a string value as a quoted Prolog atom, escaping backslashes, quotes, and newlines.
+
+        >>> _prolog_quote_atom("Fred")
+        "'Fred'"
+        >>> print(_prolog_quote_atom("O'Brien"))
+        'O\'Brien'
+
+    :param value: the string value
+    :return: a quoted Prolog atom
+    """
+    escaped = value.replace("\\", "\\\\").replace("'", "\\'").replace("\n", "\\n")
+    return f"'{escaped}'"
+
+
+def _grounded_variable_names(sentence: Sentence) -> Set[str]:
+    """
+    Collect names of variables guaranteed to be bound when a rule body succeeds.
+
+    Variables in conjuncts (including inside nested function terms) are bound;
+    for a disjunction only variables bound in every branch are guaranteed;
+    variables appearing only under negation are never bound.
+
+        >>> from typedlogic import Term, Variable, And, Or, Not
+        >>> X = Variable("x")
+        >>> Y = Variable("y")
+        >>> sorted(_grounded_variable_names(And(Term("A", X), Term("B", Y))))
+        ['x', 'y']
+        >>> sorted(_grounded_variable_names(Or(Term("A", X), Term("B", X, Y))))
+        ['x']
+        >>> sorted(_grounded_variable_names(And(Term("A", Term("f", X)), Not(Term("B", Y)))))
+        ['x']
+
+    :param sentence: a rule body (or part of one)
+    :return: names of variables bound in all successful evaluations of the body
+    """
+    if isinstance(sentence, Exists):
+        return _grounded_variable_names(sentence.sentence)
+    if isinstance(sentence, Term):
+        names: Set[str] = set()
+        for v in sentence.bindings.values():
+            if isinstance(v, Variable):
+                names.add(v.name)
+            elif isinstance(v, Term):
+                names |= _grounded_variable_names(v)
+        return names
+    if isinstance(sentence, And):
+        names = set()
+        for op in sentence.operands:
+            names |= _grounded_variable_names(op)
+        return names
+    if isinstance(sentence, Or):
+        if not sentence.operands:
+            return set()
+        return set.intersection(*[_grounded_variable_names(op) for op in sentence.operands])
+    # Not, NegationAsFailure, and anything else provide no grounding guarantees
+    return set()
+
+
+def _validate_counterexample_head_grounded(body: Sentence, head: Term, sentence: Sentence) -> None:
+    """Reject counterexample transforms whose head variables are not grounded by the body."""
+    grounded_variable_names = _grounded_variable_names(body)
+    head_variable_names = {variable.name for variable in _variables_in_order(head)}
+    ungrounded_head_variables = sorted(head_variable_names - grounded_variable_names)
+    if ungrounded_head_variables:
+        names = ", ".join(ungrounded_head_variables)
+        raise NotInProfileError(f"Head variable(s) {names} are not grounded by body {sentence}")
+
+
+def counterexample_sentence(sentence: Sentence, predicate: str = "counterexample") -> Sentence:
+    """
+    Convert a universally quantified implication into a counterexample rule.
+
+    A sentence of the form ``forall V | body -> head`` becomes the Datalog-style
+    rule ``counterexample(V_grounded) :- body, not head``. If the rule derives no
+    counterexamples, the original universal implication holds for the current model(s).
+
+        >>> from typedlogic import Forall, Term, Variable
+        >>> X = Variable("x")
+        >>> rule = counterexample_sentence(Forall([X], Term("P", X) >> Term("Q", X)))
+        >>> print(as_prolog(rule, PrologConfig(negation_as_failure_symbol="not", allow_nesting=False)))
+        counterexample(X) :- p(X), not q(X).
+
+    The implication head must be an atomic term whose variables are grounded by the body.
+
+    :param sentence: a universal implication, or an implication with free variables
+    :param predicate: predicate name to use for generated counterexample atoms
+    :return: a rule deriving counterexample witnesses
+    """
+    variables: Optional[List[Variable]] = None
+    if isinstance(sentence, Forall):
+        variables = sentence.variables
+        sentence = sentence.sentence
+    if isinstance(sentence, Implied):
+        sentence = Implies(sentence.antecedent, sentence.consequent)
+    if not isinstance(sentence, Implies):
+        raise NotInProfileError(f"Counterexample transform requires an implication, got {sentence}")
+    if variables is None:
+        variables = _variables_in_order(sentence)
+
+    body = sentence.antecedent
+    head = sentence.consequent
+    if not isinstance(head, Term):
+        raise NotInProfileError(f"Counterexample transform requires an atomic implication head, got {head}")
+
+    _validate_counterexample_head_grounded(body, head, sentence)
+
+    used_variable_names = {variable.name for variable in _variables_in_order(And(body, head))}
+    grounded_variable_names = _grounded_variable_names(body)
+    counterexample_variables = [
+        variable
+        for variable in variables
+        if variable.name in used_variable_names and variable.name in grounded_variable_names
+    ]
+    counterexample_body = And(*conjunction_as_list(body), NegationAsFailure(head))
+    return Implies(counterexample_body, Term(predicate, *counterexample_variables))
+
+
+def counterexample_proof_sentences(sentence: Sentence, predicate: str = "counterexample") -> List[Sentence]:
+    """
+    Build ground proof-check sentences for a universally quantified implication.
+
+    This is useful for Datalog-style solvers that treat absent facts as false. Rather
+    than checking the implication only against the current facts, it replaces quantified
+    variables with fresh constants, asserts the positive antecedent atoms as assumptions,
+    and derives ``predicate`` when the consequent is not derivable.
+
+        >>> from typedlogic import Forall, Term, Variable
+        >>> X = Variable("x")
+        >>> sentences = counterexample_proof_sentences(Forall([X], Term("P", X) >> Term("Q", X)))
+        >>> print(as_prolog(sentences, PrologConfig(negation_as_failure_symbol="not", allow_nesting=False)))
+        p("__counterexample_x").
+        counterexample :- not q("__counterexample_x").
+
+    :param sentence: a universal implication, or an implication with free variables
+    :param predicate: predicate name to use for generated counterexample atoms
+    :return: assumption facts plus a counterexample query rule
+    """
+    variables: Optional[List[Variable]] = None
+    if isinstance(sentence, Forall):
+        variables = sentence.variables
+        sentence = sentence.sentence
+    if isinstance(sentence, Implied):
+        sentence = Implies(sentence.antecedent, sentence.consequent)
+    if not isinstance(sentence, Implies):
+        raise NotInProfileError(f"Counterexample proof transform requires an implication, got {sentence}")
+    if variables is None:
+        variables = _variables_in_order(sentence)
+
+    head = sentence.consequent
+    if not isinstance(head, Term) or head.predicate in NAME_TO_INFIX_OP:
+        raise NotInProfileError(f"Counterexample proof transform requires an atomic implication head, got {head}")
+    _validate_counterexample_head_grounded(sentence.antecedent, head, sentence)
+
+    constants = {variable.name: f"__{predicate}_{variable.name}" for variable in variables}
+    grounded_body = replace_constants(sentence.antecedent, constants)
+    grounded_head = replace_constants(head, constants)
+
+    assumptions: List[Sentence] = []
+    counterexample_conditions: List[Sentence] = []
+    for conjunct in conjunction_as_list(grounded_body):
+        if isinstance(conjunct, Term) and conjunct.predicate not in NAME_TO_INFIX_OP:
+            assumptions.append(Implies(And(), conjunct))
+            continue
+        if isinstance(conjunct, (Not, NegationAsFailure)):
+            counterexample_conditions.append(conjunct)
+            continue
+        raise NotInProfileError(f"Unsupported antecedent in counterexample proof transform: {conjunct}")
+
+    counterexample_conditions.append(NegationAsFailure(grounded_head))
+    counterexample_body: Sentence
+    if len(counterexample_conditions) == 1:
+        counterexample_body = counterexample_conditions[0]
+    else:
+        counterexample_body = And(*counterexample_conditions)
+    return assumptions + [Implies(counterexample_body, Term(predicate))]
 
 
 def as_prolog(
@@ -389,14 +625,15 @@ def as_prolog(
             if isinstance(v, Term):
                 if not config.allow_function_terms:
                     raise ValueError(f"Nested term not supported: {v}")
-                return as_prolog(v, config, depth + 1)
+                return as_prolog(v, config, depth + 1, anon_vars=anon_vars)
             if config.double_quote_floats:
                 if isinstance(v, float):
                     return json.dumps(str(v))
             if config.double_quote_strings:
                 return json.dumps(v)
-            else:
-                return repr(v)
+            if isinstance(v, str):
+                return _prolog_quote_atom(v)
+            return repr(v)
 
         p = sentence.predicate
         operator_map = {k: v for k, v in NAME_TO_INFIX_OP.items()}
@@ -430,15 +667,7 @@ def as_prolog(
             f"Conjunctions on LHS not allowed {sentence}\n" "Transform using simplify_prolog_transform first"
         )
     # check for unbound variables
-    body_vars = []
-    # eliminate Exists
-    antecedent_list = [t.sentence if isinstance(t, Exists) else t for t in conjunction_as_list(sentence.antecedent)]
-    for body_term in antecedent_list:
-        if not isinstance(body_term, Term):
-            # TODO: this currently assumes disjunctions are unrolled from body
-            # raise NotInProfileError(f"Body must be a term {sentence}")
-            continue
-        body_vars.extend(body_term.variable_names)
+    body_vars = _grounded_variable_names(sentence.antecedent)
     if isinstance(sentence.consequent, CardinalityConstraint):
         # A cardinality constraint in the head is compiled to ASP integrity
         # constraints (min/max bounds on a #count aggregate), rather than to a
@@ -450,6 +679,8 @@ def as_prolog(
             continue
         if not isinstance(head_term, Term):
             raise NotInProfileError(f"Head must be a term, got: {type(head_term)} in {sentence}")
+        # note: only direct variable arguments are checked; variables nested inside
+        # function terms are permitted in heads (e.g. facts like p(f(X)).)
         head_vars = head_term.variable_names
         for v in head_vars:
             if v not in body_vars:
@@ -462,10 +693,10 @@ def as_prolog(
     body = as_prolog(sentence.antecedent, config, depth + 1)
     if head.startswith("(") and head.endswith(")"):
         head = head[1:-1]
-    if body == "true":
-        return f"{head}."
     if head == "fail":
         return f":- {body}."
+    if body == "true":
+        return f"{head}."
     return f"{head} :- {body}."
 
 
@@ -537,9 +768,11 @@ def simple_prolog_transform(sentence: Sentence, strict=False) -> List[Sentence]:
             continue
         if isinstance(sentence, Implied):
             sentences.append(Implies(sentence.operands[1], sentence.operands[0]))
+            continue
         if isinstance(sentence, Iff):
             sentences.append(Implies(sentence.left, sentence.right))
             sentences.append(Implies(sentence.right, sentence.left))
+            continue
         if not isinstance(sentence, Implies):
             not_in_profile(sentence)
             continue
@@ -1006,6 +1239,8 @@ def replace_constants(sentence: Sentence, constant_map: Dict[str, Any]) -> Sente
             if isinstance(v, Variable):
                 if v.name in constant_map:
                     return constant_map[v.name]
+            if isinstance(v, Term):
+                return replace_constants(v, constant_map)
             return v
 
         return Term(sentence.predicate, {k: _repl(v) for k, v in sentence.bindings.items()})
@@ -1488,6 +1723,12 @@ def to_horn_rules(sentence: Sentence, allow_disjunctions_in_head=False, allow_go
         >>> print(as_prolog(to_horn_rules(Not(P), allow_goal_clauses=True)))
         :- p.
 
+        Goal clauses (integrity constraints) are only emitted when `allow_goal_clauses`
+        is set; otherwise they are (silently) dropped, weakening the program:
+
+        >>> to_horn_rules(Not(P))
+        []
+
         >>> print(as_prolog(to_horn_rules(~P >> Q)))
         q :- \+ (p).
 
@@ -1520,7 +1761,8 @@ def to_horn_rules(sentence: Sentence, allow_disjunctions_in_head=False, allow_go
                 positive.append(lit)
         if not positive and not negative:
             # The empty clause, consisting of no literals (which is equivalent to false) is a goal clause
-            rules.append(Or())
+            if allow_goal_clauses:
+                rules.append(Implies(And(), Or()))
             continue
         # a horn clause is a disjunction of literals with at most one positive literal.
         if len(positive) > 1 and not allow_disjunctions_in_head:
@@ -1578,6 +1820,24 @@ def expand_xor(sentence: Sentence) -> Sentence:
 
 
 def expand_exactly_one(sentence: Sentence) -> Sentence:
+    """
+    Expand ExactlyOne in a sentence.
+
+    Replace ExactlyOne(A, B, ...) with a disjunction where each disjunct asserts
+    one operand and negates the rest.
+
+        >>> from typedlogic import And, Or, Term
+        >>> P = Term("P")
+        >>> Q = Term("Q")
+        >>> R = Term("R")
+        >>> expand_exactly_one(ExactlyOne(P, Q))
+        And(Or(P, Q), Not(And(P, Q)))
+        >>> expand_exactly_one(ExactlyOne(P, Q, R))
+        Or(And(P, Not(Or(Q, R))), And(Q, Not(Or(P, R))), And(R, Not(Or(P, Q))))
+
+    :param sentence:
+    :return:
+    """
     if not isinstance(sentence, ExactlyOne):
         return sentence
     # expand XOR to an OR plus an AND, where len(operands) may be > 2
@@ -1586,7 +1846,7 @@ def expand_exactly_one(sentence: Sentence) -> Sentence:
         return operands[0]
     if len(operands) == 2:
         return And(Or(*operands), Not(And(*operands)))
-    return Or([And(op, Not(Or([op2 for op2 in operands if op2 != op]))) for op in operands])
+    return Or(*[And(op, Not(Or(*[op2 for op2 in operands if op2 != op]))) for op in operands])
 
 
 def eliminate_all_implications_recursive(sentence: Sentence) -> Sentence:

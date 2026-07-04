@@ -29,6 +29,37 @@ ancestor(x, z) :- ancestor(x, y), ancestor(y, z).
 Types are optional. Untyped targets can ignore them; typed targets such as
 Souffle can use them.
 
+## Predicate Arity Validation
+
+Parsing is permissive: an *undeclared* predicate may be used at any arity, just
+as Prolog treats `person/1` and `person/2` as distinct relations. Declaring a
+predicate signals intent, so once a name is declared with `pred`, using it at an
+arity that no declaration matches is reported as a validation error. This catches
+a common mistake — writing a constraint against the wrong arity, which silently
+refers to a different (empty) relation instead of the declared facts:
+
+```tlog
+pred foo(x: int, y: int).
+foo(1, 1).
+foo(1, 2).
+
+/// BUG: foo/1 here is a different relation from the declared foo/2, so this
+/// constraint is vacuously true and never contradicts the facts above.
+all i, j | foo(i), foo(j) -> i = j.
+```
+
+Validation reports an error for the `foo/1` use. The intended functional-dependency
+constraint compares the second column for a shared first column:
+
+```tlog
+all x, y1, y2 | foo(x, y1), foo(x, y2) -> y1 = y2.
+```
+
+If a name genuinely needs multiple arities, declare each one (`pred foo/1.` and
+`pred foo(x: int, y: int).`). Errors surface through `parser.validate(...)`, the
+CLI (e.g. `convert --validate-types`), or eagerly at parse time when the parser is
+constructed with `auto_validate=True`.
+
 Predicate and variable names are case-preserving. Variables are not inferred from
 capitalization. In a rule or explicit quantifier, bare names are variables:
 
@@ -95,8 +126,9 @@ test_case(
 ).
 ```
 
-`solve` ignores lemmas and test cases by default. Use dedicated commands when
-you want to interpret this metadata:
+`solve` ignores lemmas and test cases by default. Use `test` when you want a
+one-stop validation command for both test cases and proof obligations; use
+`prove` when you only want goals and lemmas:
 
 ```bash
 typedlogic test theory.tlog --solver clingo
@@ -107,6 +139,8 @@ The test runner treats `given(that(S))` as a temporary assertion for that test
 case. `expect(that(E))` checks the expected sentence. In expectations,
 `satisfiable()` is a built-in check for fixture satisfiability, conjunction
 means all expectations must hold, and `not P` means `P` is not entailed.
+After running test cases, `test` also proves matching goals and lemmas unless
+`--no-proofs` is used.
 
 ## HiLog-Style Predicate Variables
 
@@ -169,14 +203,14 @@ typedlogic solve docs/examples/tlog/ancestor.tlog --solver clingo
 ```
 
 Lemmas and test cases are metadata, so `solve` does not run or assert them.
-Run quoted test cases explicitly:
+Run validation explicitly with `test`:
 
 ```bash
 typedlogic test docs/examples/tlog/mortality.tlog --solver clingo
 typedlogic test docs/examples/tlog/mortality.tlog --solver clingo --test socrates_mortality
 ```
 
-Prove goals and lemmas explicitly:
+`test` also proves goals and lemmas by default. Use `prove` for proof-only runs:
 
 ```bash
 typedlogic prove docs/examples/tlog/mortality.tlog --solver z3

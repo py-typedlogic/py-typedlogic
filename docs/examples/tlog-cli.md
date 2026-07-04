@@ -151,7 +151,8 @@ test_case(
 ).
 ```
 
-`solve` ignores these test cases. Run them explicitly with `test`:
+`solve` ignores test cases, goals, and lemmas. Run validation explicitly with
+`test`; it checks test cases and also proves goals and lemmas:
 
 ```bash
 typedlogic test docs/examples/tlog/mortality.tlog --solver clingo
@@ -166,7 +167,8 @@ PASS socrates_mortality
 ```
 
 Use `--dump-program` to print the generated solver program for each test fixture
-before expectations are checked.
+before expectations are checked. Use `--no-proofs` when you only want test-case
+fixtures and expectations.
 
 ## Prove Lemmas
 
@@ -176,7 +178,7 @@ Lemmas are quoted proof obligations, not axioms:
 lemma("socrates_is_mortal", that(mortal("socrates"))).
 ```
 
-Run proof obligations explicitly:
+`test` proves proof obligations by default. Use `prove` for proof-only runs:
 
 ```bash
 typedlogic prove docs/examples/tlog/mortality.tlog --solver z3

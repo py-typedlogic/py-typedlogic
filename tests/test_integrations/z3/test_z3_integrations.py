@@ -3,6 +3,7 @@ from typedlogic.compiler import ModelSyntax
 from typedlogic.datamodel import (
     And,
     CardinalityConstraint,
+    Exists,
     Forall,
     Implies,
     Or,
@@ -292,3 +293,101 @@ def test_cardinality_range_upper_violation():
         solver.add_fact(Term("Part", f"p{i}"))
         solver.add_fact(Term("HasPart", "t1", f"p{i}"))
     assert not solver.check().satisfiable
+
+
+@pytest.mark.parametrize(
+    "op,py_result",
+    [
+        ("add", 7),
+        ("sub", 1),
+        ("mul", 12),
+    ],
+)
+def test_nested_builtin_terms(op, py_result):
+    """Nested arithmetic terms should map through the full builtin table, not just add."""
+    import z3
+
+    solver = Z3Solver()
+    solver.add(PredicateDefinition(predicate="R", arguments={"a": "int"}))
+    a = Variable("a", "int")
+    b = Variable("b", "int")
+    # R(op(a, b)) with a=4, b=3 supplied via constants
+    solver.constants["a"] = 4
+    solver.constants["b"] = 3
+    expr = solver.translate(Term("R", {"a": Term(op, a, b)}))
+    # The nested term evaluates to a concrete Z3 value equal to the Python result.
+    assert z3.simplify(expr.arg(0)) == z3.simplify(z3.IntVal(py_result))
+
+
+def test_deeply_nested_builtin_terms():
+    """Nested arithmetic terms should recurse through arbitrary builtin subterms."""
+    import z3
+
+    solver = Z3Solver()
+    solver.add(PredicateDefinition(predicate="R", arguments={"a": "int"}))
+    a = Variable("a", "int")
+    b = Variable("b", "int")
+    c = Variable("c", "int")
+    solver.constants.update({"a": 4, "b": 3, "c": 2})
+    expr = solver.translate(Term("R", {"a": Term("add", Term("sub", a, b), c)}))
+    assert z3.simplify(expr.arg(0)) == z3.simplify(z3.IntVal(3))
+
+
+def test_quantifier_variable_not_captured_across_siblings():
+    """A variable bound only inside one subformula must not leak into a sibling."""
+    solver = Z3Solver()
+    solver.add(PredicateDefinition(predicate="P", arguments={"x": "int"}))
+    solver.add(PredicateDefinition(predicate="Q", arguments={"x": "int"}))
+    x = Variable("x", "int")
+    y = Variable("y", "int")
+    # forall x: (exists y: P(y)) & Q(y)  -- the second y has no binding in scope
+    sentence = Forall([x], And(Exists([y], Term("P", {"x": y})), Term("Q", {"x": y})))
+    with pytest.raises(ValueError):
+        solver.translate(sentence)
+
+
+def test_reasoning_with_existential_subformula():
+    """End-to-end: an existential nested in a universal should reason correctly."""
+    solver = Z3Solver()
+    solver.add(PredicateDefinition(predicate="Edge", arguments={"src": "int", "tgt": "int"}))
+    solver.add(PredicateDefinition(predicate="HasOut", arguments={"src": "int"}))
+    x = Variable("x", "int")
+    y = Variable("y", "int")
+    # forall x: (exists y: Edge(x, y)) -> HasOut(x)
+    solver.add(Forall([x], Implies(Exists([y], Term("Edge", {"src": x, "tgt": y})), Term("HasOut", {"src": x}))))
+    solver.add_fact(Term("Edge", {"src": 1, "tgt": 2}))
+    assert solver.check().satisfiable
+    assert solver.prove(Term("HasOut", {"src": 1}))
+
+
+def test_untyped_quantified_variables_infer_type_from_declared_predicate():
+    """Untyped tlog quantifier variables get their sort from the predicate they are used in.
+
+    Without inference, quantified variables default to a string sort and mis-sort against an
+    int-typed predicate, so a functional-dependency constraint fails to fire.
+    """
+    from typedlogic.parsers.tlog_parser import TLogParser
+
+    inconsistent = TLogParser().parse(
+        """
+        pred foo(x: int, y: int).
+        foo(1, 1).
+        foo(1, 2).
+        all x, y1, y2 | foo(x, y1), foo(x, y2) -> y1 = y2.
+        """
+    )
+    solver = Z3Solver()
+    solver.add(inconsistent)
+    assert not solver.check().satisfiable
+
+    consistent = TLogParser().parse(
+        """
+        pred foo(x: int, y: int).
+        foo(1, 1).
+        foo(2, 2).
+        all x, y1, y2 | foo(x, y1), foo(x, y2) -> y1 = y2.
+        """
+    )
+    solver = Z3Solver()
+    solver.add(consistent)
+    assert solver.check().satisfiable

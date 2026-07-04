@@ -1,0 +1,3 @@
+(cl-text tests.theorems.defined_types_example
+  (forall ((name Thing) (age Age)) (if (ge age 18) (Adult name)))
+)

@@ -1,0 +1,6 @@
+friendpath(S, O) :- friendof(S, O, _, _).
+friendpath(S, O) :- friendof(S, O, _, _).
+friendof("Fred", "Jie", 2000, 2005).
+friendof("Jie", "Li", _, _).
+query(friendof(Subject, Object, Start_year, End_year)).
+query(friendpath(Subject, Object)).

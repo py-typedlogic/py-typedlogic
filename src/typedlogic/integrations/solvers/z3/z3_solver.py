@@ -213,6 +213,11 @@ class Z3Solver(Solver):
             else:
                 pf_arg = bindings[var.name]
             return pf_arg
+        if isinstance(var, Term):
+            if var.predicate not in NUMERIC_BUILTINS:
+                raise NotImplementedError(f"Term not implemented: p: {var.predicate} {type(var)} v: {var}")
+            args = [self._tr(a, bindings) for a in var.values]
+            return NUMERIC_BUILTINS[var.predicate](*args)
         py_typ = type(var).__name__
         z3_typ = self._sort(py_typ)
         t2m_map = {
@@ -293,17 +298,29 @@ class Z3Solver(Solver):
             rhs = self.translate(sentence.operands[1], bindings)
             return z3.Implies(lhs, rhs)
         if isinstance(sentence, (tlog.Forall, tlog.Exists)):
-            if not bindings:
-                bindings = {}
+            # Copy the incoming bindings so variables bound by this quantifier are
+            # scoped to its body and do not leak into sibling subformulas (variable
+            # capture). Mutating a shared dict here would let an inner quantifier's
+            # variable bind free occurrences of the same name elsewhere.
+            bindings = dict(bindings) if bindings else {}
             args = []
             for v in sentence.variables:
                 var_name = v.name
                 domain = v.domain
+                if domain is None:
+                    # An untyped quantified variable otherwise defaults to a string sort, which
+                    # mis-sorts it against typed predicates. Infer its type from the declared
+                    # predicates it is used in (e.g. an int column) before falling back.
+                    domain = self._infer_variable_domain(var_name, sentence.sentence)
                 s = self._sort(domain)
                 arg = z3.Const(var_name, s())  ## TODO
                 bindings[var_name] = arg
                 args.append(arg)
             inner_sentence = self.translate(sentence.sentence, bindings)
+            if not args:
+                # z3 rejects quantifiers over an empty variable list; a quantifier
+                # binding nothing is logically equivalent to its body.
+                return inner_sentence
             if isinstance(sentence, tlog.Exists):
                 return z3.Exists(args, inner_sentence)
             else:
@@ -329,44 +346,9 @@ class Z3Solver(Solver):
                 # TODO: more elegant way to do this
                 sentence = copy(sentence)
                 sentence.make_keyword_indexed(list(pd.arguments.keys()))
-            pf_args = []
-            for arg_name, var in sentence.bindings.items():
-                if not bindings:
-                    bindings = {}
-                if isinstance(var, Variable):
-                    if var.name not in bindings:
-                        if var.name in self.constants:
-                            pf_arg = self.constants[var.name]
-                        else:
-                            raise ValueError(f"Variable {var.name} not bound in {bindings} or {self.constants}")
-                    else:
-                        pf_arg = bindings[var.name]
-                    pf_args.append(pf_arg)
-                elif isinstance(var, Term):
-                    args = [self._tr(a, bindings) for a in var.values]
-                    p = var.predicate
-                    if p == "add":
-                        pf_args.append(args[0] + args[1])
-                    elif p == "gt":
-                        pf_args.append(args[0] > args[1])
-                    elif p == "date":
-                        pf_args.append(args[0] == args[1])
-                    else:
-                        raise NotImplementedError(f"Term not implemented: p: {p} {type(var)} v: {var}")
-                elif var is None:
-                    pf_args.append(z3.StringVal("None"))
-                else:
-                    py_typ = type(var).__name__
-                    z3_typ = self._sort(py_typ)
-                    t2m_map = {
-                        z3.StringSort: z3.StringVal,
-                        z3.IntSort: z3.IntVal,
-                        z3.BoolSort: z3.BoolVal,
-                        z3.RealSort: z3.RealVal,
-                    }
-                    z3_valf = t2m_map.get(z3_typ, z3.StringVal)
-                    pf_arg = z3_valf(var)
-                    pf_args.append(pf_arg)
+            if not bindings:
+                bindings = {}
+            pf_args = [self._tr(var, bindings) for var in sentence.bindings.values()]
             try:
                 z3_expr = pf(*pf_args)
             except Exception as e:
@@ -437,6 +419,55 @@ class Z3Solver(Solver):
         if len(conjuncts) == 1:
             return conjuncts[0]
         return z3.And(*conjuncts)
+
+    def _infer_variable_domain(self, var_name: str, sentence: Any) -> Optional[str]:
+        """
+        Infer an untyped quantified variable's type from its use in declared predicates.
+
+        Walks the quantifier body and returns the declared argument type at the first
+        position where the variable appears as a direct argument of a declared predicate.
+        Returns ``None`` when no such use exists, leaving the caller to fall back to the
+        default sort.
+
+        :param var_name: The name of the quantified variable.
+        :param sentence: The body of the quantified sentence.
+        :return: The inferred type name, or ``None`` if it cannot be determined.
+        """
+        if not self.predicate_definitions:
+            return None
+        for term in self._iter_terms(sentence):
+            pd = self.predicate_definitions.get(term.predicate)
+            if pd is None:
+                continue
+            arg_names = list(pd.arguments.keys())
+            arg_types = list(pd.arguments.values())
+            for i, (key, value) in enumerate(term.bindings.items()):
+                if not (isinstance(value, Variable) and value.name == var_name):
+                    continue
+                idx = i if term.positional else (arg_names.index(key) if key in arg_names else i)
+                if idx < len(arg_types):
+                    return arg_types[idx]
+        return None
+
+    def _iter_terms(self, node: Any) -> Iterator[Term]:
+        """
+        Yield every ``Term`` atom in a sentence tree, recursing into nested terms.
+
+        :param node: A sentence or sub-expression.
+        :return: An iterator over the contained terms.
+        """
+        if isinstance(node, Term):
+            yield node
+            for value in node.values:
+                yield from self._iter_terms(value)
+            return
+        if isinstance(node, (tlog.Forall, tlog.Exists)):
+            yield from self._iter_terms(node.sentence)
+            return
+        operands = getattr(node, "operands", None)
+        if operands is not None:
+            for operand in operands:
+                yield from self._iter_terms(operand)
 
     def dump(self) -> str:
         return str(self.wrapped_solver)

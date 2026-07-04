@@ -1,0 +1,9 @@
+(cl-text tests.theorems.animals
+  (Person Fred)
+  (Person Jie)
+  (Animal corky cat)
+  (Animal fido dog)
+  (forall ((x Thing) (species Thing)) (if (Animal x species) (Likes x Fred)))
+  (forall ((x Thing) (species Thing)) (if (Animal x cat) (Likes x Jie)))
+  (forall ((x Thing) (species Thing)) (if (Animal x dog) (not (Likes Fred x))))
+)

@@ -1,0 +1,4 @@
+pred p().
+
+/// p holds if p does not: a paradoxical negative self-loop.
+p() :- not p().

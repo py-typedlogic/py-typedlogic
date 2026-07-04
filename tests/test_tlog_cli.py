@@ -114,6 +114,8 @@ def test_solve_tlog_can_dump_generated_clingo_program(tmp_path: Path) -> None:
     result = runner.invoke(app, ["solve", str(tlog_path), "--solver", "clingo", "--dump-program"])
 
     check(result.exit_code == 0, result.stdout)
+    check("#defined person/1." in result.stdout, result.stdout)
+    check("#defined has_name/1." in result.stdout, result.stdout)
     check(":- person(X), not has_name(X)." in result.stdout, result.stdout)
     check('person("p1").' in result.stdout, result.stdout)
     check('has_name("p1").' in result.stdout, result.stdout)
@@ -175,6 +177,112 @@ def test_tlog_test_command_fails_when_expectation_is_not_entailed(tmp_path: Path
     check("FAIL expect mortal('plato')" in result.stdout, result.stdout)
 
 
+def test_tlog_test_command_problog_enforces_constraints(tmp_path: Path) -> None:
+    """The ProbLog test command treats violated constraints as unsatisfiable."""
+    pytest.importorskip("problog")
+    tlog_path = tmp_path / "ancestry.tlog"
+    tlog_path.write_text(
+        """
+        pred parent(parent: str, child: str).
+        pred ancestor(ancestor: str, descendant: str).
+        all x, y | parent(x, y) -> ancestor(x, y).
+        all x, y, z | parent(x, y) & ancestor(y, z) -> ancestor(x, z).
+        all x, y | ancestor(x, y) -> x != y.
+
+        test_case(
+          "cycle",
+          given(that(parent("a", "b"), parent("b", "a"))),
+          expect(that(not satisfiable()))
+        ).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["test", str(tlog_path), "--solver", "problog"])
+
+    check(result.exit_code == 0, result.stdout)
+    check("PASS cycle" in result.stdout, result.stdout)
+    check("1 test case(s), 0 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_test_command_also_proves_lemmas(tmp_path: Path) -> None:
+    """The test command is a one-stop validation command for tests and proof obligations."""
+    pytest.importorskip("clingo")
+    tlog_path = tmp_path / "ancestry.tlog"
+    tlog_path.write_text(
+        """
+        pred parent(parent: str, child: str).
+        pred ancestor(ancestor: str, descendant: str).
+        all x, y | parent(x, y) -> ancestor(x, y).
+
+        test_case(
+          "parent_fixture",
+          given(that(parent("a", "b"))),
+          expect(that(ancestor("a", "b")))
+        ).
+
+        lemma(
+          "parent_implies_ancestor",
+          that(all x, y | parent(x, y) -> ancestor(x, y))
+        ).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["test", str(tlog_path), "--solver", "clingo"])
+
+    check(result.exit_code == 0, result.stdout)
+    check("PASS parent_fixture" in result.stdout, result.stdout)
+    check("1 test case(s), 0 failed, 0 unknown" in result.stdout, result.stdout)
+    check("PASS lemma parent_implies_ancestor" in result.stdout, result.stdout)
+    check("1 obligation(s), 0 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_test_command_accepts_lemma_only_validation(tmp_path: Path) -> None:
+    """The test command does not require test_case metadata when proof obligations exist."""
+    pytest.importorskip("clingo")
+    tlog_path = tmp_path / "ancestry.tlog"
+    tlog_path.write_text(
+        """
+        pred parent(parent: str, child: str).
+        pred ancestor(ancestor: str, descendant: str).
+        all x, y | parent(x, y) -> ancestor(x, y).
+
+        lemma("parent_implies_ancestor", that(all x, y | parent(x, y) -> ancestor(x, y))).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["test", str(tlog_path), "--solver", "clingo"])
+
+    check(result.exit_code == 0, result.stdout)
+    check("No matching test cases" not in result.stdout, result.stdout)
+    check("PASS lemma parent_implies_ancestor" in result.stdout, result.stdout)
+    check("1 obligation(s), 0 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_test_command_fails_when_proof_obligation_fails(tmp_path: Path) -> None:
+    """Failing proof obligations make the one-stop test command fail."""
+    pytest.importorskip("clingo")
+    tlog_path = tmp_path / "ancestry.tlog"
+    tlog_path.write_text(
+        """
+        pred parent(parent: str, child: str).
+        pred ancestor(ancestor: str, descendant: str).
+        all x, y | parent(x, y) -> ancestor(x, y).
+
+        lemma("reverse_parent", that(all x, y | parent(x, y) -> ancestor(y, x))).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["test", str(tlog_path), "--solver", "clingo"])
+
+    check(result.exit_code == 1, result.stdout)
+    check("FAIL lemma reverse_parent" in result.stdout, result.stdout)
+    check("1 obligation(s), 1 failed, 0 unknown" in result.stdout, result.stdout)
+
+
 def test_tlog_prove_command_proves_quoted_lemmas(tmp_path: Path) -> None:
     """The prove command treats lemmas as proof obligations, not axioms."""
     pytest.importorskip("z3")
@@ -196,6 +304,122 @@ def test_tlog_prove_command_proves_quoted_lemmas(tmp_path: Path) -> None:
     check(result.exit_code == 0, result.stdout)
     check("PASS lemma socrates_is_mortal: mortal('socrates')" in result.stdout, result.stdout)
     check("1 obligation(s), 0 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_prove_command_clingo_proves_universal_horn_lemmas_without_facts(tmp_path: Path) -> None:
+    """Clingo proves universal Horn lemmas by assuming the antecedent for fresh constants."""
+    pytest.importorskip("clingo")
+    tlog_path = tmp_path / "ancestry.tlog"
+    tlog_path.write_text(
+        """
+        pred parent(parent: str, child: str).
+        pred ancestor(ancestor: str, descendant: str).
+        all x, y | parent(x, y) -> ancestor(x, y).
+        all x, y, z | parent(x, y) & ancestor(y, z) -> ancestor(x, z).
+
+        lemma(
+          "grandparent_implies_ancestor",
+          that(all x, y, z | parent(x, y) & parent(y, z) -> ancestor(x, z))
+        ).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "clingo", "--target", "lemmas"])
+
+    check(result.exit_code == 0, result.stdout)
+    check("PASS lemma grandparent_implies_ancestor" in result.stdout, result.stdout)
+    check("1 obligation(s), 0 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_prove_command_clingo_does_not_prove_vacuous_universal_horn_lemmas(tmp_path: Path) -> None:
+    """Clingo universal Horn proofs must fail when only the antecedent can be assumed."""
+    pytest.importorskip("clingo")
+    tlog_path = tmp_path / "ancestry.tlog"
+    tlog_path.write_text(
+        """
+        pred parent(parent: str, child: str).
+        pred ancestor(ancestor: str, descendant: str).
+        all x, y | parent(x, y) -> ancestor(x, y).
+
+        lemma("reverse_parent", that(all x, y | parent(x, y) -> ancestor(y, x))).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "clingo", "--target", "lemmas"])
+
+    check(result.exit_code == 1, result.stdout)
+    check("FAIL lemma reverse_parent" in result.stdout, result.stdout)
+    check("1 obligation(s), 1 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_prove_command_clingo_reports_unsafe_universal_horn_lemmas_unknown(tmp_path: Path) -> None:
+    """Clingo does not attempt counterexample proofs for ungrounded-head lemmas."""
+    pytest.importorskip("clingo")
+    tlog_path = tmp_path / "unsafe.tlog"
+    tlog_path.write_text(
+        """
+        pred source(id: str).
+        pred target(id: str).
+        lemma("ungrounded_head", that(all x, y | source(x) -> target(y))).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "clingo", "--target", "lemmas"])
+
+    check(result.exit_code == 1, result.stdout)
+    check("UNKNOWN lemma ungrounded_head" in result.stdout, result.stdout)
+    check("1 obligation(s), 0 failed, 1 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_prove_command_problog_proves_universal_horn_lemmas_without_facts(tmp_path: Path) -> None:
+    """ProbLog proves deterministic universal Horn lemmas as a 0/1-probability case."""
+    pytest.importorskip("problog")
+    tlog_path = tmp_path / "ancestry.tlog"
+    tlog_path.write_text(
+        """
+        pred parent(parent: str, child: str).
+        pred ancestor(ancestor: str, descendant: str).
+        all x, y | parent(x, y) -> ancestor(x, y).
+        all x, y, z | parent(x, y) & ancestor(y, z) -> ancestor(x, z).
+
+        lemma(
+          "grandparent_implies_ancestor",
+          that(all x, y, z | parent(x, y) & parent(y, z) -> ancestor(x, z))
+        ).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "problog", "--target", "lemmas"])
+
+    check(result.exit_code == 0, result.stdout)
+    check("PASS lemma grandparent_implies_ancestor" in result.stdout, result.stdout)
+    check("1 obligation(s), 0 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_prove_command_problog_does_not_prove_vacuous_universal_horn_lemmas(tmp_path: Path) -> None:
+    """ProbLog universal Horn proofs fail when the counterexample has probability one."""
+    pytest.importorskip("problog")
+    tlog_path = tmp_path / "ancestry.tlog"
+    tlog_path.write_text(
+        """
+        pred parent(parent: str, child: str).
+        pred ancestor(ancestor: str, descendant: str).
+        all x, y | parent(x, y) -> ancestor(x, y).
+
+        lemma("reverse_parent", that(all x, y | parent(x, y) -> ancestor(y, x))).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "problog", "--target", "lemmas"])
+
+    check(result.exit_code == 1, result.stdout)
+    check("FAIL lemma reverse_parent" in result.stdout, result.stdout)
+    check("1 obligation(s), 1 failed, 0 unknown" in result.stdout, result.stdout)
 
 
 def test_tlog_prove_command_proves_negative_lemmas_with_model_fallback(tmp_path: Path) -> None:
@@ -226,6 +450,7 @@ def test_tlog_prove_command_does_not_match_variable_terms_with_different_arity(t
     tlog_path.write_text(
         """
         pred edge(source: str, target: str).
+        pred edge/1.
         edge("a", "b").
 
         lemma("one_arg_edge_is_not_entailed", that(exists x | edge(x))).

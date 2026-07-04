@@ -1,0 +1,5 @@
+(cl-text tests.theorems.mortals
+  (forall ((x NameType)) (if (Person x) (Mortal x)))
+  (forall ((x TreeNodeType) (y TreeNodeType) (z TreeNodeType)) (if (and (AncestorOf x z) (AncestorOf z y)) (AncestorOf x y)))
+  (forall ((x TreeNodeType) (y TreeNodeType)) (not (and (AncestorOf x y) (AncestorOf y x))))
+)

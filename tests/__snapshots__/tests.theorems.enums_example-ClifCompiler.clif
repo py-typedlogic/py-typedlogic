@@ -1,0 +1,6 @@
+(cl-text tests.theorems.enums_example
+  (forall ((p str) (age int) (age_category AgeCategory) (living_status LivingStatus)) (if (and (Person p age living_status) (gt age 44) (lt age 65)) (PersonHasAgeCategory p MIDDLE_AGED)))
+  (forall ((p str) (age int) (age_category AgeCategory) (living_status LivingStatus)) (if (and (Person p age living_status) (gt age 64)) (PersonHasAgeCategory p OLD)))
+  (forall ((p str) (age int) (age_category AgeCategory) (living_status LivingStatus)) (if (and (Person p age living_status) (lt age 45)) (PersonHasAgeCategory p YOUNG)))
+  (forall ((p str) (age int) (living_status LivingStatus)) (if (Person p age ALIVE) (IsAlive p)))
+)

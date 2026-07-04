@@ -36,6 +36,8 @@ plugins:
             toc_depth: 1
             members_order: source
             docstring_style: sphinx
+            filters:
+              - "!^_[^_]"
   - mermaid2:
       version: 9.3.0
   - with-pdf
@@ -67,6 +69,9 @@ nav:
       - SQL goal compiler: examples/sql-compiler.ipynb
       - TLog CLI workflow: examples/tlog-cli.md
       - TLog CLI notebook: examples/tlog-cli.ipynb
+  - Learning:
+      - Semantics (open/closed world, NAF, WFS, ASP): learning/semantics.ipynb
+      - Multiple models: learning/multiple-models.ipynb
   - Concepts:
       - Core concepts: concepts/index.md
       - Data Model: concepts/datamodel.md
@@ -83,6 +88,8 @@ nav:
       Prover9: integrations/solvers/prover9.md
       SnakeLog: integrations/solvers/snakelog.md
       ProbLog: integrations/solvers/problog.md
+      Well-Founded Semantics: integrations/solvers/wellfounded.md
+      Well-Founded Semantics scaling: integrations/solvers/wellfounded-scaling.md
       LLM Solver: integrations/solvers/llm.md
   - Compilers:
       - Compiler overview: conversion/compilers/index.md
@@ -91,6 +98,7 @@ nav:
       - Prolog: conversion/compilers/prolog.md
       - ProbLog: conversion/compilers/problog.md
       - TPTP: conversion/compilers/tptp.md
+      - CLIF: conversion/compilers/clif.md
       - FOL: conversion/compilers/fol.md
       - SQL: conversion/compilers/sql.md
       - S-Expression: conversion/compilers/sexpr.md
@@ -98,6 +106,7 @@ nav:
       - Parser overview: conversion/parsers/index.md
       - Python: conversion/parsers/python.md
       - TLog: conversion/parsers/tlog.md
+      - CLIF: conversion/parsers/clif.md
       - YAML: conversion/parsers/yaml.md
       - DataFrame: conversion/parsers/dataframe.md
       - Catalog: conversion/parsers/catalog.md

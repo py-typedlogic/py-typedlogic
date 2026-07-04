@@ -9,6 +9,10 @@ Add solvers for the following:
 - OWL Reasoners (via owlery, robot, or py-horned-owl)
 - problog
 
+Scale the native well-founded semantics solver (join-based semi-naive
+evaluation, stratified SCC decomposition): see
+[Scaling the native well-founded solver](integrations/solvers/wellfounded-scaling.md).
+
 ## Framework Integrations
 
 - OWL, using py-horned-owl

@@ -1,3 +1,5 @@
+"""Base parser interfaces and validation messages."""
+
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -9,17 +11,23 @@ from typedlogic import Sentence, Term, Theory
 
 @dataclass
 class ValidationMessage:
-    """
-    A message from a parser that indicates the result of a validation.
-    """
+    """A message from a parser that indicates the result of a validation."""
 
     message: str
     line: Optional[int] = None
     column: Optional[int] = None
     level: str = field(default="error")
 
-    def __str__(self):
-        return f"{self.level}: {self.message} at line {self.line}, column {self.column}"
+    def __str__(self) -> str:
+        """Render the validation message for CLI output."""
+        rendered = f"{self.level}: {self.message}"
+        if self.line is None and self.column is None:
+            return rendered
+        if self.line is not None and self.column is not None:
+            return f"{rendered} at line {self.line}, column {self.column}"
+        if self.line is not None:
+            return f"{rendered} at line {self.line}"
+        return f"{rendered} at column {self.column}"
 
 
 @dataclass

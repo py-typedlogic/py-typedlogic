@@ -240,6 +240,30 @@ def test_validate_iter_reports_syntax_errors() -> None:
 
     check(len(messages) == 1, repr(messages))
     check("Expected" in messages[0].message, messages[0].message)
+    check(messages[0].line == 1, repr(messages[0]))
+    check(messages[0].column is not None, repr(messages[0]))
+    check("line None" not in str(messages[0]), str(messages[0]))
+
+
+def test_markdown_validate_iter_reports_source_line_numbers() -> None:
+    """Markdown validation reports source line numbers, not compacted TLog block line numbers."""
+    source = "\n".join(
+        [
+            "Markdown prose.",
+            "",
+            "```tlog",
+            "p(a).",
+            "q(x) ->.",
+            "```",
+        ]
+    )
+
+    messages = list(TLogMarkdownParser().validate_iter(source))
+
+    check(len(messages) == 1, repr(messages))
+    check(messages[0].line == 5, repr(messages[0]))
+    check(messages[0].column is not None, repr(messages[0]))
+    check("line None" not in str(messages[0]), str(messages[0]))
 
 
 def test_validate_iter_reports_malformed_quoted_metadata() -> None:
@@ -248,6 +272,7 @@ def test_validate_iter_reports_malformed_quoted_metadata() -> None:
 
     check(len(messages) == 1, repr(messages))
     check("Expected that(sentence)" in messages[0].message, messages[0].message)
+    check("line None" not in str(messages[0]), str(messages[0]))
 
 
 def test_registry_discovers_tlog_parser() -> None:
@@ -291,6 +316,33 @@ def test_parse_literate_markdown_tlog_blocks() -> None:
     check(len(theory.sentences) == 3, repr(theory.sentences))
     check(isinstance(theory.sentences[1], Forall), repr(theory.sentences[1]))
     check(isinstance(theory.sentences[2], Exists), repr(theory.sentences[2]))
+
+
+def test_parse_literate_markdown_ignores_non_tlog_code_blocks() -> None:
+    """Markdown code fences without a TLog language tag are ignored."""
+    source = "\n".join(
+        [
+            "# Mixed markdown",
+            "",
+            "```",
+            "not valid tlog",
+            "```",
+            "",
+            "```yaml",
+            "foo: bar",
+            "```",
+            "",
+            "```tlog",
+            "pred parent(parent: str, child: str).",
+            'parent("a", "b").',
+            "```",
+        ]
+    )
+
+    theory = TLogMarkdownParser().parse(source)
+
+    check(theory.predicate_definitions[0].predicate == "parent", repr(theory.predicate_definitions))
+    check(theory.sentences[0].predicate == "parent", repr(theory.sentences))
 
 
 def test_tlog_rules_export_to_existing_prolog_compiler() -> None:
@@ -425,3 +477,79 @@ def test_tlog_type_annotations_export_to_typed_souffle_compiler() -> None:
     compiled = SouffleCompiler().compile(theory)
     check(".type Personid = symbol" in compiled, compiled)
     check(".decl parent(parent: Personid, child: Personid)" in compiled, compiled)
+
+
+def test_declared_predicate_used_at_wrong_arity_is_flagged() -> None:
+    """Declaring a predicate makes a mismatched-arity use an error (permissive parse, strict validate)."""
+    source = """
+        pred foo(x: int, y: int).
+        foo(1, 1).
+        foo(1, 2).
+        all i, j | foo(i), foo(j) -> i = j.
+        """
+
+    # Parsing stays permissive by default.
+    theory = TLogParser().parse(source)
+    check(len(theory.sentences) == 3, repr(theory.sentences))
+
+    # Validation reports the arity mismatch as an error.
+    messages = TLogParser().validate(source)
+    check(len(messages) == 1, repr(messages))
+    check(messages[0].level == "error", repr(messages[0]))
+    check("arity 1" in messages[0].message and "foo/2" in messages[0].message, messages[0].message)
+
+
+def test_declared_predicate_wrong_arity_is_flagged_in_metadata_groups() -> None:
+    """Arity validation checks quoted lemmas and tests, not just asserted axiom groups."""
+    source = """
+        pred foo(x: int, y: int).
+        lemma("bad", that(foo(x))).
+        """
+
+    messages = TLogParser().validate(source)
+
+    check(len(messages) == 1, repr(messages))
+    check("arity 1" in messages[0].message and "foo/2" in messages[0].message, messages[0].message)
+
+
+def test_undeclared_predicate_may_use_multiple_arities() -> None:
+    """With no declaration, the same name at different arities is allowed (Prolog-style)."""
+    source = """
+        person(X) :- person(X, parent).
+        person(Alice, parent).
+        """
+
+    check(TLogParser().validate(source) == [], repr(TLogParser().validate(source)))
+
+
+def test_predicate_declared_at_multiple_arities_is_permitted() -> None:
+    """Declaring both arities silences the arity guard for either use."""
+    source = """
+        pred person/1.
+        pred person/2.
+        person(X) :- person(X, parent).
+        """
+
+    check(TLogParser().validate(source) == [], repr(TLogParser().validate(source)))
+
+
+def test_builtin_comparisons_and_arithmetic_are_not_arity_checked() -> None:
+    """Builtins such as eq and add never trigger the arity guard."""
+    source = """
+        pred foo(x: int, y: int).
+        all x, y | foo(x, y), x = y -> foo(x, x + 1).
+        """
+
+    check(TLogParser().validate(source) == [], repr(TLogParser().validate(source)))
+
+
+def test_auto_validate_raises_on_arity_mismatch() -> None:
+    """auto_validate turns the arity guard into a hard parse error."""
+    source = """
+        pred foo(x: int, y: int).
+        all i, j | foo(i), foo(j) -> i = j.
+        """
+
+    check(TLogParser().parse(source) is not None, "permissive parse should still succeed")
+    with pytest.raises(ValueError, match="arity 1"):
+        TLogParser(auto_validate=True).parse(source)

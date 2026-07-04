@@ -1,0 +1,9 @@
+(cl-text typedlogic.integrations.frameworks.linkml.meta_axioms
+  (forall ((lhs ElementID) (rhs ElementID) (parent ElementID)) (if (and (Parent lhs parent) (Parent rhs parent) (ne lhs rhs)) (Disjoint lhs rhs)))
+  (forall ((cls ElementID) (slot ElementID)) (if (and (ClassDefinition cls) (SlotDefinition slot) (not (ClassSlot cls slot))) (InvalidClassSlot cls slot)))
+  (forall ((cls ElementID) (slot_expression ElementID)) (if (SlotUsage cls slot_expression) (Parent cls slot_expression)))
+  (forall ((cls ElementID) (slot_expression ElementID)) (if (Attribute cls slot_expression) (Parent cls slot_expression)))
+  (forall ((element ElementID) (parent ElementID)) (if (IsA element parent) (Parent element parent)))
+  (forall ((element ElementID) (parent ElementID)) (if (Mixin element parent) (Parent element parent)))
+  (forall ((cls ElementID) (slot ElementID) (parent ElementID)) (if (and (Parent cls parent) (ClassSlot parent slot)) (Parent cls slot)))
+)

@@ -20,6 +20,7 @@ pipx run "typedlogic[pydantic,clingo]" --help
 ```
 
 """
+
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
@@ -225,7 +226,7 @@ def convert(
 
 def _guess_format(data_file: Path) -> str:
     # Check for catalog files first
-    if data_file.name.endswith('.catalog.yaml') or data_file.name.endswith('.catalog.yml'):
+    if data_file.name.endswith(".catalog.yaml") or data_file.name.endswith(".catalog.yml"):
         return "catalog"
     if data_file.name.endswith(".tlog.md"):
         return "tlogmarkdown"
@@ -278,17 +279,19 @@ def _combine_input_files(
             try:
                 parsed_result = parser.parse(input_file)
                 # Check if result is a proper Theory object
-                if hasattr(parsed_result, 'sentences') or hasattr(parsed_result, 'predicate_definitions'):
+                if hasattr(parsed_result, "sentences") or hasattr(parsed_result, "predicate_definitions"):
                     combined_theory = parsed_result
                 else:
                     # Result is raw data, treat as ground terms
                     from typedlogic import Theory
+
                     combined_theory = Theory()
                     ground_terms = parser.parse_ground_terms(input_file)
                     combined_theory.ground_terms = ground_terms
             except Exception:
                 # If parsing as theory fails, try as ground terms only
                 from typedlogic import Theory
+
                 combined_theory = Theory()
                 ground_terms = parser.parse_ground_terms(input_file)
                 combined_theory.ground_terms = ground_terms
@@ -297,23 +300,23 @@ def _combine_input_files(
             try:
                 parsed_result = parser.parse(input_file)
                 # Check if result is a proper Theory object
-                if hasattr(parsed_result, 'sentences') or hasattr(parsed_result, 'predicate_definitions'):
+                if hasattr(parsed_result, "sentences") or hasattr(parsed_result, "predicate_definitions"):
                     file_theory = parsed_result
 
                     # Merge sentences (axioms)
-                    if hasattr(file_theory, 'sentences') and file_theory.sentences:
+                    if hasattr(file_theory, "sentences") and file_theory.sentences:
                         if combined_theory.sentences is None:
                             combined_theory.sentences = []
                         combined_theory.sentences.extend(file_theory.sentences)
 
                     # Merge ground terms (facts)
-                    if hasattr(file_theory, 'ground_terms') and file_theory.ground_terms:
+                    if hasattr(file_theory, "ground_terms") and file_theory.ground_terms:
                         if combined_theory.ground_terms is None:
                             combined_theory.ground_terms = []
                         combined_theory.ground_terms.extend(file_theory.ground_terms)
 
                     # Merge predicate definitions
-                    if hasattr(file_theory, 'predicate_definitions') and file_theory.predicate_definitions:
+                    if hasattr(file_theory, "predicate_definitions") and file_theory.predicate_definitions:
                         if combined_theory.predicate_definitions is None:
                             combined_theory.predicate_definitions = []
                         # Avoid duplicates by name
@@ -446,8 +449,7 @@ def _obligations_from_group(group: SentenceGroup) -> list[ProofObligation]:
     if group.group_type not in {SentenceGroupType.GOAL, SentenceGroupType.LEMMA}:
         return []
     return [
-        ProofObligation(kind=group.group_type, name=group.name, sentence=sentence)
-        for sentence in group.sentences or []
+        ProofObligation(kind=group.group_type, name=group.name, sentence=sentence) for sentence in group.sentences or []
     ]
 
 
@@ -511,7 +513,7 @@ def _term_matches_with_variables(term: Term, sentence_values: tuple[Any, ...]) -
     if len(term.values) != len(sentence_values):
         return False
     bindings: dict[str, Any] = {}
-    for expected, actual in zip(sentence_values, term.values):
+    for expected, actual in zip(sentence_values, term.values, strict=True):
         if not isinstance(expected, Variable):
             if expected != actual:
                 return False
@@ -544,41 +546,17 @@ def _status(result: Optional[bool]) -> str:
     return "UNKNOWN"
 
 
-@app.command()
-def test(
-    theory_file: Path = typer.Argument(..., exists=True, dir_okay=False, readable=True),
-    solver: str = typer.Option("souffle", "--solver", "-s", help="Solver to use (z3, souffle, clingo, etc.)"),
-    validate_types: bool = typer.Option(
-        True, "--validate-types/--no-validate-types", help="Use mypy to validate types"
-    ),
-    input_format: Optional[str] = input_format_option,
-    data_input_format: Optional[str] = typer.Option(None, "--data-input-format", "-d", help="Format for ground terms"),
-    selected_tests: Optional[List[str]] = typer.Option(
-        None,
-        "--test",
-        help="Only run a named test case. Repeat for multiple tests.",
-    ),
-    dump_program: bool = dump_program_option,
-    data_files: Annotated[Optional[List[Path]], typer.Argument()] = None,
-):
-    """
-    Run quoted test_case(...) declarations embedded in a theory.
-
-    Tests are off by default for `solve`. This command opts into test metadata:
-    each `given(that(...))` is temporarily asserted, and each `expect(that(...))`
-    is checked against the resulting solver state.
-    """
-    theory = _parse_theory_file(theory_file, input_format, validate_types)
-    _add_data_files(theory, data_files, data_input_format)
-    cases = [case for case in _test_cases(theory) if _selected_by_name(case.name, selected_tests)]
-    if not cases:
-        click.echo("No matching test cases found.")
-        raise typer.Exit(1)
-
+def _run_test_cases(
+    theory: Theory,
+    cases: list[TestCaseSpec],
+    solver_name: str,
+    dump_program: bool,
+) -> tuple[int, int]:
+    """Run selected test cases and return failed and unknown counts."""
     failed = 0
     unknown = 0
     for case in cases:
-        solver_instance = _get_solver_instance(solver or "souffle")
+        solver_instance = _get_solver_instance(solver_name)
         solver_instance.add(theory)
         for given in case.givens:
             solver_instance.add(given)
@@ -587,7 +565,7 @@ def test(
             try:
                 program = solver_instance.dump()
             except NotImplementedError:
-                click.echo(f"Error: Solver '{solver}' does not support dumping generated programs.")
+                click.echo(f"Error: Solver '{solver_name}' does not support dumping generated programs.")
                 raise typer.Exit(1) from None
             click.echo(f"=== Program: {case.name} ===")
             click.echo(program.rstrip())
@@ -605,11 +583,115 @@ def test(
 
         click.echo(f"{_status(case_result)} {case.name}")
         if case_result is not True or len(case.expects) > 1:
-            for expected, result in zip(case.expects, results):
+            for expected, result in zip(case.expects, results, strict=True):
                 click.echo(f"  {_status(result)} expect {_format_sentence(expected)}")
 
-    click.echo(f"{len(cases)} test case(s), {failed} failed, {unknown} unknown")
-    if failed or unknown:
+    if cases:
+        click.echo(f"{len(cases)} test case(s), {failed} failed, {unknown} unknown")
+    return failed, unknown
+
+
+def _run_proof_obligations(
+    theory: Theory,
+    obligations: list[ProofObligation],
+    solver_name: str,
+    dump_program: bool,
+) -> tuple[int, int]:
+    """Run selected proof obligations and return failed and unknown counts."""
+    if not obligations:
+        return 0, 0
+
+    solver_instance = _get_solver_instance(solver_name)
+    solver_instance.add(theory)
+
+    if dump_program:
+        try:
+            program = solver_instance.dump()
+        except NotImplementedError:
+            click.echo(f"Error: Solver '{solver_name}' does not support dumping generated programs.")
+            raise typer.Exit(1) from None
+        click.echo(program.rstrip())
+
+    context = ExpectationContext(solver_instance)
+    failed = 0
+    unknown = 0
+    for obligation in obligations:
+        result = context.prove(obligation.sentence)
+        if result is False:
+            failed += 1
+        if result is None:
+            unknown += 1
+        click.echo(
+            f"{_status(result)} {obligation.kind.value} {obligation.name}: {_format_sentence(obligation.sentence)}"
+        )
+
+    click.echo(f"{len(obligations)} obligation(s), {failed} failed, {unknown} unknown")
+    return failed, unknown
+
+
+@app.command()
+def test(
+    theory_file: Path = typer.Argument(..., exists=True, dir_okay=False, readable=True),
+    solver: str = typer.Option("souffle", "--solver", "-s", help="Solver to use (z3, souffle, clingo, etc.)"),
+    proof_target: ProveTarget = typer.Option(
+        ProveTarget.ALL,
+        "--target",
+        help="Proof obligations to run after test cases: all, goals, or lemmas.",
+    ),
+    validate_types: bool = typer.Option(
+        True, "--validate-types/--no-validate-types", help="Use mypy to validate types"
+    ),
+    input_format: Optional[str] = input_format_option,
+    data_input_format: Optional[str] = typer.Option(None, "--data-input-format", "-d", help="Format for ground terms"),
+    selected_tests: Optional[List[str]] = typer.Option(
+        None,
+        "--test",
+        help="Only run a named test case. Repeat for multiple tests.",
+    ),
+    selected_names: Optional[List[str]] = typer.Option(
+        None,
+        "--name",
+        help="Only prove obligations from a named goal or lemma group. Repeat for multiple names.",
+    ),
+    run_proofs: bool = typer.Option(
+        True,
+        "--proofs/--no-proofs",
+        help="Also prove goal and lemma obligations.",
+    ),
+    dump_program: bool = dump_program_option,
+    data_files: Annotated[Optional[List[Path]], typer.Argument()] = None,
+):
+    """
+    Run quoted test_case(...) declarations and prove goals and lemmas embedded in a theory.
+
+    Tests are off by default for `solve`. This command opts into test metadata:
+    each `given(that(...))` is temporarily asserted, and each `expect(that(...))`
+    is checked against the resulting solver state. Goal and lemma metadata is
+    also proved against the base theory unless `--no-proofs` is used.
+    """
+    theory = _parse_theory_file(theory_file, input_format, validate_types)
+    _add_data_files(theory, data_files, data_input_format)
+    cases = [case for case in _test_cases(theory) if _selected_by_name(case.name, selected_tests)]
+    obligations = []
+    if run_proofs:
+        obligations = [
+            obligation
+            for obligation in _proof_obligations(theory, proof_target)
+            if _selected_by_name(obligation.name, selected_names)
+        ]
+    if selected_tests and not cases:
+        click.echo("No matching test cases found.")
+        raise typer.Exit(1)
+    if run_proofs and selected_names and not obligations:
+        click.echo("No matching proof obligations found.")
+        raise typer.Exit(1)
+    if not cases and not obligations:
+        click.echo("No matching test cases or proof obligations found.")
+        raise typer.Exit(1)
+
+    test_failed, test_unknown = _run_test_cases(theory, cases, solver or "souffle", dump_program)
+    proof_failed, proof_unknown = _run_proof_obligations(theory, obligations, solver or "souffle", dump_program)
+    if test_failed or test_unknown or proof_failed or proof_unknown:
         raise typer.Exit(1)
 
 
@@ -652,32 +734,7 @@ def prove(
         click.echo("No matching proof obligations found.")
         raise typer.Exit(1)
 
-    solver_instance = _get_solver_instance(solver or "z3")
-    solver_instance.add(theory)
-
-    if dump_program:
-        try:
-            program = solver_instance.dump()
-        except NotImplementedError:
-            click.echo(f"Error: Solver '{solver}' does not support dumping generated programs.")
-            raise typer.Exit(1) from None
-        click.echo(program.rstrip())
-
-    context = ExpectationContext(solver_instance)
-    failed = 0
-    unknown = 0
-    for obligation in obligations:
-        result = context.prove(obligation.sentence)
-        if result is False:
-            failed += 1
-        if result is None:
-            unknown += 1
-        click.echo(
-            f"{_status(result)} {obligation.kind.value} {obligation.name}: "
-            f"{_format_sentence(obligation.sentence)}"
-        )
-
-    click.echo(f"{len(obligations)} obligation(s), {failed} failed, {unknown} unknown")
+    failed, unknown = _run_proof_obligations(theory, obligations, solver or "z3", dump_program)
     if failed or unknown:
         raise typer.Exit(1)
 
@@ -784,14 +841,13 @@ def solve(
             else:
                 result += f"\nTotal models shown: {model_count}\n"
 
-
     # Output results
     if output_file:
         with open(output_file, "w") as f:
             f.write(result)
         click.echo(f"Solution written to {output_file}")
     else:
-        click.echo("\n" + "="*50)
+        click.echo("\n" + "=" * 50)
         click.echo(result.rstrip())
 
 

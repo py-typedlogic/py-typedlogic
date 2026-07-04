@@ -1,0 +1,4 @@
+(cl-text tests.theorems.import_test.ext
+  (forall ((name str) (age int)) (if (Person name age) (NamedThing name)))
+  (forall ((subject str) (predicate str) (object str) (reciprocated boolean)) (if (Likes subject predicate object reciprocated) (Relationship subject predicate object)))
+)
