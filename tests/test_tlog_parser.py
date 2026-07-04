@@ -318,6 +318,33 @@ def test_parse_literate_markdown_tlog_blocks() -> None:
     check(isinstance(theory.sentences[2], Exists), repr(theory.sentences[2]))
 
 
+def test_parse_literate_markdown_ignores_non_tlog_code_blocks() -> None:
+    """Markdown code fences without a TLog language tag are ignored."""
+    source = "\n".join(
+        [
+            "# Mixed markdown",
+            "",
+            "```",
+            "not valid tlog",
+            "```",
+            "",
+            "```yaml",
+            "foo: bar",
+            "```",
+            "",
+            "```tlog",
+            "pred parent(parent: str, child: str).",
+            'parent("a", "b").',
+            "```",
+        ]
+    )
+
+    theory = TLogMarkdownParser().parse(source)
+
+    check(theory.predicate_definitions[0].predicate == "parent", repr(theory.predicate_definitions))
+    check(theory.sentences[0].predicate == "parent", repr(theory.sentences))
+
+
 def test_tlog_rules_export_to_existing_prolog_compiler() -> None:
     """Non-HiLog TLog rules use the existing compiler pipeline."""
     theory = TLogParser().parse(
