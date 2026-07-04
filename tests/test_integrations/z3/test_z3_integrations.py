@@ -295,6 +295,31 @@ def test_cardinality_range_upper_violation():
     assert not solver.check().satisfiable
 
 
+@pytest.mark.parametrize("actual_count,satisfiable", [(1, True), (2, False)])
+def test_cardinality_infers_counted_variable_sort_from_predicate(actual_count: int, satisfiable: bool):
+    """An untyped counted variable takes its sort from the (int-typed) predicate it is counted over.
+
+    Without domain inference the witness defaults to a string sort and mis-sorts against the
+    int-typed ``HasPart``/``Part`` arguments, raising a Z3 sort mismatch instead of checking the bound.
+    """
+    solver = Z3Solver()
+    solver.add_predicate_definition(PredicateDefinition(predicate="Thing", arguments={"x": "int"}))
+    solver.add_predicate_definition(PredicateDefinition(predicate="Part", arguments={"y": "int"}))
+    solver.add_predicate_definition(PredicateDefinition(predicate="HasPart", arguments={"x": "int", "y": "int"}))
+    x = Variable("X")
+    y = Variable("Y")
+    # Every Thing must have at most 1 part; Y is untyped and must be inferred as int.
+    solver.add_sentence(
+        Forall([x], Implies(Term("Thing", x), CardinalityConstraint(Term("HasPart", x, y), Term("Part", y), None, 1)))
+    )
+    solver.add_fact(Term("Thing", 1))
+    for i in range(actual_count):
+        part = 10 * (i + 1)
+        solver.add_fact(Term("Part", part))
+        solver.add_fact(Term("HasPart", 1, part))
+    assert solver.check().satisfiable == satisfiable
+
+
 @pytest.mark.parametrize(
     "op,py_result",
     [

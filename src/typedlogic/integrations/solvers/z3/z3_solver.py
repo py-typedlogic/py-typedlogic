@@ -389,10 +389,19 @@ class Z3Solver(Solver):
                 f"got {[v.name for v in counted]} in {cc}"
             )
         counted_var = counted[0]
-        sort = self._sort(counted_var.domain)()
         template = cc.template
         conditions = cc.conditions
         assert template is not None, f"Cardinality constraint has no template: {cc}"
+        # An untyped counted variable would otherwise default to a string sort, which
+        # mis-sorts the witnesses against a typed predicate argument (e.g. an int column)
+        # and triggers a Z3 sort mismatch. Infer its domain from the template/conditions
+        # predicates it is used in, mirroring the quantifier-variable handling above.
+        domain = counted_var.domain
+        if domain is None:
+            domain = self._infer_variable_domain(counted_var.name, template)
+        if domain is None and conditions is not None:
+            domain = self._infer_variable_domain(counted_var.name, conditions)
+        sort = self._sort(domain)()
 
         def phi(const: z3.ExprRef) -> z3.ExprRef:
             local_bindings = dict(bindings)
