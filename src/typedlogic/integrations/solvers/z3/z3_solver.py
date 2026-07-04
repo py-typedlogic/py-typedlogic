@@ -9,7 +9,14 @@ import typedlogic as tlog
 import typedlogic.pybridge
 from typedlogic import FactMixin, Variable
 from typedlogic.builtins import NUMERIC_BUILTINS
-from typedlogic.datamodel import CardinalityConstraint, DefinedType, PredicateDefinition, Sentence, Term
+from typedlogic.datamodel import (
+    CardinalityConstraint,
+    DefinedType,
+    NotInProfileError,
+    PredicateDefinition,
+    Sentence,
+    Term,
+)
 from typedlogic.parsers.pyparser.python_ast_utils import logger
 from typedlogic.profiles import (
     AllowsComparisonTerms,
@@ -22,6 +29,7 @@ from typedlogic.profiles import (
 )
 from typedlogic.pybridge import fact_arg_map, fact_predicate
 from typedlogic.solver import Model, Solution, Solver
+from typedlogic.transformations import contains_negation_as_failure
 
 SORT_MAP: Mapping[str, Type[SortRef]] = {
     "str": z3.StringSort,
@@ -147,6 +155,12 @@ class Z3Solver(Solver):
         return
 
     def prove(self, sentence: Sentence) -> Optional[bool]:
+        if contains_negation_as_failure(sentence):
+            logger.warning(
+                f"Z3 cannot prove a goal containing negation-as-failure; returning unknown for: {sentence}. "
+                "Consider typedlogic.transformations.clark_completion to obtain a classical rendering."
+            )
+            return None
         s = self.wrapped_solver
         s.push()
         s.add(z3.Not(self.translate(sentence)))
@@ -233,6 +247,20 @@ class Z3Solver(Solver):
         return self.add_sentence(fact)
 
     def add_sentence(self, sentence: Sentence) -> None:
+        # Negation-as-failure has no classical reading; skipping the sentence keeps the
+        # rest of a mixed theory usable (weakened) instead of failing whole-theory.
+        if contains_negation_as_failure(sentence):
+            if self.strict:
+                raise NotInProfileError(
+                    f"Z3 does not support negation-as-failure: {sentence}. "
+                    "Consider typedlogic.transformations.clark_completion to obtain a classical rendering."
+                )
+            logger.warning(
+                f"Skipping sentence with negation-as-failure (unsupported by Z3): {sentence}. "
+                "The theory is weakened by this omission; consider "
+                "typedlogic.transformations.clark_completion for a classical rendering."
+            )
+            return
         # normalize_variables(sentence)
         z3_expr = self.translate(sentence)
         self.wrapped_solver.add(z3_expr)
@@ -280,6 +308,11 @@ class Z3Solver(Solver):
                     )
                 )
             return z3.Or(*disj)
+        if isinstance(sentence, tlog.NegationAsFailure):
+            raise NotInProfileError(
+                f"Z3 has classical semantics and cannot translate negation-as-failure: {sentence}. "
+                "Consider typedlogic.transformations.clark_completion to obtain a classical rendering."
+            )
         if isinstance(sentence, tlog.Not):
             return z3.Not(self.translate(sentence.operands[0], bindings))
         if isinstance(sentence, tlog.Iff):

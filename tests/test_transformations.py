@@ -19,7 +19,10 @@ from typedlogic import (
 from typedlogic.datamodel import ExactlyOne, Implied, NotInProfileError
 from typedlogic.transformations import (
     PrologConfig,
+    as_fol,
     as_prolog,
+    clark_completion,
+    contains_negation_as_failure,
     counterexample_proof_sentences,
     counterexample_sentence,
     expand_exactly_one,
@@ -323,3 +326,148 @@ def test_hierarchy_rejects_unknown_parent():
     )
     with pytest.raises(ValueError, match="Unknown parent"):
         sentences_from_predicate_hierarchy(theory)
+
+
+def _birds_theory(with_facts: bool = False) -> Theory:
+    """Build the classic birds/abnormality NAF example theory."""
+    x = Variable("x", "str")
+    theory = Theory(
+        predicate_definitions=[
+            PredicateDefinition("bird", {"x": "str"}),
+            PredicateDefinition("penguin", {"x": "str"}),
+            PredicateDefinition("abnormal", {"x": "str"}),
+            PredicateDefinition("flies", {"x": "str"}),
+        ],
+    )
+    theory.add(Forall([x], Implies(Term("penguin", x), Term("abnormal", x))))
+    theory.add(Forall([x], Implies(And(Term("bird", x), NegationAsFailure(Term("abnormal", x))), Term("flies", x))))
+    if with_facts:
+        theory.ground_terms.extend([Term("bird", "tweety"), Term("bird", "pingu"), Term("penguin", "pingu")])
+    return theory
+
+
+def test_contains_negation_as_failure():
+    """NAF should be detected at any depth; classical negation should not count."""
+    x = Variable("x", "str")
+    px = Term("p", x)
+    qx = Term("q", x)
+    assert not contains_negation_as_failure(px)
+    assert not contains_negation_as_failure(Forall([x], Implies(And(px, Not(qx)), px)))
+    assert contains_negation_as_failure(NegationAsFailure(qx))
+    assert contains_negation_as_failure(Forall([x], Implies(And(px, NegationAsFailure(qx)), px)))
+    assert contains_negation_as_failure(Exists([x], Or(px, Not(NegationAsFailure(qx)))))
+
+
+def test_clark_completion_completes_naf_dependency_closure():
+    """NAF-tested predicates and their dependencies are completed; NAF becomes Not."""
+    theory = _birds_theory()
+    completed = clark_completion(theory)
+    rendered = [as_fol(s) for s in completed.sentences]
+    assert rendered == [
+        "∀[x:str]. penguin(x) → abnormal(x)",
+        "∀[x:str]. bird(x) ∧ ¬abnormal(x) → flies(x)",
+        "∀[x:str]. abnormal(x) → (penguin(x))",
+        "∀[x:str]. ¬penguin(x)",
+    ]
+    assert not any(contains_negation_as_failure(s) for s in completed.sentences)
+    # the input theory is not mutated
+    assert any(contains_negation_as_failure(s) for s in theory.sentences)
+
+
+def test_clark_completion_facts_become_equality_disjuncts():
+    """Ground facts of a completed predicate contribute equality disjuncts."""
+    theory = _birds_theory(with_facts=True)
+    completed = clark_completion(theory)
+    rendered = [as_fol(s) for s in completed.sentences]
+    assert "∀[x:str]. penguin(x) → (x == 'pingu')" in rendered
+
+
+def test_clark_completion_only_requested_predicates():
+    """An explicit predicate list overrides the default NAF-derived closure."""
+    theory = _birds_theory()
+    completed = clark_completion(theory, predicates=["abnormal"])
+    rendered = [as_fol(s) for s in completed.sentences]
+    assert "∀[x:str]. abnormal(x) → (penguin(x))" in rendered
+    assert not any("¬penguin" in r for r in rendered)
+
+
+def test_clark_completion_existentials_for_body_only_variables():
+    """Body variables not bound by the head are existentially quantified in the completion."""
+    x = Variable("x", "str")
+    y = Variable("y", "str")
+    theory = Theory(
+        predicate_definitions=[
+            PredicateDefinition("edge", {"src": "str", "dst": "str"}),
+            PredicateDefinition("connected", {"x": "str"}),
+            PredicateDefinition("isolated", {"x": "str"}),
+        ],
+    )
+    theory.add(Forall([x, y], Implies(Term("edge", x, y), Term("connected", x))))
+    theory.add(Forall([x], Implies(NegationAsFailure(Term("connected", x)), Term("isolated", x))))
+    completed = clark_completion(theory)
+    rendered = [as_fol(s) for s in completed.sentences]
+    assert "∀[x:str]. connected(x) → (∃[y:str]. edge(x, y))" in rendered
+
+
+def test_clark_completion_rejects_positive_nonrule_assertions():
+    """Completion is unsound if another sentence can assert a completed predicate."""
+    x = Variable("x", "str")
+    theory = _birds_theory()
+    theory.add(Forall([x], Or(Term("abnormal", x), Term("flies", x))))
+    with pytest.raises(NotInProfileError, match="abnormal"):
+        clark_completion(theory)
+
+
+def test_clark_completion_unstratified_warns_by_default_and_raises_when_strict(caplog):
+    """A negative cycle warns by default and raises with strict=True."""
+    import logging
+
+    x = Variable("x", "str")
+    theory = Theory(
+        predicate_definitions=[
+            PredicateDefinition("p", {"x": "str"}),
+            PredicateDefinition("q", {"x": "str"}),
+        ],
+    )
+    theory.add(Forall([x], Implies(NegationAsFailure(Term("q", x)), Term("p", x))))
+    theory.add(Forall([x], Implies(NegationAsFailure(Term("p", x)), Term("q", x))))
+    with caplog.at_level(logging.WARNING):
+        clark_completion(theory)
+    assert any("not stratified" in rec.message for rec in caplog.records)
+    with pytest.raises(NotInProfileError, match="not stratified"):
+        clark_completion(theory, strict=True)
+
+
+def test_clark_completion_without_naf_is_a_noop():
+    """A NAF-free theory gains no completion axioms."""
+    x = Variable("x", "str")
+    theory = Theory(
+        predicate_definitions=[
+            PredicateDefinition("p", {"x": "str"}),
+            PredicateDefinition("q", {"x": "str"}),
+        ],
+    )
+    theory.add(Forall([x], Implies(Term("p", x), Term("q", x))))
+    completed = clark_completion(theory)
+    assert completed.sentences == theory.sentences
+
+
+def test_clark_completion_rewrites_naf_inside_completion_bodies():
+    """Rule bodies copied into completion disjuncts must not retain NAF nodes."""
+    i = Variable("i", "str")
+    j = Variable("j", "str")
+    theory = Theory(
+        predicate_definitions=[
+            PredicateDefinition("member", {"parent": "str", "child": "str"}),
+            PredicateDefinition("scope", {"i": "str"}),
+            PredicateDefinition("sat", {"i": "str"}),
+            PredicateDefinition("viol", {"i": "str"}),
+        ],
+    )
+    theory.add(Forall([i], Implies(And(Term("scope", i), NegationAsFailure(Term("viol", i))), Term("sat", i))))
+    theory.add(Forall([i, j], Implies(And(Term("member", i, j), NegationAsFailure(Term("sat", j))), Term("viol", i))))
+    completed = clark_completion(theory)
+    assert not any(contains_negation_as_failure(s) for s in completed.sentences)
+    rendered = [as_fol(s) for s in completed.sentences]
+    assert "∀[i:str]. sat(i) → (scope(i) ∧ ¬viol(i))" in rendered
+    assert "∀[i:str]. viol(i) → (∃[j:str]. member(i, j) ∧ ¬sat(j))" in rendered
