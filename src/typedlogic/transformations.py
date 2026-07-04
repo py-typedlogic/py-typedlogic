@@ -2,9 +2,10 @@
 Function for performing transformation and manipulation of Sentences and Theories.
 """
 import json
+import re
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional, Set, Tuple, Type, Union
+from typing import Any, Callable, Collection, Dict, Iterable, List, Mapping, Optional, Set, Tuple, Type, Union
 
 from typedlogic import (
     BooleanSentence,
@@ -190,6 +191,74 @@ class PrologConfig:
     null_term: str = "null(_)"
     allow_skolem_terms: bool = False
     allow_ungrounded_vars_in_head: bool = False
+
+
+def _render_asp_variable(v: Variable, config: PrologConfig) -> str:
+    """Render a variable name the same way :func:`as_prolog` renders variable arguments."""
+    v_name = v.name
+    if not config.use_lowercase_vars:
+        match = re.match(r"(_+)(.*)", v_name)
+        if match:
+            prefix, suffix = match.groups()
+            v_name = f"{prefix}{suffix.capitalize()}"
+        else:
+            v_name = v_name.capitalize()
+    return v_name
+
+
+def _cardinality_head_to_asp(
+    cc: "CardinalityConstraint",
+    antecedent: Sentence,
+    body_vars: Collection[str],
+    config: "PrologConfig",
+    depth: int,
+) -> str:
+    """
+    Compile a head-position :class:`CardinalityConstraint` to ASP integrity constraints.
+
+    A rule ``Body -> CardinalityConstraint(template, conditions, min, max)`` is rendered as
+    one integrity constraint per bound: it is violated (making the program unsatisfiable)
+    when, for some binding of the body variables, the number of distinct counted variables
+    satisfying ``template`` and ``conditions`` falls outside ``[min, max]``. This is a
+    satisfiability check, in contrast to the generative choice-rule reading of a bare
+    ``min {..} max :- body`` clause.
+
+        >>> x = Variable("X")
+        >>> y = Variable("Y")
+        >>> thing = Term("Thing", x)
+        >>> hp = Term("HasPart", x, y)
+        >>> part = Term("Part", y)
+        >>> rule = thing >> CardinalityConstraint(hp, part, 1, 2)
+        >>> print(as_prolog(rule))
+        :- thing(X), #count { Y : haspart(X, Y), part(Y) } < 1.
+        :- thing(X), #count { Y : haspart(X, Y), part(Y) } > 2.
+
+    :param cc: the cardinality constraint appearing in the rule head
+    :param antecedent: the rule body
+    :param body_vars: variable names already bound by the body (the global variables)
+    :param config: prolog rendering configuration
+    :param depth: current rendering depth
+    :return: newline-separated integrity constraints (possibly empty if fully unbounded)
+    """
+    template = cc.template
+    conditions = cc.conditions
+    assert template is not None, f"Cardinality constraint has no template: {cc}"
+    body = as_prolog(antecedent, config, depth + 1)
+    elems = [as_prolog(template, config, depth + 1)]
+    if conditions is not None and conditions != template:
+        elems.append(as_prolog(conditions, config, depth + 1))
+    counted = cc.counted_variables(bound=body_vars)
+    if not counted:
+        raise NotInProfileError(f"Cardinality constraint has no counted variables (all are bound by the body): {cc}")
+    key = ", ".join(_render_asp_variable(v, config) for v in counted)
+    agg = "#count { " + key + " : " + ", ".join(elems) + " }"
+    prefix = "" if body == "true" else f"{body}, "
+    lines = []
+    if cc.minimum_number is not None and cc.minimum_number > 0:
+        lines.append(f":- {prefix}{agg} < {cc.minimum_number}.")
+    if cc.maximum_number is not None:
+        lines.append(f":- {prefix}{agg} > {cc.maximum_number}.")
+    return "\n".join(lines)
 
 
 def _prolog_quote_atom(value: str) -> str:
@@ -513,9 +582,12 @@ def as_prolog(
         neg_symbol = config.negation_symbol if isinstance(sentence, Not) else config.negation_as_failure_symbol
         return f"{neg_symbol} {negated_clause}"
     if isinstance(sentence, CardinalityConstraint):
-        # TODO: assume clingo syntax for now.
-        template_pro = as_prolog(sentence.template, config, depth + 1)
-        conditions_pro = as_prolog(sentence.conditions, config, depth + 1)
+        # Body-position (aggregate) rendering; assumes clingo syntax.
+        template = sentence.template
+        conditions = sentence.conditions
+        assert template is not None and conditions is not None, f"Incomplete cardinality constraint: {sentence}"
+        template_pro = as_prolog(template, config, depth + 1)
+        conditions_pro = as_prolog(conditions, config, depth + 1)
         inner = "{" + template_pro + " : " + conditions_pro + "}"
         if sentence.minimum_number is not None:
             inner = f"{sentence.minimum_number} <= {inner}"
@@ -596,6 +668,11 @@ def as_prolog(
         )
     # check for unbound variables
     body_vars = _grounded_variable_names(sentence.antecedent)
+    if isinstance(sentence.consequent, CardinalityConstraint):
+        # A cardinality constraint in the head is compiled to ASP integrity
+        # constraints (min/max bounds on a #count aggregate), rather than to a
+        # generative choice rule. This gives it satisfiability-check semantics.
+        return _cardinality_head_to_asp(sentence.consequent, sentence.antecedent, body_vars, config, depth)
     anon_vars = set()
     for head_term in disjunction_as_list(sentence.consequent):
         if isinstance(head_term, Not):
