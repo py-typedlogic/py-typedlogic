@@ -14,7 +14,7 @@
         <link rel="prev" href="../problog/">
       
       
-        <link rel="next" href="../llm/">
+        <link rel="next" href="../wellfounded-scaling/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -1112,6 +1112,66 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reading-the-three-valued-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading the three-valued model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#undefined-atoms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Undefined atoms
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-a-theory-programmatically" class="md-nav__link">
+    <span class="md-ellipsis">
+      Building a theory programmatically
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-a-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choosing a backend
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#typedlogic.integrations.solvers.wellfounded.WellFoundedSolver.check" class="md-nav__link">
     <span class="md-ellipsis">
       check
@@ -1142,6 +1202,28 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wellfounded-scaling/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Well-Founded Semantics scaling
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -2032,6 +2114,66 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reading-the-three-valued-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reading the three-valued model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#undefined-atoms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Undefined atoms
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-a-theory-programmatically" class="md-nav__link">
+    <span class="md-ellipsis">
+      Building a theory programmatically
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-a-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choosing a backend
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#typedlogic.integrations.solvers.wellfounded.WellFoundedSolver.check" class="md-nav__link">
     <span class="md-ellipsis">
       check
@@ -2087,7 +2229,9 @@ which every ground atom is <code>true</code>, <code>false</code>, or <code>undef
 <ul>
 <li><code>native</code> (default) — a dependency-free pure-Python implementation of the Van
   Gelder alternating fixpoint. Returns the full three-valued model. Best for
-  teaching and modestly-sized programs.</li>
+  teaching and modestly-sized programs; it grounds naively and is not built for
+  large programs (see <a href="../wellfounded-scaling/">Scaling the native well-founded solver</a>
+  for the plan to fix that).</li>
 <li><code>problog</code> — delegates to <a href="../problog/">ProbLog</a>, which evaluates the <em>two-valued</em>
   restriction of WFS. It agrees with <code>native</code> on stratified programs and raises
   <code>NegativeCycleError</code> on programs that are genuinely three-valued.</li>
@@ -2100,6 +2244,87 @@ which every ground atom is <code>true</code>, <code>false</code>, or <code>undef
 <p>For a worked comparison of the well-founded semantics against closed-world
 Datalog and Answer Set Programming, see the
 <a href="../../../learning/semantics/">semantics notebook</a>.</p>
+<h2 id="installation">Installation</h2>
+<p>The <code>native</code> backend has no dependencies beyond <code>typedlogic</code> itself. The optional
+backends reuse existing extras:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>typedlogic<span class="w">              </span><span class="c1"># native backend only</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;typedlogic[problog]&#39;</span><span class="w">   </span><span class="c1"># adds the problog backend</span>
+</code></pre></div>
+<p>The <code>xsb</code> backend additionally requires the external
+<a href="https://xsb.sourceforge.net/">XSB</a> executable on <code>PATH</code>.</p>
+<h2 id="usage">Usage</h2>
+<h3 id="reading-the-three-valued-model">Reading the three-valued model</h3>
+<p>Load a theory (here in <a href="../../../conversion/parsers/tlog/">TLog</a> syntax) and ask
+for its model. The returned <code>WellFoundedModel</code> (documented below)
+exposes the atoms that are <strong>true</strong> as <code>ground_terms</code> (so <code>iter_retrieve</code> works as
+with any solver) and the atoms that are <strong>undefined</strong> as <code>undefined_terms</code>. Any
+atom in neither list is <strong>false</strong>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.parsers.tlog_parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">TLogParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.integrations.solvers.wellfounded</span><span class="w"> </span><span class="kn">import</span> <span class="n">WellFoundedSolver</span>
+
+<span class="n">program</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">pred Bird(name: str).</span>
+<span class="s2">pred Penguin(name: str).</span>
+<span class="s2">pred Abnormal(name: str).</span>
+<span class="s2">pred Flies(name: str).</span>
+
+<span class="s2">Bird(&quot;tweety&quot;).</span>
+<span class="s2">Bird(&quot;opus&quot;).</span>
+<span class="s2">Penguin(&quot;opus&quot;).</span>
+
+<span class="s2">Abnormal(x) :- Penguin(x).</span>
+<span class="s2">Flies(x) :- Bird(x), not Abnormal(x).   # `not` is negation-as-failure</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">solver</span> <span class="o">=</span> <span class="n">WellFoundedSolver</span><span class="p">()</span>                 <span class="c1"># backend=&quot;native&quot; is the default</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">TLogParser</span><span class="p">()</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">program</span><span class="p">))</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">ground_terms</span><span class="p">))</span>     <span class="c1"># true atoms</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">undefined_terms</span><span class="p">))</span>  <span class="c1"># undefined atoms</span>
+<span class="nb">print</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;Flies&quot;</span><span class="p">)])</span> <span class="c1"># -&gt; [&#39;Flies(tweety)&#39;]</span>
+</code></pre></div>
+<p><code>tweety</code> flies (nothing proves it abnormal), <code>opus</code> does not (it is a penguin),
+and this stratified program has no <code>undefined</code> atoms.</p>
+<h3 id="undefined-atoms">Undefined atoms</h3>
+<p>Where a program loops through negation, the well-founded model marks the offending
+atoms <code>undefined</code> instead of yielding several models (as ASP would) or none:</p>
+<div class="highlight"><pre><span></span><code><span class="n">loop</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">pred p().</span>
+<span class="s2">pred q().</span>
+<span class="s2">p() :- not q().</span>
+<span class="s2">q() :- not p().</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">solver</span> <span class="o">=</span> <span class="n">WellFoundedSolver</span><span class="p">()</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">TLogParser</span><span class="p">()</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">loop</span><span class="p">))</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">ground_terms</span><span class="p">])</span>      <span class="c1"># [] -- nothing is true</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">undefined_terms</span><span class="p">))</span>  <span class="c1"># [&#39;p&#39;, &#39;q&#39;]</span>
+</code></pre></div>
+<h3 id="building-a-theory-programmatically">Building a theory programmatically</h3>
+<p>You can also assert predicate definitions, rules, and facts directly, using
+<code>NegationAsFailure</code> for NAF body literals:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Term</span><span class="p">,</span> <span class="n">NegationAsFailure</span><span class="p">,</span> <span class="n">Variable</span><span class="p">,</span> <span class="n">PredicateDefinition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.integrations.solvers.wellfounded</span><span class="w"> </span><span class="kn">import</span> <span class="n">WellFoundedSolver</span>
+
+<span class="n">solver</span> <span class="o">=</span> <span class="n">WellFoundedSolver</span><span class="p">()</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">PredicateDefinition</span><span class="p">(</span><span class="n">predicate</span><span class="o">=</span><span class="s2">&quot;Bird&quot;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">}))</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">PredicateDefinition</span><span class="p">(</span><span class="n">predicate</span><span class="o">=</span><span class="s2">&quot;Abnormal&quot;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">}))</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">PredicateDefinition</span><span class="p">(</span><span class="n">predicate</span><span class="o">=</span><span class="s2">&quot;Flies&quot;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">}))</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Bird&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">NegationAsFailure</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Abnormal&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)))</span> <span class="o">&gt;&gt;</span> <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Flies&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Bird&quot;</span><span class="p">,</span> <span class="s2">&quot;tweety&quot;</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">solver</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">iter_retrieve</span><span class="p">(</span><span class="s2">&quot;Flies&quot;</span><span class="p">)])</span>  <span class="c1"># -&gt; [&#39;Flies(tweety)&#39;]</span>
+</code></pre></div>
+<h3 id="choosing-a-backend">Choosing a backend</h3>
+<div class="highlight"><pre><span></span><code><span class="n">WellFoundedSolver</span><span class="p">()</span>                     <span class="c1"># native (default): full three-valued model</span>
+<span class="n">WellFoundedSolver</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="s2">&quot;problog&quot;</span><span class="p">)</span>    <span class="c1"># two-valued; raises NegativeCycleError on loops</span>
+<span class="n">WellFoundedSolver</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="s2">&quot;xsb&quot;</span><span class="p">)</span>        <span class="c1"># experimental; needs the xsb binary</span>
+</code></pre></div>
+<p><code>check()</code> always reports <code>satisfiable=True</code> (a well-founded model always exists),
+and <code>models()</code> yields the single model.</p>
 
 
 <div class="doc doc-object doc-class">
@@ -2166,8 +2391,7 @@ none); the offending atoms become <em>undefined</em>:</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/integrations/solvers/wellfounded/wellfounded_solver.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">102</span>
-<span class="normal">103</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">103</span>
 <span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
@@ -2482,7 +2706,8 @@ none); the offending atoms become <em>undefined</em>:</p>
 <span class="normal">415</span>
 <span class="normal">416</span>
 <span class="normal">417</span>
-<span class="normal">418</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">418</span>
+<span class="normal">419</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">WellFoundedSolver</span><span class="p">(</span><span class="n">Solver</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A solver that computes the well-founded model of a normal logic program.</span>
@@ -2830,10 +3055,10 @@ none); the offending atoms become <em>undefined</em>:</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/integrations/solvers/wellfounded/wellfounded_solver.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">152</span>
-<span class="normal">153</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">153</span>
 <span class="normal">154</span>
-<span class="normal">155</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Solution</span><span class="p">:</span>
+<span class="normal">155</span>
+<span class="normal">156</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Solution</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Report satisfiability; a well-founded model always exists, so this is always true.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">Solution</span><span class="p">(</span><span class="n">satisfiable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -2859,9 +3084,9 @@ none); the offending atoms become <em>undefined</em>:</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/integrations/solvers/wellfounded/wellfounded_solver.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Model</span><span class="p">]:</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Model</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Yield the single well-founded model.&quot;&quot;&quot;</span>
     <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
@@ -2886,15 +3111,15 @@ none); the offending atoms become <em>undefined</em>:</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/integrations/solvers/wellfounded/wellfounded_solver.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">161</span>
-<span class="normal">162</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">162</span>
 <span class="normal">163</span>
 <span class="normal">164</span>
 <span class="normal">165</span>
 <span class="normal">166</span>
 <span class="normal">167</span>
 <span class="normal">168</span>
-<span class="normal">169</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WellFoundedModel</span><span class="p">:</span>
+<span class="normal">169</span>
+<span class="normal">170</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WellFoundedModel</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the single well-founded model (with three-valued information).&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">==</span> <span class="s2">&quot;native&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_native_model</span><span class="p">()</span>
@@ -2948,20 +3173,20 @@ false.</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/integrations/solvers/wellfounded/wellfounded_solver.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span>
-<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">WellFoundedModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A three-valued model.</span>
@@ -3022,15 +3247,15 @@ cannot represent; use the <code>native</code> (or <code>xsb</code>) backend for 
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/integrations/solvers/wellfounded/wellfounded_solver.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">66</span>
-<span class="normal">67</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">67</span>
 <span class="normal">68</span>
 <span class="normal">69</span>
 <span class="normal">70</span>
 <span class="normal">71</span>
 <span class="normal">72</span>
 <span class="normal">73</span>
-<span class="normal">74</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">NegativeCycleError</span><span class="p">(</span><span class="n">NotInProfileError</span><span class="p">):</span>
+<span class="normal">74</span>
+<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">NegativeCycleError</span><span class="p">(</span><span class="n">NotInProfileError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised by two-valued backends when the well-founded model is not total.</span>
 

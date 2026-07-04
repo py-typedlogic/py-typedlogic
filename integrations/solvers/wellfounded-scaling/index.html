@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/souffle/">
+        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/integrations/solvers/wellfounded-scaling/">
       
       
-        <link rel="prev" href="../z3/">
+        <link rel="prev" href="../wellfounded/">
       
       
-        <link rel="next" href="../prover9/">
+        <link rel="next" href="../llm/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Souffle - py-typedlogic</title>
+        <title>Well-Founded Semantics scaling - py-typedlogic</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#souffle-integrations" class="md-skip">
+        <a href="#scaling-the-native-well-founded-solver" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Souffle
+              Well-Founded Semantics scaling
             
           </span>
         </div>
@@ -973,19 +973,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../souffle/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -995,7 +986,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -1093,10 +1083,31 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../wellfounded-scaling/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Well-Founded Semantics scaling
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1106,6 +1117,113 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#where-the-time-goes-today" class="md-nav__link">
+    <span class="md-ellipsis">
+      Where the time goes today
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      The plan
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-0-fail-fast-safety-immediate" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 0 — fail fast (safety, immediate)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-join-based-semi-naive-evaluation-the-big-win-pure-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 1 — join-based, semi-naive evaluation (the big win, pure Python)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-stratification-scc-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 2 — stratification / SCC decomposition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-incremental-transformed-alternating-fixpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 3 — incremental / transformed alternating fixpoint
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-offload-the-core-only-if-still-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 4 — offload the core (only if still needed)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#boundaries-non-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Boundaries (non-goals)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation strategy
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1989,6 +2107,101 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#where-the-time-goes-today" class="md-nav__link">
+    <span class="md-ellipsis">
+      Where the time goes today
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      The plan
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-0-fail-fast-safety-immediate" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 0 — fail fast (safety, immediate)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-join-based-semi-naive-evaluation-the-big-win-pure-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 1 — join-based, semi-naive evaluation (the big win, pure Python)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-stratification-scc-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 2 — stratification / SCC decomposition
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-incremental-transformed-alternating-fixpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 3 — incremental / transformed alternating fixpoint
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-offload-the-core-only-if-still-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phase 4 — offload the core (only if still needed)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#boundaries-non-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Boundaries (non-goals)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation strategy
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2006,273 +2219,138 @@
   
 
 
-<h1 id="souffle-integrations">Souffle Integrations</h1>
-<p><img alt="souffle logo" src="https://souffle-lang.github.io/img/logo-2x.png" /></p>
-
-
-<div class="doc doc-object doc-class">
-
-
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="Solver
-
-
-  
-      dataclass
-   (typedlogic.solver.Solver)" href="../../../api/solver/#typedlogic.solver.Solver">Solver</a></code></p>
-
-
-        <p>A solver that uses Soufflé.</p>
-<p>Soufflé is a logic programming language inspired by Datalog. For more details,
-see <a href="https://souffle-lang.github.io/">The Souffle site</a>.</p>
-<p>Note that in order to use this integration, you need to <a href="https://souffle-lang.github.io/install">install Souffle</a>
-and have it on your path.</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.integrations.frameworks.pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">FactBaseModel</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="k">class</span><span class="w"> </span><span class="nc">AncestorOf</span><span class="p">(</span><span class="n">FactBaseModel</span><span class="p">):</span>
-<span class="o">...</span>     <span class="n">ancestor</span><span class="p">:</span> <span class="nb">str</span>
-<span class="o">...</span>     <span class="n">descendant</span><span class="p">:</span> <span class="nb">str</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">SouffleSolver</span><span class="p">()</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic</span><span class="w"> </span><span class="kn">import</span> <span class="n">SentenceGroup</span><span class="p">,</span> <span class="n">PredicateDefinition</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">solver</span><span class="o">.</span><span class="n">add_predicate_definition</span><span class="p">(</span><span class="n">PredicateDefinition</span><span class="p">(</span><span class="n">predicate</span><span class="o">=</span><span class="s2">&quot;AncestorOf&quot;</span><span class="p">,</span> <span class="n">arguments</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ancestor&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;descendant&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">}))</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">solver</span><span class="o">.</span><span class="n">add_fact</span><span class="p">(</span><span class="n">AncestorOf</span><span class="p">(</span><span class="n">ancestor</span><span class="o">=</span><span class="s1">&#39;p1&#39;</span><span class="p">,</span> <span class="n">descendant</span><span class="o">=</span><span class="s1">&#39;p1a&#39;</span><span class="p">))</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">solver</span><span class="o">.</span><span class="n">add_fact</span><span class="p">(</span><span class="n">AncestorOf</span><span class="p">(</span><span class="n">ancestor</span><span class="o">=</span><span class="s1">&#39;p1a&#39;</span><span class="p">,</span> <span class="n">descendant</span><span class="o">=</span><span class="s1">&#39;p1aa&#39;</span><span class="p">))</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">aa</span> <span class="o">=</span> <span class="n">SentenceGroup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;transitivity-of-ancestor-of&quot;</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">solver</span><span class="o">.</span><span class="n">add_sentence_group</span><span class="p">(</span><span class="n">aa</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">soln</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
-</code></pre></div>
-
-<p>This solver does not implement the open-world assumption.</p>
-<div class="codehilite"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.profiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenWorld</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">solver</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">impl</span><span class="p">(</span><span class="n">OpenWorld</span><span class="p">)</span>
-<span class="kc">False</span>
-</code></pre></div>
-
-
-
-
-
-
-
-              <details class="quote">
-                <summary>Source code in <code>src/typedlogic/integrations/solvers/souffle/souffle_solver.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 25</span>
-<span class="normal"> 26</span>
-<span class="normal"> 27</span>
-<span class="normal"> 28</span>
-<span class="normal"> 29</span>
-<span class="normal"> 30</span>
-<span class="normal"> 31</span>
-<span class="normal"> 32</span>
-<span class="normal"> 33</span>
-<span class="normal"> 34</span>
-<span class="normal"> 35</span>
-<span class="normal"> 36</span>
-<span class="normal"> 37</span>
-<span class="normal"> 38</span>
-<span class="normal"> 39</span>
-<span class="normal"> 40</span>
-<span class="normal"> 41</span>
-<span class="normal"> 42</span>
-<span class="normal"> 43</span>
-<span class="normal"> 44</span>
-<span class="normal"> 45</span>
-<span class="normal"> 46</span>
-<span class="normal"> 47</span>
-<span class="normal"> 48</span>
-<span class="normal"> 49</span>
-<span class="normal"> 50</span>
-<span class="normal"> 51</span>
-<span class="normal"> 52</span>
-<span class="normal"> 53</span>
-<span class="normal"> 54</span>
-<span class="normal"> 55</span>
-<span class="normal"> 56</span>
-<span class="normal"> 57</span>
-<span class="normal"> 58</span>
-<span class="normal"> 59</span>
-<span class="normal"> 60</span>
-<span class="normal"> 61</span>
-<span class="normal"> 62</span>
-<span class="normal"> 63</span>
-<span class="normal"> 64</span>
-<span class="normal"> 65</span>
-<span class="normal"> 66</span>
-<span class="normal"> 67</span>
-<span class="normal"> 68</span>
-<span class="normal"> 69</span>
-<span class="normal"> 70</span>
-<span class="normal"> 71</span>
-<span class="normal"> 72</span>
-<span class="normal"> 73</span>
-<span class="normal"> 74</span>
-<span class="normal"> 75</span>
-<span class="normal"> 76</span>
-<span class="normal"> 77</span>
-<span class="normal"> 78</span>
-<span class="normal"> 79</span>
-<span class="normal"> 80</span>
-<span class="normal"> 81</span>
-<span class="normal"> 82</span>
-<span class="normal"> 83</span>
-<span class="normal"> 84</span>
-<span class="normal"> 85</span>
-<span class="normal"> 86</span>
-<span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">SouffleSolver</span><span class="p">(</span><span class="n">Solver</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A solver that uses Soufflé.</span>
-
-<span class="sd">    Soufflé is a logic programming language inspired by Datalog. For more details,</span>
-<span class="sd">    see [The Souffle site](https://souffle-lang.github.io/).</span>
-
-<span class="sd">    Note that in order to use this integration, you need to [install Souffle](https://souffle-lang.github.io/install)</span>
-<span class="sd">    and have it on your path.</span>
-
-<span class="sd">        &gt;&gt;&gt; from typedlogic.integrations.frameworks.pydantic import FactBaseModel</span>
-<span class="sd">        &gt;&gt;&gt; class AncestorOf(FactBaseModel):</span>
-<span class="sd">        ...     ancestor: str</span>
-<span class="sd">        ...     descendant: str</span>
-<span class="sd">        &gt;&gt;&gt; solver = SouffleSolver()</span>
-<span class="sd">        &gt;&gt;&gt; from typedlogic import SentenceGroup, PredicateDefinition</span>
-<span class="sd">        &gt;&gt;&gt; solver.add_predicate_definition(PredicateDefinition(predicate=&quot;AncestorOf&quot;, arguments={&#39;ancestor&#39;: str, &#39;descendant&#39;: str}))</span>
-<span class="sd">        &gt;&gt;&gt; solver.add_fact(AncestorOf(ancestor=&#39;p1&#39;, descendant=&#39;p1a&#39;))</span>
-<span class="sd">        &gt;&gt;&gt; solver.add_fact(AncestorOf(ancestor=&#39;p1a&#39;, descendant=&#39;p1aa&#39;))</span>
-<span class="sd">        &gt;&gt;&gt; aa = SentenceGroup(name=&quot;transitivity-of-ancestor-of&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; solver.add_sentence_group(aa)</span>
-<span class="sd">        &gt;&gt;&gt; soln = solver.check()</span>
-
-<span class="sd">    This solver does not implement the open-world assumption.</span>
-
-<span class="sd">        &gt;&gt;&gt; from typedlogic.profiles import OpenWorld</span>
-<span class="sd">        &gt;&gt;&gt; solver.profile.impl(OpenWorld)</span>
-<span class="sd">        False</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">exec_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;souffle&quot;</span><span class="p">)</span>
-    <span class="n">profile</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Profile</span><span class="p">]</span> <span class="o">=</span> <span class="n">MixedProfile</span><span class="p">(</span>
-        <span class="n">ClassicDatalog</span><span class="p">(),</span> <span class="n">SortedLogic</span><span class="p">(),</span> <span class="n">AllowsComparisonTerms</span><span class="p">(),</span> <span class="n">SingleModelSemantics</span><span class="p">()</span>
-    <span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Model</span><span class="p">]:</span>
-        <span class="n">compiler</span> <span class="o">=</span> <span class="n">SouffleCompiler</span><span class="p">()</span>
-        <span class="n">program</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_theory</span><span class="p">)</span>
-        <span class="n">pdmap</span> <span class="o">=</span> <span class="p">{}</span>
-
-        <span class="n">facts</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">terms_by_predicate</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Term</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_theory</span><span class="o">.</span><span class="n">ground_terms</span><span class="p">:</span>
-            <span class="n">terms_by_predicate</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">term</span><span class="o">.</span><span class="n">predicate</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
-        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_dir</span><span class="p">:</span>
-            <span class="c1"># Create output directives for each predicate</span>
-            <span class="n">output_files</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="n">input_files</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">for</span> <span class="n">pd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_theory</span><span class="o">.</span><span class="n">predicate_definitions</span><span class="p">:</span>
-                <span class="n">pred</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">predicate</span>
-                <span class="n">pdmap</span><span class="p">[</span><span class="n">pred</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span>
-                <span class="n">output_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pred</span><span class="si">}</span><span class="s2">.csv&quot;</span>
-                <span class="n">output_files</span><span class="p">[</span><span class="n">pred</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
-                <span class="n">program</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">.output </span><span class="si">{</span><span class="n">pred</span><span class="si">}</span><span class="s1">(IO=file, filename=&quot;</span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s1">&quot;)</span><span class="se">\n</span><span class="s1">&#39;</span>
-                <span class="n">input_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">temp_dir</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pred</span><span class="si">}</span><span class="s2">__in.csv&quot;</span>
-                <span class="n">input_files</span><span class="p">[</span><span class="n">pred</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
-                <span class="n">program</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">.input </span><span class="si">{</span><span class="n">pred</span><span class="si">}</span><span class="s1">(IO=file, filename=&quot;</span><span class="si">{</span><span class="n">input_file</span><span class="si">}</span><span class="s1">&quot;)</span><span class="se">\n</span><span class="s1">&#39;</span>
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
-                    <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">terms_by_predicate</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="p">[]):</span>
-                        <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">term</span><span class="o">.</span><span class="n">bindings</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-
-            <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.dl&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
-                <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
-                <span class="n">fp</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">exec_name</span><span class="p">,</span> <span class="n">fp</span><span class="o">.</span><span class="n">name</span><span class="p">],</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">stderr</span><span class="p">:</span>
-                    <span class="n">msg</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-                    <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-
-                    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;.*Variable (\S+) only occurs once.*&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-
-            <span class="k">for</span> <span class="n">pred</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">output_files</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-                    <span class="k">continue</span>
-                <span class="n">pd</span> <span class="o">=</span> <span class="n">pdmap</span><span class="p">[</span><span class="n">pred</span><span class="p">]</span>
-                <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
-                    <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">reader</span><span class="p">:</span>
-                        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-                <span class="n">facts</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">make_terms</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">pd</span><span class="p">))</span>
-
-        <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">source_object</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">ground_terms</span><span class="o">=</span><span class="n">facts</span><span class="p">)</span>
-        <span class="k">yield</span> <span class="n">model</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Solution</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Solution</span><span class="p">(</span><span class="n">satisfiable</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">compiler</span> <span class="o">=</span> <span class="n">SouffleCompiler</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_theory</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-              </details>
-
-
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
+<h1 id="scaling-the-native-well-founded-solver">Scaling the native well-founded solver</h1>
+<p>The <code>native</code> backend of
+<a href="../wellfounded/"><code>WellFoundedSolver</code></a> is correct and dependency-free, but it is
+deliberately simple and is <strong>not</strong> built for large programs. This page documents
+<em>why</em>, and a phased plan to make it scale while keeping the same public API and
+the same three-valued results.</p>
+<p>The intent is that each phase is independently shippable, is a pure-Python
+change until the very last one, and is validated against the current
+implementation as a correctness oracle (see <a href="#validation-strategy">Validation</a>).</p>
+<h2 id="where-the-time-goes-today">Where the time goes today</h2>
+<p>The native backend does three things, in <code>wellfounded_solver.py</code>:</p>
+<ol>
+<li><strong>Grounding</strong> (<code>_ground_rules</code>) — every rule is instantiated over the whole
+   Herbrand universe by a naive cartesian product: <code>universe ** n_vars</code> ground
+   instances per rule, <em>regardless of whether matching body facts exist</em>.</li>
+<li><strong>Least model of a reduct</strong> (<code>_gamma</code>) — forward chaining that re-scans every
+   ground rule on every pass, with set-subset tests and no indexing.</li>
+<li><strong>Alternating fixpoint</strong> (<code>_alternating_fixpoint</code>) — iterates <code>γ²</code> to a least
+   fixpoint (the true atoms) and to a greatest fixpoint (the non-false atoms),
+   recomputing <code>γ</code> <em>from scratch</em> at every outer step.</li>
+</ol>
+<p>The dominant costs, worst first:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Bottleneck</th>
+<th>Symptom</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>Naive grounding (cartesian product)</td>
+<td>Blows up with predicate arity / number of variables; grounds instances that can never fire</td>
+</tr>
+<tr>
+<td>B</td>
+<td>Naive least-model (no join index, no semi-naive)</td>
+<td>Re-derives the whole relation every pass</td>
+</tr>
+<tr>
+<td>C</td>
+<td>Non-incremental alternating fixpoint</td>
+<td>Recomputes the least model from <code>∅</code> at each outer iteration</td>
+</tr>
+<tr>
+<td>D</td>
+<td>Whole-program WFS</td>
+<td>Runs the expensive three-valued machinery even where the program is stratified and a plain datalog pass would do</td>
+</tr>
+</tbody>
+</table>
+<h2 id="the-plan">The plan</h2>
+<h3 id="phase-0-fail-fast-safety-immediate">Phase 0 — fail fast (safety, immediate)</h3>
+<p>Before optimizing, stop the naive grounder from silently OOMing. Add a guard that
+estimates the ground-instance count and raises a clear error (with a pointer to
+the <code>xsb</code> backend / this page) once it exceeds a configurable budget. Cheap, and
+turns a hang into an actionable message.</p>
+<h3 id="phase-1-join-based-semi-naive-evaluation-the-big-win-pure-python">Phase 1 — join-based, semi-naive evaluation (the big win, pure Python)</h3>
+<p>Replace both the cartesian grounding <strong>and</strong> the forward-chaining least-model
+with standard bottom-up datalog evaluation:</p>
+<ul>
+<li><strong>Index facts</strong> by <code>(predicate, bound-argument positions)</code> so rule bodies are
+  evaluated as <strong>relational joins</strong> over the <em>current</em> extensions, producing only
+  ground instances that actually have matching facts (output-sensitive instead of
+  <code>universe ** n_vars</code>).</li>
+<li><strong>Semi-naive (differential) evaluation</strong>: in each round join against only the
+  newly-derived facts (the delta), not the whole relation. Positive recursion
+  (transitive closure and friends) goes from "re-derive everything every pass" to
+  work proportional to new derivations.</li>
+</ul>
+<p>This subsumes bottlenecks <strong>A</strong> and <strong>B</strong> and is the single highest-leverage
+change. It requires no new dependencies.</p>
+<h3 id="phase-2-stratification-scc-decomposition">Phase 2 — stratification / SCC decomposition</h3>
+<p><code>undefined</code> only ever arises from a <strong>cycle through negation</strong>. So:</p>
+<ul>
+<li>Build the predicate dependency graph, tag edges that pass through
+  negation-as-failure, and compute strongly connected components (Tarjan).</li>
+<li>Evaluate components in topological order. A component with <strong>no negative cycle</strong>
+  is stratified: one semi-naive datalog pass with stratified negation gives its
+  two-valued answer directly — <strong>no alternating fixpoint needed</strong>.</li>
+<li>Run the alternating fixpoint <strong>only</strong> on the residual non-stratified components.</li>
+</ul>
+<p>This is "modular well-founded semantics": WFS cost collapses to datalog cost for
+the stratified bulk, and the three-valued machinery is confined to the genuinely
+ambiguous fragment (bottleneck <strong>D</strong>).</p>
+<h3 id="phase-3-incremental-transformed-alternating-fixpoint">Phase 3 — incremental / transformed alternating fixpoint</h3>
+<p>For the residual non-stratified components:</p>
+<ul>
+<li><strong>Warm-start</strong> each <code>γ²</code> iteration from the previous interpretation instead of
+  from <code>∅</code> (the lfp/gfp iterations are monotone), recomputing only affected atoms
+  (bottleneck <strong>C</strong>).</li>
+<li>Alternatively, encode WFS as <strong>two-valued datalog on a transformed (doubled)
+  program</strong>, so the semi-naive engine from Phase 1 computes the true and the
+  non-false sets in a single evaluation, and the three-valued model falls out of
+  their difference.</li>
+</ul>
+<h3 id="phase-4-offload-the-core-only-if-still-needed">Phase 4 — offload the core (only if still needed)</h3>
+<p>If pure Python is still the bottleneck at the target scale, delegate the
+<em>stratified</em> core to a fast engine and keep only the WFS residual in Python:</p>
+<ul>
+<li>the existing <a href="../souffle/">Souffle</a> integration, or a future Rust datalog engine
+  (semi-naive joins + alternating-fixpoint outer loop, shipped as a
+  <code>pip</code>-installable PyO3 wheel), or</li>
+<li>the <a href="../wellfounded/"><code>xsb</code></a> backend for goal-directed / recursive workloads.</li>
+</ul>
+<p>Phases 1–3 are expected to cover the vast majority of realistic programs without
+reaching this phase.</p>
+<h2 id="boundaries-non-goals">Boundaries (non-goals)</h2>
+<ul>
+<li><strong>Function symbols / infinite Herbrand universes.</strong> The bottom-up engine
+  assumes a finite Herbrand base. Programs that generate unbounded terms are the
+  domain of goal-directed tabling (XSB), not this backend; the grounder should
+  detect and reject them with a clear message rather than diverge.</li>
+<li><strong>API and semantics stay fixed.</strong> Every phase lives behind <code>backend="native"</code>
+  and must return byte-for-byte the same <code>(true, false, undefined)</code> partition as
+  today. Scaling is an internal optimization, never a semantic change.</li>
+</ul>
+<h2 id="validation-strategy">Validation strategy</h2>
+<p>The current alternating-fixpoint implementation is the <strong>reference oracle</strong>:</p>
+<ul>
+<li><strong>Differential tests.</strong> Every optimized path must produce the identical
+  three-valued partition as the reference on a corpus of programs: stratified
+  defaults, positive recursion (transitive closure), the even/odd negative loops,
+  layered defaults, and disjunction-free ASP encodings.</li>
+<li><strong>Property-based tests.</strong> Generate random normal logic programs (via
+  <code>hypothesis</code>) and assert <code>optimized(program) == reference(program)</code>.</li>
+<li><strong>Benchmarks.</strong> Track wall-clock and peak memory on transitive closure at
+  increasing sizes, layered default reasoning, and negative-cycle-heavy programs,
+  so each phase's win (and any regression) is measured, not assumed.</li>
+</ul>
 
 
 
