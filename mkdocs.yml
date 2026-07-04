@@ -89,6 +89,7 @@ nav:
       SnakeLog: integrations/solvers/snakelog.md
       ProbLog: integrations/solvers/problog.md
       Well-Founded Semantics: integrations/solvers/wellfounded.md
+      Well-Founded Semantics scaling: integrations/solvers/wellfounded-scaling.md
       LLM Solver: integrations/solvers/llm.md
   - Compilers:
       - Compiler overview: conversion/compilers/index.md
