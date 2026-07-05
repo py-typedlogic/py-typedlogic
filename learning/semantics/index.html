@@ -3446,13 +3446,16 @@ the fragment</em>, and the <code>WellFoundedSolver</code> backends make the trad
   wrapped engine. But ProbLog implements only the <strong>two-valued</strong> restriction of WFS: it agrees
   with the native backend on stratified programs, and <strong>refuses</strong> genuinely three-valued programs
   with a <code>NegativeCycle</code> error rather than reporting <em>undefined</em>.</li>
+<li>The <strong><code>swi</code></strong> backend drives <a href="https://www.swi-prolog.org/">SWI-Prolog</a>, whose tabling engine
+  computes WFS. It returns the full three-valued model and is validated in CI — the
+  recommended external engine for large or deeply-recursive programs (requires the <code>swipl</code>
+  binary, e.g. <code>apt-get install swi-prolog</code>).</li>
 <li>The <strong><code>xsb</code></strong> backend is meant to drive <a href="https://xsb.sourceforge.net/">XSB Prolog</a> — the
-  reference SLG/tabling engine — for large or deeply-recursive programs (requires the external
-  <code>xsb</code> binary). It is <strong>experimental and not yet validated against a live XSB</strong>, so prefer
-  <code>native</code> for now.</li>
+  reference SLG/tabling engine (requires the external <code>xsb</code> binary). It is <strong>experimental and
+  not yet validated against a live XSB</strong>, so prefer <code>swi</code> for now.</li>
 <li>The <strong><code>native</code></strong> backend has no dependencies and returns the full three-valued model; it is the
   right tool for teaching and modestly-sized programs (grounding is naive, so it is not meant to
-  compete with XSB on scale).</li>
+  compete with tabled Prolog engines on scale).</li>
 </ul>
 <p>Watch ProbLog agree on the stratified default program, then refuse the negative loop:</p>
 </div>
@@ -3606,8 +3609,8 @@ WellFoundedSolver      True     False  True     False
   single three-valued model that marks the ambiguity <strong>undefined</strong>. They coincide on stratified
   programs.</li>
 <li>The <a href="../../integrations/solvers/wellfounded/"><code>WellFoundedSolver</code></a> gives you WFS directly, with a
-  native three-valued engine, a wrapped ProbLog backend for the two-valued fragment, and an
-  (experimental) XSB backend for scale.</li>
+  native three-valued engine, an SWI-Prolog tabling backend for scale, a wrapped ProbLog
+  backend for the two-valued fragment, and an (experimental) XSB backend.</li>
 <li><code>typedlogic.profiles</code> lets you <em>name</em> the assumption you rely on, so a mismatch between what you
   meant and what your solver does becomes explicit rather than a silent bug.</li>
 </ul>

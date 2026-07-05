@@ -2225,22 +2225,32 @@ of a normal logic program (definite rules plus negation-as-failure). Unlike
 Answer Set Programming, which enumerates zero or more two-valued <em>stable models</em>,
 the well-founded semantics always yields exactly <strong>one</strong> three-valued model, in
 which every ground atom is <code>true</code>, <code>false</code>, or <code>undefined</code>.</p>
-<p>It ships three interchangeable backends, selected with the <code>backend</code> field:</p>
+<p>It ships four interchangeable backends, selected with the <code>backend</code> field:</p>
 <ul>
 <li><code>native</code> (default) — a dependency-free pure-Python implementation of the Van
   Gelder alternating fixpoint. Returns the full three-valued model. Best for
   teaching and modestly-sized programs; it grounds naively and is not built for
   large programs (see <a href="../wellfounded-scaling/">Scaling the native well-founded solver</a>
   for the plan to fix that).</li>
+<li><code>swi</code> — drives <a href="https://www.swi-prolog.org/">SWI-Prolog</a> as an external
+  subprocess (requires the <code>swipl</code> executable on <code>PATH</code>). SWI's tabling engine
+  computes the well-founded semantics, and this backend returns the full
+  three-valued model, classifying each atom via <code>library(wfs)</code>. SWI-Prolog is
+  easy to install (<code>apt-get install swi-prolog</code>, <code>brew install swi-prolog</code>) and
+  this backend is exercised in CI, making it the recommended external engine
+  for large or deeply-recursive programs.</li>
 <li><code>problog</code> — delegates to <a href="../problog/">ProbLog</a>, which evaluates the <em>two-valued</em>
   restriction of WFS. It agrees with <code>native</code> on stratified programs and raises
   <code>NegativeCycleError</code> on programs that are genuinely three-valued.</li>
 <li><code>xsb</code> — <strong>experimental, unverified.</strong> Drives <a href="https://xsb.sourceforge.net/">XSB Prolog</a>,
   the reference SLG/tabling engine, as an external subprocess (requires the <code>xsb</code>
-  executable on <code>PATH</code>). Intended for large or deeply-recursive programs, but it
-  has not yet been validated against a live XSB install and is not exercised in
-  CI; it emits a warning when used. Prefer <code>native</code> until it is validated.</li>
+  executable on <code>PATH</code>). It has not yet been validated against a live XSB install
+  and is not exercised in CI; it emits a warning when used. Prefer <code>swi</code> until it
+  is validated.</li>
 </ul>
+<p>The <code>swi</code> and <code>xsb</code> backends hand the <em>original</em> (non-ground) rules to the
+tabled engine; the naive grounder is only used to enumerate the candidate atoms
+to report on.</p>
 <p>For a worked comparison of the well-founded semantics against closed-world
 Datalog and Answer Set Programming, see the
 <a href="../../../learning/semantics/">semantics notebook</a>.</p>
@@ -2249,6 +2259,11 @@ Datalog and Answer Set Programming, see the
 backends reuse existing extras:</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>typedlogic<span class="w">              </span><span class="c1"># native backend only</span>
 pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;typedlogic[problog]&#39;</span><span class="w">   </span><span class="c1"># adds the problog backend</span>
+</code></pre></div>
+<p>The <code>swi</code> backend requires the external <a href="https://www.swi-prolog.org/">SWI-Prolog</a>
+executable (<code>swipl</code>) on <code>PATH</code>:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>swi-prolog<span class="w">   </span><span class="c1"># Debian/Ubuntu</span>
+brew<span class="w"> </span>install<span class="w"> </span>swi-prolog<span class="w">           </span><span class="c1"># macOS</span>
 </code></pre></div>
 <p>The <code>xsb</code> backend additionally requires the external
 <a href="https://xsb.sourceforge.net/">XSB</a> executable on <code>PATH</code>.</p>
@@ -2320,9 +2335,12 @@ atoms <code>undefined</code> instead of yielding several models (as ASP would) o
 </code></pre></div>
 <h3 id="choosing-a-backend">Choosing a backend</h3>
 <div class="highlight"><pre><span></span><code><span class="n">WellFoundedSolver</span><span class="p">()</span>                     <span class="c1"># native (default): full three-valued model</span>
+<span class="n">WellFoundedSolver</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="s2">&quot;swi&quot;</span><span class="p">)</span>        <span class="c1"># three-valued via SWI-Prolog tabling; needs swipl</span>
 <span class="n">WellFoundedSolver</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="s2">&quot;problog&quot;</span><span class="p">)</span>    <span class="c1"># two-valued; raises NegativeCycleError on loops</span>
 <span class="n">WellFoundedSolver</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="s2">&quot;xsb&quot;</span><span class="p">)</span>        <span class="c1"># experimental; needs the xsb binary</span>
 </code></pre></div>
+<p>External backends look up their default executable (<code>swipl</code> / <code>xsb</code>) on <code>PATH</code>;
+pass <code>exec_name="/path/to/binary"</code> to override.</p>
 <p><code>check()</code> always reports <code>satisfiable=True</code> (a well-founded model always exists),
 and <code>models()</code> yields the single model.</p>
 
@@ -2391,22 +2409,7 @@ none); the offending atoms become <em>undefined</em>:</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/integrations/solvers/wellfounded/wellfounded_solver.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">118</span>
 <span class="normal">119</span>
 <span class="normal">120</span>
 <span class="normal">121</span>
@@ -2707,7 +2710,128 @@ none); the offending atoms become <em>undefined</em>:</p>
 <span class="normal">416</span>
 <span class="normal">417</span>
 <span class="normal">418</span>
-<span class="normal">419</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">WellFoundedSolver</span><span class="p">(</span><span class="n">Solver</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A solver that computes the well-founded model of a normal logic program.</span>
@@ -2754,8 +2878,11 @@ none); the offending atoms become <em>undefined</em>:</p>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;native&quot;</span><span class="p">)</span>
-    <span class="n">exec_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;xsb&quot;</span><span class="p">)</span>
+    <span class="n">exec_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="n">profile</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Profile</span><span class="p">]</span> <span class="o">=</span> <span class="n">MixedProfile</span><span class="p">(</span><span class="n">WellFoundedSemantics</span><span class="p">(),</span> <span class="n">SingleModelSemantics</span><span class="p">())</span>
+
+    <span class="c1"># Default executable per external backend; override with ``exec_name``.</span>
+    <span class="n">DEFAULT_EXECUTABLES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;xsb&quot;</span><span class="p">:</span> <span class="s2">&quot;xsb&quot;</span><span class="p">,</span> <span class="s2">&quot;swi&quot;</span><span class="p">:</span> <span class="s2">&quot;swipl&quot;</span><span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Solution</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Report satisfiability; a well-founded model always exists, so this is always true.&quot;&quot;&quot;</span>
@@ -2774,7 +2901,9 @@ none); the offending atoms become <em>undefined</em>:</p>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problog_model</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">==</span> <span class="s2">&quot;xsb&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xsb_model</span><span class="p">()</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown WellFoundedSolver backend: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="si">!r}</span><span class="s2"> (expected native, problog, or xsb)&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">==</span> <span class="s2">&quot;swi&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_swi_model</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown WellFoundedSolver backend: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="si">!r}</span><span class="s2"> (expected native, swi, problog, or xsb)&quot;</span><span class="p">)</span>
 
     <span class="c1"># -- grounding (shared by the native and problog backends) -------------</span>
 
@@ -2952,29 +3081,80 @@ none); the offending atoms become <em>undefined</em>:</p>
                 <span class="n">true_terms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_atom_text_to_term</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">term</span><span class="p">),</span> <span class="n">atom_terms</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">WellFoundedModel</span><span class="p">(</span><span class="n">ground_terms</span><span class="o">=</span><span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">true_terms</span> <span class="k">if</span> <span class="n">t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">])</span>
 
-    <span class="c1"># -- xsb backend: the reference WFS engine as an external subprocess ----</span>
+    <span class="c1"># -- external Prolog backends (swi / xsb): tabled WFS evaluation --------</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_executable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolve and locate the external engine binary for the current backend.&quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exec_name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_EXECUTABLES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">]</span>
+        <span class="n">exe</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">exe</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">hint</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;Install SWI-Prolog from https://www.swi-prolog.org/ (e.g. apt-get install swi-prolog)&quot;</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">==</span> <span class="s2">&quot;swi&quot;</span>
+                <span class="k">else</span> <span class="s2">&quot;Install XSB from https://xsb.sourceforge.net/&quot;</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="si">!r}</span><span class="s2"> backend requires the executable </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> on PATH. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hint</span><span class="si">}</span><span class="s2">, or use backend=&#39;native&#39;.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">exe</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_swi_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WellFoundedModel</span><span class="p">:</span>
+        <span class="n">exe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_executable</span><span class="p">()</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">atom_terms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ground_rules</span><span class="p">()</span>
+        <span class="n">candidates</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">atom_terms</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tabled_prolog_config</span><span class="p">()</span>
+        <span class="c1"># After SLG completion, an atom is true iff it has an unconditional answer</span>
+        <span class="c1"># (library(wfs) reports its delay list as `true`), undefined iff it has only</span>
+        <span class="c1"># conditional answers, and false iff it has no answers at all.</span>
+        <span class="n">driver</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;wf_tv(G, TV) :-</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;    (   call_delays(G, true) -&gt; TV = true</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;    ;   call_delays(G, _) -&gt; TV = undefined</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;    ;   TV = false</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;    ).</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;main :-</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;    wf_candidates(Candidates),</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;    forall(member(I-G, Candidates),</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s1">&#39;           ( wf_tv(G, TV), format(&quot;WF ~w ~w~n&quot;, [I, TV]) )),</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="s2">&quot;    halt.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="n">entries</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">-(</span><span class="si">{</span><span class="n">as_prolog</span><span class="p">(</span><span class="n">term</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">term</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">candidates</span><span class="p">))</span>
+        <span class="n">candidate_list</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;wf_candidates([</span><span class="si">{</span><span class="n">entries</span><span class="si">}</span><span class="s2">]).</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">program</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tabled_program</span><span class="p">([</span><span class="s2">&quot;:- use_module(library(wfs)).&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">candidate_list</span> <span class="o">+</span> <span class="n">driver</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">d</span><span class="p">:</span>
+            <span class="n">prog_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;program.pl&quot;</span>
+            <span class="n">prog_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>  <span class="c1"># noqa: S603</span>
+                <span class="p">[</span><span class="n">exe</span><span class="p">,</span> <span class="s2">&quot;-q&quot;</span><span class="p">,</span> <span class="s2">&quot;-g&quot;</span><span class="p">,</span> <span class="s2">&quot;catch(main, E, (print_message(error, E), halt(2)))&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">prog_path</span><span class="p">)],</span>
+                <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">DEVNULL</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;SWI-Prolog evaluation failed (exit code </span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">returncode</span><span class="si">}</span><span class="s2">). &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;stderr:</span><span class="se">\n</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s2">program:</span><span class="se">\n</span><span class="si">{</span><span class="n">program</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_tv_lines</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">candidates</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_xsb_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WellFoundedModel</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="s2">&quot;The &#39;xsb&#39; WellFoundedSolver backend is experimental and has not been validated &quot;</span>
-            <span class="s2">&quot;against a live XSB install; verify its output or use backend=&#39;native&#39;.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;against a live XSB install; verify its output or use backend=&#39;swi&#39; or &#39;native&#39;.&quot;</span><span class="p">,</span>
             <span class="ne">UserWarning</span><span class="p">,</span>
             <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">exe</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exec_name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">exe</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pragma: no cover - environment dependent</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;The &#39;xsb&#39; backend requires the XSB Prolog executable </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">exec_name</span><span class="si">!r}</span><span class="s2"> on PATH. &quot;</span>
-                <span class="s2">&quot;Install XSB from https://xsb.sourceforge.net/ or use backend=&#39;native&#39;.&quot;</span>
-            <span class="p">)</span>
-        <span class="n">rules</span><span class="p">,</span> <span class="n">atom_terms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ground_rules</span><span class="p">()</span>
+        <span class="n">exe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_executable</span><span class="p">()</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">atom_terms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ground_rules</span><span class="p">()</span>
         <span class="n">candidates</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">atom_terms</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-        <span class="n">program</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prolog_program</span><span class="p">(</span><span class="n">query_atoms</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tabled_prolog_config</span><span class="p">()</span>
+        <span class="n">program</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tabled_program</span><span class="p">([</span><span class="s2">&quot;:- import call_tv/2 from tables.&quot;</span><span class="p">])</span>
         <span class="c1"># XSB&#39;s call_tv/2 returns the well-founded truth value (true / undefined);</span>
         <span class="c1"># atoms that fail outright are false. We print &quot;&lt;index&gt; &lt;tv&gt;&quot; per candidate.</span>
         <span class="n">goals</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">term</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">candidates</span><span class="p">):</span>
-            <span class="n">atom</span> <span class="o">=</span> <span class="n">as_prolog</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prolog_config</span><span class="p">())</span>
+            <span class="n">atom</span> <span class="o">=</span> <span class="n">as_prolog</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
             <span class="n">goals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;( call_tv((</span><span class="si">{</span><span class="n">atom</span><span class="si">}</span><span class="s2">), TV</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">) -&gt; writeln(&#39;WF </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> &#39;(TV</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">)) ; true )&quot;</span><span class="p">)</span>
         <span class="n">driver</span> <span class="o">=</span> <span class="s2">&quot;main :- &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">goals</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, halt.</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">goals</span> <span class="k">else</span> <span class="s2">&quot;main :- halt.</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">d</span><span class="p">:</span>
@@ -2999,7 +3179,57 @@ none); the offending atoms become <em>undefined</em>:</p>
                 <span class="n">true_terms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">WellFoundedModel</span><span class="p">(</span><span class="n">ground_terms</span><span class="o">=</span><span class="n">true_terms</span><span class="p">,</span> <span class="n">undefined_terms</span><span class="o">=</span><span class="n">undefined_terms</span><span class="p">)</span>
 
-    <span class="c1"># -- prolog rendering helpers (problog / xsb) --------------------------</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_tv_lines</span><span class="p">(</span><span class="n">stdout</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">candidates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Term</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">WellFoundedModel</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse ``WF &lt;index&gt; &lt;truth-value&gt;`` driver output into a three-valued model.&quot;&quot;&quot;</span>
+        <span class="n">true_terms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Term</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">undefined_terms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Term</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">stdout</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;WF&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">term</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+            <span class="k">if</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">:</span>
+                <span class="n">true_terms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;undefined&quot;</span><span class="p">:</span>
+                <span class="n">undefined_terms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">term</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">WellFoundedModel</span><span class="p">(</span><span class="n">ground_terms</span><span class="o">=</span><span class="n">true_terms</span><span class="p">,</span> <span class="n">undefined_terms</span><span class="o">=</span><span class="n">undefined_terms</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_tabled_prolog_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PrologConfig</span><span class="p">:</span>
+        <span class="c1"># `tnot/1` is well-founded (SLG) negation in both SWI and XSB; plain `\\+`</span>
+        <span class="c1"># is ordinary Prolog negation and would never yield `undefined`.</span>
+        <span class="k">return</span> <span class="n">PrologConfig</span><span class="p">(</span><span class="n">negation_as_failure_symbol</span><span class="o">=</span><span class="s2">&quot;tnot&quot;</span><span class="p">,</span> <span class="n">negation_symbol</span><span class="o">=</span><span class="s2">&quot;tnot&quot;</span><span class="p">,</span> <span class="n">double_quote_strings</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_tabled_program</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preamble</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Render the (non-ground) rules as a tabled Prolog program.</span>
+
+<span class="sd">        Every predicate is declared tabled -- required for well-founded negation</span>
+<span class="sd">        (``tnot/1`` only applies to tabled goals) and so that atoms of clause-less</span>
+<span class="sd">        predicates fail cleanly instead of raising an existence error. ``as_prolog``</span>
+<span class="sd">        renders NAF as the prefix ``tnot (goal)``, so ``tnot`` is declared as a</span>
+<span class="sd">        prefix operator.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tabled_prolog_config</span><span class="p">()</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">preamble</span><span class="p">)</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;:- op(900, fy, tnot).&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">functor</span><span class="p">,</span> <span class="n">arity</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predicate_signatures</span><span class="p">():</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;:- table </span><span class="si">{</span><span class="n">functor</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">arity</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_terminate</span><span class="p">(</span><span class="n">as_prolog</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">config</span><span class="p">))</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sentences</span><span class="p">())</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_predicate_signatures</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;All (rendered functor, arity) pairs appearing in the program, sorted.&quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tabled_prolog_config</span><span class="p">()</span>
+        <span class="n">signatures</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sentences</span><span class="p">():</span>
+            <span class="n">head</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">naf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_destructure</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">[</span><span class="n">head</span><span class="p">,</span> <span class="o">*</span><span class="n">pos</span><span class="p">,</span> <span class="o">*</span><span class="n">naf</span><span class="p">]:</span>
+                <span class="n">functor</span> <span class="o">=</span> <span class="n">as_prolog</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">predicate</span><span class="p">),</span> <span class="n">config</span><span class="p">)</span>
+                <span class="n">signatures</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">functor</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">values</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">signatures</span><span class="p">)</span>
+
+    <span class="c1"># -- prolog rendering helpers (shared with problog) ---------------------</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_prolog_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PrologConfig</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">PrologConfig</span><span class="p">(</span><span class="n">negation_as_failure_symbol</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;\+&quot;</span><span class="p">,</span> <span class="n">negation_symbol</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;\+&quot;</span><span class="p">,</span> <span class="n">double_quote_strings</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -3055,10 +3285,10 @@ none); the offending atoms become <em>undefined</em>:</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/integrations/solvers/wellfounded/wellfounded_solver.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Solution</span><span class="p">:</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Solution</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Report satisfiability; a well-founded model always exists, so this is always true.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">Solution</span><span class="p">(</span><span class="n">satisfiable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -3084,9 +3314,9 @@ none); the offending atoms become <em>undefined</em>:</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/integrations/solvers/wellfounded/wellfounded_solver.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Model</span><span class="p">]:</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">models</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Model</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Yield the single well-founded model.&quot;&quot;&quot;</span>
     <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
@@ -3111,15 +3341,17 @@ none); the offending atoms become <em>undefined</em>:</p>
 
             <details class="quote">
               <summary>Source code in <code>src/typedlogic/integrations/solvers/wellfounded/wellfounded_solver.py</code></summary>
-              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WellFoundedModel</span><span class="p">:</span>
+              <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">WellFoundedModel</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the single well-founded model (with three-valued information).&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">==</span> <span class="s2">&quot;native&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_native_model</span><span class="p">()</span>
@@ -3127,7 +3359,9 @@ none); the offending atoms become <em>undefined</em>:</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_problog_model</span><span class="p">()</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">==</span> <span class="s2">&quot;xsb&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xsb_model</span><span class="p">()</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown WellFoundedSolver backend: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="si">!r}</span><span class="s2"> (expected native, problog, or xsb)&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">==</span> <span class="s2">&quot;swi&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_swi_model</span><span class="p">()</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown WellFoundedSolver backend: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="si">!r}</span><span class="s2"> (expected native, swi, problog, or xsb)&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3173,20 +3407,20 @@ false.</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/integrations/solvers/wellfounded/wellfounded_solver.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">WellFoundedModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A three-valued model.</span>
@@ -3247,15 +3481,15 @@ cannot represent; use the <code>native</code> (or <code>xsb</code>) backend for 
 
               <details class="quote">
                 <summary>Source code in <code>src/typedlogic/integrations/solvers/wellfounded/wellfounded_solver.py</code></summary>
-                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">NegativeCycleError</span><span class="p">(</span><span class="n">NotInProfileError</span><span class="p">):</span>
+                <div class="codehilite"><table class="codehilitetable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">NegativeCycleError</span><span class="p">(</span><span class="n">NotInProfileError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised by two-valued backends when the well-founded model is not total.</span>
 

@@ -2276,7 +2276,7 @@ implementation as a correctness oracle (see <a href="#validation-strategy">Valid
 <h3 id="phase-0-fail-fast-safety-immediate">Phase 0 — fail fast (safety, immediate)</h3>
 <p>Before optimizing, stop the naive grounder from silently OOMing. Add a guard that
 estimates the ground-instance count and raises a clear error (with a pointer to
-the <code>xsb</code> backend / this page) once it exceeds a configurable budget. Cheap, and
+the <code>swi</code> backend / this page) once it exceeds a configurable budget. Cheap, and
 turns a hang into an actionable message.</p>
 <h3 id="phase-1-join-based-semi-naive-evaluation-the-big-win-pure-python">Phase 1 — join-based, semi-naive evaluation (the big win, pure Python)</h3>
 <p>Replace both the cartesian grounding <strong>and</strong> the forward-chaining least-model
@@ -2324,7 +2324,7 @@ ambiguous fragment (bottleneck <strong>D</strong>).</p>
 <li>the existing <a href="../souffle/">Souffle</a> integration, or a future Rust datalog engine
   (semi-naive joins + alternating-fixpoint outer loop, shipped as a
   <code>pip</code>-installable PyO3 wheel), or</li>
-<li>the <a href="../wellfounded/"><code>xsb</code></a> backend for goal-directed / recursive workloads.</li>
+<li>the <a href="../wellfounded/"><code>swi</code> or <code>xsb</code></a> backends for goal-directed / recursive workloads.</li>
 </ul>
 <p>Phases 1–3 are expected to cover the vast majority of realistic programs without
 reaching this phase.</p>
@@ -2332,7 +2332,7 @@ reaching this phase.</p>
 <ul>
 <li><strong>Function symbols / infinite Herbrand universes.</strong> The bottom-up engine
   assumes a finite Herbrand base. Programs that generate unbounded terms are the
-  domain of goal-directed tabling (XSB), not this backend; the grounder should
+  domain of goal-directed tabling (SWI-Prolog, XSB), not this backend; the grounder should
   detect and reject them with a clear message rather than diverge.</li>
 <li><strong>API and semantics stay fixed.</strong> Every phase lives behind <code>backend="native"</code>
   and must return byte-for-byte the same <code>(true, false, undefined)</code> partition as
