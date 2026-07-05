@@ -19,7 +19,7 @@ from typedlogic import (
     Theory,
     Variable,
 )
-from typedlogic.builtins import NAME_TO_INFIX_OP
+from typedlogic.builtins import NAME_TO_INFIX_OP, NUMERIC_BUILTINS
 from typedlogic.datamodel import (
     And,
     CardinalityConstraint,
@@ -38,6 +38,9 @@ from typedlogic.datamodel import (
 from typedlogic.utils.detect_stratified_negation import analyze_datalog_program
 
 logger = logging.getLogger(__name__)
+
+# predicates with fixed interpretations that can never be (re)defined by rules
+_BUILTIN_PREDICATES = set(NAME_TO_INFIX_OP) | set(NUMERIC_BUILTINS)
 
 
 def sentences_from_predicate_hierarchy(theory: Theory) -> List[Sentence]:
@@ -2401,7 +2404,9 @@ def clark_completion(
 
     :param theory: the theory to transform
     :param predicates: predicates to complete; defaults to all predicates tested by NAF,
-        plus every predicate they transitively depend on
+        plus every predicate they transitively depend on. Builtin comparison predicates
+        (eq, lt, ...) are never completed; NAF over a builtin is simply rewritten to
+        classical negation.
     :param strict: if True, raise instead of warning when the program is not stratified
     :return: a new theory with NAF replaced by classical negation plus completion axioms
     """
@@ -2421,13 +2426,16 @@ def clark_completion(
         targets: Set[str] = set()
         for s in axiom_sentences:
             targets |= _naf_predicates(s)
+        # builtins (eq, lt, ...) have fixed interpretations: ``not eq(...)`` is rewritten
+        # to classical negation below, but there is nothing to complete
+        targets -= _BUILTIN_PREDICATES
         # For ``not q`` to carry its stable-model meaning classically, q's definition must
         # be closed, which in turn requires closing the predicates q depends on: complete
         # the full dependency closure of the NAF-tested predicates (builtins excluded).
         body_dependencies: Dict[str, Set[str]] = defaultdict(set)
         for head, body in rules:
             body_dependencies[head.predicate] |= {
-                t.predicate for t in _terms_in(body) if t.predicate not in NAME_TO_INFIX_OP
+                t.predicate for t in _terms_in(body) if t.predicate not in _BUILTIN_PREDICATES
             }
         queue = list(targets)
         while queue:

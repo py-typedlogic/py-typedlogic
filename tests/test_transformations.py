@@ -471,3 +471,19 @@ def test_clark_completion_rewrites_naf_inside_completion_bodies():
     rendered = [as_fol(s) for s in completed.sentences]
     assert "∀[i:str]. sat(i) → (scope(i) ∧ ¬viol(i))" in rendered
     assert "∀[i:str]. viol(i) → (∃[j:str]. member(i, j) ∧ ¬sat(j))" in rendered
+
+
+def test_clark_completion_ignores_builtins_under_naf():
+    """NAF over a builtin (eq, lt, ...) is rewritten classically, never completed."""
+    x = Variable("x", "str")
+    theory = Theory(
+        predicate_definitions=[
+            PredicateDefinition("p", {"x": "str"}),
+            PredicateDefinition("r", {"x": "str"}),
+        ],
+    )
+    theory.add(Forall([x], Implies(And(Term("p", x), NegationAsFailure(Term("eq", x, "bad"))), Term("r", x))))
+    completed = clark_completion(theory)
+    rendered = [as_fol(s) for s in completed.sentences]
+    assert rendered == ["∀[x:str]. p(x) ∧ ¬x == 'bad' → r(x)"]
+    assert not any(contains_negation_as_failure(s) for s in completed.sentences)

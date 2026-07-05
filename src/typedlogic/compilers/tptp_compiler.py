@@ -1,11 +1,26 @@
+import logging
 from collections import defaultdict
 from dataclasses import dataclass
 from typing import ClassVar, Dict, Optional, Union
 
 from typedlogic import Theory
 from typedlogic.compiler import Compiler, ModelSyntax
-from typedlogic.datamodel import SentenceGroupType
-from typedlogic.transformations import as_tptp
+from typedlogic.datamodel import Sentence, SentenceGroupType
+from typedlogic.transformations import as_tptp, contains_negation_as_failure
+
+logger = logging.getLogger(__name__)
+
+
+def _skip_naf(sentence: Sentence, role: str) -> bool:
+    """Return True (with a warning) if a sentence contains NAF and must be skipped."""
+    if contains_negation_as_failure(sentence):
+        logger.warning(
+            f"Skipping {role} with negation-as-failure (unsupported in TPTP FOF): {sentence}. "
+            "The theory is weakened by this omission; consider "
+            "typedlogic.transformations.clark_completion for a classical rendering."
+        )
+        return True
+    return False
 
 
 @dataclass
@@ -39,12 +54,16 @@ class TPTPCompiler(Compiler):
         grp_counts: Dict[str, int] = defaultdict(int)
         for sg in theory.asserted_sentence_groups:
             for s in sg.sentences or []:
+                if _skip_naf(s, "sentence"):
+                    continue
                 t = as_tptp(s)
                 grp_counts["axiom"] += 1
                 lines.append(f"fof(axiom{grp_counts['axiom']}, axiom, {t}).")
         for sg in theory.sentence_groups:
             if sg.group_type == SentenceGroupType.GOAL:
                 for s in sg.sentences or []:
+                    if _skip_naf(s, "conjecture"):
+                        continue
                     t = as_tptp(s)
                     grp_counts["conjecture"] += 1
                     lines.append(f"fof(conjecture{grp_counts['conjecture']}, conjecture, {t}).")
