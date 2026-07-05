@@ -25,6 +25,9 @@ jobs:
       - name: Install dependencies
         run: uv sync --locked --all-extras --dev
 
+      - name: Install SWI-Prolog (WellFoundedSolver swi backend)
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends swi-prolog-nox
+
       - name: Check common spelling errors
         run: uv run codespell src/ tests/ -S tests/input/,tests/output/
 

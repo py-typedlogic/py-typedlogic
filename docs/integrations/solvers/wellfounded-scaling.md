@@ -38,7 +38,7 @@ The dominant costs, worst first:
 
 Before optimizing, stop the naive grounder from silently OOMing. Add a guard that
 estimates the ground-instance count and raises a clear error (with a pointer to
-the `xsb` backend / this page) once it exceeds a configurable budget. Cheap, and
+the `swi` backend / this page) once it exceeds a configurable budget. Cheap, and
 turns a hang into an actionable message.
 
 ### Phase 1 — join-based, semi-naive evaluation (the big win, pure Python)
@@ -93,7 +93,7 @@ If pure Python is still the bottleneck at the target scale, delegate the
 - the existing [Souffle](souffle.md) integration, or a future Rust datalog engine
   (semi-naive joins + alternating-fixpoint outer loop, shipped as a
   `pip`-installable PyO3 wheel), or
-- the [`xsb`](wellfounded.md) backend for goal-directed / recursive workloads.
+- the [`swi` or `xsb`](wellfounded.md) backends for goal-directed / recursive workloads.
 
 Phases 1–3 are expected to cover the vast majority of realistic programs without
 reaching this phase.
@@ -102,7 +102,7 @@ reaching this phase.
 
 - **Function symbols / infinite Herbrand universes.** The bottom-up engine
   assumes a finite Herbrand base. Programs that generate unbounded terms are the
-  domain of goal-directed tabling (XSB), not this backend; the grounder should
+  domain of goal-directed tabling (SWI-Prolog, XSB), not this backend; the grounder should
   detect and reject them with a clear message rather than diverge.
 - **API and semantics stay fixed.** Every phase lives behind `backend="native"`
   and must return byte-for-byte the same `(true, false, undefined)` partition as

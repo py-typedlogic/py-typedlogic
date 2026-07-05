@@ -1,10 +1,14 @@
+likes(_, _) :- fail.
+person(_) :- fail.
+animal(_, _) :- fail.
 person("Fred").
 person("Jie").
 animal("corky", "cat").
 animal("fido", "dog").
 likes(X, "Fred") :- animal(X, Species).
 likes(X, "Jie") :- animal(X, "cat").
-:- animal(X, "dog"), likes("Fred", X).
+typedlogic_constraint_violation :- animal(X, "dog"), likes("Fred", X).
+evidence(typedlogic_constraint_violation, false).
 query(likes(Subject, Object)).
 query(person(Name)).
 query(animal(Name, Species)).
