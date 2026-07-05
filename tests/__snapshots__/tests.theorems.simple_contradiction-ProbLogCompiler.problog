@@ -1,3 +1,5 @@
+foo(_) :- fail.
 foo("bar").
-:- foo("bar").
+typedlogic_constraint_violation :- foo("bar").
+evidence(typedlogic_constraint_violation, false).
 query(foo(V)).

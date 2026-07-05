@@ -1,8 +1,9 @@
 """Tests for the well-founded semantics solver and its backends.
 
-The ``native`` and ``problog`` backends run everywhere; the ``xsb`` backend is
-skipped when the external XSB executable is not on PATH (mirroring the Souffle
-and Prover9 integration tests).
+The ``native`` and ``problog`` backends run everywhere; the ``swi`` and ``xsb``
+backends are skipped when the external engine is not on PATH (mirroring the
+Souffle and Prover9 integration tests). SWI-Prolog is installed in CI, so the
+``swi`` backend is exercised on every CI run.
 """
 
 import shutil
@@ -42,6 +43,15 @@ q() :- not p().
 ODD_LOOP = """
 pred p().
 p() :- not p().
+"""
+
+TRANSITIVE_CLOSURE = """
+pred edge(a: str, b: str).
+pred path(a: str, b: str).
+edge("a", "b").
+edge("b", "c").
+path(x, y) :- edge(x, y).
+path(x, z) :- edge(x, y), path(y, z).
 """
 
 
@@ -94,15 +104,7 @@ def test_native_always_satisfiable():
 
 def test_native_positive_recursion():
     """Ordinary transitive closure works (positive bodies, no negation)."""
-    program = """
-    pred edge(a: str, b: str).
-    pred path(a: str, b: str).
-    edge("a", "b").
-    edge("b", "c").
-    path(x, y) :- edge(x, y).
-    path(x, z) :- edge(x, y), path(y, z).
-    """
-    model = solve(program)
+    model = solve(TRANSITIVE_CLOSURE)
     atoms = true_atoms(model)
     assert "path(a, c)" in atoms
     assert undefined_atoms(model) == []
@@ -143,6 +145,69 @@ def test_xsb_missing_binary_raises_clear_error():
     solver.add(TLogParser().parse(ODD_LOOP))
     with pytest.raises(FileNotFoundError):
         solver.model()
+
+
+def test_swi_missing_binary_raises_clear_error():
+    """exec_name overrides the default swipl executable; a bogus one raises clearly."""
+    solver = WellFoundedSolver(backend="swi", exec_name="swipl-that-does-not-exist")
+    solver.add(TLogParser().parse(ODD_LOOP))
+    with pytest.raises(FileNotFoundError):
+        solver.model()
+
+
+# --- swi backend: SWI-Prolog tabling (exercised in CI) ------------------------
+
+swi_required = pytest.mark.skipif(shutil.which("swipl") is None, reason="swipl executable not on PATH")
+
+
+@swi_required
+def test_swi_stratified_matches_native():
+    """SWI agrees with the native backend on the full three-valued stratified model."""
+    native = solve(BIRDS, backend="native")
+    swi = solve(BIRDS, backend="swi")
+    assert true_atoms(swi) == true_atoms(native)
+    assert undefined_atoms(swi) == undefined_atoms(native) == []
+
+
+@swi_required
+def test_swi_even_loop_is_undefined():
+    model = solve(EVEN_LOOP, backend="swi")
+    assert true_atoms(model) == []
+    assert undefined_atoms(model) == ["p", "q"]
+
+
+@swi_required
+def test_swi_odd_loop_is_undefined():
+    model = solve(ODD_LOOP, backend="swi")
+    assert true_atoms(model) == []
+    assert undefined_atoms(model) == ["p"]
+
+
+@swi_required
+def test_swi_positive_recursion_matches_native():
+    """Tabling handles left/right recursion; candidates absent from the model are false."""
+    native = solve(TRANSITIVE_CLOSURE, backend="native")
+    swi = solve(TRANSITIVE_CLOSURE, backend="swi")
+    assert true_atoms(swi) == true_atoms(native)
+    assert "path(a, c)" in true_atoms(swi)
+    assert "path(c, a)" not in true_atoms(swi)
+    assert undefined_atoms(swi) == []
+
+
+@swi_required
+def test_swi_mixed_loop_and_stratified_parts():
+    """Undefinedness is contained: the loop atoms go undefined, unrelated facts stay true."""
+    program = """
+    pred p().
+    pred q().
+    pred solid().
+    solid().
+    p() :- not q().
+    q() :- not p().
+    """
+    model = solve(program, backend="swi")
+    assert true_atoms(model) == ["solid"]
+    assert undefined_atoms(model) == ["p", "q"]
 
 
 # --- xsb backend: only when the external engine is available -----------------

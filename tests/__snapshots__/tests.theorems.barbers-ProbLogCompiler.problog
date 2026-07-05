@@ -1,3 +1,6 @@
+person(_) :- fail.
+barber(_) :- fail.
+shaves(_, _) :- fail.
 shaves(Shaver, Customer) :- barber(Shaver), person(Customer), \+ shaves(Customer, Customer).
 person(Name) :- barber(Name).
 query(person(Name)).
