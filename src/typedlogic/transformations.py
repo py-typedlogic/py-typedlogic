@@ -2,9 +2,10 @@
 Function for performing transformation and manipulation of Sentences and Theories.
 """
 import json
+import logging
 import re
 from collections import defaultdict
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any, Callable, Collection, Dict, Iterable, List, Mapping, Optional, Set, Tuple, Type, Union
 
 from typedlogic import (
@@ -18,7 +19,7 @@ from typedlogic import (
     Theory,
     Variable,
 )
-from typedlogic.builtins import NAME_TO_INFIX_OP
+from typedlogic.builtins import NAME_TO_INFIX_OP, NUMERIC_BUILTINS
 from typedlogic.datamodel import (
     And,
     CardinalityConstraint,
@@ -31,9 +32,15 @@ from typedlogic.datamodel import (
     NotInProfileError,
     Or,
     QuantifiedSentence,
+    SentenceGroupType,
     Xor,
 )
 from typedlogic.utils.detect_stratified_negation import analyze_datalog_program
+
+logger = logging.getLogger(__name__)
+
+# predicates with fixed interpretations that can never be (re)defined by rules
+_BUILTIN_PREDICATES = set(NAME_TO_INFIX_OP) | set(NUMERIC_BUILTINS)
 
 
 def sentences_from_predicate_hierarchy(theory: Theory) -> List[Sentence]:
@@ -977,6 +984,13 @@ def tptp_problem(theory: Theory, conjecture: Optional[Sentence] = None) -> str:
     lines = [f"% Problem: {theory.name}"]
 
     for i, sentence in enumerate(theory.sentences, 1):
+        if contains_negation_as_failure(sentence):
+            logger.warning(
+                f"Skipping sentence with negation-as-failure (unsupported in TPTP FOF): {sentence}. "
+                "The theory is weakened by this omission; consider "
+                "typedlogic.transformations.clark_completion for a classical rendering."
+            )
+            continue
         lines.append(f"fof(axiom{i}, axiom, {as_tptp(sentence)}).")
 
     if conjecture:
@@ -1125,6 +1139,15 @@ def prover9_problem(theory: Theory, conjecture: Optional[Sentence] = None) -> st
     # Assumptions (axioms)
     lines.append("formulas(assumptions).")
     for sentence in theory.sentences:
+        if contains_negation_as_failure(sentence):
+            # Negation-as-failure has no classical reading; skipping the sentence keeps the
+            # rest of a mixed theory usable (weakened) instead of failing whole-theory.
+            logger.warning(
+                f"Skipping sentence with negation-as-failure (unsupported by Prover9): {sentence}. "
+                "The theory is weakened by this omission; consider "
+                "typedlogic.transformations.clark_completion for a classical rendering."
+            )
+            continue
         lines.append(f"    {as_prover9(sentence)}.")
     lines.append("end_of_list.")
     lines.append("")
@@ -2126,3 +2149,397 @@ def ensure_terms_positional(theory: Theory):
 
     for s in theory.sentences:
         transform_sentence(s, tr)
+
+
+def contains_negation_as_failure(sentence: Sentence) -> bool:
+    """
+    Check whether a sentence contains a :class:`NegationAsFailure` anywhere in its structure.
+
+        >>> from typedlogic import Term, Variable, Forall
+        >>> X = Variable("X", "str")
+        >>> P = Term("P", X)
+        >>> Q = Term("Q", X)
+        >>> contains_negation_as_failure(P >> Q)
+        False
+        >>> contains_negation_as_failure(Forall([X], And(P, NegationAsFailure(Q)) >> Q))
+        True
+
+    :param sentence: the sentence to inspect
+    :return: True if any subformula is a NegationAsFailure
+    """
+    if isinstance(sentence, NegationAsFailure):
+        return True
+    if isinstance(sentence, QuantifiedSentence):
+        return contains_negation_as_failure(sentence.sentence)
+    if isinstance(sentence, CardinalityConstraint):
+        parts = [p for p in (sentence.template, sentence.conditions) if p is not None]
+        return any(contains_negation_as_failure(p) for p in parts)
+    if isinstance(sentence, BooleanSentence):
+        return any(contains_negation_as_failure(op) for op in sentence.operands)
+    return False
+
+
+def _naf_predicates(sentence: Sentence) -> Set[str]:
+    """
+    Collect the predicates of atoms appearing (directly) under a NegationAsFailure.
+
+    :param sentence: the sentence to inspect
+    :return: set of predicate names negated by NAF
+    """
+    result: Set[str] = set()
+    if isinstance(sentence, NegationAsFailure):
+        for term in _terms_in(sentence.negated):
+            result.add(term.predicate)
+        return result
+    if isinstance(sentence, QuantifiedSentence):
+        return _naf_predicates(sentence.sentence)
+    if isinstance(sentence, CardinalityConstraint):
+        for part in (sentence.template, sentence.conditions):
+            if part is not None:
+                result |= _naf_predicates(part)
+        return result
+    if isinstance(sentence, BooleanSentence):
+        for op in sentence.operands:
+            result |= _naf_predicates(op)
+    return result
+
+
+def _terms_in(sentence: Sentence) -> Iterable[Term]:
+    """
+    Yield every Term atom in a sentence tree.
+
+    :param sentence: the sentence to inspect
+    :return: iterator over contained terms
+    """
+    if isinstance(sentence, CardinalityConstraint):
+        for part in (sentence.template, sentence.conditions):
+            if part is not None:
+                yield from _terms_in(part)
+        return
+    if isinstance(sentence, Term):
+        yield sentence
+        return
+    if isinstance(sentence, QuantifiedSentence):
+        yield from _terms_in(sentence.sentence)
+        return
+    if isinstance(sentence, BooleanSentence):
+        for op in sentence.operands:
+            yield from _terms_in(op)
+
+
+def _predicates_at_polarity(sentence: Sentence, positive: bool = True) -> Set[str]:
+    """
+    Collect predicates occurring at the given polarity in a sentence.
+
+    Used to decide whether a sentence could *assert* atoms of a predicate (positive
+    polarity) as opposed to merely testing them (negative polarity). Iff, Xor,
+    ExactlyOne and cardinality constraints are treated conservatively as containing
+    their predicates at both polarities.
+
+    :param sentence: the sentence to inspect
+    :param positive: the polarity of the current position
+    :return: predicates occurring at the requested polarity
+    """
+    if isinstance(sentence, CardinalityConstraint):
+        result: Set[str] = set()
+        for part in (sentence.template, sentence.conditions):
+            if part is not None:
+                result |= {t.predicate for t in _terms_in(part)}
+        return result
+    if isinstance(sentence, Term):
+        return {sentence.predicate} if positive else set()
+    if isinstance(sentence, (Not, NegationAsFailure)):
+        return _predicates_at_polarity(sentence.negated, not positive)
+    if isinstance(sentence, Implies):
+        return _predicates_at_polarity(sentence.antecedent, not positive) | _predicates_at_polarity(
+            sentence.consequent, positive
+        )
+    if isinstance(sentence, Implied):
+        return _predicates_at_polarity(sentence.operands[0], positive) | _predicates_at_polarity(
+            sentence.operands[1], not positive
+        )
+    if isinstance(sentence, (Iff, Xor, ExactlyOne)):
+        return {t.predicate for t in _terms_in(sentence)}
+    if isinstance(sentence, QuantifiedSentence):
+        return _predicates_at_polarity(sentence.sentence, positive)
+    if isinstance(sentence, BooleanSentence):
+        result = set()
+        for op in sentence.operands:
+            result |= _predicates_at_polarity(op, positive)
+        return result
+    return set()
+
+
+def _destructure_definite_rules(sentence: Sentence) -> Optional[List[Tuple[Term, Sentence]]]:
+    """
+    Destructure a sentence into (head, body) rule pairs, if it has definite rule form.
+
+    Recognized forms are an optionally universally quantified fact, ``body -> head``,
+    or ``head <- body``, where the head is an atom or a conjunction of atoms
+    (a conjunctive head yields one rule per conjunct). Returns None for any other form.
+
+    :param sentence: the sentence to destructure
+    :return: list of (head, body) pairs, or None if the sentence is not a definite rule
+    """
+    s = sentence
+    while isinstance(s, Forall):
+        s = s.sentence
+    if isinstance(s, CardinalityConstraint):
+        return None
+    if isinstance(s, Term):
+        return [(s, And())]
+    if isinstance(s, Implied):
+        s = Implies(s.operands[1], s.operands[0])
+    if not isinstance(s, Implies):
+        return None
+    head = s.consequent
+    body = s.antecedent
+    if isinstance(head, Term) and not isinstance(head, CardinalityConstraint):
+        return [(head, body)]
+    if isinstance(head, And):
+        head_atoms = [op for op in head.operands if isinstance(op, Term) and not isinstance(op, CardinalityConstraint)]
+        if len(head_atoms) == len(head.operands):
+            return [(h, body) for h in head_atoms]
+    return None
+
+
+def _body_literal_polarities(body: Sentence) -> List[Tuple[str, bool]]:
+    """
+    Collect (predicate, is_negative) dependency edges from a rule body.
+
+    A body atom counts as negative when it occurs under an odd number of
+    negations (classical or negation-as-failure).
+
+    :param body: the rule body
+    :return: list of (predicate, is_negative) pairs
+    """
+    positive = _predicates_at_polarity(body, positive=True)
+    negative = _predicates_at_polarity(body, positive=False)
+    return [(p, False) for p in sorted(positive)] + [(p, True) for p in sorted(negative)]
+
+
+def _replace_naf_with_not(sentence: Sentence) -> Sentence:
+    """
+    Rewrite every NegationAsFailure in a sentence to a classical Not.
+
+    :param sentence: the sentence to rewrite
+    :return: the rewritten sentence
+    """
+
+    def tr(s: Sentence) -> Sentence:
+        if isinstance(s, NegationAsFailure):
+            return Not(s.negated)
+        return s
+
+    return transform_sentence(sentence, tr)
+
+
+def clark_completion(
+    theory: Theory,
+    predicates: Optional[Collection[str]] = None,
+    strict: bool = False,
+) -> Theory:
+    """
+    Render a theory using negation-as-failure into classical FOL via (partial) Clark completion.
+
+    Predicates tested by negation-as-failure are *completed*: an "only if" axiom is added
+    stating that the predicate holds only when one of its defining rule bodies (or facts)
+    holds. All ``NegationAsFailure`` operators are then replaced with classical ``Not``.
+    Together with the original rules (the "if" direction), this yields the Clark completion
+    of each completed predicate, giving classical solvers such as Z3 or Prover9 a faithful
+    reading of stratified NAF programs.
+
+        >>> from typedlogic import Forall, Implies, PredicateDefinition, Term, Theory, Variable
+        >>> x = Variable("x", "str")
+        >>> theory = Theory(predicate_definitions=[
+        ...     PredicateDefinition("bird", {"x": "str"}),
+        ...     PredicateDefinition("abnormal", {"x": "str"}),
+        ...     PredicateDefinition("flies", {"x": "str"}),
+        ... ])
+        >>> theory.add(Forall([x], Implies(And(Term("bird", x), NegationAsFailure(Term("abnormal", x))),
+        ...            Term("flies", x))))
+        >>> completed = clark_completion(theory)
+        >>> for s in completed.sentences:
+        ...     print(as_fol(s))
+        ∀[x:str]. bird(x) ∧ ¬abnormal(x) → flies(x)
+        ∀[x:str]. ¬abnormal(x)
+
+    Here ``abnormal`` has no defining rules or facts, so its completion closes it off
+    entirely. A predicate with defining rules is completed to the disjunction of its
+    rule bodies:
+
+        >>> theory2 = Theory(predicate_definitions=[
+        ...     PredicateDefinition("penguin", {"x": "str"}),
+        ...     PredicateDefinition("abnormal", {"x": "str"}),
+        ...     PredicateDefinition("bird", {"x": "str"}),
+        ...     PredicateDefinition("flies", {"x": "str"}),
+        ... ])
+        >>> theory2.add(Forall([x], Implies(Term("penguin", x), Term("abnormal", x))))
+        >>> theory2.add(Forall([x], Implies(And(Term("bird", x), NegationAsFailure(Term("abnormal", x))),
+        ...             Term("flies", x))))
+        >>> completed2 = clark_completion(theory2)
+        >>> for s in completed2.sentences:
+        ...     print(as_fol(s))
+        ∀[x:str]. penguin(x) → abnormal(x)
+        ∀[x:str]. bird(x) ∧ ¬abnormal(x) → flies(x)
+        ∀[x:str]. abnormal(x) → (penguin(x))
+        ∀[x:str]. ¬penguin(x)
+
+    Note that ``penguin`` is completed as well (here to "there are no penguins",
+    since the example declares no penguin facts): ``abnormal`` is defined in terms
+    of ``penguin``, so closing ``abnormal`` requires closing ``penguin`` too.
+    Ground facts contribute equality disjuncts, so with a fact ``penguin(pingu)``
+    the last axiom would instead be ``∀[x:str]. penguin(x) → (x == 'pingu')``.
+
+    The program restricted to the completed predicates must be a definite logic program:
+    each completed predicate may only be defined by facts and rules with an atomic
+    (or conjunctive-atomic) head. If a completed predicate occurs positively in any
+    other kind of sentence, a :class:`NotInProfileError` is raised, since the
+    completion axiom would then be unsound.
+
+    If the program is not stratified, the completion may not agree with the
+    stable-model semantics; by default a warning is logged (every stable model is
+    still a model of the completion, so proving against the completion remains
+    cautious/sound), and with ``strict=True`` a :class:`NotInProfileError` is raised.
+
+    :param theory: the theory to transform
+    :param predicates: predicates to complete; defaults to all predicates tested by NAF,
+        plus every predicate they transitively depend on. Builtin comparison predicates
+        (eq, lt, ...) are never completed; NAF over a builtin is simply rewritten to
+        classical negation.
+    :param strict: if True, raise instead of warning when the program is not stratified
+    :return: a new theory with NAF replaced by classical negation plus completion axioms
+    """
+    axiom_sentences = theory.sentences
+
+    # destructure axioms into definite rules where possible
+    rules: List[Tuple[Term, Sentence]] = []
+    non_rules: List[Sentence] = []
+    for s in axiom_sentences:
+        destructured = _destructure_definite_rules(s)
+        if destructured is None:
+            non_rules.append(s)
+        else:
+            rules.extend(destructured)
+
+    if predicates is None:
+        targets: Set[str] = set()
+        for s in axiom_sentences:
+            targets |= _naf_predicates(s)
+        # builtins (eq, lt, ...) have fixed interpretations: ``not eq(...)`` is rewritten
+        # to classical negation below, but there is nothing to complete
+        targets -= _BUILTIN_PREDICATES
+        # For ``not q`` to carry its stable-model meaning classically, q's definition must
+        # be closed, which in turn requires closing the predicates q depends on: complete
+        # the full dependency closure of the NAF-tested predicates (builtins excluded).
+        body_dependencies: Dict[str, Set[str]] = defaultdict(set)
+        for head, body in rules:
+            body_dependencies[head.predicate] |= {
+                t.predicate for t in _terms_in(body) if t.predicate not in _BUILTIN_PREDICATES
+            }
+        queue = list(targets)
+        while queue:
+            for dep in body_dependencies.get(queue.pop(), set()):
+                if dep not in targets:
+                    targets.add(dep)
+                    queue.append(dep)
+    else:
+        targets = set(predicates)
+
+    # completion is only sound if completed predicates are defined exclusively by
+    # definite rules and facts
+    for s in non_rules:
+        offending = _predicates_at_polarity(s, positive=True) & targets
+        if offending:
+            raise NotInProfileError(
+                f"Cannot Clark-complete predicate(s) {sorted(offending)}: "
+                f"asserted (positively) by a non-rule sentence: {s}"
+            )
+
+    # stratification check over the rule dependency graph
+    dependency_map: Dict[str, List[Tuple[str, bool]]] = defaultdict(list)
+    for head, body in rules:
+        dependency_map[head.predicate].extend(_body_literal_polarities(body))
+    is_stratified, edge, _ = analyze_datalog_program(list(dependency_map.items()))
+    if not is_stratified:
+        msg = (
+            f"Program is not stratified (negative cycle through {edge}); the Clark completion "
+            "may be weaker than, or inconsistent with, the stable-model semantics"
+        )
+        if strict:
+            raise NotInProfileError(msg)
+        logger.warning(msg)
+
+    completions: List[Sentence] = []
+    predicate_definition_map = theory.predicate_definition_map
+    for target in sorted(targets):
+        pd = predicate_definition_map.get(target)
+        defining = [(head, body) for head, body in rules if head.predicate == target]
+        defining += [(t, And()) for t in theory.ground_terms if t.predicate == target]
+        arg_types: List[Optional[str]]
+        if pd is not None:
+            arg_names = list(pd.arguments.keys())
+            arg_types = [t if isinstance(t, str) else None for t in pd.arguments.values()]
+        elif defining:
+            arity = len(defining[0][0].bindings)
+            arg_names = [f"x{i + 1}" for i in range(arity)]
+            arg_types = [None] * arity
+        else:
+            raise NotInProfileError(
+                f"Cannot Clark-complete predicate '{target}': no predicate definition and no defining rules"
+            )
+        canonical_vars = [Variable(name, domain=typ) for name, typ in zip(arg_names, arg_types, strict=True)]
+        canonical_names = set(arg_names)
+
+        disjuncts: List[Sentence] = []
+        for rule_index, (head, body) in enumerate(defining):
+            if pd is not None and head.positional is False:
+                head_args = [head.bindings.get(k) for k in arg_names]
+            else:
+                head_args = list(head.bindings.values())
+            if len(head_args) != len(canonical_vars):
+                raise NotInProfileError(
+                    f"Arity mismatch for '{target}': head {head} does not match arguments {arg_names}"
+                )
+            varmap: Dict[str, Variable] = {}
+            equalities: List[Sentence] = []
+            for zvar, arg in zip(canonical_vars, head_args, strict=True):
+                if isinstance(arg, Variable) and arg.name not in varmap:
+                    varmap[arg.name] = zvar
+                elif isinstance(arg, Variable):
+                    # repeated head variable: constrain to the canonical var it maps to
+                    equalities.append(Term("eq", zvar, varmap[arg.name]))
+                else:
+                    equalities.append(Term("eq", zvar, arg))
+            # standardize apart body variables that clash with the canonical head variables
+            for v in _variables_in_order(body):
+                if v.name not in varmap and v.name in canonical_names:
+                    varmap[v.name] = Variable(f"{v.name}__d{rule_index}", domain=v.domain)
+            renamed_body = map_variables(body, varmap)
+            body_conjuncts = conjunction_as_list(renamed_body)
+            inner_operands = equalities + [c for c in body_conjuncts if not (isinstance(c, And) and not c.operands)]
+            inner: Sentence = inner_operands[0] if len(inner_operands) == 1 else And(*inner_operands)
+            existential_vars = [v for v in _variables_in_order(renamed_body) if v.name not in canonical_names]
+            if existential_vars:
+                inner = Exists(existential_vars, inner)
+            disjuncts.append(inner)
+
+        head_atom = Term(target, *canonical_vars) if canonical_vars else Term(target)
+        only_if: Sentence = Implies(head_atom, Or(*disjuncts)) if disjuncts else Not(head_atom)
+        if canonical_vars:
+            only_if = Forall(canonical_vars, only_if)
+        # rule bodies copied into the disjuncts may themselves contain NAF
+        completions.append(_replace_naf_with_not(only_if))
+
+    new_groups = [
+        replace(sg, sentences=[_replace_naf_with_not(s) for s in sg.sentences or []]) for sg in theory.sentence_groups
+    ]
+    if completions:
+        new_groups.append(
+            SentenceGroup(
+                name="clark_completion",
+                group_type=SentenceGroupType.AXIOM,
+                sentences=completions,
+            )
+        )
+    return replace(theory, sentence_groups=new_groups)

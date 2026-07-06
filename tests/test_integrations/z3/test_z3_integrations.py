@@ -6,6 +6,7 @@ from typedlogic.datamodel import (
     Exists,
     Forall,
     Implies,
+    Not,
     Or,
     PredicateDefinition,
     Term,
@@ -416,3 +417,109 @@ def test_untyped_quantified_variables_infer_type_from_declared_predicate():
     solver = Z3Solver()
     solver.add(consistent)
     assert solver.check().satisfiable
+
+
+def _naf_theory() -> Theory:
+    """Build a mixed theory: one NAF rule plus a pure-Horn axiom and facts."""
+    from typedlogic.datamodel import NegationAsFailure
+
+    x = Variable("x", "str")
+    theory = Theory(
+        predicate_definitions=[
+            PredicateDefinition("bird", {"x": "str"}),
+            PredicateDefinition("penguin", {"x": "str"}),
+            PredicateDefinition("abnormal", {"x": "str"}),
+            PredicateDefinition("flies", {"x": "str"}),
+        ],
+    )
+    theory.add(Forall([x], Implies(Term("penguin", x), Term("abnormal", x))))
+    theory.add(Forall([x], Implies(And(Term("bird", x), NegationAsFailure(Term("abnormal", x))), Term("flies", x))))
+    theory.ground_terms.extend([Term("bird", "tweety"), Term("bird", "pingu"), Term("penguin", "pingu")])
+    return theory
+
+
+def test_naf_sentences_are_skipped_with_a_warning(caplog):
+    """One NAF rule must not break classical obligations elsewhere in the theory."""
+    import logging
+
+    theory = _naf_theory()
+    solver = Z3Solver()
+    with caplog.at_level(logging.WARNING):
+        solver.add(theory)
+    assert any("negation-as-failure" in rec.message for rec in caplog.records)
+    assert solver.check().satisfiable
+    # the pure-Horn part of the theory is still provable
+    assert solver.prove(Term("abnormal", "pingu")) is True
+    # the NAF rule was skipped, so its consequences are not derivable
+    assert solver.prove(Term("flies", "tweety")) is False
+
+
+def test_naf_sentences_raise_in_strict_mode():
+    """With strict=True the solver refuses NAF instead of weakening the theory."""
+    from typedlogic.datamodel import NotInProfileError
+
+    theory = _naf_theory()
+    solver = Z3Solver(strict=True)
+    with pytest.raises(NotInProfileError, match="negation-as-failure"):
+        solver.add(theory)
+
+
+def test_prove_returns_unknown_for_naf_goal():
+    """A goal containing NAF cannot be decided classically; prove returns None."""
+    from typedlogic.datamodel import NegationAsFailure
+
+    solver = Z3Solver()
+    solver.add(PredicateDefinition(predicate="p", arguments={"x": "str"}))
+    solver.add(Term("p", "a"))
+    assert solver.prove(NegationAsFailure(Term("p", "b"))) is None
+
+
+def test_clark_completion_makes_naf_theory_provable():
+    """Clark completion gives the NAF rules a faithful classical rendering for Z3."""
+    from typedlogic.transformations import clark_completion
+
+    completed = clark_completion(_naf_theory())
+    solver = Z3Solver()
+    solver.add(completed)
+    assert solver.check().satisfiable
+    # tweety is a bird and provably not abnormal under the completion
+    assert solver.prove(Term("flies", "tweety")) is True
+    # pingu is an abnormal penguin: flies(pingu) must not be entailed
+    assert solver.prove(Term("flies", "pingu")) is False
+    assert solver.prove(Term("abnormal", "pingu")) is True
+    assert solver.prove(Not(Term("abnormal", "tweety"))) is True
+
+
+def test_clark_completion_locally_stratified_recursion_through_negation():
+    """A locally stratified program (mutual NAF recursion over a finite member tree) proves classically."""
+    from typedlogic.datamodel import NegationAsFailure
+    from typedlogic.transformations import clark_completion
+
+    i, j = Variable("i", "str"), Variable("j", "str")
+    theory = Theory(
+        predicate_definitions=[
+            PredicateDefinition("member", {"parent": "str", "child": "str"}),
+            PredicateDefinition("scope", {"i": "str"}),
+            PredicateDefinition("sat", {"i": "str"}),
+            PredicateDefinition("viol", {"i": "str"}),
+        ],
+    )
+    theory.add(Forall([i], Implies(And(Term("scope", i), NegationAsFailure(Term("viol", i))), Term("sat", i))))
+    theory.add(Forall([i, j], Implies(And(Term("member", i, j), NegationAsFailure(Term("sat", j))), Term("viol", i))))
+    theory.ground_terms.extend(
+        [
+            Term("scope", "root"),
+            Term("scope", "leaf1"),
+            Term("scope", "leaf2"),
+            Term("member", "root", "leaf1"),
+            Term("member", "root", "leaf2"),
+        ]
+    )
+    solver = Z3Solver()
+    solver.add(clark_completion(theory))
+    assert solver.check().satisfiable
+    # leaves have no members, hence no violations, hence are satisfied
+    assert solver.prove(Term("sat", "leaf1")) is True
+    # both members of root are satisfied, so root is not violated and is satisfied
+    assert solver.prove(Term("viol", "root")) is False
+    assert solver.prove(Term("sat", "root")) is True

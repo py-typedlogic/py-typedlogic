@@ -18,7 +18,7 @@ import typedlogic.integrations.frameworks.linkml.meta as linkml_meta
 import typedlogic.integrations.frameworks.linkml.meta_axioms as linkml_meta_axioms
 from tests import SNAPSHOTS_DIR
 from tests.theorems import barbers, unary_predicates
-from typedlogic import Forall, Implies, Not, PredicateDefinition, Term, Theory, Variable
+from typedlogic import And, Forall, Implies, Not, PredicateDefinition, Term, Theory, Variable
 from typedlogic.compilers.clif_compiler import ClifCompiler
 from typedlogic.compilers.fol_compiler import FOLCompiler
 from typedlogic.compilers.prolog_compiler import PrologCompiler
@@ -141,3 +141,46 @@ def test_prolog_compiler_strict_raises_on_dropped_constraints():
     theory = _person_robot_theory()
     with pytest.raises(NotInProfileError):
         PrologCompiler(strict=True).compile(theory)
+
+
+def _naf_mixed_theory() -> Theory:
+    """Build a theory mixing one NAF rule with a classical implication."""
+    from typedlogic.datamodel import NegationAsFailure
+
+    x = Variable("x", "str")
+    theory = Theory(
+        predicate_definitions=[
+            PredicateDefinition("p", {"x": "str"}),
+            PredicateDefinition("q", {"x": "str"}),
+            PredicateDefinition("r", {"x": "str"}),
+        ],
+    )
+    theory.add(Forall([x], Implies(Term("p", x), Term("q", x))))
+    theory.add(Forall([x], Implies(And(Term("p", x), NegationAsFailure(Term("q", x))), Term("r", x))))
+    return theory
+
+
+def test_p9_compiler_skips_naf_sentences(caplog):
+    """One NAF rule must not crash Prover9 compilation of a mixed theory.
+
+    Named p9 rather than prover9: this exercises only the compiler, and conftest
+    skips any test with "prover9" in its id when the executable is missing.
+    """
+    import logging
+
+    with caplog.at_level(logging.WARNING):
+        compiled = Prover9Compiler().compile(_naf_mixed_theory())
+    assert any("negation-as-failure" in rec.message for rec in caplog.records)
+    assert "p(x) -> q(x)" in compiled
+    assert "r(x)" not in compiled
+
+
+def test_tptp_compiler_skips_naf_sentences(caplog):
+    """One NAF rule must not crash TPTP compilation of a mixed theory."""
+    import logging
+
+    with caplog.at_level(logging.WARNING):
+        compiled = TPTPCompiler().compile(_naf_mixed_theory())
+    assert any("negation-as-failure" in rec.message for rec in caplog.records)
+    assert "fof(axiom1, axiom, ! [X] : (p(X) => q(X)))." in compiled
+    assert "axiom2" not in compiled
