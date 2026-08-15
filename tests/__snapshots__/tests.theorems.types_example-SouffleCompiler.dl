@@ -1,4 +1,3 @@
-.type Thing = symbol
 .decl PersonWithAge(name: symbol, age: number)
 .decl Adult(name: symbol)
 .decl StageAge(stage: symbol, age: number)

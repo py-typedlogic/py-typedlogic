@@ -1,4 +1,3 @@
-.type Thing = symbol
 .decl Likes(subject: symbol, object: symbol)
 .decl Person(name: symbol)
 .decl Animal(name: symbol, species: symbol)

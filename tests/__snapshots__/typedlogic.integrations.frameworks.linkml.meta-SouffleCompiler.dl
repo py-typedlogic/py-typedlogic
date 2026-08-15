@@ -1,6 +1,3 @@
-.type Elementid = symbol
-.type Classdefinitionid = symbol
-.type Slotdefinitionid = symbol
 .decl Element(id: symbol)
 .decl ClassDefinition(id: symbol)
 .decl TypeDefinition(id: symbol)

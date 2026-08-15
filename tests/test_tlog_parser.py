@@ -475,8 +475,9 @@ def test_tlog_type_annotations_export_to_typed_souffle_compiler() -> None:
     )
 
     compiled = SouffleCompiler().compile(theory)
-    check(".type Personid = symbol" in compiled, compiled)
-    check(".decl parent(parent: Personid, child: Personid)" in compiled, compiled)
+    # The declared name is preserved verbatim, and `<:` makes Souffle enforce the brand.
+    check(".type PersonID <: symbol" in compiled, compiled)
+    check(".decl parent(parent: PersonID, child: PersonID)" in compiled, compiled)
 
 
 def test_declared_predicate_used_at_wrong_arity_is_flagged() -> None:

@@ -3,7 +3,7 @@
 % Adult(name: str)
 % StageAge(stage: str, age: str)
 % PersonWithAge2(name: str, age_in_years: int)
-% PersonWithAddress(name: str, zip_code: str)
+% PersonWithAddress(name: str, zip_code: ZipCode)
 
 %% classifications
 

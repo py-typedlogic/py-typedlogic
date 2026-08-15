@@ -62,7 +62,7 @@
         (arguments 
           (dict 
             ((name "str") 
-              (zip_code "str")))) 
+              (zip_code "ZipCode")))) 
         (description null) 
         (metadata null) 
         (parents 
