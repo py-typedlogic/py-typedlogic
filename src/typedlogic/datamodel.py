@@ -200,7 +200,11 @@ class Sentence(ABC):
     def __invert__(self):
         return Not(self)
 
-    def __sub__(self):
+    def __neg__(self):
+        # Unary minus is the Python surface's spelling of negation as failure, matching
+        # the `ast.USub` case in the parser. This was previously named `__sub__`, which
+        # Python never invokes for unary minus and which cannot work as binary
+        # subtraction either, since it takes no second operand.
         return NegationAsFailure(self)
 
     def __rshift__(self, other):
