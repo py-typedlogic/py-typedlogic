@@ -158,6 +158,7 @@ class SouffleCompiler(Compiler):
             use_lowercase_vars=True,
             use_uppercase_predicates=None,
             negation_symbol="!",
+            negation_as_failure_symbol="!",
             double_quote_strings=True,
             operator_map={
                 "eq": "=",
