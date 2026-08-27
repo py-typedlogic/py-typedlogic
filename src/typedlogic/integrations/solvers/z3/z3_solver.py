@@ -9,7 +9,15 @@ import typedlogic as tlog
 import typedlogic.pybridge
 from typedlogic import FactMixin, Variable
 from typedlogic.builtins import NUMERIC_BUILTINS
-from typedlogic.datamodel import CardinalityConstraint, DefinedType, PredicateDefinition, Sentence, Term
+from typedlogic.datamodel import (
+    CardinalityConstraint,
+    DefinedType,
+    NegationAsFailure,
+    NotInProfileError,
+    PredicateDefinition,
+    Sentence,
+    Term,
+)
 from typedlogic.parsers.pyparser.python_ast_utils import logger
 from typedlogic.profiles import (
     AllowsComparisonTerms,
@@ -29,6 +37,33 @@ SORT_MAP: Mapping[str, Type[SortRef]] = {
     "bool": z3.BoolSort,
     "float": z3.RealSort,
 }
+
+
+def contains_negation_as_failure(sentence: Any) -> bool:
+    """
+    Check whether a sentence contains a negation-as-failure operator anywhere in its tree.
+
+        >>> from typedlogic import Forall, Implies, NegationAsFailure, Term, Variable
+        >>> x = Variable("x")
+        >>> contains_negation_as_failure(Term("p", x))
+        False
+        >>> contains_negation_as_failure(Forall([x], Implies(NegationAsFailure(Term("q", x)), Term("p", x))))
+        True
+
+    :param sentence: the sentence (or sub-expression) to inspect
+    :return: True if any subformula is a NegationAsFailure
+    """
+    if isinstance(sentence, NegationAsFailure):
+        return True
+    if isinstance(sentence, CardinalityConstraint):
+        parts = [sentence.template, sentence.conditions]
+        return any(contains_negation_as_failure(part) for part in parts if part is not None)
+    if isinstance(sentence, (tlog.Forall, tlog.Exists)):
+        return contains_negation_as_failure(sentence.sentence)
+    operands = getattr(sentence, "operands", None)
+    if operands is not None:
+        return any(contains_negation_as_failure(op) for op in operands)
+    return False
 
 
 # Return the first "M" models of formula list of formulas F
@@ -233,7 +268,21 @@ class Z3Solver(Solver):
         return self.add_sentence(fact)
 
     def add_sentence(self, sentence: Sentence) -> None:
-        # normalize_variables(sentence)
+        """
+        Add a sentence to the solver.
+
+        Sentences containing negation-as-failure have no classical (open-world) reading,
+        so they are skipped with a warning rather than aborting the whole theory; this
+        only weakens the axiom set, so anything still proved remains sound. With
+        ``strict=True`` such sentences raise :class:`NotInProfileError` instead.
+
+        :param sentence: the sentence to add
+        """
+        if contains_negation_as_failure(sentence):
+            if self.strict:
+                raise NotInProfileError(f"NegationAsFailure has no classical (open-world) reading in Z3: {sentence}")
+            logger.warning(f"SKIPPING sentence with negation-as-failure (no classical reading in Z3): {sentence}")
+            return
         z3_expr = self.translate(sentence)
         self.wrapped_solver.add(z3_expr)
 
@@ -282,6 +331,8 @@ class Z3Solver(Solver):
             return z3.Or(*disj)
         if isinstance(sentence, tlog.Not):
             return z3.Not(self.translate(sentence.operands[0], bindings))
+        if isinstance(sentence, NegationAsFailure):
+            raise NotInProfileError(f"NegationAsFailure has no classical (open-world) reading in Z3: {sentence}")
         if isinstance(sentence, tlog.Iff):
             # rewrite
             lhs = sentence.left

@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 from typedlogic.compiler import ModelSyntax
 from typedlogic.datamodel import (
@@ -6,6 +8,8 @@ from typedlogic.datamodel import (
     Exists,
     Forall,
     Implies,
+    NegationAsFailure,
+    NotInProfileError,
     Or,
     PredicateDefinition,
     Term,
@@ -383,6 +387,54 @@ def test_reasoning_with_existential_subformula():
     solver.add_fact(Term("Edge", {"src": 1, "tgt": 2}))
     assert solver.check().satisfiable
     assert solver.prove(Term("HasOut", {"src": 1}))
+
+
+def test_naf_sentences_skipped_with_warning(caplog):
+    """A negation-as-failure rule in a mixed theory is skipped with a warning, not fatal.
+
+    NAF has no classical open-world reading, and translation is whole-theory, so a single
+    NAF rule previously raised NotImplementedError and made every prove obligation fail —
+    even pure-Horn obligations that never mention the NAF rule.
+    """
+    from typedlogic.parsers.tlog_parser import TLogParser
+
+    theory = TLogParser().parse(
+        """
+        pred p(x: str).
+        pred q(x: str).
+        pred r(x: str).
+
+        all x: str | p(x), not q(x) -> r(x).
+        all x: str | p(x) -> q(x).
+        """
+    )
+    solver = Z3Solver()
+    with caplog.at_level(logging.WARNING):
+        solver.add(theory)
+    assert "negation" in caplog.text.lower()
+    assert solver.check().satisfiable
+    x = Variable("x", "str")
+    # The NAF-free part of the theory is still loaded and provable.
+    assert solver.prove(Forall([x], Implies(Term("p", x), Term("q", x))))
+    assert solver.prove(Forall([x], Implies(And(Term("p", x), Term("q", x)), Term("p", x))))
+
+
+def test_naf_sentence_strict_mode_raises():
+    """With strict=True, an out-of-profile NAF sentence raises instead of being skipped."""
+    solver = Z3Solver(strict=True)
+    solver.add(PredicateDefinition(predicate="p", arguments={"x": "str"}))
+    solver.add(PredicateDefinition(predicate="q", arguments={"x": "str"}))
+    x = Variable("x", "str")
+    with pytest.raises(NotInProfileError):
+        solver.add_sentence(Forall([x], Implies(NegationAsFailure(Term("q", x)), Term("p", x))))
+
+
+def test_translate_naf_raises_not_in_profile():
+    """Directly translating NAF (e.g. as a proof goal) fails loudly rather than being dropped."""
+    solver = Z3Solver()
+    solver.add(PredicateDefinition(predicate="q", arguments={"x": "str"}))
+    with pytest.raises(NotInProfileError):
+        solver.translate(NegationAsFailure(Term("q", "a")))
 
 
 def test_untyped_quantified_variables_infer_type_from_declared_predicate():
