@@ -152,7 +152,8 @@ def check_theory(
         True
 
     :param theory: The theory to check
-    :param solver: A solver instance or registered name; defaults to Clingo
+    :param solver: A solver instance or registered name; defaults to Clingo, which is an
+        optional dependency (``pip install "typedlogic[clingo]"``)
     :param extra_axioms: Further axiom modules over the metatheory vocabulary
     :param extra_diagnostics: Further predicates to report, for rules from `extra_axioms`
     :return: The diagnostics derived, together with what reflection skipped

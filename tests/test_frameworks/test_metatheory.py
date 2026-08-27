@@ -150,6 +150,28 @@ def test_literal_of_right_base_type_is_accepted():
     assert check_theory(theory).ok
 
 
+def test_omitted_keyword_argument_does_not_shift_positions():
+    """A keyword term that omits an argument must not move later ones into its place.
+
+    Compacting the bindings shifted every argument after an omission into the wrong
+    declared position, deriving clashes for types the variable never touches.
+    """
+    theory = Theory(
+        name="omitted",
+        type_definitions={"PersonID": "str"},
+        predicate_definitions=[
+            PredicateDefinition("Rec", {"age": "int", "pid": "PersonID"}),
+            PredicateDefinition("Flag", {"id": "PersonID"}),
+        ],
+    )
+    theory.add(Forall([X], Implies(Term("Rec", {"pid": X}), Term("Flag", X))))
+    facts = theory_to_facts(theory)
+    assert VarPosition("Sentences", "x", "Rec", 1) in facts
+    assert VarPosition("Sentences", "x", "Rec", 0) not in facts
+    result = check_theory(theory)
+    assert result.ok, str(result)
+
+
 def test_undeclared_predicate_is_reported():
     """A rule over an undeclared predicate escapes every signature check."""
     theory = _branded_theory()

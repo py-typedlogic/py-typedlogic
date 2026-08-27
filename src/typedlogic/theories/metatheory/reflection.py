@@ -13,7 +13,7 @@ present in the theory. The cost is that reflection alone proves nothing about wh
 skipped; see :func:`skipped_sentences` to see what a given theory lost.
 """
 
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 from typedlogic import Fact, Sentence, Term, Theory, Variable
 from typedlogic.builtins import NUMERIC_BUILTINS
@@ -75,20 +75,21 @@ def _base_type_of(value: Any) -> Optional[str]:
     return None
 
 
-def _positional_values(term: Term, pd: Optional[PredicateDefinition]) -> Sequence[Any]:
+def _positional_values(term: Term, pd: Optional[PredicateDefinition]) -> List[Tuple[int, Any]]:
     """
-    Return a term's arguments in declaration order.
+    Return a term's arguments paired with their declared positions.
 
-    Keyword-indexed terms are reordered to match the predicate's declared arguments, so
-    that positions in the reflected facts always mean the same thing.
+    Keyword-indexed terms are matched against the predicate's declared argument order,
+    keeping each value at its declared position: a term that omits an argument must not
+    shift the ones after it into the omitted slot.
 
     :param term: The term whose arguments are wanted
     :param pd: The declaration for the term's predicate, if the theory has one
-    :return: The argument values, in positional order
+    :return: Pairs of declared position and argument value
     """
     if term.positional is False and pd is not None:
-        return [term.bindings[name] for name in pd.arguments if name in term.bindings]
-    return term.values
+        return [(i, term.bindings[name]) for i, name in enumerate(pd.arguments) if name in term.bindings]
+    return list(enumerate(term.values))
 
 
 def _rule_terms(sentence: Sentence) -> Optional[Tuple[List[Term], List[Term], List[Term]]]:
@@ -140,39 +141,46 @@ def _is_builtin(predicate: str) -> bool:
     return predicate in NUMERIC_BUILTINS
 
 
-def _horn_rules(theory: Theory) -> List[Tuple[str, Sentence]]:
+def _described_rules(theory: Theory) -> Tuple[List[Tuple[str, Sentence]], List[Sentence]]:
     """
-    Normalize a theory's asserted sentences to named Horn rules.
+    Normalize a theory's asserted sentences to named Horn rules, tracking what was lost.
 
     Rules are named after the sentence group they came from so that diagnostics point at
-    something the author recognizes, such as the decorated function's name.
+    something the author recognizes, such as the decorated function's name. A sentence
+    that cannot be normalized, or that normalizes to something with no rule shape, lands
+    in the second list; deciding both outcomes in one pass keeps :func:`theory_to_facts`
+    and :func:`skipped_sentences` from drifting apart.
 
     :param theory: The theory to normalize
-    :return: Pairs of rule id and normalized sentence
+    :return: Pairs of rule id and normalized sentence, and the sentences not described
     """
     rules: List[Tuple[str, Sentence]] = []
+    skipped: List[Sentence] = []
     groups = [
-        (sg.name or "sentences", sg.sentences or [])
+        (sg.name or "sentences", list(sg.sentences or []))
         for sg in theory.sentence_groups
         if sg.group_type in (None, SentenceGroupType.AXIOM)
     ]
     groups.append(("ground_terms", list(theory.ground_terms)))
     for group_name, sentences in groups:
         for sentence in sentences:
-            if isinstance(sentence, Extension):
-                sentence = sentence.to_model_object()
+            model_object = sentence.to_model_object() if isinstance(sentence, Extension) else sentence
             try:
-                normalized = to_horn_rules(sentence, allow_goal_clauses=True)
+                normalized = to_horn_rules(model_object, allow_goal_clauses=True)
             except (NotInProfileError, ValueError):
+                skipped.append(sentence)
                 continue
-            for i, rule in enumerate(normalized):
-                rules.append((f"{group_name}[{i}]" if len(normalized) > 1 else group_name, rule))
-    return rules
+            described = [rule for rule in normalized if _rule_terms(rule) is not None]
+            if not normalized or len(described) < len(normalized):
+                skipped.append(sentence)
+            for i, rule in enumerate(described):
+                rules.append((f"{group_name}[{i}]" if len(described) > 1 else group_name, rule))
+    return rules, skipped
 
 
 def skipped_sentences(theory: Theory) -> List[Sentence]:
     """
-    List the asserted sentences that reflection could not describe.
+    List the asserted sentences that reflection could not fully describe.
 
     Reflection covers what has a Horn form. Anything else contributes no facts, so a
     clean type check says nothing about it; this function makes that gap inspectable
@@ -183,20 +191,9 @@ def skipped_sentences(theory: Theory) -> List[Sentence]:
         []
 
     :param theory: The theory to inspect
-    :return: Sentences that produced no rules
+    :return: Sentences of which some part produced no rules
     """
-    skipped = []
-    for sg in theory.sentence_groups:
-        if sg.group_type not in (None, SentenceGroupType.AXIOM):
-            continue
-        for sentence in sg.sentences or []:
-            model_object = sentence.to_model_object() if isinstance(sentence, Extension) else sentence
-            try:
-                if not to_horn_rules(model_object, allow_goal_clauses=True):
-                    skipped.append(sentence)
-            except (NotInProfileError, ValueError):
-                skipped.append(sentence)
-    return skipped
+    return _described_rules(theory)[1]
 
 
 def theory_to_facts(theory: Theory) -> List[Fact]:
@@ -253,7 +250,7 @@ def theory_to_facts(theory: Theory) -> List[Fact]:
     facts.extend(TypeExists(TypeName(t)) for t in sorted(declared_types))
 
     predicate_map = theory.predicate_definition_map
-    for rule_name, rule in _horn_rules(theory):
+    for rule_name, rule in _described_rules(theory)[0]:
         split = _rule_terms(rule)
         if split is None:
             continue
@@ -272,7 +269,7 @@ def theory_to_facts(theory: Theory) -> List[Fact]:
             if _is_builtin(term.predicate):
                 continue
             predicate = PredicateName(term.predicate)
-            for position, value in enumerate(_positional_values(term, predicate_map.get(term.predicate))):
+            for position, value in _positional_values(term, predicate_map.get(term.predicate)):
                 if isinstance(value, Variable):
                     facts.append(VarPosition(rule_id, VarName(value.name), predicate, position))
                 elif isinstance(value, Term):
