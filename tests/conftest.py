@@ -20,23 +20,42 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "souffle: mark tests requiring souffle executable")
     config.addinivalue_line("markers", "slow: mark test as slow running")
 
+def requires_souffle_binary(item) -> bool:
+    """
+    Determine whether a test actually invokes the souffle executable.
+
+    Compiling to Souffle syntax is pure string generation and needs no executable, so a
+    test must not be skipped merely for naming souffle: doing so silently left the whole
+    Souffle compiler untested anywhere the binary is absent, including CI.
+
+    :param item: The collected pytest item
+    :return: True if the test needs a souffle executable to run
+    """
+    if item.get_closest_marker("souffle"):
+        return True
+    nodeid = str(item.nodeid).lower()
+    if "souffle" not in nodeid:
+        return False
+    return not ("soufflecompiler" in nodeid or "souffle_compiler" in nodeid)
+
+
 def pytest_collection_modifyitems(config, items):
     """Skip tests based on available executables and other markers."""
     # Skip markers
     skip_souffle = pytest.mark.skip(reason="Souffle executable not found")
     skip_prover9 = pytest.mark.skip(reason="Prover9 executable not found")
     skip_slow = pytest.mark.skip(reason="slow test")
-    
+
     for item in items:
         # Skip slow tests
         if item.get_closest_marker("slow"):
             item.add_marker(skip_slow)
-            
+
         # Skip tests requiring external executables if not available
-        if item.get_closest_marker("souffle") or "souffle" in str(item.nodeid).lower():
+        if requires_souffle_binary(item):
             if not has_souffle:
                 item.add_marker(skip_souffle)
-                
+
         if item.get_closest_marker("prover9") or "prover9" in str(item.nodeid).lower():
             if not has_prover9:
                 item.add_marker(skip_prover9)

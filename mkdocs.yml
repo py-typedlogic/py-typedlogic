@@ -75,6 +75,8 @@ nav:
   - Concepts:
       - Core concepts: concepts/index.md
       - Data Model: concepts/datamodel.md
+      - Types: concepts/types.md
+      - Reasoning about theories: concepts/metatheory.md
       - Decorators: concepts/decorators.md
       - Generators: concepts/generators.md
       - Solvers: concepts/solvers.md

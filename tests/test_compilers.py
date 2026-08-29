@@ -184,3 +184,98 @@ def test_tptp_compiler_skips_naf_sentences(caplog):
     assert any("negation-as-failure" in rec.message for rec in caplog.records)
     assert "fof(axiom1, axiom, ! [X] : (p(X) => q(X)))." in compiled
     assert "axiom2" not in compiled
+def _typed_theory(**type_definitions):
+    """Build a theory whose predicate brands both of its arguments with defined types."""
+    return Theory(
+        name="typed",
+        type_definitions=dict(type_definitions),
+        predicate_definitions=[PredicateDefinition("Employs", {"org": "OrgID", "person": "PersonID"})],
+    )
+
+
+def test_souffle_compiler_brands_defined_types_as_subtypes():
+    """Defined types compile to Souffle subtypes, so Souffle enforces the branding.
+
+    With ``=`` the name is a mere alias and OrgID/PersonID stay mutually assignable.
+    """
+    theory = _typed_theory(OrgID="str", PersonID="str")
+    compiled = SouffleCompiler().compile(theory)
+    assert ".type OrgID <: symbol" in compiled
+    assert ".type PersonID <: symbol" in compiled
+    assert ".decl Employs(org: OrgID, person: PersonID)" in compiled
+
+
+def test_souffle_compiler_subtype_branding_can_be_disabled():
+    """Arithmetic over a branded numeric type needs alias semantics, so it stays available."""
+    theory = _typed_theory(OrgID="str", PersonID="str")
+    compiled = SouffleCompiler(strict_subtypes=False).compile(theory)
+    assert ".type OrgID = symbol" in compiled
+    assert "<:" not in compiled
+
+
+def test_souffle_compiler_preserves_type_name_case():
+    """Type names are emitted verbatim; capitalizing them collided distinct names."""
+    theory = Theory(
+        name="casing",
+        type_definitions={"PersonID": "str", "PersonId": "int"},
+        predicate_definitions=[PredicateDefinition("P", {"a": "PersonID", "b": "PersonId"})],
+    )
+    compiled = SouffleCompiler().compile(theory)
+    assert ".type PersonID <: symbol" in compiled
+    assert ".type PersonId <: number" in compiled
+    assert "Personid" not in compiled
+
+
+def test_souffle_compiler_omits_unreferenced_type_definitions():
+    """A type no predicate mentions cannot brand anything, so it is not declared.
+
+    Plain Python aliases (``NameType = str``) are erased before introspection, and used
+    to surface here as declarations implying an enforcement that did not exist.
+    """
+    theory = _typed_theory(OrgID="str", PersonID="str", Unused="str")
+    compiled = SouffleCompiler().compile(theory)
+    assert "Unused" not in compiled
+
+
+def test_souffle_compiler_emits_transitively_referenced_types():
+    """A type reached only through another type definition is still declared."""
+    theory = _typed_theory(OrgID="Identifier", PersonID="Identifier", Identifier="str")
+    compiled = SouffleCompiler().compile(theory)
+    assert ".type Identifier <: symbol" in compiled
+    assert ".type OrgID <: Identifier" in compiled
+
+
+def test_souffle_compiler_renames_types_clashing_with_primitives():
+    """A defined type named after a Souffle primitive must not redefine that primitive."""
+    theory = Theory(
+        name="clash",
+        type_definitions={"symbol": "str"},
+        predicate_definitions=[PredicateDefinition("P", {"a": "symbol"})],
+    )
+    compiled = SouffleCompiler().compile(theory)
+    assert ".type symbol_t <: symbol" in compiled
+    assert ".decl P(a: symbol_t)" in compiled
+
+
+def test_souffle_compiler_unions_stay_aliases_and_resolve_members():
+    """A union is a sum of its members, so it keeps ``=`` and names defined members."""
+    theory = Theory(
+        name="unions",
+        type_definitions={"Identifier": "str", "Key": ["Identifier", "int"]},
+        predicate_definitions=[PredicateDefinition("P", {"k": "Key"})],
+    )
+    compiled = SouffleCompiler().compile(theory)
+    assert ".type Key = Identifier | number" in compiled
+
+
+def test_souffle_compiler_newtype_branding_survives_python_introspection():
+    """End to end: a NewType declared in Python reaches the Souffle declaration.
+
+    Pydantic's JSON schema resolves NewTypes away, which previously erased the brand
+    before it could reach any compiler.
+    """
+    theory = translate_module_to_theory(defined_types_example)
+    assert theory.predicate_definition_map["PersonWithAddress"].arguments["zip_code"] == "ZipCode"
+    compiled = SouffleCompiler().compile(theory)
+    assert ".type ZipCode <: symbol" in compiled
+    assert ".decl PersonWithAddress(name: symbol, zip_code: ZipCode)" in compiled
