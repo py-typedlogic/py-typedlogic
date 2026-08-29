@@ -1,3 +1,7 @@
+coin(_) :- fail.
+heads(_) :- fail.
+tails(_) :- fail.
+win :- fail.
 win :- heads(C).
 query(coin(Id)).
 query(heads(Id)).

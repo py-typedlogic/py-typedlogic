@@ -1,3 +1,8 @@
+personwithage(_, _) :- fail.
+adult(_) :- fail.
+stageage(_, _) :- fail.
+personwithage2(_, _) :- fail.
+personwithaddress(_, _) :- fail.
 adult(_Name) :- Age >= 18.
 query(personwithage(Name, Age)).
 query(adult(Name)).

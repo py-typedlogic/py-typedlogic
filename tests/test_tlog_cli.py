@@ -493,3 +493,58 @@ def test_expectation_context_falls_back_when_solver_prove_returns_none() -> None
     check(context.prove(Term("edge", "a", "b")) is True, "Expected exact term proof by model fallback")
     check(context.prove(Exists([Variable("x")], Term("edge", Variable("x"), "b"))) is True, "Expected exists proof")
     check(context.prove(Not(Term("missing", "a"))) is True, "Expected negative proof by model fallback")
+
+
+def test_tlog_prove_z3_skips_negation_as_failure_rules(tmp_path: Path) -> None:
+    """One NAF rule must not break z3 proving of NAF-free obligations elsewhere in the theory."""
+    pytest.importorskip("z3")
+    tlog_path = tmp_path / "naf_repro.tlog"
+    tlog_path.write_text(
+        """
+        pred p(x: str).
+        pred q(x: str).
+        pred r(x: str).
+
+        all x: str | p(x), not q(x) -> r(x).
+
+        lemma("trivial", that(all x: str | p(x) & q(x) -> p(x))).
+        """,
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "z3", "--target", "lemmas"])
+
+    check(result.exit_code == 0, result.stdout)
+    check("PASS lemma trivial" in result.stdout, result.stdout)
+    check("1 obligation(s), 0 failed, 0 unknown" in result.stdout, result.stdout)
+
+
+def test_tlog_prove_z3_clark_completion_proves_naf_dependent_lemma(tmp_path: Path) -> None:
+    """--clark-completion renders NAF classically so z3 can prove NAF-dependent lemmas."""
+    pytest.importorskip("z3")
+    tlog_path = tmp_path / "naf_completion.tlog"
+    tlog_path.write_text(
+        """
+        pred p(x: str).
+        pred q(x: str).
+        pred r(x: str).
+
+        p("a").
+        q("b").
+
+        all x: str | p(x), not q(x) -> r(x).
+
+        lemma("naf", that(r("a"))).
+        """,
+        encoding="utf-8",
+    )
+
+    # without the transform the NAF rule is skipped and the lemma is not provable
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "z3", "--target", "lemmas"])
+    check(result.exit_code == 1, result.stdout)
+    check("FAIL lemma naf" in result.stdout, result.stdout)
+
+    result = runner.invoke(app, ["prove", str(tlog_path), "--solver", "z3", "--target", "lemmas", "--clark-completion"])
+    check(result.exit_code == 0, result.stdout)
+    check("PASS lemma naf: r('a')" in result.stdout, result.stdout)
+    check("1 obligation(s), 0 failed, 0 unknown" in result.stdout, result.stdout)

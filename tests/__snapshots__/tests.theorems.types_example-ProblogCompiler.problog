@@ -1,3 +1,6 @@
+personwithage(_, _) :- fail.
+adult(_) :- fail.
+stageage(_, _) :- fail.
 stageage("Adult", _Age_threshold).
 personwithage("Alice", 25).
 adult(_Name) :- Age >= Age_threshold.

@@ -10,13 +10,10 @@ import typedlogic.pybridge
 from typedlogic import FactMixin, Variable
 from typedlogic.builtins import NUMERIC_BUILTINS
 from typedlogic.datamodel import (
-    BooleanSentence,
     CardinalityConstraint,
     DefinedType,
-    NegationAsFailure,
     NotInProfileError,
     PredicateDefinition,
-    QuantifiedSentence,
     Sentence,
     Term,
 )
@@ -32,6 +29,7 @@ from typedlogic.profiles import (
 )
 from typedlogic.pybridge import fact_arg_map, fact_predicate
 from typedlogic.solver import Model, Solution, Solver
+from typedlogic.transformations import contains_negation_as_failure
 
 SORT_MAP: Mapping[str, Type[SortRef]] = {
     "str": z3.StringSort,
@@ -39,32 +37,6 @@ SORT_MAP: Mapping[str, Type[SortRef]] = {
     "bool": z3.BoolSort,
     "float": z3.RealSort,
 }
-
-
-def contains_negation_as_failure(sentence: Sentence) -> bool:
-    """
-    Check whether a sentence contains a negation-as-failure operator anywhere in its tree.
-
-        >>> from typedlogic import Forall, Implies, NegationAsFailure, Term, Variable
-        >>> x = Variable("x")
-        >>> contains_negation_as_failure(Term("p", x))
-        False
-        >>> contains_negation_as_failure(Forall([x], Implies(NegationAsFailure(Term("q", x)), Term("p", x))))
-        True
-
-    :param sentence: the sentence to inspect
-    :return: True if any subformula is a NegationAsFailure
-    """
-    if isinstance(sentence, NegationAsFailure):
-        return True
-    if isinstance(sentence, CardinalityConstraint):
-        parts = [sentence.template, sentence.conditions]
-        return any(contains_negation_as_failure(part) for part in parts if part is not None)
-    if isinstance(sentence, QuantifiedSentence):
-        return contains_negation_as_failure(sentence.sentence)
-    if isinstance(sentence, BooleanSentence):
-        return any(contains_negation_as_failure(op) for op in sentence.operands)
-    return False
 
 
 # Return the first "M" models of formula list of formulas F
@@ -183,6 +155,12 @@ class Z3Solver(Solver):
         return
 
     def prove(self, sentence: Sentence) -> Optional[bool]:
+        if contains_negation_as_failure(sentence):
+            logger.warning(
+                f"Z3 cannot prove a goal containing negation-as-failure; returning unknown for: {sentence}. "
+                "Consider typedlogic.transformations.clark_completion to obtain a classical rendering."
+            )
+            return None
         s = self.wrapped_solver
         s.push()
         s.add(z3.Not(self.translate(sentence)))
@@ -281,8 +259,15 @@ class Z3Solver(Solver):
         """
         if contains_negation_as_failure(sentence):
             if self.strict:
-                raise NotInProfileError(f"NegationAsFailure has no classical (open-world) reading in Z3: {sentence}")
-            logger.warning(f"SKIPPING sentence with negation-as-failure (no classical reading in Z3): {sentence}")
+                raise NotInProfileError(
+                    f"Z3 does not support negation-as-failure: {sentence}. "
+                    "Consider typedlogic.transformations.clark_completion to obtain a classical rendering."
+                )
+            logger.warning(
+                f"Skipping sentence with negation-as-failure (unsupported by Z3): {sentence}. "
+                "The theory is weakened by this omission; consider "
+                "typedlogic.transformations.clark_completion for a classical rendering."
+            )
             return
         z3_expr = self.translate(sentence)
         self.wrapped_solver.add(z3_expr)
@@ -330,10 +315,13 @@ class Z3Solver(Solver):
                     )
                 )
             return z3.Or(*disj)
+        if isinstance(sentence, tlog.NegationAsFailure):
+            raise NotInProfileError(
+                f"Z3 has classical semantics and cannot translate negation-as-failure: {sentence}. "
+                "Consider typedlogic.transformations.clark_completion to obtain a classical rendering."
+            )
         if isinstance(sentence, tlog.Not):
             return z3.Not(self.translate(sentence.operands[0], bindings))
-        if isinstance(sentence, NegationAsFailure):
-            raise NotInProfileError(f"NegationAsFailure has no classical (open-world) reading in Z3: {sentence}")
         if isinstance(sentence, tlog.Iff):
             # rewrite
             lhs = sentence.left

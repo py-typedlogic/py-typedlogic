@@ -53,6 +53,7 @@ from typedlogic.registry import (
     get_solver,
 )
 from typedlogic.solver import Model, Solver
+from typedlogic.transformations import clark_completion
 
 app = typer.Typer()
 
@@ -714,6 +715,12 @@ def prove(
         "--name",
         help="Only prove obligations from a named goal or lemma group. Repeat for multiple names.",
     ),
+    use_clark_completion: bool = typer.Option(
+        False,
+        "--clark-completion/--no-clark-completion",
+        help="Apply Clark completion so negation-as-failure rules get a classical rendering "
+        "(for classical solvers such as z3 or prover9).",
+    ),
     dump_program: bool = dump_program_option,
     data_files: Annotated[Optional[List[Path]], typer.Argument()] = None,
 ):
@@ -725,6 +732,8 @@ def prove(
     """
     theory = _parse_theory_file(theory_file, input_format, validate_types)
     _add_data_files(theory, data_files, data_input_format)
+    if use_clark_completion:
+        theory = clark_completion(theory)
     obligations = [
         obligation
         for obligation in _proof_obligations(theory, target)

@@ -1,3 +1,7 @@
+namedthing(_) :- fail.
+relationship(_, _, _) :- fail.
+person(_, _) :- fail.
+likes(_, _, _, _) :- fail.
 namedthing(Name) :- person(Name, Age).
 relationship(Subject, Predicate, Object) :- likes(Subject, Predicate, Object, Reciprocated).
 query(namedthing(Name)).
