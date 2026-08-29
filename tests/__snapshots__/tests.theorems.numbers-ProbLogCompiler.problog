@@ -1,3 +1,5 @@
+personage(_, _) :- fail.
+sameage(_, _) :- fail.
 personage("Alice", 25).
 personage("Bob", 30).
 personage("Ciara", 30).

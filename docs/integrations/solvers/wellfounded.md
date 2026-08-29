@@ -6,21 +6,32 @@ Answer Set Programming, which enumerates zero or more two-valued *stable models*
 the well-founded semantics always yields exactly **one** three-valued model, in
 which every ground atom is `true`, `false`, or `undefined`.
 
-It ships three interchangeable backends, selected with the `backend` field:
+It ships four interchangeable backends, selected with the `backend` field:
 
 - `native` (default) — a dependency-free pure-Python implementation of the Van
   Gelder alternating fixpoint. Returns the full three-valued model. Best for
   teaching and modestly-sized programs; it grounds naively and is not built for
   large programs (see [Scaling the native well-founded solver](wellfounded-scaling.md)
   for the plan to fix that).
+- `swi` — drives [SWI-Prolog](https://www.swi-prolog.org/) as an external
+  subprocess (requires the `swipl` executable on `PATH`). SWI's tabling engine
+  computes the well-founded semantics, and this backend returns the full
+  three-valued model, classifying each atom via `library(wfs)`. SWI-Prolog is
+  easy to install (`apt-get install swi-prolog`, `brew install swi-prolog`) and
+  this backend is exercised in CI, making it the recommended external engine
+  for large or deeply-recursive programs.
 - `problog` — delegates to [ProbLog](problog.md), which evaluates the *two-valued*
   restriction of WFS. It agrees with `native` on stratified programs and raises
   `NegativeCycleError` on programs that are genuinely three-valued.
 - `xsb` — **experimental, unverified.** Drives [XSB Prolog](https://xsb.sourceforge.net/),
   the reference SLG/tabling engine, as an external subprocess (requires the `xsb`
-  executable on `PATH`). Intended for large or deeply-recursive programs, but it
-  has not yet been validated against a live XSB install and is not exercised in
-  CI; it emits a warning when used. Prefer `native` until it is validated.
+  executable on `PATH`). It has not yet been validated against a live XSB install
+  and is not exercised in CI; it emits a warning when used. Prefer `swi` until it
+  is validated.
+
+The `swi` and `xsb` backends hand the *original* (non-ground) rules to the
+tabled engine; the naive grounder is only used to enumerate the candidate atoms
+to report on.
 
 For a worked comparison of the well-founded semantics against closed-world
 Datalog and Answer Set Programming, see the
@@ -34,6 +45,14 @@ backends reuse existing extras:
 ```bash
 pip install typedlogic              # native backend only
 pip install 'typedlogic[problog]'   # adds the problog backend
+```
+
+The `swi` backend requires the external [SWI-Prolog](https://www.swi-prolog.org/)
+executable (`swipl`) on `PATH`:
+
+```bash
+sudo apt-get install swi-prolog   # Debian/Ubuntu
+brew install swi-prolog           # macOS
 ```
 
 The `xsb` backend additionally requires the external
@@ -123,9 +142,13 @@ print([str(t) for t in solver.model().iter_retrieve("Flies")])  # -> ['Flies(twe
 
 ```python
 WellFoundedSolver()                     # native (default): full three-valued model
+WellFoundedSolver(backend="swi")        # three-valued via SWI-Prolog tabling; needs swipl
 WellFoundedSolver(backend="problog")    # two-valued; raises NegativeCycleError on loops
 WellFoundedSolver(backend="xsb")        # experimental; needs the xsb binary
 ```
+
+External backends look up their default executable (`swipl` / `xsb`) on `PATH`;
+pass `exec_name="/path/to/binary"` to override.
 
 `check()` always reports `satisfiable=True` (a well-founded model always exists),
 and `models()` yields the single model.

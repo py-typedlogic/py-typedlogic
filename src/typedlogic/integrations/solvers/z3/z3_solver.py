@@ -247,8 +247,16 @@ class Z3Solver(Solver):
         return self.add_sentence(fact)
 
     def add_sentence(self, sentence: Sentence) -> None:
-        # Negation-as-failure has no classical reading; skipping the sentence keeps the
-        # rest of a mixed theory usable (weakened) instead of failing whole-theory.
+        """
+        Add a sentence to the solver.
+
+        Sentences containing negation-as-failure have no classical (open-world) reading,
+        so they are skipped with a warning rather than aborting the whole theory; this
+        only weakens the axiom set, so anything still proved remains sound. With
+        ``strict=True`` such sentences raise :class:`NotInProfileError` instead.
+
+        :param sentence: the sentence to add
+        """
         if contains_negation_as_failure(sentence):
             if self.strict:
                 raise NotInProfileError(
@@ -261,7 +269,6 @@ class Z3Solver(Solver):
                 "typedlogic.transformations.clark_completion for a classical rendering."
             )
             return
-        # normalize_variables(sentence)
         z3_expr = self.translate(sentence)
         self.wrapped_solver.add(z3_expr)
 

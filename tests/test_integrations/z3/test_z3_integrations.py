@@ -1,3 +1,5 @@
+import logging
+
 import pytest
 from typedlogic.compiler import ModelSyntax
 from typedlogic.datamodel import (
@@ -6,7 +8,9 @@ from typedlogic.datamodel import (
     Exists,
     Forall,
     Implies,
+    NegationAsFailure,
     Not,
+    NotInProfileError,
     Or,
     PredicateDefinition,
     Term,
@@ -386,6 +390,14 @@ def test_reasoning_with_existential_subformula():
     assert solver.prove(Term("HasOut", {"src": 1}))
 
 
+def test_translate_naf_raises_not_in_profile():
+    """Directly translating NAF (e.g. as a proof goal) fails loudly rather than being dropped."""
+    solver = Z3Solver()
+    solver.add(PredicateDefinition(predicate="q", arguments={"x": "str"}))
+    with pytest.raises(NotInProfileError):
+        solver.translate(NegationAsFailure(Term("q", "a")))
+
+
 def test_untyped_quantified_variables_infer_type_from_declared_predicate():
     """Untyped tlog quantifier variables get their sort from the predicate they are used in.
 
@@ -421,8 +433,6 @@ def test_untyped_quantified_variables_infer_type_from_declared_predicate():
 
 def _naf_theory() -> Theory:
     """Build a mixed theory: one NAF rule plus a pure-Horn axiom and facts."""
-    from typedlogic.datamodel import NegationAsFailure
-
     x = Variable("x", "str")
     theory = Theory(
         predicate_definitions=[
@@ -440,8 +450,6 @@ def _naf_theory() -> Theory:
 
 def test_naf_sentences_are_skipped_with_a_warning(caplog):
     """One NAF rule must not break classical obligations elsewhere in the theory."""
-    import logging
-
     theory = _naf_theory()
     solver = Z3Solver()
     with caplog.at_level(logging.WARNING):
@@ -456,8 +464,6 @@ def test_naf_sentences_are_skipped_with_a_warning(caplog):
 
 def test_naf_sentences_raise_in_strict_mode():
     """With strict=True the solver refuses NAF instead of weakening the theory."""
-    from typedlogic.datamodel import NotInProfileError
-
     theory = _naf_theory()
     solver = Z3Solver(strict=True)
     with pytest.raises(NotInProfileError, match="negation-as-failure"):
@@ -466,8 +472,6 @@ def test_naf_sentences_raise_in_strict_mode():
 
 def test_prove_returns_unknown_for_naf_goal():
     """A goal containing NAF cannot be decided classically; prove returns None."""
-    from typedlogic.datamodel import NegationAsFailure
-
     solver = Z3Solver()
     solver.add(PredicateDefinition(predicate="p", arguments={"x": "str"}))
     solver.add(Term("p", "a"))
@@ -492,7 +496,6 @@ def test_clark_completion_makes_naf_theory_provable():
 
 def test_clark_completion_locally_stratified_recursion_through_negation():
     """A locally stratified program (mutual NAF recursion over a finite member tree) proves classically."""
-    from typedlogic.datamodel import NegationAsFailure
     from typedlogic.transformations import clark_completion
 
     i, j = Variable("i", "str"), Variable("j", "str")

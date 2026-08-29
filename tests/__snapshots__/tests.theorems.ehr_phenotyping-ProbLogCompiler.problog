@@ -1,3 +1,14 @@
+code(_, _) :- fail.
+patient(_, _, _) :- fail.
+encounter(_, _, _) :- fail.
+diagnosis(_, _) :- fail.
+labresult(_, _, _, _, _) :- fail.
+medication(_, _, _, _) :- fail.
+phenotype(_) :- fail.
+diabetest2(_, _) :- fail.
+hypertension(_, _) :- fail.
+ckd(_, _, _) :- fail.
+isa(_, _) :- fail.
 diabetest2(Patient_id, _) :- patient(Patient_id, date(1970, 1, 1), "unknown"), encounter(Encounter_id, Patient_id, date(2024, 1, 1)), diagnosis(Encounter_id, code("ICD10", "E11")).
 diabetest2(Patient_id, _) :- patient(Patient_id, date(1970, 1, 1), "unknown"), encounter(Encounter_id, Patient_id, date(2024, 1, 1)), diagnosis(Encounter_id, code("ICD10", Child_code)), isa(code("ICD10", Child_code), code("ICD10", "E11")).
 diabetest2(Patient_id, 0.9) :- patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "4548-4"), V, "%"), V >= 6.5.
@@ -6,10 +17,14 @@ hypertension(Patient_id, _) :- patient(Patient_id, date(1970, 1, 1), "unknown"),
 hypertension(Patient_id, 0.8) :- patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "8480-6"), Systolic, "mmHg"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "8462-4"), Diastolic, "mmHg"), Systolic >= 140, Diastolic >= 90.
 ckd(Patient_id, _, _) :- patient(Patient_id, date(1970, 1, 1), "unknown"), encounter(Encounter_id, Patient_id, date(2024, 1, 1)), diagnosis(Encounter_id, code("ICD10", "N18")).
 ckd(Patient_id, 1, 0.5) :- Value >= 90, patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2").
-Value >= 90 :- Value >= 60, patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2"), \+ ckd(Patient_id, 2, 0.7).
-Value >= 90 :- Value >= 30, patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2"), \+ ckd(Patient_id, 3, 0.9), \+ Value >= 60.
-Value >= 90 :- Value >= 15, patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2"), \+ ckd(Patient_id, 4, 0.95), \+ Value >= 30, \+ Value >= 60.
-Value >= 90 :- patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2"), \+ Value >= 15, \+ ckd(Patient_id, 5, 0.99), \+ Value >= 30, \+ Value >= 60.
+typedlogic_constraint_violation :- Value >= 60, patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2"), \+ ckd(Patient_id, 2, 0.7), Value < 90.
+evidence(typedlogic_constraint_violation, false).
+typedlogic_constraint_violation :- Value >= 30, patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2"), \+ ckd(Patient_id, 3, 0.9), \+ Value >= 60, Value < 90.
+evidence(typedlogic_constraint_violation, false).
+typedlogic_constraint_violation :- Value >= 15, patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2"), \+ ckd(Patient_id, 4, 0.95), \+ Value >= 30, \+ Value >= 60, Value < 90.
+evidence(typedlogic_constraint_violation, false).
+typedlogic_constraint_violation :- patient(Patient_id, date(1970, 1, 1), "unknown"), labresult(Patient_id, date(2024, 1, 1), code("LOINC", "62238-1"), Value, "mL/min/1.73m\u00b2"), \+ Value >= 15, \+ ckd(Patient_id, 5, 0.99), \+ Value >= 30, \+ Value >= 60, Value < 90.
+evidence(typedlogic_constraint_violation, false).
 diabetest2(Patient_id, 1.0) :- diabetest2(Patient_id, _), hypertension(Patient_id, _).
 hypertension(Patient_id, 1.0) :- diabetest2(Patient_id, _), hypertension(Patient_id, _).
 phenotype(Patient_id) :- diabetest2(Patient_id, Confidence).

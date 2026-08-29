@@ -7,7 +7,7 @@ model, computable in polynomial time. It is the three-valued, skeptical
 counterpart to the (two-valued, credulous, possibly-multiple) stable-model
 semantics implemented by :class:`~typedlogic.integrations.solvers.clingo.ClingoSolver`.
 
-Three interchangeable **backends** are provided, selected with the ``backend``
+Four interchangeable **backends** are provided, selected with the ``backend``
 field:
 
 ``native`` (default)
@@ -17,8 +17,19 @@ field:
     reference backend used in the documentation. It is intended for teaching and
     modestly-sized programs: grounding is by naive instantiation, so it is not a
     substitute for an industrial grounder on large or deeply-recursive programs
-    (use the ``xsb`` backend for those). See ``docs/integrations/solvers/
-    wellfounded-scaling.md`` for the plan to make this backend scale.
+    (use the ``swi`` or ``xsb`` backend for those). See ``docs/integrations/
+    solvers/wellfounded-scaling.md`` for the plan to make this backend scale.
+
+``swi``
+    Drives `SWI-Prolog <https://www.swi-prolog.org/>`_ as an external subprocess.
+    SWI's tabling engine computes the well-founded semantics (developed in
+    collaboration with the XSB team), and this backend returns the full
+    three-valued model: each atom is classified via ``library(wfs)`` --
+    unconditional answers are ``true``, conditional (delayed) answers are
+    ``undefined``, and everything else is ``false``. It requires the ``swipl``
+    executable on ``PATH`` (``apt-get install swi-prolog`` /
+    ``brew install swi-prolog``), and it is exercised in CI, making it the
+    recommended external engine for large or deeply-recursive programs.
 
 ``problog``
     Delegates to `ProbLog <https://dtai.cs.kuleuven.be/problog/>`_, a mature
@@ -30,17 +41,21 @@ field:
 
 ``xsb`` (experimental, unverified)
     Drives `XSB Prolog <https://xsb.sourceforge.net/>`_, the reference SLG /
-    tabling engine for the well-founded semantics, as an external subprocess --
-    the backend to reach for on large or recursive programs. Like the other
-    external-binary integrations (Souffle, Prover9) it requires the ``xsb``
-    executable on ``PATH``; when it is absent a clear error is raised.
+    tabling engine for the well-founded semantics, as an external subprocess.
+    Like the other external-binary integrations (Souffle, Prover9) it requires
+    the ``xsb`` executable on ``PATH``; when it is absent a clear error is
+    raised.
 
     .. warning::
        This backend is **experimental and has not been executed against a live
        XSB install** -- it is written to XSB's documented ``call_tv/2`` API but
        is not exercised in CI (the tests skip when ``xsb`` is not on ``PATH``).
-       It emits a :class:`UserWarning` when used. Prefer the ``native`` backend
-       until the ``xsb`` path has been validated against real XSB output.
+       It emits a :class:`UserWarning` when used. Prefer the ``swi`` backend,
+       which is validated in CI, until the ``xsb`` path has been checked against
+       real XSB output.
+
+Both Prolog backends evaluate the *original* (non-ground) rules under tabling;
+the naive grounder is only used to enumerate the candidate atoms to report on.
 """
 
 import logging
@@ -50,7 +65,7 @@ import tempfile
 import warnings
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import ClassVar, Dict, FrozenSet, Iterator, List, Set, Tuple
+from typing import ClassVar, Dict, FrozenSet, Iterator, List, Optional, Set, Tuple
 
 from typedlogic import And, Forall, Implies, Term, Variable
 from typedlogic.datamodel import NegationAsFailure, NotInProfileError, Sentence
@@ -147,8 +162,11 @@ class WellFoundedSolver(Solver):
     """
 
     backend: str = field(default="native")
-    exec_name: str = field(default="xsb")
+    exec_name: Optional[str] = field(default=None)
     profile: ClassVar[Profile] = MixedProfile(WellFoundedSemantics(), SingleModelSemantics())
+
+    # Default executable per external backend; override with ``exec_name``.
+    DEFAULT_EXECUTABLES: ClassVar[Dict[str, str]] = {"xsb": "xsb", "swi": "swipl"}
 
     def check(self) -> Solution:
         """Report satisfiability; a well-founded model always exists, so this is always true."""
@@ -167,7 +185,9 @@ class WellFoundedSolver(Solver):
             return self._problog_model()
         if self.backend == "xsb":
             return self._xsb_model()
-        raise ValueError(f"Unknown WellFoundedSolver backend: {self.backend!r} (expected native, problog, or xsb)")
+        if self.backend == "swi":
+            return self._swi_model()
+        raise ValueError(f"Unknown WellFoundedSolver backend: {self.backend!r} (expected native, swi, problog, or xsb)")
 
     # -- grounding (shared by the native and problog backends) -------------
 
@@ -345,29 +365,80 @@ class WellFoundedSolver(Solver):
                 true_terms.append(self._atom_text_to_term(str(term), atom_terms))
         return WellFoundedModel(ground_terms=[t for t in true_terms if t is not None])
 
-    # -- xsb backend: the reference WFS engine as an external subprocess ----
+    # -- external Prolog backends (swi / xsb): tabled WFS evaluation --------
+
+    def _executable(self) -> str:
+        """Resolve and locate the external engine binary for the current backend."""
+        name = self.exec_name or self.DEFAULT_EXECUTABLES[self.backend]
+        exe = shutil.which(name)
+        if exe is None:
+            hint = (
+                "Install SWI-Prolog from https://www.swi-prolog.org/ (e.g. apt-get install swi-prolog)"
+                if self.backend == "swi"
+                else "Install XSB from https://xsb.sourceforge.net/"
+            )
+            raise FileNotFoundError(
+                f"The {self.backend!r} backend requires the executable {name!r} on PATH. "
+                f"{hint}, or use backend='native'."
+            )
+        return exe
+
+    def _swi_model(self) -> WellFoundedModel:
+        exe = self._executable()
+        _, atom_terms = self._ground_rules()
+        candidates = list(atom_terms.values())
+        config = self._tabled_prolog_config()
+        # After SLG completion, an atom is true iff it has an unconditional answer
+        # (library(wfs) reports its delay list as `true`), undefined iff it has only
+        # conditional answers, and false iff it has no answers at all.
+        driver = (
+            "wf_tv(G, TV) :-\n"
+            "    (   call_delays(G, true) -> TV = true\n"
+            "    ;   call_delays(G, _) -> TV = undefined\n"
+            "    ;   TV = false\n"
+            "    ).\n"
+            "main :-\n"
+            "    wf_candidates(Candidates),\n"
+            "    forall(member(I-G, Candidates),\n"
+            '           ( wf_tv(G, TV), format("WF ~w ~w~n", [I, TV]) )),\n'
+            "    halt.\n"
+        )
+        entries = ", ".join(f"{i}-({as_prolog(term, config)})" for i, term in enumerate(candidates))
+        candidate_list = f"wf_candidates([{entries}]).\n"
+        program = self._tabled_program([":- use_module(library(wfs))."]) + "\n" + candidate_list + driver
+        with tempfile.TemporaryDirectory() as d:
+            prog_path = Path(d) / "program.pl"
+            prog_path.write_text(program, encoding="utf-8")
+            res = subprocess.run(  # noqa: S603
+                [exe, "-q", "-g", "catch(main, E, (print_message(error, E), halt(2)))", str(prog_path)],
+                capture_output=True,
+                text=True,
+                stdin=subprocess.DEVNULL,
+            )
+        if res.returncode != 0:
+            raise RuntimeError(
+                f"SWI-Prolog evaluation failed (exit code {res.returncode}). "
+                f"stderr:\n{res.stderr.strip()}\nprogram:\n{program}"
+            )
+        return self._parse_tv_lines(res.stdout, candidates)
 
     def _xsb_model(self) -> WellFoundedModel:
         warnings.warn(
             "The 'xsb' WellFoundedSolver backend is experimental and has not been validated "
-            "against a live XSB install; verify its output or use backend='native'.",
+            "against a live XSB install; verify its output or use backend='swi' or 'native'.",
             UserWarning,
             stacklevel=2,
         )
-        exe = shutil.which(self.exec_name)
-        if exe is None:  # pragma: no cover - environment dependent
-            raise FileNotFoundError(
-                f"The 'xsb' backend requires the XSB Prolog executable {self.exec_name!r} on PATH. "
-                "Install XSB from https://xsb.sourceforge.net/ or use backend='native'."
-            )
-        rules, atom_terms = self._ground_rules()
+        exe = self._executable()
+        _, atom_terms = self._ground_rules()
         candidates = list(atom_terms.values())
-        program = self._prolog_program(query_atoms=None)
+        config = self._tabled_prolog_config()
+        program = self._tabled_program([":- import call_tv/2 from tables."])
         # XSB's call_tv/2 returns the well-founded truth value (true / undefined);
         # atoms that fail outright are false. We print "<index> <tv>" per candidate.
         goals = []
         for i, term in enumerate(candidates):
-            atom = as_prolog(term, self._prolog_config())
+            atom = as_prolog(term, config)
             goals.append(f"( call_tv(({atom}), TV{i}) -> writeln('WF {i} '(TV{i})) ; true )")
         driver = "main :- " + ", ".join(goals) + ", halt.\n" if goals else "main :- halt.\n"
         with tempfile.TemporaryDirectory() as d:
@@ -392,7 +463,57 @@ class WellFoundedSolver(Solver):
                 true_terms.append(term)
         return WellFoundedModel(ground_terms=true_terms, undefined_terms=undefined_terms)
 
-    # -- prolog rendering helpers (problog / xsb) --------------------------
+    @staticmethod
+    def _parse_tv_lines(stdout: str, candidates: List[Term]) -> WellFoundedModel:
+        """Parse ``WF <index> <truth-value>`` driver output into a three-valued model."""
+        true_terms: List[Term] = []
+        undefined_terms: List[Term] = []
+        for line in stdout.splitlines():
+            parts = line.strip().split()
+            if len(parts) != 3 or parts[0] != "WF":
+                continue
+            term = candidates[int(parts[1])]
+            if parts[2] == "true":
+                true_terms.append(term)
+            elif parts[2] == "undefined":
+                undefined_terms.append(term)
+        return WellFoundedModel(ground_terms=true_terms, undefined_terms=undefined_terms)
+
+    def _tabled_prolog_config(self) -> PrologConfig:
+        # `tnot/1` is well-founded (SLG) negation in both SWI and XSB; plain `\\+`
+        # is ordinary Prolog negation and would never yield `undefined`.
+        return PrologConfig(negation_as_failure_symbol="tnot", negation_symbol="tnot", double_quote_strings=False)
+
+    def _tabled_program(self, preamble: List[str]) -> str:
+        """
+        Render the (non-ground) rules as a tabled Prolog program.
+
+        Every predicate is declared tabled -- required for well-founded negation
+        (``tnot/1`` only applies to tabled goals) and so that atoms of clause-less
+        predicates fail cleanly instead of raising an existence error. ``as_prolog``
+        renders NAF as the prefix ``tnot (goal)``, so ``tnot`` is declared as a
+        prefix operator.
+        """
+        config = self._tabled_prolog_config()
+        lines = list(preamble)
+        lines.append(":- op(900, fy, tnot).")
+        for functor, arity in self._predicate_signatures():
+            lines.append(f":- table {functor}/{arity}.")
+        lines.extend(self._terminate(as_prolog(s, config)) for s in self._sentences())
+        return "\n".join(lines)
+
+    def _predicate_signatures(self) -> List[Tuple[str, int]]:
+        """All (rendered functor, arity) pairs appearing in the program, sorted."""
+        config = self._tabled_prolog_config()
+        signatures: Set[Tuple[str, int]] = set()
+        for sentence in self._sentences():
+            head, pos, naf = self._destructure(sentence)
+            for t in [head, *pos, *naf]:
+                functor = as_prolog(Term(t.predicate), config)
+                signatures.add((functor, len(t.values)))
+        return sorted(signatures)
+
+    # -- prolog rendering helpers (shared with problog) ---------------------
 
     def _prolog_config(self) -> PrologConfig:
         return PrologConfig(negation_as_failure_symbol=r"\+", negation_symbol=r"\+", double_quote_strings=False)

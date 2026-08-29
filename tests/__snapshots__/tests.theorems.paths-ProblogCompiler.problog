@@ -1,3 +1,5 @@
+path(_, _) :- fail.
+link(_, _) :- fail.
 path(X, Z) :- path(X, Y), path(Y, Z).
 path(Source, Target) :- link(Source, Target).
 query(path(Source, Target)).

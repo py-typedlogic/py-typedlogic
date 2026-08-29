@@ -1,3 +1,18 @@
+element(_) :- fail.
+classdefinition(_) :- fail.
+typedefinition(_) :- fail.
+enumdefinition(_) :- fail.
+slotdefinition(_) :- fail.
+schemadefinition(_) :- fail.
+treeroot(_) :- fail.
+classslot(_, _) :- fail.
+identifier(_, _) :- fail.
+multivalued(_) :- fail.
+required(_) :- fail.
+isa(_, _) :- fail.
+mixin(_, _) :- fail.
+attribute(_, _) :- fail.
+slotusage(_, _) :- fail.
 element(Id) :- classdefinition(Id).
 element(Id) :- typedefinition(Id).
 element(Id) :- enumdefinition(Id).
