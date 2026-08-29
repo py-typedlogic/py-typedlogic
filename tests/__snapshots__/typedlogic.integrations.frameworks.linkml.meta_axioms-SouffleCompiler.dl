@@ -1,4 +1,3 @@
-.type Elementid = symbol
 .decl Attribute(cls: symbol, slot_expression: symbol)
 .decl ClassDefinition(id: symbol)
 .decl ClassSlot(cls: symbol, slot: symbol)

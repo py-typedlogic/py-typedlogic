@@ -1,4 +1,3 @@
-.type Id = symbol
 .decl Path(source: symbol, target: symbol)
 .decl Link(source: symbol, target: symbol)
 Path(x, z) :- Path(x, y), Path(y, z).

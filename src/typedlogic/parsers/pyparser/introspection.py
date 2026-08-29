@@ -5,7 +5,7 @@ import types
 import typing
 from dataclasses import fields, Field
 from types import ModuleType
-from typing import Any, Dict, List, NewType, Tuple, Type, Union, Optional
+from typing import Any, Dict, List, NewType, Tuple, Type, Union, Optional, cast
 
 from typedlogic import Fact, FactMixin, Theory
 from typedlogic.datamodel import DefinedType, PredicateDefinition, SentenceGroupType
@@ -179,6 +179,39 @@ JSON_SCHEMA_TYPE_MAP = {
 }
 
 
+def newtype_annotations(cls: Type) -> Dict[str, str]:
+    """
+    Map attribute names to the name of their `NewType` annotation, where they have one.
+
+    `NewType` is the one Python construct that keeps a distinct *name* for a type at
+    runtime: a plain alias (``PersonID = str``) is erased before it can be introspected,
+    so only `NewType` can carry branding through to the logic.
+
+        >>> from typing import NewType
+        >>> from dataclasses import dataclass
+        >>> PersonID = NewType("PersonID", str)
+        >>> @dataclass
+        ... class Employs:
+        ...     employer: str
+        ...     employee: PersonID
+        >>> newtype_annotations(Employs)
+        {'employee': 'PersonID'}
+
+    Annotations inherited from base classes are included, with the most derived
+    declaration winning. Annotations that are not NewTypes -- including string annotations
+    left unevaluated by ``from __future__ import annotations`` -- are omitted, leaving the
+    caller's own type resolution in charge.
+
+    :param cls: The class to introspect
+    :return: Mapping of attribute name to `NewType` name
+    """
+    annotations: Dict[str, Any] = {}
+    for base in reversed(cls.__mro__):
+        annotations.update(getattr(base, "__annotations__", {}) or {})
+    # mypy models NewType as a special form rather than an object carrying __name__.
+    return {k: cast(Any, v).__name__ for k, v in annotations.items() if isinstance(v, NewType)}
+
+
 def introspect_attributes(cls: Type) -> dict[str, Any]:
     # https://stackoverflow.com/questions/69090253/how-to-iterate-over-attributes-of-dataclass-in-python
     try:
@@ -188,6 +221,9 @@ def introspect_attributes(cls: Type) -> dict[str, Any]:
             # TODO: conversion to JSON schema in Pydantic erases type information,
             # and will incorrectly assign strs to some Unions.
             schema = cls.model_json_schema()
+            # JSON schema resolves NewTypes down to their supertype, losing the branding;
+            # recover it from the annotations, which pydantic leaves intact.
+            newtypes = newtype_annotations(cls)
             r = {}
             for p, p_schema in schema["properties"].items():
 
@@ -196,6 +232,9 @@ def introspect_attributes(cls: Type) -> dict[str, Any]:
                         return [_parse_type(x) for x in s["anyOf"]]
                     return s.get("type", "str")
 
+                if p in newtypes:
+                    r[p] = newtypes[p]
+                    continue
                 t = _parse_type(p_schema)
                 if isinstance(t, str):
                     r[p] = JSON_SCHEMA_TYPE_MAP.get(t, t)

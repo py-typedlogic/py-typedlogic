@@ -41,7 +41,7 @@ predicate_definitions:
   predicate: PersonWithAddress
   arguments:
     name: str
-    zip_code: str
+    zip_code: ZipCode
   parents: []
 sentence_groups:
 - type: SentenceGroup
