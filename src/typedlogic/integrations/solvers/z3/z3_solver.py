@@ -10,11 +10,13 @@ import typedlogic.pybridge
 from typedlogic import FactMixin, Variable
 from typedlogic.builtins import NUMERIC_BUILTINS
 from typedlogic.datamodel import (
+    BooleanSentence,
     CardinalityConstraint,
     DefinedType,
     NegationAsFailure,
     NotInProfileError,
     PredicateDefinition,
+    QuantifiedSentence,
     Sentence,
     Term,
 )
@@ -39,7 +41,7 @@ SORT_MAP: Mapping[str, Type[SortRef]] = {
 }
 
 
-def contains_negation_as_failure(sentence: Any) -> bool:
+def contains_negation_as_failure(sentence: Sentence) -> bool:
     """
     Check whether a sentence contains a negation-as-failure operator anywhere in its tree.
 
@@ -50,7 +52,7 @@ def contains_negation_as_failure(sentence: Any) -> bool:
         >>> contains_negation_as_failure(Forall([x], Implies(NegationAsFailure(Term("q", x)), Term("p", x))))
         True
 
-    :param sentence: the sentence (or sub-expression) to inspect
+    :param sentence: the sentence to inspect
     :return: True if any subformula is a NegationAsFailure
     """
     if isinstance(sentence, NegationAsFailure):
@@ -58,11 +60,10 @@ def contains_negation_as_failure(sentence: Any) -> bool:
     if isinstance(sentence, CardinalityConstraint):
         parts = [sentence.template, sentence.conditions]
         return any(contains_negation_as_failure(part) for part in parts if part is not None)
-    if isinstance(sentence, (tlog.Forall, tlog.Exists)):
+    if isinstance(sentence, QuantifiedSentence):
         return contains_negation_as_failure(sentence.sentence)
-    operands = getattr(sentence, "operands", None)
-    if operands is not None:
-        return any(contains_negation_as_failure(op) for op in operands)
+    if isinstance(sentence, BooleanSentence):
+        return any(contains_negation_as_failure(op) for op in sentence.operands)
     return False
 
 
