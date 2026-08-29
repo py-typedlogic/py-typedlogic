@@ -2159,6 +2159,11 @@ theory and asks the selected solver to prove each quoted obligation.</p>
   -d, --data-input-format TEXT    Format for ground terms
   --name TEXT                     Only prove obligations from a named goal or
                                   lemma group. Repeat for multiple names.
+  --clark-completion / --no-clark-completion
+                                  Apply Clark completion so negation-as-
+                                  failure rules get a classical rendering (for
+                                  classical solvers such as z3 or prover9).
+                                  [default: no-clark-completion]
   --dump-program, --show-program  Print the solver-specific generated program
                                   before solving.
   [DATA_FILES]...
