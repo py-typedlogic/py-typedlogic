@@ -11,6 +11,10 @@
         <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/concepts/types/">
       
       
+        <link rel="prev" href="../datamodel/">
+      
+      
+        <link rel="next" href="../metatheory/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -18,7 +22,7 @@
     
     
       
-        <title>Typing in typed-logic - py-typedlogic</title>
+        <title>Types - py-typedlogic</title>
       
     
     
@@ -114,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Typing in typed-logic
+              Types
             
           </span>
         </div>
@@ -668,17 +672,19 @@
       
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -693,7 +699,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Concepts
@@ -734,6 +740,118 @@
   
   <span class="md-ellipsis">
     Data Model
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Types
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Types
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-python-surface" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. The Python surface
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-theorys-own-type-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. The theory's own type declarations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-optional-metatheory" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. The optional metatheory
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../metatheory/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Reasoning about theories
     
   </span>
   
@@ -1980,9 +2098,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pytheories" class="md-nav__link">
+  <a href="#1-the-python-surface" class="md-nav__link">
     <span class="md-ellipsis">
-      Pytheories
+      1. The Python surface
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-theorys-own-type-declarations" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. The theory's own type declarations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-optional-metatheory" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. The optional metatheory
     </span>
   </a>
   
@@ -2008,14 +2144,50 @@
 
 
 <h1 id="typing-in-typed-logic">Typing in typed-logic</h1>
-<p>Broadly speaking, logics can be broken down into <em>untyped</em> logics, and <em>typed</em> (also known as <em>sorted</em> logics).</p>
-<p>The data model for typedlogic follows the typed logic model</p>
-<h2 id="pytheories">Pytheories</h2>
+<p>Broadly speaking, logics can be broken down into <em>untyped</em> logics, and <em>typed</em> (also known as <em>sorted</em>) logics.</p>
+<p>The data model for typedlogic follows the typed logic model. Typing operates at three
+levels, which are worth keeping distinct.</p>
+<h2 id="1-the-python-surface">1. The Python surface</h2>
 <p>Any typed-logic theory written in Python follows the same rules as the rest of Python.
 It must of course be a valid Python program, without any syntax or runtime errors.</p>
 <p>Additionally, you can avail yourself of standard Python tooling to help keep your code clean
 and bug-free. This includes type checking, whether via a tool such as <code>mypy</code>, or simply
-via your IDE.</p>
+via your IDE. This is <em>prescriptive</em> typing: you declare, and code that disagrees is
+rejected.</p>
+<h2 id="2-the-theorys-own-type-declarations">2. The theory's own type declarations</h2>
+<p>A <a class="autorefs autorefs-internal" title="Theory
+
+
+  
+      dataclass
+  " href="../datamodel/#typedlogic.datamodel.Theory"><code>Theory</code></a> carries <code>type_definitions</code> mapping a name to a
+base type or a union of them, and each <code>PredicateDefinition</code> declares a type per argument.
+This is a light, Souffle-style layer, and it is what typed targets consume.</p>
+<p>Note that Python erases plain aliases before they can be introspected:</p>
+<div class="highlight"><pre><span></span><code><span class="n">PersonID</span> <span class="o">=</span> <span class="nb">str</span>          <span class="c1"># erased; never reaches the logic</span>
+<span class="n">PersonID</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s2">&quot;PersonID&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>   <span class="c1"># survives, and brands the argument</span>
+</code></pre></div>
+<p>Only <code>NewType</code> (or an explicit <code>type</code> declaration in <a href="../../conversion/parsers/tlog/">TLog</a>)
+carries a distinct type <em>name</em> through to the compiled output. With <code>NewType</code>, a branded
+type compiles to a Souffle subtype:</p>
+<div class="highlight"><pre><span></span><code>.type PersonID &lt;: symbol
+.decl parent(parent: PersonID, child: PersonID)
+</code></pre></div>
+<p>The <code>&lt;:</code> matters. Souffle's <code>.type PersonID = symbol</code> defines an <em>alias</em>, under which
+<code>PersonID</code> and <code>OrgID</code> remain mutually assignable; <code>&lt;:</code> defines a genuine subtype that
+Souffle enforces.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A branded type over <code>number</code> that takes part in arithmetic needs alias semantics,
+because Souffle types the result of an arithmetic functor as <code>number</code>, which is not a
+subtype of the branded type. Use <code>SouffleCompiler(strict_subtypes=False)</code> in that case.</p>
+</div>
+<h2 id="3-the-optional-metatheory">3. The optional metatheory</h2>
+<p>Declarations alone cannot express properties that span a rule — that one variable is used
+at two incompatible argument positions, or that a rule set recurses through negation. The
+optional <a href="../metatheory/">metatheory</a> covers these by reifying a theory into ground facts
+and reasoning over them with ordinary axioms, so type rules are themselves logic and can
+be extended by the user.</p>
 
 
 

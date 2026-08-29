@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/examples/tlog-cli/">
+        <link rel="canonical" href="https://py-typedlogic.github.io/py-typedlogic/concepts/metatheory/">
       
       
-        <link rel="prev" href="../sql-compiler/">
+        <link rel="prev" href="../types/">
       
       
-        <link rel="next" href="./">
+        <link rel="next" href="../decorators/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>TLog CLI workflow - py-typedlogic</title>
+        <title>Reasoning about theories - py-typedlogic</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tlog-cli-examples" class="md-skip">
+        <a href="#reasoning-about-theories" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              TLog CLI workflow
+              Reasoning about theories
             
           </span>
         </div>
@@ -432,19 +432,17 @@
       
   
   
-    
   
   
-  
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -459,7 +457,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Gallery
@@ -473,7 +471,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../examples/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -495,7 +493,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../synbio-design-checks/" class="md-nav__link">
+      <a href="../../examples/synbio-design-checks/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -517,7 +515,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sql-compiler/" class="md-nav__link">
+      <a href="../../examples/sql-compiler/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -536,31 +534,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    TLog CLI workflow
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../examples/tlog-cli/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -570,89 +547,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#convert-tlog-to-other-formats" class="md-nav__link">
-    <span class="md-ellipsis">
-      Convert TLog To Other Formats
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#convert-to-tlog" class="md-nav__link">
-    <span class="md-ellipsis">
-      Convert To TLog
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#literate-markdown" class="md-nav__link">
-    <span class="md-ellipsis">
-      Literate Markdown
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#run-inference-with-clingo" class="md-nav__link">
-    <span class="md-ellipsis">
-      Run Inference With Clingo
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#show-multiple-worlds" class="md-nav__link">
-    <span class="md-ellipsis">
-      Show Multiple Worlds
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#run-quoted-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      Run Quoted Tests
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#prove-lemmas" class="md-nav__link">
-    <span class="md-ellipsis">
-      Prove Lemmas
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -665,7 +559,7 @@
   
   
     <li class="md-nav__item">
-      <a href="./" class="md-nav__link">
+      <a href="../../examples/tlog-cli/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -778,17 +672,19 @@
       
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -803,7 +699,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Concepts
@@ -817,7 +713,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -839,7 +735,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/datamodel/" class="md-nav__link">
+      <a href="../datamodel/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -861,7 +757,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/types/" class="md-nav__link">
+      <a href="../types/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -880,10 +776,31 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../concepts/metatheory/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Reasoning about theories
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -893,6 +810,98 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-first-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      A first check
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-three-pieces" class="md-nav__link">
+    <span class="md-ellipsis">
+      The three pieces
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-it-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      What it checks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-your-own-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adding your own rules
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deliberate-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deliberate limits
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#negation-p-not-not-p" class="md-nav__link">
+    <span class="md-ellipsis">
+      Negation: -P not not P
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solver-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      Solver support
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relation-to-mypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Relation to mypy
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -905,7 +914,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/decorators/" class="md-nav__link">
+      <a href="../decorators/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -927,7 +936,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/generators/" class="md-nav__link">
+      <a href="../generators/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -949,7 +958,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/solvers/" class="md-nav__link">
+      <a href="../solvers/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -971,7 +980,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/models/" class="md-nav__link">
+      <a href="../models/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -993,7 +1002,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/benchmarks.md" class="md-nav__link">
+      <a href="../benchmarks.md" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -2134,63 +2143,72 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#convert-tlog-to-other-formats" class="md-nav__link">
+  <a href="#a-first-check" class="md-nav__link">
     <span class="md-ellipsis">
-      Convert TLog To Other Formats
+      A first check
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#convert-to-tlog" class="md-nav__link">
+  <a href="#the-three-pieces" class="md-nav__link">
     <span class="md-ellipsis">
-      Convert To TLog
+      The three pieces
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#literate-markdown" class="md-nav__link">
+  <a href="#what-it-checks" class="md-nav__link">
     <span class="md-ellipsis">
-      Literate Markdown
+      What it checks
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#run-inference-with-clingo" class="md-nav__link">
+  <a href="#adding-your-own-rules" class="md-nav__link">
     <span class="md-ellipsis">
-      Run Inference With Clingo
+      Adding your own rules
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#show-multiple-worlds" class="md-nav__link">
+  <a href="#deliberate-limits" class="md-nav__link">
     <span class="md-ellipsis">
-      Show Multiple Worlds
+      Deliberate limits
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#run-quoted-tests" class="md-nav__link">
+  <a href="#negation-p-not-not-p" class="md-nav__link">
     <span class="md-ellipsis">
-      Run Quoted Tests
+      Negation: -P not not P
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#prove-lemmas" class="md-nav__link">
+  <a href="#solver-support" class="md-nav__link">
     <span class="md-ellipsis">
-      Prove Lemmas
+      Solver support
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relation-to-mypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Relation to mypy
     </span>
   </a>
   
@@ -2215,140 +2233,137 @@
   
 
 
-<h1 id="tlog-cli-examples">TLog CLI Examples</h1>
-<p>TLog is a parser and compiler format, not a separate CLI mode. Use the existing
-generic commands:</p>
+<h1 id="reasoning-about-theories">Reasoning about theories</h1>
+<p>The core data model carries <em>light syntactic types</em>: an argument declaration names a base
+type or a defined type, and that is the whole of it. This is roughly the Souffle level of
+expressiveness, and it is deliberate — the core stays close to Common Logic.</p>
+<p>The optional metatheory adds a layer with a second-order flavour without changing the
+core or introducing a second formalism. It works by reifying a theory into ordinary
+ground facts, so that rules <em>about</em> types are ordinary first-order rules, run by whichever
+solver you already use.</p>
+<div class="highlight"><pre><span></span><code>theory  ──reflection──▶  ground facts  ──┐
+                                          ├──▶ solver ──▶ diagnostics
+      metatheory axioms (@axiom) ─────────┘
+</code></pre></div>
+<h2 id="a-first-check">A first check</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Theory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.datamodel</span><span class="w"> </span><span class="kn">import</span> <span class="n">And</span><span class="p">,</span> <span class="n">Forall</span><span class="p">,</span> <span class="n">Implies</span><span class="p">,</span> <span class="n">PredicateDefinition</span><span class="p">,</span> <span class="n">Term</span><span class="p">,</span> <span class="n">Variable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typedlogic.theories.metatheory</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_theory</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="n">theory</span> <span class="o">=</span> <span class="n">Theory</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;branded&quot;</span><span class="p">,</span>
+    <span class="n">type_definitions</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;PersonID&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">,</span> <span class="s2">&quot;OrgID&quot;</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">},</span>
+    <span class="n">predicate_definitions</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">PredicateDefinition</span><span class="p">(</span><span class="s2">&quot;Person&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;PersonID&quot;</span><span class="p">}),</span>
+        <span class="n">PredicateDefinition</span><span class="p">(</span><span class="s2">&quot;Org&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;OrgID&quot;</span><span class="p">}),</span>
+        <span class="n">PredicateDefinition</span><span class="p">(</span><span class="s2">&quot;Flag&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;PersonID&quot;</span><span class="p">}),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<span class="n">theory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Forall</span><span class="p">([</span><span class="n">x</span><span class="p">],</span> <span class="n">Implies</span><span class="p">(</span><span class="n">And</span><span class="p">(</span><span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Person&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Org&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">)),</span> <span class="n">Term</span><span class="p">(</span><span class="s2">&quot;Flag&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">))))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">check_theory</span><span class="p">(</span><span class="n">theory</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Sentences: variable &#39;x&#39; is used at positions declared &#39;OrgID&#39; and &#39;PersonID&#39;, which are not compatible
+</code></pre></div>
+<p><code>PersonID</code> and <code>OrgID</code> are both strings, so no signature is individually wrong. The
+problem is that one variable spans both — a property of the rule, not of any declaration,
+and exactly the kind of thing a per-argument type annotation cannot express.</p>
+<h2 id="the-three-pieces">The three pieces</h2>
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>typedlogic.theories.metatheory.vocabulary</code></td>
+<td>Predicates describing a theory: signatures, type definitions, rule structure</td>
+</tr>
+<tr>
+<td><code>typedlogic.theories.metatheory.reflection</code></td>
+<td>Turns a <code>Theory</code> into ground facts of that vocabulary</td>
+</tr>
+<tr>
+<td><code>typedlogic.theories.metatheory.axioms</code></td>
+<td>The rules deriving subtyping, variable types, clashes, and stratification</td>
+</tr>
+</tbody>
+</table>
+<p>The axioms are plain <code>@axiom</code> functions. Nothing about them is privileged:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@axiom</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">type_clash</span><span class="p">(</span><span class="n">rule</span><span class="p">:</span> <span class="n">RuleID</span><span class="p">,</span> <span class="n">var</span><span class="p">:</span> <span class="n">VarName</span><span class="p">,</span> <span class="n">left</span><span class="p">:</span> <span class="n">TypeName</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">TypeName</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">VarType</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">left</span><span class="p">)</span> <span class="ow">and</span> <span class="n">VarType</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span> <span class="ow">and</span> <span class="o">-</span><span class="n">Compatible</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">TypeClash</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="what-it-checks">What it checks</h2>
 <ul>
-<li><code>convert</code> for one input theory to one output format</li>
-<li><code>dump</code> for combining and exporting inputs</li>
-<li><code>solve</code> for satisfiability, materialization, and answer-set enumeration</li>
-<li><code>test</code> for quoted <code>test_case(...)</code> metadata</li>
-<li><code>prove</code> for quoted goals and lemmas</li>
+<li><strong><code>TypeClash</code></strong> — a variable used at two positions whose declared types are incompatible.</li>
+<li><strong><code>ConstantClash</code></strong> — a literal at a position whose declared type cannot hold it.</li>
+<li><strong><code>UndeclaredPredicate</code></strong> — a rule referencing a predicate the theory never declares.</li>
+<li><strong><code>UnstratifiedNegation</code></strong> — a predicate on a recursive cycle passing through a negation.</li>
 </ul>
-<h2 id="convert-tlog-to-other-formats">Convert TLog To Other Formats</h2>
-<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>convert<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span>-t<span class="w"> </span>prolog
+<p>The last one is the useful demonstration that this is not only about sorts. Stratification
+is a property of the rule graph, and it falls out of the same machinery:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@axiom</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">unstratified_negation</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">PredicateName</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">DependsNegatively</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">UnstratifiedNegation</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 </code></pre></div>
-<p>Example output:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">%% Predicate Definitions</span>
-<span class="c1">% parent(parent: PersonID, child: PersonID)</span>
-<span class="c1">% ancestor(ancestor: PersonID, descendant: PersonID)</span>
+<h2 id="adding-your-own-rules">Adding your own rules</h2>
+<p>Because the check <em>is</em> a solve, adding a rule adds a check. Write an <code>@axiom</code> over the
+same vocabulary and pass the module in:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">UnbrandedArgument</span><span class="p">(</span><span class="n">Fact</span><span class="p">):</span>
+    <span class="n">predicate</span><span class="p">:</span> <span class="n">PredicateName</span>
+    <span class="n">position</span><span class="p">:</span> <span class="nb">int</span>
 
-<span class="nf">parent</span><span class="p">(</span><span class="s s-Atom">&#39;Alice&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;Bob&#39;</span><span class="p">).</span>
-<span class="nf">parent</span><span class="p">(</span><span class="s s-Atom">&#39;Bob&#39;</span><span class="p">,</span> <span class="s s-Atom">&#39;Charlie&#39;</span><span class="p">).</span>
-<span class="nf">ancestor</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">)</span> <span class="p">:-</span> <span class="nf">parent</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">).</span>
-<span class="nf">ancestor</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Z</span><span class="p">)</span> <span class="p">:-</span> <span class="nf">ancestor</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">),</span> <span class="nf">ancestor</span><span class="p">(</span><span class="nv">Y</span><span class="p">,</span> <span class="nv">Z</span><span class="p">).</span>
+<span class="nd">@axiom</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">flag_unbranded_string_arguments</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">PredicateName</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An argument declared as a bare string carries no brand to enforce.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">ArgType</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;str&quot;</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">UnbrandedArgument</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
 </code></pre></div>
-<p>Other compiler targets work the same way:</p>
-<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>convert<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span>-t<span class="w"> </span>yaml
-typedlogic<span class="w"> </span>convert<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span>-t<span class="w"> </span>fol
-typedlogic<span class="w"> </span>convert<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span>-t<span class="w"> </span>souffle
+<div class="highlight"><pre><span></span><code><span class="n">check_theory</span><span class="p">(</span><span class="n">theory</span><span class="p">,</span> <span class="n">extra_axioms</span><span class="o">=</span><span class="p">[</span><span class="n">house_rules</span><span class="p">],</span> <span class="n">extra_diagnostics</span><span class="o">=</span><span class="p">[</span><span class="n">UnbrandedArgument</span><span class="p">])</span>
 </code></pre></div>
-<h2 id="convert-to-tlog">Convert To TLog</h2>
-<p>Use <code>-t tlog</code> with any parser-supported input:</p>
-<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>convert<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span>-t<span class="w"> </span>tlog
+<p>No change to the checker is needed. This is the practical payoff of keeping types as data
+rather than as a fixed pass: project-specific conventions become enforceable without
+forking the framework.</p>
+<h2 id="deliberate-limits">Deliberate limits</h2>
+<p><strong>Descriptive, not prescriptive.</strong> The checker reports what it can derive; it does not
+require you to annotate anything. An unannotated theory is analyzed as far as its
+declarations allow, and no further.</p>
+<p><strong>Opaque types constrain nothing.</strong> A type that does not resolve to a base type — an enum
+class, or a name left over from an annotation the Python introspector could not reduce,
+such as <code>Optional</code> — is treated as compatible with everything. Reporting an
+incompatibility there would be reporting the checker's own ignorance.</p>
+<p><strong>Reflection is partial.</strong> Constructs the vocabulary cannot describe — arithmetic
+subterms, builtin comparisons, sentences with no Horn form — are skipped rather than
+approximated. A clean result is therefore bounded by what was skipped, which
+<code>CheckResult.skipped</code> makes inspectable:</p>
+<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">check_theory</span><span class="p">(</span><span class="n">theory</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">ok</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">skipped</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;clean, but </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">skipped</span><span class="p">)</span><span class="si">}</span><span class="s2"> sentences were not analyzed&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Example output:</p>
-<div class="highlight"><pre><span></span><code>type PersonID: str.
-
-pred parent(parent: PersonID, child: PersonID).
-pred ancestor(ancestor: PersonID, descendant: PersonID).
-
-parent(&#39;Alice&#39;, &#39;Bob&#39;).
-parent(&#39;Bob&#39;, &#39;Charlie&#39;).
-/// Direct parent links are ancestor links.
-all x, y | ancestor(x, y) :- parent(x, y).
-/// Ancestor links are transitive.
-all x, y, z | ancestor(x, z) :- (ancestor(x, y) &amp; ancestor(y, z)).
-</code></pre></div>
-<h2 id="literate-markdown">Literate Markdown</h2>
-<p>Files ending in <code>.tlog.md</code> are parsed as Markdown wrappers around fenced TLog
-blocks:</p>
-<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>dump<span class="w"> </span>docs/examples/tlog/literate-rules.tlog.md<span class="w"> </span>-t<span class="w"> </span>prolog
-</code></pre></div>
-<p>The prose is ignored. Fenced <code>tlog</code>, <code>typedlogic</code>, or <code>logic</code> blocks are parsed
-in order.</p>
-<h2 id="run-inference-with-clingo">Run Inference With Clingo</h2>
-<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>solve<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--solver<span class="w"> </span>clingo<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--show<span class="w"> </span>ancestor<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--max-models<span class="w"> </span><span class="m">1</span>
-</code></pre></div>
-<p>Example output:</p>
-<div class="highlight"><pre><span></span><code>Satisfiable: True
-
-=== Model 1 ===
-ancestor(Alice, Bob)
-ancestor(Bob, Charlie)
-ancestor(Alice, Charlie)
-
-Total models shown: 1
-</code></pre></div>
-<p><code>--show ancestor</code> filters materialized output to selected predicates. It is a
-generic <code>solve</code> option and works for other syntaxes too.</p>
-<p>To inspect the generated solver-specific program before solving, use
-<code>--dump-program</code>:</p>
-<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>solve<span class="w"> </span>docs/examples/tlog/ancestor.tlog<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--solver<span class="w"> </span>clingo<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--dump-program
-</code></pre></div>
-<h2 id="show-multiple-worlds">Show Multiple Worlds</h2>
-<p>Answer-set solvers such as Clingo can produce multiple models:</p>
-<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>solve<span class="w"> </span>docs/examples/tlog/worlds.tlog<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--solver<span class="w"> </span>clingo<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--show<span class="w"> </span>selected<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--max-models<span class="w"> </span><span class="m">2</span>
-</code></pre></div>
-<p>Example output:</p>
-<div class="highlight"><pre><span></span><code>Satisfiable: True
-
-=== Model 1 ===
-selected(coffee)
-
-=== Model 2 ===
-selected(tea)
-
-Total models shown: 2
-</code></pre></div>
-<p>The input syntax is still just TLog; the multiple-world behavior comes from the
-chosen solver.</p>
-<h2 id="run-quoted-tests">Run Quoted Tests</h2>
-<p>TLog files can include test cases as quoted metadata:</p>
-<div class="highlight"><pre><span></span><code>pred human(name: str).
-pred mortal(name: str).
-
-mortal(x) :- human(x).
-
-test_case(
-  &quot;socrates_mortality&quot;,
-  given(that(human(&quot;socrates&quot;))),
-  expect(that(satisfiable() &amp; mortal(&quot;socrates&quot;) &amp; not philosopher(&quot;socrates&quot;)))
-).
-</code></pre></div>
-<p><code>solve</code> ignores test cases, goals, and lemmas. Run validation explicitly with
-<code>test</code>; it checks test cases and also proves goals and lemmas:</p>
-<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span><span class="nb">test</span><span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>clingo
-typedlogic<span class="w"> </span><span class="nb">test</span><span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>clingo<span class="w"> </span>--test<span class="w"> </span>socrates_mortality
-</code></pre></div>
-<p>Example output:</p>
-<div class="highlight"><pre><span></span><code>PASS socrates_mortality
-1 test case(s), 0 failed, 0 unknown
-</code></pre></div>
-<p>Use <code>--dump-program</code> to print the generated solver program for each test fixture
-before expectations are checked. Use <code>--no-proofs</code> when you only want test-case
-fixtures and expectations.</p>
-<h2 id="prove-lemmas">Prove Lemmas</h2>
-<p>Lemmas are quoted proof obligations, not axioms:</p>
-<div class="highlight"><pre><span></span><code>lemma(&quot;socrates_is_mortal&quot;, that(mortal(&quot;socrates&quot;))).
-</code></pre></div>
-<p><code>test</code> proves proof obligations by default. Use <code>prove</code> for proof-only runs:</p>
-<div class="highlight"><pre><span></span><code>typedlogic<span class="w"> </span>prove<span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>z3
-typedlogic<span class="w"> </span>prove<span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--target<span class="w"> </span>lemmas
-typedlogic<span class="w"> </span>prove<span class="w"> </span>docs/examples/tlog/mortality.tlog<span class="w"> </span>--solver<span class="w"> </span>z3<span class="w"> </span>--name<span class="w"> </span>socrates_is_mortal
-</code></pre></div>
-<p>Example output:</p>
-<div class="highlight"><pre><span></span><code>PASS lemma socrates_is_mortal: mortal(&#39;socrates&#39;)
-1 obligation(s), 0 failed, 0 unknown
-</code></pre></div>
+<h2 id="negation-p-not-not-p">Negation: <code>-P</code> not <code>not P</code></h2>
+<p>Inside an <code>@axiom</code>, <code>-P(...)</code> is negation as failure and <code>not P(...)</code> is classical
+negation. They are not interchangeable. A classically negated body literal is lifted into
+a head disjunction on the way to the solver, so an answer-set solver may satisfy the rule
+by choosing the negated atom instead of your intended conclusion — a check written with
+<code>not</code> reports whichever findings the chosen model happens to contain. Diagnostics need
+"cannot be derived", which is what <code>-</code> means.</p>
+<h2 id="solver-support">Solver support</h2>
+<p>The default is Clingo, which supports the stratified negation the axioms use. The
+negation is stratified by construction: <code>TypeClash</code> negates <code>Compatible</code>, which never
+depends on <code>TypeClash</code>.</p>
+<h2 id="relation-to-mypy">Relation to mypy</h2>
+<p>The Python surface is checked by mypy, which is <em>prescriptive</em>: you declare, and code that
+disagrees is rejected. The metatheory is <em>descriptive</em> and complements it, because the
+properties above are invisible to mypy — it cannot see that a variable spans two
+incompatible argument positions of a rule, nor that a rule set recurses through negation.
+The two layers check different things, and neither subsumes the other.</p>
 
 
 
