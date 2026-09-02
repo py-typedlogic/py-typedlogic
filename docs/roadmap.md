@@ -17,6 +17,13 @@ evaluation, stratified SCC decomposition): see
 
 - OWL, using py-horned-owl
 - LinkML
+- Maud (metabolic models): a proof-of-concept exporter now writes a
+  [Maud](https://github.com/biosustain/Maud) input folder from typedlogic facts
+  (see [Maud integration](integrations/frameworks/maud/index.md)). typedlogic
+  supplies the symbolic/structural layer (network, stoichiometry, regulation,
+  validation); the continuous Bayesian inference stays with Maud/Stan. Future
+  work: richer validation axioms, and round-tripping existing Maud models back
+  into typedlogic facts.
 
 ## Transformations
 

@@ -123,6 +123,7 @@ nav:
       - Pydantic: integrations/frameworks/pydantic
       - SQLModel: integrations/frameworks/sqlmodel.md
       - RDF: integrations/frameworks/rdf/index.md
+      - Maud (metabolic models): integrations/frameworks/maud/index.md
   - Command Line: cli.md
   - FAQ: faq.md
   - Roadmap: roadmap.md
