@@ -9,6 +9,19 @@ This page provides various examples to illustrate the usage of TypedLogic in dif
 - [TLog CLI examples](examples/tlog-cli.md): author `.tlog` and literate `.tlog.md` files, convert them, run Clingo, filter materialized predicates, and inspect multiple worlds.
 - [TLog notebook](examples/tlog-cli.ipynb): notebook form of the same CLI-oriented workflow.
 
+## Temporal Intervals with Numeric Anchoring
+
+[`tests/theorems/allen_intervals.py`](https://github.com/py-typedlogic/py-typedlogic/blob/main/tests/theorems/allen_intervals.py)
+encodes Allen's interval calculus over developmental stages. Intervals are related through
+named endpoint *points*; every relation (the 13 Allen atoms and RO's compound relations such
+as `starts during`) is a conjunction of order constraints between points; and a point may
+carry an integer position. Where positions are known, comparison decides the relation; where
+they are not, point-order transitivity does the qualitative reasoning. The composition table
+is never asserted and is recovered as a theorem, and two assertions about the same pair
+intersect (e.g. `starts during` and `ends during` give `during`), which OWL property chains
+cannot do. Runs on Clingo and Souffle for materialisation and on Z3 for proofs and
+inconsistency detection. See `tests/test_integrations/test_allen_intervals.py`.
+
 ## Basic Family Relationships
 
 ```python
