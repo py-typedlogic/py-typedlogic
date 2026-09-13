@@ -138,7 +138,18 @@ class Z3Solver(Solver):
         return self._wrapped_solver
 
     def check(self) -> Solution:
+        """
+        Check satisfiability of the loaded theory.
+
+        Z3 can give up (``unknown``) on theories with quantifiers over infinite sorts;
+        that is reported as ``satisfiable=None`` rather than being conflated with
+        ``unsat``, so callers can tell "inconsistent" from "undecided".
+
+        :return: a Solution whose ``satisfiable`` is True, False, or None (unknown)
+        """
         result = self.wrapped_solver.check()
+        if result == z3.unknown:
+            return Solution(satisfiable=None)
         return Solution(satisfiable=result == z3.sat)
 
     def models(self) -> Iterator[Model]:

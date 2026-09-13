@@ -526,3 +526,16 @@ def test_clark_completion_locally_stratified_recursion_through_negation():
     # both members of root are satisfied, so root is not violated and is satisfied
     assert solver.prove(Term("viol", "root")) is False
     assert solver.prove(Term("sat", "root")) is True
+
+
+def test_check_reports_unknown_as_none():
+    """Z3's ``unknown`` must not be conflated with ``unsat``: it surfaces as ``satisfiable=None``."""
+    import z3
+
+    class _GivesUp:
+        def check(self):
+            return z3.unknown
+
+    solver = Z3Solver()
+    solver._wrapped_solver = _GivesUp()  # type: ignore[assignment]
+    assert solver.check().satisfiable is None
