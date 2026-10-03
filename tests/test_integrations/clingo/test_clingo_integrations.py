@@ -337,3 +337,60 @@ def test_unsat_atomic(num_things: int, consequent: Optional[Union[Term, bool]]):
     print(solver.dump())
     is_sat = num_things == 0
     assert solver.check().satisfiable == is_sat
+
+
+NAF_SOURCE = '''
+from dataclasses import dataclass
+from typedlogic import Fact, axiom, not_provable
+
+
+@dataclass(frozen=True)
+class Bird(Fact):
+    """A bird."""
+
+    x: str
+
+
+@dataclass(frozen=True)
+class Abnormal(Fact):
+    """An abnormal bird, e.g. a penguin."""
+
+    x: str
+
+
+@dataclass(frozen=True)
+class Flies(Fact):
+    """Holds of birds that fly."""
+
+    x: str
+
+
+@axiom
+def default_flies(x: str):
+    """Birds fly unless known to be abnormal."""
+    if Bird(x) and not_provable(Abnormal(x)):
+        assert Flies(x)
+'''
+
+
+def test_not_provable_renders_as_negated_literal(tmp_path):
+    """``not_provable(..)`` in axiom source must reach clingo as a negated literal.
+
+    Regression: the call form was parsed as a positive ``not_provable(..)`` term, so the
+    rule silently never fired (clingo warns the atom occurs in no rule head).
+    """
+    path = tmp_path / "naf_theory.py"
+    path.write_text(NAF_SOURCE)
+    theory = PythonParser().parse(path)
+
+    solver = ClingoSolver()
+    solver.add(theory)
+    program = solver.dump()
+    assert "not abnormal(X)" in program
+    assert "not_provable" not in program
+
+    solver.add(Term("Bird", "tweety"))
+    solver.add(Term("Bird", "pingu"))
+    solver.add(Term("Abnormal", "pingu"))
+    flies = {t.values[0] for t in solver.model().iter_retrieve("Flies")}
+    assert flies == {"tweety"}

@@ -172,6 +172,15 @@ def parse_sentence(node: Union[ast.AST, List[ast.stmt]]) -> Sentence:
             return Implied(left, right)
         else:
             raise AssertionError
+    elif isinstance(node, ast.Call) and (
+        isinstance(node.func, ast.Name) and node.func.id in ["not_provable", "NegationAsFailure"]
+    ):
+        # Negation-as-failure written in call form, e.g. ``not_provable(P(x))``. Without this
+        # branch it falls through to the generic call handler below and is parsed as a positive
+        # term ``not_provable(p(x))``, which backends emit verbatim instead of as a negated literal.
+        if len(node.args) != 1:
+            raise ValueError(f"Unsupported number of arguments for {node.func.id}: {len(node.args)}")
+        return NegationAsFailure(parse_sentence(node.args[0]))
     elif isinstance(node, ast.Call):
         predicate = get_func_name(node.func)
         if predicate in ["all", "any"]:

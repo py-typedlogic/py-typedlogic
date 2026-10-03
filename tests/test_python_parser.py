@@ -1,7 +1,7 @@
 import ast
 
 import pytest
-from typedlogic import And, Implies, Not, Or, Variable
+from typedlogic import And, Implies, NegationAsFailure, Not, Or, Variable
 from typedlogic.datamodel import Exists, Forall, Iff, Term
 from typedlogic.parsers.pyparser.python_ast_utils import parse_function_def_to_sentence_group, parse_sentence
 
@@ -30,6 +30,13 @@ AGENT_TERM2 = Term("Agent", {"name": X, "age": Y})
         ("(~Person(name=x))", Not(PERSON_TERM)),
         ("((~Person(name=x)))", Not(PERSON_TERM)),
         ("not Person(name=x)", Not(PERSON_TERM)),
+        ("-Person(name=x)", NegationAsFailure(PERSON_TERM)),
+        ("not_provable(Person(name=x))", NegationAsFailure(PERSON_TERM)),
+        ("NegationAsFailure(Person(name=x))", NegationAsFailure(PERSON_TERM)),
+        (
+            "Person(name=x) & not_provable(Agent(name=x))",
+            And(PERSON_TERM, NegationAsFailure(AGENT_TERM)),
+        ),
         ("PersonAge(x, y)", Term("PersonAge", X, Y)),
         ("PersonAge(x, 5)", Term("PersonAge", X, 5)),
         ("x == y", Term("eq", X, Y)),

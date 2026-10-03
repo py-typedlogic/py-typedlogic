@@ -18,7 +18,7 @@ import typedlogic.integrations.frameworks.linkml.meta as linkml_meta
 import typedlogic.integrations.frameworks.linkml.meta_axioms as linkml_meta_axioms
 from tests import SNAPSHOTS_DIR
 from tests.theorems import barbers, unary_predicates
-from typedlogic import And, Forall, Implies, Not, PredicateDefinition, Term, Theory, Variable
+from typedlogic import And, Forall, Implies, NegationAsFailure, Not, PredicateDefinition, Term, Theory, Variable
 from typedlogic.compilers.clif_compiler import ClifCompiler
 from typedlogic.compilers.fol_compiler import FOLCompiler
 from typedlogic.compilers.prolog_compiler import PrologCompiler
@@ -279,3 +279,44 @@ def test_souffle_compiler_newtype_branding_survives_python_introspection():
     compiled = SouffleCompiler().compile(theory)
     assert ".type ZipCode <: symbol" in compiled
     assert ".decl PersonWithAddress(name: symbol, zip_code: ZipCode)" in compiled
+
+
+@pytest.mark.parametrize(
+    "compiler_class,expected",
+    [
+        (PrologCompiler, r"\+ (abnormal(X))"),
+        (SouffleCompiler, "! (Abnormal(x))"),
+        (ProbLogCompiler, r"\+ abnormal(X)"),
+    ],
+    # These ids deliberately avoid the substring "souffle": tests/conftest.py skips any test
+    # whose nodeid contains it, on the assumption that the souffle binary is needed. These
+    # cases only exercise the compiler, so they should run everywhere.
+    ids=["prolog", "datalog", "problog"],
+)
+def test_negation_as_failure_rendering(compiler_class, expected):
+    """Each Datalog/Prolog dialect must render negation-as-failure in its own syntax.
+
+    Regression: Souffle spells stratified negation ``!``, but only ``negation_symbol`` was
+    configured, so NAF fell back to the Prolog default and emitted a program Souffle cannot parse.
+    """
+    x = Variable("x")
+    theory = Theory()
+    for pred in ("Bird", "Abnormal", "Flies"):
+        theory.predicate_definitions.append(PredicateDefinition(pred, {"x": "str"}))
+    theory.add(Implies(And(Term("Bird", x), NegationAsFailure(Term("Abnormal", x))), Term("Flies", x)))
+
+    program = compiler_class().compile(theory)
+    assert expected in program
+    assert "not_provable" not in program
+
+
+def test_negation_as_failure_not_in_classical_profile():
+    """CLIF is classical FOL and must reject negation-as-failure rather than silently accept it."""
+    x = Variable("x")
+    theory = Theory()
+    for pred in ("Bird", "Abnormal", "Flies"):
+        theory.predicate_definitions.append(PredicateDefinition(pred, {"x": "str"}))
+    theory.add(Implies(And(Term("Bird", x), NegationAsFailure(Term("Abnormal", x))), Term("Flies", x)))
+
+    with pytest.raises(NotInProfileError):
+        ClifCompiler().compile(theory)
