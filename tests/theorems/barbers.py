@@ -22,7 +22,10 @@ class Shaves(BaseModel, Fact):
 @axiom
 def shaves(shaver: NameType, customer: NameType):
     """
-    All persons are mortal
+    A barber shaves everyone who does not shave themselves.
+
+    Uses classical negation (``~``): the paradox is a classical-FOL one, and under
+    negation-as-failure it would not arise.
     """
-    if Barber(name=shaver) and Person(name=customer) and not Shaves(shaver=customer, customer=customer):
+    if Barber(name=shaver) and Person(name=customer) and ~Shaves(shaver=customer, customer=customer):
         assert Shaves(shaver=shaver, customer=customer)

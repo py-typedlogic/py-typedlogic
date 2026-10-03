@@ -42,7 +42,7 @@
     ((SentenceGroup 
         (name "shaves") 
         (group_type "axiom") 
-        (docstring "All persons are mortal") 
+        (docstring "A barber shaves everyone who does not shave themselves.\n\nUses classical negation (``~``): the paradox is a classical-FOL one, and under\nnegation-as-failure it would not arise.") 
         (sentences 
           ((Forall 
               ((Variable "shaver" "NameType") 

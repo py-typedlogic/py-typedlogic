@@ -11,13 +11,13 @@ Two consequences follow. Type rules are *extensible* -- a project can add its ow
 is not limited to sorts: :class:`~typedlogic.theories.metatheory.vocabulary.UnstratifiedNegation`
 below is a property of the rule graph, derived by the same means.
 
-Negation in the rules below is written ``-P(...)``, the Python surface's spelling of
-negation as failure. This is not interchangeable with ``not P(...)``, which is classical
-negation: a classically negated body literal is lifted into a head disjunction on the way
-to a solver, and an answer-set solver may then satisfy the rule by choosing the negated
-atom instead of the intended conclusion -- so a check written with ``not`` reports
-whichever findings the chosen model happens to contain. Every diagnostic here needs
-"cannot be derived", which is what ``-`` means.
+Negation in the rules below is negation as failure, written ``not P(...)`` (``-P(...)``
+is a legacy spelling of the same thing). This is not interchangeable with ``~P(...)``,
+which is classical negation: a classically negated body literal is lifted into a head
+disjunction on the way to a solver, and an answer-set solver may then satisfy the rule by
+choosing the negated atom instead of the intended conclusion -- so a check written with
+``~`` reports whichever findings the chosen model happens to contain. Every diagnostic
+here needs "cannot be derived", which is what ``not`` means.
 
 The negation is also stratified: `TypeClash` negates `Compatible`, which never depends on
 `TypeClash`, so a solver with stratified negation (for example Clingo) accepts the program
@@ -125,7 +125,7 @@ def opaque_types_constrain_nothing(left: TypeName, right: TypeName):
     a type it cannot resolve to a base type would appear to conflict with every other
     type, turning every enum and every unreduced annotation into a false positive.
     """
-    if TypeExists(left) and TypeExists(right) and -TypeGrounded(left):
+    if TypeExists(left) and TypeExists(right) and not TypeGrounded(left):
         assert Compatible(left, right)
         assert Compatible(right, left)
 
@@ -147,28 +147,28 @@ def type_clash(rule: RuleID, var: VarName, left: TypeName, right: TypeName):
     This is the check that a Souffle-style declaration alone cannot make: it is about a
     variable's occurrences *across* the literals of a rule, not about one signature.
     """
-    if VarType(rule, var, left) and VarType(rule, var, right) and -Compatible(left, right):
+    if VarType(rule, var, left) and VarType(rule, var, right) and not Compatible(left, right):
         assert TypeClash(rule, var, left, right)
 
 
 @axiom
 def constant_clash(rule: RuleID, p: PredicateName, i: int, declared: TypeName, actual: TypeName):
     """A literal must be compatible with the type declared at the position it fills."""
-    if ConstantPosition(rule, actual, p, i) and ArgType(p, i, declared) and -Compatible(actual, declared):
+    if ConstantPosition(rule, actual, p, i) and ArgType(p, i, declared) and not Compatible(actual, declared):
         assert ConstantClash(rule, p, i, declared, actual)
 
 
 @axiom
 def undeclared_head_predicate(rule: RuleID, p: PredicateName):
     """A rule deriving an undeclared predicate escapes every signature check."""
-    if HeadPredicate(rule, p) and -PredicateDeclared(p):
+    if HeadPredicate(rule, p) and not PredicateDeclared(p):
         assert UndeclaredPredicate(rule, p)
 
 
 @axiom
 def undeclared_body_predicate(rule: RuleID, p: PredicateName):
     """A rule reading an undeclared predicate is reading a relation nothing populates."""
-    if BodyPredicate(rule, p) and -PredicateDeclared(p):
+    if BodyPredicate(rule, p) and not PredicateDeclared(p):
         assert UndeclaredPredicate(rule, p)
 
 

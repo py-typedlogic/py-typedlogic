@@ -10,7 +10,6 @@ from typedlogic.datamodel import (
     Forall,
     Iff,
     Implied,
-    Not,
     Or,
     Sentence,
     SentenceGroup,
@@ -137,8 +136,12 @@ def parse_sentence(node: Union[ast.AST, List[ast.stmt]]) -> Sentence:
         if isinstance(node.op, ast.Invert):
             return ~parse_sentence(node.operand)
         elif isinstance(node.op, ast.Not):
-            return Not(parse_sentence(node.operand))
+            # `not X` is negation-as-failure, matching the .tlog grammar, ASP-Core-2 and
+            # Prolog's historical `not`. Classical/strong negation is `~X`.
+            return NegationAsFailure(parse_sentence(node.operand))
         elif isinstance(node.op, ast.USub):
+            # `-X` is a legacy spelling of negation-as-failure, kept for compatibility.
+            # Prefer `not X`; note that `-` means *strong* negation in ASP.
             return NegationAsFailure(parse_sentence(node.operand))
         else:
             raise ValueError(f"Unsupported unary operator: {type(node.op)}")
