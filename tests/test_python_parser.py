@@ -26,10 +26,10 @@ AGENT_TERM2 = Term("Agent", {"name": X, "age": Y})
         ("assert Person(name=x)", PERSON_TERM),
         ("Person(name='x')", Term("Person", {"name": "x"})),
         ("Person(age=55)", Term("Person", {"age": 55})),
-        ("~Person(name=x)", Not(PERSON_TERM)),
+        ("~Person(name=x)", Not(PERSON_TERM)),  # classical / strong negation
         ("(~Person(name=x))", Not(PERSON_TERM)),
         ("((~Person(name=x)))", Not(PERSON_TERM)),
-        ("not Person(name=x)", Not(PERSON_TERM)),
+        ("not Person(name=x)", NegationAsFailure(PERSON_TERM)),
         ("-Person(name=x)", NegationAsFailure(PERSON_TERM)),
         ("not_provable(Person(name=x))", NegationAsFailure(PERSON_TERM)),
         ("NegationAsFailure(Person(name=x))", NegationAsFailure(PERSON_TERM)),
@@ -51,6 +51,10 @@ AGENT_TERM2 = Term("Agent", {"name": X, "age": Y})
         ("any(Agent(name=x) for x in gen1(Name) if Person(name=x))", Exists([X], Implies(PERSON_TERM, AGENT_TERM))),
         (
             "not any(Agent(name=x) for x in gen1(Name) if Person(name=x))",
+            NegationAsFailure(Exists([X], Implies(PERSON_TERM, AGENT_TERM))),
+        ),
+        (
+            "~any(Agent(name=x) for x in gen1(Name) if Person(name=x))",
             Not(Exists([X], Implies(PERSON_TERM, AGENT_TERM))),
         ),
         (
@@ -145,7 +149,7 @@ func_args_example = """
 NameType = Union[str, int]
 def all_persons_are_mortal_axiom(x: NameType):
     if not Mortal(name=x):
-        assert not Person(name=x)
+        assert ~Person(name=x)
 """
 
 
@@ -164,8 +168,10 @@ def test_func_args():
     assert vars[0].domain == "NameType"
     sentence = qs.sentence
     assert isinstance(sentence, Implies)
-    assert isinstance(sentence.antecedent, Not)
+    # body `not` is negation-as-failure; the head keeps classical `~`
+    assert isinstance(sentence.antecedent, NegationAsFailure)
     assert isinstance(sentence.antecedent.operands[0], Term)
+    assert isinstance(sentence.consequent, Not)
 
 
 axiom_func_complex = """

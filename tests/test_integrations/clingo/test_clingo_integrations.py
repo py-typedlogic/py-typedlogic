@@ -394,3 +394,71 @@ def test_not_provable_renders_as_negated_literal(tmp_path):
     solver.add(Term("Abnormal", "pingu"))
     flies = {t.values[0] for t in solver.model().iter_retrieve("Flies")}
     assert flies == {"tweety"}
+
+
+NEGATION_CONVENTION_SOURCE = '''
+from dataclasses import dataclass
+from typedlogic import Fact, axiom
+
+
+@dataclass(frozen=True)
+class Bird(Fact):
+    """A bird."""
+
+    x: str
+
+
+@dataclass(frozen=True)
+class Abnormal(Fact):
+    """An abnormal bird, e.g. a penguin."""
+
+    x: str
+
+
+@dataclass(frozen=True)
+class Flies(Fact):
+    """Holds of birds that fly."""
+
+    x: str
+
+
+@axiom
+def default_flies(x: str):
+    """Birds fly unless known to be abnormal. `not` is negation-as-failure."""
+    if Bird(x) and not Abnormal(x):
+        assert Flies(x)
+'''
+
+
+def test_keyword_not_is_negation_as_failure(tmp_path):
+    """`not X` in an axiom body is NAF, matching the .tlog grammar, ASP and Prolog.
+
+    It previously produced classical negation (the same node as ``~X``), which clingo
+    reaches by contraposing the literal into a head disjunction.
+    """
+    path = tmp_path / "birds.py"
+    path.write_text(NEGATION_CONVENTION_SOURCE)
+    solver = ClingoSolver()
+    solver.add(PythonParser().parse(path))
+
+    program = solver.dump()
+    assert "not abnormal(X)" in program
+    # the classical reading would lift the negated literal into the head instead
+    assert "abnormal(X); flies(X)" not in program
+
+    solver.add(Term("Bird", "tweety"))
+    solver.add(Term("Bird", "opus"))
+    solver.add(Term("Abnormal", "opus"))
+    assert {t.values[0] for t in solver.model().iter_retrieve("Flies")} == {"tweety"}
+
+
+def test_tilde_remains_classical_negation(tmp_path):
+    """`~X` keeps the classical reading, so the two spellings stay distinguishable."""
+    path = tmp_path / "birds_classical.py"
+    path.write_text(NEGATION_CONVENTION_SOURCE.replace("not Abnormal(x)", "~Abnormal(x)"))
+    solver = ClingoSolver()
+    solver.add(PythonParser().parse(path))
+
+    program = solver.dump()
+    assert "abnormal(X); flies(X)" in program
+    assert "not abnormal(X)" not in program

@@ -127,14 +127,17 @@ if result.ok and result.skipped:
     print(f"clean, but {len(result.skipped)} sentences were not analyzed")
 ```
 
-## Negation: `-P` not `not P`
+## Negation: `not P` not `~P`
 
-Inside an `@axiom`, `-P(...)` is negation as failure and `not P(...)` is classical
+Inside an `@axiom`, `not P(...)` is negation as failure and `~P(...)` is classical
 negation. They are not interchangeable. A classically negated body literal is lifted into
 a head disjunction on the way to the solver, so an answer-set solver may satisfy the rule
 by choosing the negated atom instead of your intended conclusion — a check written with
-`not` reports whichever findings the chosen model happens to contain. Diagnostics need
-"cannot be derived", which is what `-` means.
+`~` reports whichever findings the chosen model happens to contain. Diagnostics need
+"cannot be derived", which is what `not` means.
+
+`-P(...)` is a legacy spelling of `not P(...)` and still works. Prefer `not`: it matches
+the `.tlog` syntax, ASP and Prolog, whereas `-` denotes *strong* negation in ASP.
 
 ## Solver support
 

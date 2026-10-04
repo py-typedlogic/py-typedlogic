@@ -328,6 +328,6 @@ def test_pathway_in_liver():
 @goal
 def test_fbp1_knockout_blocks_pathway():
     """Test that knocking out FBP1 blocks the pathway when FBP2 is not expressed"""
-    if SimulationContext(tissue_id=TissueId.KIDNEY) and InactiveGene(id=GeneId.FBP1) and not PathwayActive():
+    if SimulationContext(tissue_id=TissueId.KIDNEY) and InactiveGene(id=GeneId.FBP1) and ~PathwayActive():
         return True
     return False

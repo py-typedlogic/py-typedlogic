@@ -43,7 +43,7 @@ def ancestor_transitivity_axiom() -> bool:
 # TODO:
 @axiom
 def acyclicity_axiom(x: TreeNodeType, y: TreeNodeType):
-    assert not (AncestorOf(ancestor=x, descendant=y) and AncestorOf(ancestor=y, descendant=x))
+    assert ~(AncestorOf(ancestor=x, descendant=y) and AncestorOf(ancestor=y, descendant=x))
 
 
 @goal

@@ -38,4 +38,4 @@ def transitivity(x: ID, y: ID, z: ID, d1: int, d2: int):
 @axiom
 def reflexivity():
     """No paths back to self"""
-    assert not any(Path(source=x, target=x, hops=d) for x, d in gen2(ID, int))
+    assert ~any(Path(source=x, target=x, hops=d) for x, d in gen2(ID, int))
