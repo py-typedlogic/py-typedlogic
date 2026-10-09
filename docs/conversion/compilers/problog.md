@@ -15,6 +15,8 @@ sentences. For a closed-world body condition, use `NegationAsFailure`, rather th
 assuming classical negation and negation as failure are interchangeable.
 Head variables, including variables in function terms, must appear in positive
 ordinary body atoms; comparisons alone do not establish this binding.
+Anonymous head arguments (`None` or `Variable("_")`) are rejected, including
+inside function terms.
 
 Strict mode is opt-in to preserve existing general FOL conversion callers.
 The default deterministic conversion remains best-effort and can omit or rewrite
@@ -60,7 +62,9 @@ program = ProbLogCompiler().compile(theory, strict=True, include_queries=False)
 ```
 
 Alternatives are `(probability, atom)` pairs with distinct atomic heads and a
-total probability at most one. A total below one leaves the remaining probability
+total probability at most one. Heads must also remain distinct after Prolog
+rendering (which lowercases predicates), and cannot contain anonymous arguments.
+A total below one leaves the remaining probability
 for none of the alternatives. An optional `body=...` supplies a Horn-rule body;
 each grounding is a separate categorical choice. For example:
 

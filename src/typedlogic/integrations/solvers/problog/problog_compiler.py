@@ -270,8 +270,21 @@ class ProbLogCompiler(Compiler):
         cls._validate_head_grounding(sentence.antecedent, head)
 
     @classmethod
+    def _validate_no_anonymous_head_arguments(cls, value: Any) -> None:
+        """Reject arguments that render as fresh, unbound anonymous variables."""
+        if value is None or (isinstance(value, Variable) and value.name == "_"):
+            raise NotInProfileError("Anonymous arguments are not allowed in ProbLog heads")
+        if isinstance(value, Term):
+            for argument in value.values:
+                cls._validate_no_anonymous_head_arguments(argument)
+        elif isinstance(value, (list, tuple)):
+            for argument in value:
+                cls._validate_no_anonymous_head_arguments(argument)
+
+    @classmethod
     def _validate_head_grounding(cls, body: Sentence, head: Term) -> None:
         """Include nested head variables in the strict range-restriction check."""
+        cls._validate_no_anonymous_head_arguments(head)
 
         def variables(value: Any) -> set[str]:
             if isinstance(value, Variable):
@@ -319,6 +332,7 @@ class ProbLogCompiler(Compiler):
         cls._validate_body(body)
         probabilities = []
         rendered_heads = []
+        rendered_atoms: set[str] = set()
         atoms = []
         for alternative in alternatives:
             if not isinstance(alternative, (list, tuple)) or len(alternative) != 2:
@@ -328,6 +342,7 @@ class ProbLogCompiler(Compiler):
             if isinstance(atom, Extension):
                 atom = atom.to_model_object()
             cls._validate_atom(atom)
+            cls._validate_no_anonymous_head_arguments(atom)
             if atom in atoms:
                 raise ValueError(f"Duplicate annotated-disjunction head: {atom}")
             atoms.append(atom)
@@ -335,8 +350,12 @@ class ProbLogCompiler(Compiler):
                 cls._validate_head_grounding(body, atom)
             # Rendering the corresponding rule validates head-variable grounding.
             as_prolog(Implies(body, atom), config=config, strict=True)
+            rendered_atom = as_prolog(atom, config=config, strict=True)
+            if rendered_atom in rendered_atoms:
+                raise ValueError(f"Annotated-disjunction heads collide after rendering: {rendered_atom}")
+            rendered_atoms.add(rendered_atom)
             probabilities.append(probability)
-            rendered_heads.append(f"{probability}::{as_prolog(atom, config=config, strict=True)}")
+            rendered_heads.append(f"{probability}::{rendered_atom}")
         if math.fsum(probabilities) > 1:
             raise ValueError("Annotated-disjunction probabilities must sum to at most 1")
         heads = "; ".join(rendered_heads)

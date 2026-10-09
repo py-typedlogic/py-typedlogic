@@ -99,6 +99,37 @@ def test_strict_path_never_silently_drops_or_reinterprets_sentence(sentence: Any
         compile_sentences(Term("Valid"), sentence)
 
 
+@pytest.mark.parametrize("argument", [None, Term("F", None), Variable("_")])
+@pytest.mark.parametrize("weighted", [False, True])
+@pytest.mark.parametrize("conditional", [False, True])
+def test_strict_heads_reject_anonymous_arguments(argument: Any, weighted: bool, conditional: bool) -> None:
+    """None and anonymous variables cannot bypass strict head grounding checks."""
+    sentence = Term("P", argument)
+    if conditional:
+        sentence = Implies(Term("Body", argument), sentence)
+    if weighted:
+        sentence = Probability(0.5, That(sentence))
+    with pytest.raises(NotInProfileError, match="Anonymous arguments"):
+        compile_sentences(sentence)
+
+
+@pytest.mark.parametrize("strict", [False, True])
+@pytest.mark.parametrize("argument", [None, Term("F", None), Variable("_")])
+def test_disjunction_heads_reject_anonymous_arguments(argument: Any, strict: bool) -> None:
+    """A new categorical choice must never introduce an unbound anonymous head."""
+    choice = AnnotatedDisjunction(((0.4, Term("A", argument)), (0.6, Term("B"))), body=Term("Body", argument))
+    with pytest.raises(NotInProfileError, match="Anonymous arguments"):
+        compile_sentences(choice, strict=strict)
+
+
+@pytest.mark.parametrize("strict", [False, True])
+@pytest.mark.parametrize("heads", [(Term("A"), Term("a")), (Term("P", Term("F", "x")), Term("P", Term("f", "x")))])
+def test_disjunction_rejects_rendered_head_collisions(heads: Any, strict: bool) -> None:
+    """Distinct typed predicates must remain distinct after Prolog lowercasing."""
+    with pytest.raises(ValueError, match="collide after rendering"):
+        compile_sentences(AnnotatedDisjunction(((0.4, heads[0]), (0.6, heads[1]))), strict=strict)
+
+
 def test_strict_option_is_opt_in() -> None:
     """Retain legacy deterministic conversion until callers opt into the subset."""
     sentence = Or(Term("P"), Term("Q"))
