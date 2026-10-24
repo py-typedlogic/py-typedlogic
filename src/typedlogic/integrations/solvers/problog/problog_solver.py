@@ -69,10 +69,11 @@ class ProbLogSolver(Solver):
     exec_name: str = field(default="problog")
     profile: ClassVar[Profile] = MixedProfile(Probabilistic(), AllowsComparisonTerms(), MultipleModelSemantics())
     problog_args: Optional[Dict[str, Any]] = None
+    strict_compilation: bool = False
 
     def models(self, **kwargs) -> Iterator[ProbabilisticModel]:
         compiler = ProbLogCompiler()
-        program = compiler.compile(self.base_theory)
+        program = compiler.compile(self.base_theory, strict=self.strict_compilation)
         result = self._evaluate_program(program, **kwargs)
         m = ProbabilisticModel()
         for term, prob in result.items():
@@ -125,7 +126,7 @@ class ProbLogSolver(Solver):
 
     def dump(self) -> str:
         compiler = ProbLogCompiler()
-        return compiler.compile(self.base_theory)
+        return compiler.compile(self.base_theory, strict=self.strict_compilation)
 
     def prove(self, sentence: Sentence) -> Optional[bool]:
         """Prove Datalog-safe implications by checking counterexample probability."""
@@ -138,7 +139,7 @@ class ProbLogSolver(Solver):
         except NotInProfileError:
             return None
 
-        program = compiler.compile(self.base_theory, include_queries=False)
+        program = compiler.compile(self.base_theory, include_queries=False, strict=self.strict_compilation)
         proof_clauses: list[str] = []
         prolog_config = compiler.prolog_config()
         try:
