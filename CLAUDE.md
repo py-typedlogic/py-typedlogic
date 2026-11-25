@@ -7,6 +7,7 @@
 - **Run single test**: `uv run pytest tests/path/to/test_file.py::test_function_name`
 - **Run tests by pattern**: `uv run pytest -k "pattern"`
 - **Type check**: `uv run mypy src tests`
+- **Doctests**: `uv run pytest --doctest-modules src` or `make doctest`
 - **Lint**: `uv run ruff check src/ tests/ --exclude tests/input --exclude tests/output`
 - **Format code**: `uv run ruff format src/ tests/ --exclude tests/input --exclude tests/output`
 - **Fix linting**: `make format` (ruff format + `ruff check --fix`)
@@ -20,7 +21,7 @@
 - snake_case for functions/variables, PascalCase for classes
 - Docstrings required (checked by docstr-coverage)
 - Import order: stdlib → third-party → local
-- Follow PEP 8 conventions with Black formatting
+- Follow PEP 8 conventions; format with `ruff format` (see `make format`)
 - Max complexity: 10 (McCabe)
 - Prefer explicit error handling with specific exceptions
 

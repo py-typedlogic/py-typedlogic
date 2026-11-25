@@ -1,6 +1,7 @@
 # py-typedlogic: Pythonic logic for your data models.
 
-Define logical predicates directly in Python as Pydantic, dataclasses, SQLModel, or plain python objects:
+Define logical predicates directly in Python as Pydantic, dataclasses, SQLModel, or plain python objects
+(classes with annotated attributes or an annotated `__init__`):
 
 ```python
 # links.py
@@ -29,7 +30,7 @@ You can use this to create objects (ground terms, in logic terms) using normal P
 ```python
 links = []
 for source, target in [('CA', 'OR'), ('OR', 'WA')]:
-   links.append(link)
+   links.append(Link(source=source, target=target))
 ```
 
 Define logical *constraints* or *rules* using Python syntax:
@@ -53,13 +54,13 @@ def transitivity(x: ID, y: ID, z: ID, d1: int, d2: int):
 Use a solver to infer new facts:
 
 ```python
-from typedlogic.registry import get_solver
+import links
 from links import Link
+from typedlogic.registry import get_solver
 
 solver = get_solver("clingo")
-solver.load(links) 
-links = [Link(source='CA', target='OR'), Link(source='OR', target='WA')]
-for link in links:
+solver.load(links)
+for link in [Link(source='CA', target='OR'), Link(source='OR', target='WA')]:
     solver.add(link)
 model = solver.model()
 for fact in model.iter_retrieve("Path"):
@@ -69,9 +70,9 @@ for fact in model.iter_retrieve("Path"):
 prints:
 
 ```
-Path(source='CA', target='OR')
-Path(source='OR', target='WA')
-Path(source='CA', target='WA')
+Path(CA, OR, 1)
+Path(OR, WA, 1)
+Path(CA, WA, 2)
 ```
 
 ## Key Features

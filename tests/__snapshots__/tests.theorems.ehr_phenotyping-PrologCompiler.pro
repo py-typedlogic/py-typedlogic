@@ -4,11 +4,11 @@
 % Encounter(id: str, patient_id: str, date: date)
 % Diagnosis(encounter_id: str, code: Code)
 % LabResult(patient_id: str, date: date, code: Code, value: float, unit: str)
-% Medication(patient_id: str, date: date, code: Code, dosage: Optional)
+% Medication(patient_id: str, date: date, code: Code, dosage: str)
 % Phenotype(patient_id: str)
 % DiabetesT2(patient_id: str, confidence: float)
 % Hypertension(patient_id: str, confidence: float)
-% CKD(patient_id: str, stage: Optional, confidence: float)
+% CKD(patient_id: str, stage: int, confidence: float)
 % IsA(child: Code, parent: Code)
 
 %% diabetes_from_diagnosis

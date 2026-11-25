@@ -2,7 +2,7 @@
   (name "tests.theorems.optional_example") 
   (constants 
     (dict 
-      ((Optional "typing.Optional")))) 
+      ())) 
   (type_definitions 
     (dict 
       ((Person "str")))) 
@@ -13,8 +13,8 @@
           (dict 
             ((subject "str") 
               (object "str") 
-              (start_year "Optional") 
-              (end_year "Optional")))) 
+              (start_year "int") 
+              (end_year "int")))) 
         (description null) 
         (metadata null) 
         (parents 

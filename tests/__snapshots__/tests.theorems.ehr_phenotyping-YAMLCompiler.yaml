@@ -44,7 +44,7 @@ predicate_definitions:
     patient_id: str
     date: date
     code: Code
-    dosage: Optional
+    dosage: str
   parents: []
 - type: PredicateDefinition
   predicate: Phenotype
@@ -69,7 +69,7 @@ predicate_definitions:
   predicate: CKD
   arguments:
     patient_id: str
-    stage: Optional
+    stage: int
     confidence: float
   parents:
   - Phenotype
@@ -879,7 +879,7 @@ sentence_groups:
       - type: Variable
         arguments:
         - stage
-        - Optional
+        - int
       - type: Variable
         arguments:
         - confidence

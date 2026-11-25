@@ -133,16 +133,6 @@ def predicate(cls=None, *, exclude_from_hash=None, **kwargs):
         cls.__hash__ = custom_hash
         cls.__eq__ = custom_eq
 
-        original_init = cls.__init__
-
-        @wraps(original_init)
-        def custom_init(*args, **kwargs):
-            instance = original_init(*args, **kwargs)
-            print(f"Predicate class created: {instance}")
-            return instance
-
-        cls.__init__ = custom_init
-
         return cls
 
     return wrapper if cls is None else wrapper(cls)

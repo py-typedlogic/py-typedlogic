@@ -2,10 +2,7 @@
   (name "tests.theorems.ehr_phenotyping") 
   (constants 
     (dict 
-      ((Optional "typing.Optional") 
-        (List "typing.List") 
-        (Dict "typing.Dict") 
-        (Set "typing.Set")))) 
+      ())) 
   (type_definitions 
     (dict 
       ())) 
@@ -77,7 +74,7 @@
             ((patient_id "str") 
               (date "date") 
               (code "Code") 
-              (dosage "Optional")))) 
+              (dosage "str")))) 
         (description null) 
         (metadata null) 
         (parents 
@@ -120,7 +117,7 @@
         (arguments 
           (dict 
             ((patient_id "str") 
-              (stage "Optional") 
+              (stage "int") 
               (confidence "float")))) 
         (description null) 
         (metadata null) 
@@ -427,7 +424,7 @@
         (sentences 
           ((Forall 
               ((Variable "patient_id" "str") 
-                (Variable "stage" "Optional") 
+                (Variable "stage" "int") 
                 (Variable "confidence" "float")) 
               (Implies 
                 (CKD 

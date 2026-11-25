@@ -2,8 +2,7 @@
   (name "tests.theorems.mortals") 
   (constants 
     (dict 
-      ((List "typing.List") 
-        (Iterator "typing.Iterator")))) 
+      ())) 
   (type_definitions 
     (dict 
       ((NameType "str") 

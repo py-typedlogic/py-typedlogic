@@ -10,5 +10,5 @@
   (forall ((patient_id str)) (if (and (DiabetesT2 patient_id null) (Hypertension patient_id null)) (and (DiabetesT2 patient_id 1.0) (Hypertension patient_id 1.0))))
   (forall ((patient_id str) (confidence float)) (if (DiabetesT2 patient_id confidence) (Phenotype patient_id)))
   (forall ((patient_id str) (confidence float)) (if (Hypertension patient_id confidence) (Phenotype patient_id)))
-  (forall ((patient_id str) (stage Optional) (confidence float)) (if (CKD patient_id stage confidence) (Phenotype patient_id)))
+  (forall ((patient_id str) (stage int) (confidence float)) (if (CKD patient_id stage confidence) (Phenotype patient_id)))
 )

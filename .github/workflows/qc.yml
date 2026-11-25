@@ -31,5 +31,11 @@ jobs:
       - name: Check common spelling errors
         run: uv run codespell src/ tests/ -S tests/input/,tests/output/
 
+      - name: Type check with mypy
+        run: uv run mypy src tests
+
       - name: Test with pytest and generate coverage file
         run: uv run pytest -v --durations=10
+
+      - name: Run doctests
+        run: uv run pytest --doctest-modules src

@@ -3651,6 +3651,7 @@ source = { editable = "." }
 dependencies = [
     { name = "importlib-metadata" },
     { name = "lark" },
+    { name = "pyyaml" },
     { name = "typer" },
 ]
 
@@ -3736,6 +3737,7 @@ requires-dist = [
     { name = "py-horned-owl", marker = "extra == 'owl'", specifier = ">=1.0.0,!=1.0.1" },
     { name = "pydantic", marker = "extra == 'pydantic'" },
     { name = "pyprover", marker = "extra == 'pyprover'" },
+    { name = "pyyaml" },
     { name = "rdflib", marker = "extra == 'rdflib'" },
     { name = "snakelog", marker = "extra == 'snakelog'" },
     { name = "sympy", marker = "extra == 'sympy'" },

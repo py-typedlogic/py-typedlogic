@@ -1,3 +1,3 @@
 ∀[x:NameType]. Person(x) → Mortal(x)
 ∀[x:TreeNodeType y:TreeNodeType z:TreeNodeType]. AncestorOf(x, z) ∧ AncestorOf(z, y) → AncestorOf(x, y)
-∀[x:TreeNodeType y:TreeNodeType]. ¬AncestorOf(x, y) ∧ AncestorOf(y, x)
+∀[x:TreeNodeType y:TreeNodeType]. ¬(AncestorOf(x, y) ∧ AncestorOf(y, x))

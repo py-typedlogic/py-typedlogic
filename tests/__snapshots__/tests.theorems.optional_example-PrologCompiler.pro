@@ -1,5 +1,5 @@
 %% Predicate Definitions
-% FriendOf(subject: str, object: str, start_year: Optional, end_year: Optional)
+% FriendOf(subject: str, object: str, start_year: int, end_year: int)
 % FriendPath(subject: str, object: str)
 
 %% tr
