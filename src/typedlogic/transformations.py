@@ -56,8 +56,6 @@ def sentences_from_predicate_hierarchy(theory: Theory) -> List[Sentence]:
     :return: New implication sentences (excluding any already present in the theory)
     """
     new_sentences: List[Sentence] = []
-    if not theory.predicate_definitions:
-        raise ValueError("Theory must have predicate definitions")
     for pd in theory.predicate_definitions:
         if pd.parents:
             for parent in pd.parents:
@@ -120,11 +118,7 @@ def implies_from_parents(theory: Theory) -> Theory:
     new_sentences = sentences_from_predicate_hierarchy(theory)
     new_sg = SentenceGroup(name="Inferred", sentences=new_sentences)
     sgs = (theory.sentence_groups or []) + [new_sg]
-    return Theory(
-        name=theory.name,
-        predicate_definitions=theory.predicate_definitions,
-        sentence_groups=sgs,
-    )
+    return replace(theory, sentence_groups=sgs)
 
 
 def disjunction_as_list(sentence: Sentence) -> List[Sentence]:
@@ -400,8 +394,8 @@ def counterexample_proof_sentences(sentence: Sentence, predicate: str = "counter
         >>> X = Variable("x")
         >>> sentences = counterexample_proof_sentences(Forall([X], Term("P", X) >> Term("Q", X)))
         >>> print(as_prolog(sentences, PrologConfig(negation_as_failure_symbol="not", allow_nesting=False)))
-        p("__counterexample_x").
-        counterexample :- not q("__counterexample_x").
+        p('__counterexample_x').
+        counterexample :- not q('__counterexample_x').
 
     :param sentence: a universal implication, or an implication with free variables
     :param predicate: predicate name to use for generated counterexample atoms
@@ -455,7 +449,7 @@ def as_prolog(
     strict=True,
     anon_vars: Optional[Set[str]] = None,
 ) -> str:
-    """
+    r"""
     Convert a sentence to Prolog syntax.
 
         >>> from typedlogic import Term, Variable, Forall
@@ -633,6 +627,10 @@ def as_prolog(
                 if not config.allow_function_terms:
                     raise ValueError(f"Nested term not supported: {v}")
                 return as_prolog(v, config, depth + 1, anon_vars=anon_vars)
+            if isinstance(v, bool):
+                # a bare True/False would be read back as a Prolog variable
+                v = "true" if v else "false"
+                return json.dumps(v) if config.double_quote_strings else v
             if config.double_quote_floats:
                 if isinstance(v, float):
                     return json.dumps(str(v))
@@ -822,29 +820,65 @@ def as_fol(sentence, config: Optional[PrologConfig] = None) -> str:
     >>> print(as_fol(A|B))
     (A(x) ∨ B(x))
 
+    Compound operands are parenthesized where the reading would otherwise be ambiguous:
+
+    >>> print(as_fol(~(A & B)))
+    ¬(A(x) ∧ B(x))
+    >>> print(as_fol((A >> B) >> A))
+    (A(x) → B(x)) → A(x)
+    >>> print(as_fol((A & NegationAsFailure(B)) >> A))
+    A(x) ∧ not B(x) → A(x)
+
     :param sentence:
     :param config:
     :return:
     """
     if not config:
         config = PrologConfig(use_lowercase_vars=True, use_uppercase_predicates=None)
+
+    def _operand(op: Sentence, *compound: Type[Sentence]) -> str:
+        """Render an operand, parenthesizing it when it is one of the given compound types."""
+        rendered = as_fol(op, config)
+        if isinstance(op, Extension):
+            op = op.to_model_object()
+        if isinstance(op, compound):
+            return f"({rendered})"
+        return rendered
+
+    arrows = (Implies, Implied, Iff, QuantifiedSentence)
+    if isinstance(sentence, Extension):
+        return as_fol(sentence.to_model_object(), config)
     if isinstance(sentence, (Exists, Forall)):
         qsym = "∀" if isinstance(sentence, Forall) else "∃"
         arg_exprs = [f"{v.name}:{v.domain}" if v.domain else v.name for v in sentence.variables]
         args = " ".join(arg_exprs)
         return f"{qsym}[{args}]. {as_fol(sentence.sentence, config)}"
     if isinstance(sentence, And):
-        return f"{' ∧ '.join(as_fol(op, config) for op in sentence.operands)}"
+        if not sentence.operands:
+            return "⊤"
+        return f"{' ∧ '.join(_operand(op, *arrows) for op in sentence.operands)}"
     if isinstance(sentence, Or):
-        return f"({' ∨ '.join(as_fol(op, config) for op in sentence.operands)})"
+        if not sentence.operands:
+            return "⊥"
+        if len(sentence.operands) == 1:
+            return f"({as_fol(sentence.operands[0], config)})"
+        return f"({' ∨ '.join(_operand(op, *arrows) for op in sentence.operands)})"
+    if isinstance(sentence, Xor):
+        return f"({' ⊕ '.join(_operand(op, And, *arrows) for op in sentence.operands)})"
+    if isinstance(sentence, ExactlyOne):
+        return as_fol(expand_exactly_one(sentence), config)
     if isinstance(sentence, Not):
-        return f"¬{as_fol(sentence.negated, config)}"
+        return f"¬{_operand(sentence.negated, And, *arrows)}"
+    if isinstance(sentence, NegationAsFailure):
+        return f"not {_operand(sentence.negated, And, *arrows)}"
     if isinstance(sentence, Implies):
-        return f"{as_fol(sentence.antecedent, config)} → {as_fol(sentence.consequent, config)}"
+        return f"{_operand(sentence.antecedent, *arrows)} → {_operand(sentence.consequent, *arrows)}"
     if isinstance(sentence, Implied):
-        return f"{as_fol(sentence.operands[1], config)} ← {as_fol(sentence.operands[0], config)}"
+        return f"{_operand(sentence.operands[1], *arrows)} ← {_operand(sentence.operands[0], *arrows)}"
     if isinstance(sentence, Iff):
-        return f"{as_fol(sentence.left, config)} ↔ {as_fol(sentence.right, config)}"
+        return f"{_operand(sentence.left, *arrows)} ↔ {_operand(sentence.right, *arrows)}"
+    if isinstance(sentence, CardinalityConstraint):
+        return str(sentence)
     if isinstance(sentence, Term):
         vals = list(sentence.bindings.values())
 
@@ -881,7 +915,7 @@ def as_fol(sentence, config: Optional[PrologConfig] = None) -> str:
                 return p
             else:
                 return f"{p}({', '.join([_render_arg(v) for v in vals])})"
-    return ""
+    raise ValueError(f"Unsupported sentence type for FOL rendering: {type(sentence)} // {sentence}")
 
 
 def as_tptp(sentence: Sentence, config: Optional[PrologConfig] = None, depth=0) -> str:
@@ -924,10 +958,23 @@ def as_tptp(sentence: Sentence, config: Optional[PrologConfig] = None, depth=0) 
         return f"{quantifier} [{vars}] : {as_tptp(sentence.sentence, config, depth)}"
 
     elif isinstance(sentence, And):
+        if not sentence.operands:
+            return "$true"
         return f"({' & '.join(as_tptp(op, config, depth + 1) for op in sentence.operands)})"
 
+    elif isinstance(sentence, Xor):
+        return as_tptp(expand_xor(sentence), config, depth)
+
+    elif isinstance(sentence, ExactlyOne):
+        return as_tptp(expand_exactly_one(sentence), config, depth)
+
     elif isinstance(sentence, Or):
+        if not sentence.operands:
+            return "$false"
         return f"({' | '.join(as_tptp(op, config, depth + 1) for op in sentence.operands)})"
+
+    elif isinstance(sentence, Implied):
+        return as_tptp(Implies(sentence.antecedent, sentence.consequent), config, depth)
 
     elif isinstance(sentence, Not):
         return f"~{as_tptp(sentence.negated, config, depth + 1)}"
@@ -942,6 +989,9 @@ def as_tptp(sentence: Sentence, config: Optional[PrologConfig] = None, depth=0) 
 
     elif isinstance(sentence, Term):
         predicate = format_predicate(sentence.predicate)
+        if not sentence.bindings:
+            # TPTP propositional atoms take no parentheses
+            return predicate
         args = ", ".join(format_var(v) if isinstance(v, Variable) else repr(v) for v in sentence.bindings.values())
         return f"{predicate}({args})"
 
@@ -1252,10 +1302,23 @@ def replace_constants(sentence: Sentence, constant_map: Dict[str, Any]) -> Sente
     :param constant_map:
     :return:
     """
+    if isinstance(sentence, Extension):
+        sentence = sentence.to_model_object()
     if isinstance(sentence, QuantifiedSentence):
         return type(sentence)(sentence.variables, replace_constants(sentence.sentence, constant_map))
     elif isinstance(sentence, BooleanSentence):
         return type(sentence)(*[replace_constants(op, constant_map) for op in sentence.operands])
+    elif isinstance(sentence, CardinalityConstraint):
+        template = sentence.template
+        conditions = sentence.conditions
+        if conditions is None:
+            raise ValueError(f"Cardinality constraint has no conditions: {sentence}")
+        return CardinalityConstraint(
+            replace_constants(template, constant_map) if template is not None else None,
+            replace_constants(conditions, constant_map),
+            sentence.minimum_number,
+            sentence.maximum_number,
+        )
     elif isinstance(sentence, Term):
 
         def _repl(v: Any) -> Any:
@@ -1532,24 +1595,46 @@ def skolemize(
     :return:
 
     """
-    if substitution_map is None:
-        substitution_map = {}
-    if not universal_vars:
-        universal_vars = []
+    return _skolemize(sentence, universal_vars or [], substitution_map or {}, [0])
+
+
+def _skolemize(
+    sentence: Sentence,
+    universal_vars: List[Variable],
+    substitution_map: Dict[str, Term],
+    counter: List[int],
+) -> Sentence:
+    """
+    Recursive worker for :func:`skolemize`.
+
+    ``substitution_map`` is scoped: each quantifier works on its own copy, so a Skolem
+    substitution never leaks into a sibling or enclosing scope. ``counter`` is a shared
+    one-element list, so every existential variable gets a fresh Skolem symbol.
+
+        >>> from typedlogic import And, Variable, Term, Forall, Exists
+        >>> Y = Variable("Y")
+        >>> skolemize(And(Exists([Y], Term("P", Y)), Exists([Y], Term("Q", Y)), Exists([Y], Term("R", Y))))
+        And(P(sk__1), Q(sk__2), R(sk__3))
+        >>> skolemize(And(Exists([Y], Term("P", Y)), Forall([Y], Term("Q", Y))))
+        And(P(sk__1), Forall([Y: None] : Q(?Y)))
+    """
     if isinstance(sentence, Forall):
+        bound = {v.name for v in sentence.variables}
+        inner_map = {k: v for k, v in substitution_map.items() if k not in bound}
         return Forall(
-            sentence.variables, skolemize(sentence.sentence, universal_vars + sentence.variables, substitution_map)
+            sentence.variables,
+            _skolemize(sentence.sentence, universal_vars + sentence.variables, inner_map, counter),
         )
     if isinstance(sentence, Exists):
-        vars_to_skolemize = [v for v in sentence.variables if v not in universal_vars]
-        n = len(substitution_map)
-        for v in vars_to_skolemize:
-            n += 1
-            skolem_term = Term(f"sk__{n}", *universal_vars)
-            substitution_map[v.name] = skolem_term
-        return skolemize(sentence.sentence, universal_vars, substitution_map)
+        inner_map = dict(substitution_map)
+        for v in sentence.variables:
+            if v in universal_vars:
+                continue
+            counter[0] += 1
+            inner_map[v.name] = Term(f"sk__{counter[0]}", *universal_vars)
+        return _skolemize(sentence.sentence, universal_vars, inner_map, counter)
     if isinstance(sentence, BooleanSentence):
-        return type(sentence)(*[skolemize(op, universal_vars, substitution_map) for op in sentence.operands])
+        return type(sentence)(*[_skolemize(op, universal_vars, substitution_map, counter) for op in sentence.operands])
     elif isinstance(sentence, Term):
         return Term(
             sentence.predicate,
@@ -1721,7 +1806,7 @@ def existentials_to_constraints(sentence: Sentence) -> Sentence:
     return sentence
 
 def to_horn_rules(sentence: Sentence, allow_disjunctions_in_head=False, allow_goal_clauses=None) -> List[Sentence]:
-    """
+    r"""
     Convert a sentence to a list of Horn rules.
 
     Examples
@@ -2085,7 +2170,7 @@ def force_stratification(horn_rules: List[Sentence]) -> List[Sentence]:
                 terms = [body]
             for term in terms:
                 negated = False
-                if isinstance(term, Not):
+                if isinstance(term, (Not, NegationAsFailure)):
                     term = term.negated
                     negated = True
                 if not isinstance(term, Term):
@@ -2144,10 +2229,11 @@ def ensure_terms_positional(theory: Theory):
                 # could include builtins
                 return
             pd = pds[0]
-            if s.positional is False:
+            if s.positional is False and set(s.bindings) <= set(pd.arguments):
+                # (bindings keyed by names the definition does not declare are left alone)
                 s.bindings = {k: s.bindings.get(k) for k, v in pd.arguments.items()}
 
-    for s in theory.sentences:
+    for s in theory.sentences + theory.ground_terms:
         transform_sentence(s, tr)
 
 

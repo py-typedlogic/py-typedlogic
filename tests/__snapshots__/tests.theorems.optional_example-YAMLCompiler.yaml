@@ -9,8 +9,8 @@ predicate_definitions:
   arguments:
     subject: str
     object: str
-    start_year: Optional
-    end_year: Optional
+    start_year: int
+    end_year: int
   parents: []
 - type: PredicateDefinition
   predicate: FriendPath

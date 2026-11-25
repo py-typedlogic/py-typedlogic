@@ -44,6 +44,7 @@ from typedlogic.datamodel import (
     Theory,
     Variable,
 )
+from typedlogic.profiles import OpenWorld
 from typedlogic.registry import (
     all_compiler_classes,
     all_parser_classes,
@@ -199,20 +200,9 @@ def convert(
     ```
 
     """
-    parser = get_parser(input_format or _guess_format(theory_files[0]))
-    if validate_types:
-        for p in theory_files:
-            errs = parser.validate(p)
-            if errs:
-                for err in errs:
-                    click.echo(str(err))
-                raise ValueError("Errors in file")
-    theory = parser.parse(theory_files[0])
-    if len(theory_files) > 1:
-        for input_file in theory_files[1:]:
-            facts_theory = parser.parse(input_file)
-            for s in facts_theory.sentences:
-                theory.add(s)
+    theory = _parse_theory_file(theory_files[0], input_format, validate_types)
+    for input_file in theory_files[1:]:
+        theory.merge(_parse_theory_file(input_file, input_format, validate_types))
 
     compiler = get_compiler(output_format or "z3sexpr")
     result = compiler.compile(theory)
@@ -235,6 +225,8 @@ def _guess_format(data_file: Path) -> str:
     suffix = data_file.suffix[1:]
     if suffix == "py":
         return "python"
+    elif suffix == "yml":
+        return "yaml"
     elif suffix in ["csv", "tsv", "xlsx", "xls", "tab"]:
         return "dataframe"
     return suffix
@@ -262,8 +254,7 @@ def _combine_input_files(
         ValueError: If validation fails or no valid theories found
 
     """
-    combined_theory = None
-
+    combined_theory: Optional[Theory] = None
     for input_file in input_files:
         file_format = input_format or _guess_format(input_file)
         parser = get_parser(file_format)
@@ -275,72 +266,18 @@ def _combine_input_files(
                     click.echo(f"Validation error in {input_file}: {err}")
                 raise ValueError(f"Type validation errors in {input_file}")
 
-        # Parse the file - try theory first, then ground terms
+        parsed_result = parser.parse(input_file)
+        if not isinstance(parsed_result, Theory):
+            # a plain data file (e.g. YAML facts) rather than a serialized theory
+            parsed_result = Theory(ground_terms=parser.parse_ground_terms(input_file))
         if combined_theory is None:
-            try:
-                parsed_result = parser.parse(input_file)
-                # Check if result is a proper Theory object
-                if hasattr(parsed_result, "sentences") or hasattr(parsed_result, "predicate_definitions"):
-                    combined_theory = parsed_result
-                else:
-                    # Result is raw data, treat as ground terms
-                    from typedlogic import Theory
-
-                    combined_theory = Theory()
-                    ground_terms = parser.parse_ground_terms(input_file)
-                    combined_theory.ground_terms = ground_terms
-            except Exception:
-                # If parsing as theory fails, try as ground terms only
-                from typedlogic import Theory
-
-                combined_theory = Theory()
-                ground_terms = parser.parse_ground_terms(input_file)
-                combined_theory.ground_terms = ground_terms
+            # the first file supplies the name and annotations of the combined theory
+            combined_theory = parsed_result
         else:
-            # Try to parse as theory first
-            try:
-                parsed_result = parser.parse(input_file)
-                # Check if result is a proper Theory object
-                if hasattr(parsed_result, "sentences") or hasattr(parsed_result, "predicate_definitions"):
-                    file_theory = parsed_result
-
-                    # Merge sentences (axioms)
-                    if hasattr(file_theory, "sentences") and file_theory.sentences:
-                        if combined_theory.sentences is None:
-                            combined_theory.sentences = []
-                        combined_theory.sentences.extend(file_theory.sentences)
-
-                    # Merge ground terms (facts)
-                    if hasattr(file_theory, "ground_terms") and file_theory.ground_terms:
-                        if combined_theory.ground_terms is None:
-                            combined_theory.ground_terms = []
-                        combined_theory.ground_terms.extend(file_theory.ground_terms)
-
-                    # Merge predicate definitions
-                    if hasattr(file_theory, "predicate_definitions") and file_theory.predicate_definitions:
-                        if combined_theory.predicate_definitions is None:
-                            combined_theory.predicate_definitions = []
-                        # Avoid duplicates by name
-                        existing_names = {pd.predicate for pd in combined_theory.predicate_definitions}
-                        for pd in file_theory.predicate_definitions:
-                            if pd.predicate not in existing_names:
-                                combined_theory.predicate_definitions.append(pd)
-                else:
-                    # Result is raw data, treat as ground terms
-                    ground_terms = parser.parse_ground_terms(input_file)
-                    if combined_theory.ground_terms is None:
-                        combined_theory.ground_terms = []
-                    combined_theory.ground_terms.extend(ground_terms)
-            except Exception:
-                # If parsing as theory fails, try as ground terms
-                ground_terms = parser.parse_ground_terms(input_file)
-                if combined_theory.ground_terms is None:
-                    combined_theory.ground_terms = []
-                combined_theory.ground_terms.extend(ground_terms)
+            combined_theory.merge(parsed_result)
 
     if combined_theory is None:
-        raise ValueError("No valid theories found in input files")
-
+        raise ValueError("No input files given")
     return combined_theory
 
 
@@ -348,7 +285,8 @@ def _parse_theory_file(theory_file: Path, input_format: Optional[str], validate_
     """Parse one theory file, optionally validating Python inputs."""
     parser = get_parser(input_format or _guess_format(theory_file))
     if validate_types:
-        errs = parser.validate(theory_file)
+        # warnings (e.g. an empty column in a data file) are not grounds for refusing the input
+        errs = [m for m in parser.validate(theory_file) if m.level == "error"]
         if errs:
             for err in errs:
                 click.echo(f"Validation error in {theory_file}: {err}")
@@ -481,6 +419,10 @@ def _evaluate_expectation(context: ExpectationContext, sentence: Sentence) -> Op
             return None
         return not result
     if isinstance(sentence, Not):
+        if context.solver.profile.impl(OpenWorld):
+            # Under the open-world assumption, failing to prove P does not establish ~P:
+            # the negation has to be proved in its own right.
+            return context.prove(sentence)
         result = _evaluate_expectation(context, sentence.negated)
         if result is None:
             return None

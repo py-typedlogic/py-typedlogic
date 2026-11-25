@@ -37,6 +37,11 @@ class OWLPyParser(Parser):
         >>> fol_strings = sorted([as_fol(s) for s in theory.sentences])
         >>> for s in fol_strings:
         ...     print(s)
+        (∀[I]. Father(I) ↔ (Man(I) ∨ Woman(I))) ∧ ¬(∃[I]. (¬(Man(I) ∧ Woman(I))))
+        (∀[I]. Man(I) ↔ (Man(I) ∨ Woman(I))) ∧ ¬(∃[I]. (¬(Man(I) ∧ Woman(I))))
+        (∀[I]. Parent(I) ↔ (Man(I) ∨ Woman(I))) ∧ ¬(∃[I]. (¬(Man(I) ∧ Woman(I))))
+        (∀[I]. Person(I) ↔ (Man(I) ∨ Woman(I))) ∧ ¬(∃[I]. (¬(Man(I) ∧ Woman(I))))
+        (∀[I]. Woman(I) ↔ (Man(I) ∨ Woman(I))) ∧ ¬(∃[I]. (¬(Man(I) ∧ Woman(I))))
         ∀[I J K]. HasChild(I, J) ∧ HasChild(J, K) → HasChild(I, K)
         ∀[I J K]. HasDescendant(I, J) ∧ HasDescendant(J, K) → HasDescendant(I, K)
         ∀[I J K]. HasGrandchild(I, J) ∧ HasGrandchild(J, K) → HasGrandchild(I, K)
@@ -52,17 +57,12 @@ class OWLPyParser(Parser):
         ∀[I J]. HasGrandchild(I, J) → ¬HasGrandchild(J, I)
         ∀[I J]. HasParent(I, J) ↔ HasChild(J, I)
         ∀[I]. Father(I) → Person(I)
-        ∀[I]. Father(I) ↔ (Man(I) ∨ Woman(I)) ∧ ¬∃[I]. (¬Man(I) ∧ Woman(I))
         ∀[I]. Father(I) ↔ Parent(I) ∧ Man(I)
         ∀[I]. Man(I) → Person(I)
-        ∀[I]. Man(I) ↔ (Man(I) ∨ Woman(I)) ∧ ¬∃[I]. (¬Man(I) ∧ Woman(I))
         ∀[I]. Parent(I) → Person(I)
-        ∀[I]. Parent(I) ↔ (Man(I) ∨ Woman(I)) ∧ ¬∃[I]. (¬Man(I) ∧ Woman(I))
-        ∀[I]. Parent(I) ↔ Person(I) ∧ ∃[J]. HasChild(I, J) ∧ Thing(J)
+        ∀[I]. Parent(I) ↔ Person(I) ∧ (∃[J]. HasChild(I, J) ∧ Thing(J))
         ∀[I]. Person(I) → Thing(I)
-        ∀[I]. Person(I) ↔ (Man(I) ∨ Woman(I)) ∧ ¬∃[I]. (¬Man(I) ∧ Woman(I))
         ∀[I]. Woman(I) → Person(I)
-        ∀[I]. Woman(I) ↔ (Man(I) ∨ Woman(I)) ∧ ¬∃[I]. (¬Man(I) ∧ Woman(I))
         ∀[J0 J1 J2]. HasChild(J0, J1) ∧ HasChild(J1, J2) → HasGrandchild(J0, J2)
         ∀[P I J]. HasAncestor(I, J) → TopObjectProperty(I, J)
         ∀[P I J]. HasChild(I, J) → HasDescendant(I, J)
@@ -113,7 +113,8 @@ class OWLPyParser(Parser):
             else:
                 return source
 
-        theory = p.parse(get_file())
+        # OWL classes state their own subclass axioms; the Python class hierarchy is not re-derived
+        theory = p.parse(get_file(), class_hierarchy=False)
         python_txt = get_file().read()
         # TODO: check for multiple invocations
         module = compile_python(python_txt, name=None, package_path=str(source))

@@ -145,9 +145,9 @@ class SnakeLogSolver(Solver):
                     self.wrapped_solver.add(snakelog_expr)
                     self.sentences.append(sentence)
         except NotInProfileError as e:
-            logger.info(f"SKIPPING: {sentence} // {e}")
             if self.strict:
                 raise e
+            logger.warning(f"Skipping sentence not supported by SnakeLogSolver: {sentence} ({e})")
 
     def _string_type(self) -> str:
         # TODO: remove after the following is fixed

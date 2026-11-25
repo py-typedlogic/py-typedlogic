@@ -5,9 +5,9 @@
 
 %% facts
 
-%% UNTRANSLATABLE: StageAge('Adult', AGE_THRESHOLD)
+stageage('Adult', 18).
 personwithage('Alice', 25).
 
 %% classifications
 
-%% UNTRANSLATABLE: ∀[name:Thing age:int]. age >= AGE_THRESHOLD → Adult(name)
+%% UNTRANSLATABLE: ∀[name:Thing age:int]. age >= 18 → Adult(name)

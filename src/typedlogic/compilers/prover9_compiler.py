@@ -41,6 +41,8 @@ class Prover9Compiler(Compiler):
                 if _skip_naf(sentence, "sentence"):
                     continue
                 lines.append(f"    {as_prover9(sentence)}.")
+        for term in theory.ground_terms:
+            lines.append(f"    {as_prover9(term)}.")
         lines.append("end_of_list.")
         lines.append("")
 

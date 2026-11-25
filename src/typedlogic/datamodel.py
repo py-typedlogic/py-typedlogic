@@ -21,7 +21,7 @@ Here is an example:
         >>> x = Variable('x')
         >>> y = Variable('y')
         >>> pdef = PredicateDefinition(predicate='FriendOf',
-        ...                          arguments={'x': 'str', 'y': 'str'}),
+        ...                          arguments={'x': 'str', 'y': 'str'})
         >>> theory = Theory(
         ...     name="My theory",
         ...     predicate_definitions=[pdef],
@@ -971,7 +971,6 @@ def _collect_variables(sentence: Any) -> List["Variable"]:
     return result
 
 
-@dataclass
 class CardinalityConstraint(Term):
     """
     A constraint on the cardinality of a set of terms.
@@ -1191,6 +1190,41 @@ class Theory:
         if not self.sentence_groups:
             self.sentence_groups = []
         self.sentence_groups.append(SentenceGroup(name="Sentences", sentences=[sentence]))
+
+    def merge(self, other: "Theory") -> None:
+        """
+        Merge another theory into this one, in place.
+
+        Sentence groups (including goals, lemmas and tests) and ground terms are appended;
+        constants and type definitions are updated; predicate definitions are added unless
+        a definition with the same predicate name and arity is already present. The name
+        and annotations of this theory are kept.
+
+            >>> t1 = Theory(predicate_definitions=[PredicateDefinition("P", {"x": "str"})])
+            >>> t1.add(Term("P", "a"))
+            >>> t2 = Theory(predicate_definitions=[PredicateDefinition("P", {"x": "str"})],
+            ...             ground_terms=[Term("P", "b")])
+            >>> t2.add(Term("P", "c"))
+            >>> t1.merge(t2)
+            >>> t1.sentences
+            [P(a), P(c)]
+            >>> t1.ground_terms
+            [P(b)]
+            >>> len(t1.predicate_definitions)
+            1
+
+        :param other: the theory whose contents are added to this one
+        """
+        self.constants.update(other.constants)
+        self.type_definitions.update(other.type_definitions)
+        existing = {(pd.predicate, len(pd.arguments)) for pd in self.predicate_definitions}
+        for pd in other.predicate_definitions:
+            key = (pd.predicate, len(pd.arguments))
+            if key not in existing:
+                existing.add(key)
+                self.predicate_definitions.append(pd)
+        self.sentence_groups.extend(other.sentence_groups)
+        self.ground_terms.extend(other.ground_terms)
 
     def extend(self, sentences: Iterable[Sentence]):
         """

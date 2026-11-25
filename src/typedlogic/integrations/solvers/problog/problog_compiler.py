@@ -52,6 +52,7 @@ class ProbLogCompiler(Compiler):
             >>> theory.add(Probability(0.5, That(Term('AncestorOf', 'p1a', 'p1aa'))))
             >>> compiler = ProbLogCompiler()
             >>> print(compiler.compile(theory))
+            ancestorof(_, _) :- fail.
             ancestorof(X, Z) :- ancestorof(X, Y), ancestorof(Y, Z).
             0.5::ancestorof("p1", "p1a").
             0.5::ancestorof("p1a", "p1aa").
@@ -150,7 +151,7 @@ class ProbLogCompiler(Compiler):
                         continue
                     rules.append(rewritten_rule)
             except NotInProfileError as e:
-                logger.info(f"Skipping sentence {s} due to {e}")
+                logger.warning(f"Skipping sentence not expressible in ProbLog: {s} ({e})")
             return rules
 
         pr_sent = self._sentence_probability(sentence)

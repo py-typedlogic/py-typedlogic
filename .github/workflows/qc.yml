@@ -8,7 +8,9 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # Pinned: on ubuntu-26.04 (now ubuntu-latest) the dsharp binary bundled with ProbLog
+    # segfaults on tests/test_integrations/problog/test_problog.py::test_diagnosis_main.
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         python-version: [ "3.11" ]
@@ -31,5 +33,11 @@ jobs:
       - name: Check common spelling errors
         run: uv run codespell src/ tests/ -S tests/input/,tests/output/
 
+      - name: Type check with mypy
+        run: uv run mypy src tests
+
       - name: Test with pytest and generate coverage file
         run: uv run pytest -v --durations=10
+
+      - name: Run doctests
+        run: uv run pytest --doctest-modules src

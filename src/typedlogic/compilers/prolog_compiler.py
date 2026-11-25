@@ -4,7 +4,7 @@ from typing import ClassVar, Optional, Union
 from typedlogic import Theory
 from typedlogic.compiler import Compiler, ModelSyntax
 from typedlogic.datamodel import NotInProfileError
-from typedlogic.transformations import PrologConfig, as_fol, as_prolog
+from typedlogic.transformations import PrologConfig, as_fol, as_prolog, replace_constants
 
 
 @dataclass
@@ -61,6 +61,8 @@ class PrologCompiler(Compiler):
         for sg in theory.asserted_sentence_groups:
             lines.append(f"\n%% {sg.name}\n")
             for s in sg.sentences or []:
+                if theory.constants:
+                    s = replace_constants(s, theory.constants)
                 try:
                     translated = as_prolog(s, config, translate=True)
                     if not translated.strip():

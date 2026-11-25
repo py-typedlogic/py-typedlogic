@@ -1,4 +1,3 @@
-from io import TextIOWrapper
 from pathlib import Path
 from typing import Any, Dict, List, Optional, TextIO, Union
 
@@ -15,12 +14,17 @@ class YAMLParser(Parser):
     """
 
     def parse(self, source: Union[Path, str, TextIO], **kwargs) -> Theory:
+        return from_object(self._load(source))
+
+    @staticmethod
+    def _load(source: Union[Path, str, TextIO]) -> Any:
+        """Load YAML from a path, a YAML string, or any text stream."""
         if isinstance(source, Path):
-            source = source.open()
-        if not isinstance(source, (str, TextIOWrapper)):
+            with source.open() as f:
+                return yaml.safe_load(f)
+        if not isinstance(source, str) and not hasattr(source, "read"):
             raise ValueError(f"Invalid source type: {type(source)}")
-        obj = yaml.safe_load(source)
-        return from_object(obj)
+        return yaml.safe_load(source)
 
     def parse_ground_terms(self, source: Union[Path, str, TextIO], **kwargs) -> List[Term]:
         """
@@ -30,19 +34,9 @@ class YAMLParser(Parser):
         :param kwargs:
         :return:
         """
-        file_name = None
-        if isinstance(source, Path):
-            source = source.open()
-            file_name = str(source)
-        if isinstance(source, str):
-            file_name = source
-        if not isinstance(source, (str, TextIOWrapper)):
-            raise ValueError(f"Invalid source type: {type(source)}")
-        obj = yaml.safe_load(source)
-        if file_name:
-            default_predicate = Path(file_name).stem.split(".")[0]
-        else:
-            default_predicate = None
+        # a file named e.g. Link.01.yaml supplies "Link" as the default predicate
+        default_predicate = source.name.split(".")[0] if isinstance(source, Path) else None
+        obj = self._load(source)
         if isinstance(obj, list):
             return [self._ground_term(o, default_predicate) for o in obj]
         elif isinstance(obj, dict):

@@ -13,4 +13,4 @@ ancestorof(X, Y) :- ancestorof(X, Z), ancestorof(Z, Y).
 
 %% acyclicity_axiom
 
-%% UNTRANSLATABLE: ∀[x:TreeNodeType y:TreeNodeType]. ¬AncestorOf(x, y) ∧ AncestorOf(y, x)
+%% UNTRANSLATABLE: ∀[x:TreeNodeType y:TreeNodeType]. ¬(AncestorOf(x, y) ∧ AncestorOf(y, x))

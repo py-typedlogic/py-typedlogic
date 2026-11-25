@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import ast
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable, TextIO, Union
+from types import ModuleType
+from typing import Any, Iterable, Iterator, TextIO, Union
 
 from lark import Lark, Transformer
 from lark.exceptions import LarkError
@@ -414,13 +416,17 @@ class _TreeToNodes(Transformer):
 
     def number(self, items: list[Any]) -> Union[int, float]:
         raw = str(items[0])
-        if "." in raw:
+        if any(c in raw for c in ".eE"):
             return float(raw)
         return int(raw)
 
     def string(self, items: list[Any]) -> str:
-        raw = str(items[0])
-        return bytes(raw[1:-1], "utf-8").decode("unicode_escape")
+        # single- and double-quoted TLog strings share Python's escape syntax; literal_eval
+        # (unlike a utf-8 -> unicode_escape round trip) leaves non-ASCII text intact
+        value = ast.literal_eval(str(items[0]))
+        if not isinstance(value, str):
+            raise ValueError(f"Expected a string literal, got {items[0]}")
+        return value
 
     def true(self, items: list[Any]) -> bool:
         return True
@@ -474,7 +480,9 @@ class TLogParser(Parser):
             self._add_statement(theory, statement)
         return theory
 
-    def validate_iter(self, source: Union[Path, str, TextIO], **kwargs: Any) -> Iterable[ValidationMessage]:
+    def validate_iter(
+        self, source: Union[Path, str, TextIO, ModuleType], **kwargs: Any
+    ) -> Iterator[ValidationMessage]:
         """
         Validate source syntax and predicate-arity usage.
 
@@ -482,6 +490,8 @@ class TLogParser(Parser):
         used at an arity that no declaration provides. Undeclared predicates are not checked, so
         the same name may still be used at multiple arities when no ``pred`` declaration exists.
         """
+        if isinstance(source, ModuleType):
+            raise ValueError("TLog source must be text or a file, not a Python module")
         try:
             theory = self._build_theory(self._prepare_text(source))
         except (LarkError, ValueError) as e:
@@ -652,7 +662,8 @@ class TLogParser(Parser):
             if node.predicate.variable:
                 predicate = bound_vars.get(node.predicate.name, Variable(node.predicate.name))
             args = [self._lower(arg, bound_vars, bare_names_as_variables) for arg in node.arguments]
-            return Term(predicate, *args)
+            # HiLog: the predicate position may hold a variable, which Term's signature does not yet model
+            return Term(predicate, *args)  # type: ignore[arg-type]
         if isinstance(node, Term):
             args = [self._lower(arg, bound_vars, bare_names_as_variables) for arg in node.values]
             return Term(node.predicate, *args)

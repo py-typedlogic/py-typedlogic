@@ -44,7 +44,7 @@ class Registry:
 
     def create_instance(self, category: Type, handle: str, **kwargs) -> Extendable:
         implementation_class = self.get_implementation_class(category, handle)
-        return implementation_class()
+        return implementation_class(**kwargs)
 
     @classmethod
     def load_implementations(cls, package_path: str):
@@ -52,21 +52,24 @@ class Registry:
         this_path = importlib.import_module(package_path).__file__
         if this_path is None:
             raise ValueError(f"Error: package {package_path} not found")
-        package_dir = os.path.dirname(Path(this_path))
+        package_dir = Path(this_path).parent
         # traverse the directory recursively
         for root, dirs, files in os.walk(package_dir):
             for filename in files:
-                filepath = os.path.join(root, filename)
-                if filepath.endswith(".py") and not filepath.startswith("__"):
-                    base = filepath.replace(package_dir, "").replace("/", ".")[1:-3]
-                    module_name = f"{package_path}.{base}"
+                # dunder files (__init__, __main__) are covered by importing their package
+                if filename.endswith(".py") and not filename.startswith("__"):
+                    relative = (Path(root) / filename).relative_to(package_dir).with_suffix("")
+                    module_name = ".".join([package_path, *relative.parts])
                     try:
                         module = importlib.import_module(module_name)
                         for name, obj in inspect.getmembers(module):
                             if inspect.isclass(obj):
                                 for t, suffix_name in SUFFIXES.items():
+                                    if obj is t:
+                                        # the abstract base itself is not an implementation
+                                        continue
                                     if name.lower().endswith(suffix_name) and issubclass(obj, t):
-                                        handle = name.lower().replace(suffix_name, "")
+                                        handle = name.lower()[: -len(suffix_name)]
                                         registry.register(handle, t, obj)
                     except ImportError as e:
                         logger.info(f"Error importing {module_name}: {e} - assuming not installed")

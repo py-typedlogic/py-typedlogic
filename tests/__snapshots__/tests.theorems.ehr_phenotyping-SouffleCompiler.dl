@@ -2,12 +2,12 @@
 .decl Patient(id: symbol, birth_date: symbol, sex: symbol)
 .decl Encounter(id: symbol, patient_id: symbol, date: symbol)
 .decl Diagnosis(encounter_id: symbol, code: symbol)
-.decl LabResult(patient_id: symbol, date: symbol, code: symbol, value: number, unit: symbol)
+.decl LabResult(patient_id: symbol, date: symbol, code: symbol, value: float, unit: symbol)
 .decl Medication(patient_id: symbol, date: symbol, code: symbol, dosage: symbol)
 .decl Phenotype(patient_id: symbol)
-.decl DiabetesT2(patient_id: symbol, confidence: number)
-.decl Hypertension(patient_id: symbol, confidence: number)
-.decl CKD(patient_id: symbol, stage: symbol, confidence: number)
+.decl DiabetesT2(patient_id: symbol, confidence: float)
+.decl Hypertension(patient_id: symbol, confidence: float)
+.decl CKD(patient_id: symbol, stage: number, confidence: float)
 .decl IsA(child: symbol, parent: symbol)
 DiabetesT2(patient_id, _) :- Patient(patient_id, date(1970, 1, 1), "unknown"), Encounter(encounter_id, patient_id, date(2024, 1, 1)), Diagnosis(encounter_id, Code("ICD10", "E11")).
 DiabetesT2(patient_id, _) :- Patient(patient_id, date(1970, 1, 1), "unknown"), Encounter(encounter_id, patient_id, date(2024, 1, 1)), Diagnosis(encounter_id, Code("ICD10", child_code)), IsA(Code("ICD10", child_code), Code("ICD10", "E11")).

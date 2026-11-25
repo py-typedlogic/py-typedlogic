@@ -198,7 +198,7 @@ def _maximum_cardinality_constraint(cls: str, slot: str, maximum: int) -> Senten
 
 
 def _validate_abox_predicate_names(facts: Mapping[str, set[tuple[Any, ...]]]) -> None:
-    names = set()
+    names: set[str] = set()
     for predicate in ("class_definition", "type_definition", "enum_definition", "slot_definition"):
         names.update(str(values[0]) for values in _tuples(facts, predicate))
     invalid = sorted(name for name in names if not PREDICATE_NAME_PATTERN.fullmatch(name))
@@ -211,7 +211,7 @@ def _validate_abox_predicate_names(facts: Mapping[str, set[tuple[Any, ...]]]) ->
 
 def _abox_predicate_definitions(facts: Mapping[str, set[tuple[Any, ...]]]) -> list[PredicateDefinition]:
     definitions: list[PredicateDefinition] = []
-    unary_predicates = set()
+    unary_predicates: set[str] = set()
     for predicate in ("class_definition", "type_definition", "enum_definition"):
         unary_predicates.update(str(values[0]) for values in _tuples(facts, predicate))
     for predicate_name in sorted(unary_predicates):

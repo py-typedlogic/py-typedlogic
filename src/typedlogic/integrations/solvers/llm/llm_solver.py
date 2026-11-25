@@ -45,7 +45,7 @@ class LLMSolver(Solver):
     """
     A solver that uses an LLM.
 
-    This is for research purposes only. LLM output can be reliable, slow, and expensive,
+    This is for research purposes only. LLM output can be unreliable, slow, and expensive,
     and should not be used as a replacement for a deterministic logic-based solver.
 
     Example:

@@ -1,3 +1,4 @@
+import logging
 from abc import ABC, abstractmethod
 from collections import abc
 from dataclasses import dataclass, field
@@ -8,6 +9,7 @@ from typing import Any, ClassVar, Dict, Iterable, Iterator, List, Optional, Set,
 from typedlogic import FactMixin, Variable
 from typedlogic.datamodel import (
     Exists,
+    NotInProfileError,
     PredicateDefinition,
     Sentence,
     SentenceGroup,
@@ -19,6 +21,9 @@ from typedlogic.datamodel import (
 from typedlogic.parsers.pyparser.python_parser import PythonParser
 from typedlogic.profiles import Profile, UnspecifiedProfile
 from typedlogic.pybridge import fact_to_term
+from typedlogic.transformations import ensure_terms_positional
+
+logger = logging.getLogger(__name__)
 
 ELEMENT = Union[FactMixin, SentenceGroup, Sentence, Theory, PredicateDefinition]
 
@@ -179,7 +184,7 @@ class Solver(ABC):
         pass
 
     def prove_goals(self, strict=True) -> Iterable[Tuple[Sentence, Optional[bool]]]:
-        if not self.check().satisfiable:
+        if self.check().satisfiable is False:
             raise ValueError("Cannot prove goals for unsatisfiable theory")
         if not self.goals:
             raise ValueError("No goals to prove")
@@ -324,6 +329,15 @@ class Solver(ABC):
         self.base_theory.predicate_definitions.append(predicate_definition)
 
     def add_theory(self, theory: Theory) -> None:
+        """
+        Add a theory to the solver.
+
+        Keyword-bound terms are first normalized (in place) to the argument order of their
+        predicate definitions, so that backends can rely on positional order.
+
+        :param theory: the theory to add
+        """
+        ensure_terms_positional(theory)
         if theory.constants:
             for k, v in theory.constants.items():
                 self.constants[k] = v
@@ -341,6 +355,21 @@ class Solver(ABC):
         if theory.ground_terms:
             for t in theory.ground_terms:
                 self.add(t)
+
+    def _skip_sentence(self, sentence: Any, reason: Any) -> None:
+        """
+        Handle a sentence that cannot be expressed in this solver's profile.
+
+        Dropping a sentence weakens the theory, so it is always reported with a warning;
+        with ``strict=True`` a :class:`NotInProfileError` is raised instead.
+
+        :param sentence: the sentence being dropped
+        :param reason: why it cannot be translated
+        """
+        msg = f"Skipping sentence not supported by {type(self).__name__}: {sentence} ({reason})"
+        if self.strict:
+            raise NotInProfileError(msg)
+        logger.warning(msg)
 
     def dump(self) -> str:
         """

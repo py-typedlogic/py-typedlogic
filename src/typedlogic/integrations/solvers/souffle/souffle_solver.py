@@ -90,6 +90,11 @@ class SouffleSolver(Solver):
                 fp.write(program)
                 fp.flush()
                 res = subprocess.run([self.exec_name, fp.name], capture_output=True)
+                if res.returncode != 0:
+                    # without this, an aborted evaluation would surface as an empty model
+                    raise RuntimeError(
+                        f"Souffle failed (exit code {res.returncode}):\n{res.stderr.decode()}\nprogram:\n{program}"
+                    )
                 if res.stderr:
                     msg = res.stderr.decode()
                     import re
