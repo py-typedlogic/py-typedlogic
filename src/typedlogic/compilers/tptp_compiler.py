@@ -59,6 +59,9 @@ class TPTPCompiler(Compiler):
                 t = as_tptp(s)
                 grp_counts["axiom"] += 1
                 lines.append(f"fof(axiom{grp_counts['axiom']}, axiom, {t}).")
+        for term in theory.ground_terms:
+            grp_counts["axiom"] += 1
+            lines.append(f"fof(axiom{grp_counts['axiom']}, axiom, {as_tptp(term)}).")
         for sg in theory.sentence_groups:
             if sg.group_type == SentenceGroupType.GOAL:
                 for s in sg.sentences or []:

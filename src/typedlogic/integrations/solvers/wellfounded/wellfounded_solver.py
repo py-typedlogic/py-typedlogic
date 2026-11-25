@@ -68,12 +68,15 @@ from pathlib import Path
 from typing import ClassVar, Dict, FrozenSet, Iterator, List, Optional, Set, Tuple
 
 from typedlogic import And, Forall, Implies, Term, Variable
+from typedlogic.builtins import NAME_TO_INFIX_OP, NUMERIC_BUILTINS
 from typedlogic.datamodel import NegationAsFailure, NotInProfileError, Sentence
 from typedlogic.profiles import MixedProfile, Profile, SingleModelSemantics, WellFoundedSemantics
 from typedlogic.solver import Model, Solution, Solver
 from typedlogic.transformations import PrologConfig, as_prolog
 
 logger = logging.getLogger(__name__)
+
+_BUILTIN_PREDICATES = set(NAME_TO_INFIX_OP) | set(NUMERIC_BUILTINS)
 
 # A ground atom is a predicate name plus a tuple of constant argument values.
 GroundAtom = Tuple[str, Tuple]
@@ -239,6 +242,13 @@ class WellFoundedSolver(Solver):
             pos: List[Term] = []
             naf: List[Term] = []
             for lit in literals:
+                atom = lit.operands[0] if isinstance(lit, NegationAsFailure) else lit
+                if isinstance(atom, Term) and atom.predicate in _BUILTIN_PREDICATES:
+                    # treating e.g. ge(A, 18) as an ordinary (never-derived) atom would
+                    # silently make the rule unsatisfiable
+                    raise NotInProfileError(
+                        f"WellFoundedSolver does not support builtin comparison/arithmetic terms, got: {atom}"
+                    )
                 if isinstance(lit, NegationAsFailure):
                     inner = lit.operands[0]
                     if not isinstance(inner, Term):

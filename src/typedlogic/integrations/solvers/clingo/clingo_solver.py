@@ -16,7 +16,13 @@ from typedlogic.profiles import (
     Profile,
 )
 from typedlogic.solver import Model, Solution, Solver
-from typedlogic.transformations import PrologConfig, as_prolog, counterexample_proof_sentences, to_horn_rules
+from typedlogic.transformations import (
+    PrologConfig,
+    as_prolog,
+    counterexample_proof_sentences,
+    replace_constants,
+    to_horn_rules,
+)
 
 logger = logging.getLogger(__name__)
 COUNTEREXAMPLE_PREDICATE = "typedlogic_counterexample"
@@ -87,18 +93,21 @@ class ClingoSolver(Solver):
         for sentence in self.base_theory.sentences + self.base_theory.ground_terms:
             if not isinstance(sentence, Sentence):
                 raise ValueError(f"Expected Sentence, got {sentence}")
-            rules = []
+            if self.base_theory.constants:
+                sentence = replace_constants(sentence, self.base_theory.constants)
             try:
-                for rule in to_horn_rules(sentence, allow_disjunctions_in_head=True, allow_goal_clauses=True):
-                    rules.append(rule)
-                    # yield as_prolog(rule, config=prolog_config)
+                rules = to_horn_rules(sentence, allow_disjunctions_in_head=True, allow_goal_clauses=True)
             except NotInProfileError as e:
-                logger.info(f"Skipping sentence {sentence} due to {e}")
+                self._skip_sentence(sentence, e)
+                continue
             for rule in rules:
+                # a sentence may yield several rules; only the inexpressible ones are dropped
                 try:
-                    yield as_prolog(rule, config=prolog_config)
+                    clause = as_prolog(rule, config=prolog_config)
                 except NotInProfileError as e:
-                    logger.info(f"Skipping sentence {sentence} due to {e}")
+                    self._skip_sentence(rule, e)
+                    continue
+                yield clause
 
     def _predicate_declarations(self) -> Iterator[str]:
         """Yield clingo declarations for predicate names declared by the theory."""

@@ -139,6 +139,9 @@ class Z3Solver(Solver):
 
     def check(self) -> Solution:
         result = self.wrapped_solver.check()
+        if result == z3.unknown:
+            # e.g. timeouts or incomplete quantifier reasoning: neither sat nor unsat
+            return Solution(satisfiable=None)
         return Solution(satisfiable=result == z3.sat)
 
     def models(self) -> Iterator[Model]:
@@ -166,6 +169,8 @@ class Z3Solver(Solver):
         s.add(z3.Not(self.translate(sentence)))
         result = s.check()
         s.pop()
+        if result == z3.unknown:
+            return None
         return result == z3.unsat
 
     def _unroll_type(self, typ: DefinedType) -> Set[str]:
@@ -243,7 +248,7 @@ class Z3Solver(Solver):
         z3_valf = t2m_map.get(z3_typ, z3.StringVal)
         return z3_valf(var)
 
-    def add_fact(self, fact: FactMixin) -> None:
+    def add_fact(self, fact: Union[FactMixin, Term]) -> None:
         return self.add_sentence(fact)
 
     def add_sentence(self, sentence: Sentence) -> None:
@@ -386,6 +391,9 @@ class Z3Solver(Solver):
                 # TODO: more elegant way to do this
                 sentence = copy(sentence)
                 sentence.make_keyword_indexed(list(pd.arguments.keys()))
+            elif set(sentence.bindings) == set(pd.arguments):
+                # keyword bindings may be written in any order; the z3 function is positional
+                sentence = tlog.Term(sentence.predicate, {k: sentence.bindings[k] for k in pd.arguments})
             if not bindings:
                 bindings = {}
             pf_args = [self._tr(var, bindings) for var in sentence.bindings.values()]

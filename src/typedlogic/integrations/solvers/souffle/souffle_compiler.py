@@ -1,5 +1,6 @@
+import logging
 from dataclasses import dataclass
-from typing import ClassVar, Dict, List, Optional, Set, Union
+from typing import Any, ClassVar, Dict, List, Optional, Set, Union
 
 from typedlogic import Theory
 from typedlogic.compiler import Compiler, ModelSyntax
@@ -12,16 +13,30 @@ from typedlogic.transformations import (
     to_horn_rules,
 )
 
+logger = logging.getLogger(__name__)
+
 #: Names reserved by Souffle for its own primitive types; a defined type using one of
 #: these names is renamed rather than emitted as a redefinition of the primitive.
 SOUFFLE_PRIMITIVE_TYPES = frozenset({"symbol", "number", "unsigned", "float"})
 
 
 def _base_type(t: str) -> str:
-    if t in ["int", "float"]:
+    """
+    Map a base type name to a Souffle primitive type.
+
+        >>> _base_type("int")
+        'number'
+        >>> _base_type("float")
+        'float'
+        >>> _base_type("str")
+        'symbol'
+
+    """
+    if t == "int":
         return "number"
-    else:
-        return "symbol"
+    if t == "float":
+        return "float"
+    return "symbol"
 
 
 def _type(name: str) -> str:
@@ -140,6 +155,18 @@ class SouffleCompiler(Compiler):
             return _type(t)
         return _base_type(t)
 
+    def _skip(self, sentence: Any, reason: Any) -> None:
+        """
+        Report a sentence that cannot be expressed in Souffle Datalog.
+
+        Dropping it weakens the program, so a warning is always logged; with
+        ``strict=True`` a :class:`NotInProfileError` is raised instead.
+        """
+        msg = f"Skipping sentence not expressible in Souffle: {sentence} ({reason})"
+        if self.strict:
+            raise NotInProfileError(msg)
+        logger.warning(msg)
+
     def compile(self, theory: Theory, syntax: Optional[Union[str, ModelSyntax]] = None, **kwargs) -> str:
         blocks = []
 
@@ -171,20 +198,22 @@ class SouffleCompiler(Compiler):
             # TODO: allow preserving existentials
             try:
                 tr_sentences = to_horn_rules(s)
-                horn_rules.extend(tr_sentences)
-            except NotInProfileError:
-                # blocks.append(f"% IGNORED: {s} // {e}")
+            except NotInProfileError as e:
+                self._skip(s, e)
                 continue
+            if not tr_sentences:
+                self._skip(s, "no Horn rule translation, e.g. an integrity constraint")
+            horn_rules.extend(tr_sentences)
 
         horn_rules = force_stratification(horn_rules)
         for rule in horn_rules:
             try:
                 prolog = as_prolog(rule, config)
-                if not prolog.endswith("."):
-                    prolog += "."
-                blocks.append(prolog)
-            except NotInProfileError:
-                # blocks.append(f"% IGNORED: {s} // {e}")
+            except NotInProfileError as e:
+                self._skip(rule, e)
                 continue
+            if not prolog.endswith("."):
+                prolog += "."
+            blocks.append(prolog)
 
         return "\n".join(blocks)

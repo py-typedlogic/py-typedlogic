@@ -39,6 +39,6 @@ class FOLCompiler(Compiler):
 
         """
         lines = []
-        for s in theory.sentences:
+        for s in theory.sentences + theory.ground_terms:
             lines.append(as_fol(s))
         return "\n".join(lines)
