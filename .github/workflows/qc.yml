@@ -8,7 +8,9 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # Pinned: on ubuntu-26.04 (now ubuntu-latest) the dsharp binary bundled with ProbLog
+    # segfaults on tests/test_integrations/problog/test_problog.py::test_diagnosis_main.
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         python-version: [ "3.11" ]
