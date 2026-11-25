@@ -467,3 +467,89 @@ class TestCLIErrorHandling:
         assert ("unknown" in result.stdout.lower() or 
                 "not found" in result.stdout.lower() or
                 "invalid" in result.stdout.lower())
+
+
+second_theory = """
+from dataclasses import dataclass
+from typedlogic import Fact, axiom
+
+@dataclass
+class Mortal(Fact):
+    name: str
+
+@dataclass
+class Buried(Fact):
+    name: str
+
+@axiom
+def all_mortals_are_buried(i: str):
+    if Mortal(i):
+        assert Buried(i)
+"""
+
+
+@pytest.fixture
+def two_theories_and_facts(tmp_path: Path):
+    first = tmp_path / "first_theory.py"
+    first.write_text(content)
+    second = tmp_path / "second_theory.py"
+    second.write_text(second_theory)
+    facts = tmp_path / "facts.yml"
+    facts.write_text("Person:\n  - [socrates]\n")
+    return first, second, facts
+
+
+def test_dump_keeps_rules_from_every_file(two_theories_and_facts):
+    first, second, facts = two_theories_and_facts
+    result = runner.invoke(app, ["dump", str(first), str(second), str(facts), "-t", "prolog", "--no-validate-types"])
+    assert result.exit_code == 0, result.stdout
+    assert "mortal(I) :- person(I)." in result.stdout
+    assert "buried(I) :- mortal(I)." in result.stdout
+    assert "person('socrates')." in result.stdout
+
+
+@pytest.mark.parametrize("command", ["dump", "convert"])
+def test_fol_output_includes_facts_and_all_rules(command, two_theories_and_facts):
+    first, second, facts = two_theories_and_facts
+    args = [command, str(first), str(second), "-t", "fol", "--no-validate-types"]
+    if command == "dump":
+        args.append(str(facts))
+    result = runner.invoke(app, args)
+    assert result.exit_code == 0, result.stdout
+    assert "Person(i) → Mortal(i)" in result.stdout
+    assert "Mortal(i) → Buried(i)" in result.stdout
+    if command == "dump":
+        assert "Person('socrates')" in result.stdout
+
+
+def test_solve_accepts_yml_data_files(two_theories_and_facts):
+    first, _, facts = two_theories_and_facts
+    result = runner.invoke(app, ["solve", str(first), str(facts), "-s", "clingo", "--no-validate-types"])
+    assert result.exit_code == 0, result.stdout
+    assert "Mortal(socrates)" in result.stdout
+
+
+NEGATED_EXPECTATION = """
+pred P(n: str).
+pred Q(n: str).
+Q('a').
+test_case("unknown_is_not_false", expect(that(~P('a')))).
+"""
+
+
+@pytest.mark.parametrize("solver,exit_code,status", [("z3", 1, "FAIL"), ("clingo", 0, "PASS")])
+def test_negated_expectation_respects_open_world(tmp_path: Path, solver, exit_code, status):
+    """~P('a') is entailed under the closed-world assumption, but not by an open-world solver."""
+    path = tmp_path / "neg.tlog"
+    path.write_text(NEGATED_EXPECTATION)
+    result = runner.invoke(app, ["test", str(path), "-s", solver, "--no-proofs"])
+    assert result.exit_code == exit_code, result.stdout
+    assert f"{status} unknown_is_not_false" in result.stdout
+
+
+def test_negated_expectation_holds_when_entailed_open_world(tmp_path: Path):
+    path = tmp_path / "neg.tlog"
+    path.write_text(NEGATED_EXPECTATION + "all x | Q(x) -> ~P(x).\n")
+    result = runner.invoke(app, ["test", str(path), "-s", "z3", "--no-proofs"])
+    assert result.exit_code == 0, result.stdout
+    assert "PASS unknown_is_not_false" in result.stdout

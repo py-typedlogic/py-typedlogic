@@ -312,12 +312,6 @@ class CatalogParser(Parser):
         
         # Merge all theories
         for theory in theories:
-            # Merge sentences (axioms and rules)
-            if hasattr(theory, 'sentences') and theory.sentences:
-                if merged.sentences is None:
-                    merged.sentences = []
-                merged.sentences.extend(theory.sentences)
-            
             # Merge sentence groups
             if hasattr(theory, 'sentence_groups') and theory.sentence_groups:
                 if merged.sentence_groups is None:

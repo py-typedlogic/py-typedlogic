@@ -1,6 +1,7 @@
 """Tests for the ergonomic TypedLogic text parser."""
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -94,7 +95,7 @@ def test_comma_is_body_conjunction_without_stealing_term_argument_commas() -> No
     )
 
     check(theory.sentences[0] == Term("pair", "Alice", "Bob"), repr(theory.sentences[0]))
-    sentence = theory.sentences[1]
+    sentence: Any = theory.sentences[1]
     check(isinstance(sentence, Forall), repr(sentence))
     check([v.name for v in sentence.variables] == ["x", "z", "Y"], repr(sentence.variables))
     check("parent(?x, ?z)" in repr(sentence.sentence), repr(sentence.sentence))
@@ -110,9 +111,9 @@ def test_rule_direction_variants_and_iff() -> None:
         """
     )
 
-    left_arrow = theory.sentences[0]
-    right_arrow = theory.sentences[1]
-    iff = theory.sentences[2]
+    left_arrow: Any = theory.sentences[0]
+    right_arrow: Any = theory.sentences[1]
+    iff: Any = theory.sentences[2]
     check(repr(left_arrow.sentence) == "Implies(instance(?i), known(?i))", repr(left_arrow))
     check(repr(right_arrow.sentence) == "Implies(instance(?i), known(?i))", repr(right_arrow))
     check(isinstance(iff, Forall), repr(iff))
@@ -137,8 +138,8 @@ def test_unicode_quantifier_symbols() -> None:
         """
     )
 
-    universal = theory.sentences[0]
-    existential = theory.sentences[1]
+    universal: Any = theory.sentences[0]
+    existential: Any = theory.sentences[1]
     check(isinstance(universal, Forall), repr(universal))
     check([v.name for v in universal.variables] == ["i", "C"], repr(universal.variables))
     check(universal.variables[0].domain == "PointerID", repr(universal.variables))
@@ -304,7 +305,8 @@ def test_parse_literature_style_linkml_rules_example() -> None:
     check(len(theory.predicate_definitions) == 4, repr(theory.predicate_definitions))
     check(len(theory.sentences) == 4, repr(theory.sentences))
     check(theory.sentences[0].annotations["comment"] == "Inherit slots through the class hierarchy.", "bad comment")
-    check(isinstance(theory.sentences[-1].sentence.antecedent.predicate, Variable), repr(theory.sentences[-1]))
+    hilog_rule: Any = theory.sentences[-1]
+    check(isinstance(hilog_rule.sentence.antecedent.predicate, Variable), repr(hilog_rule))
 
 
 def test_parse_literate_markdown_tlog_blocks() -> None:
@@ -342,7 +344,8 @@ def test_parse_literate_markdown_ignores_non_tlog_code_blocks() -> None:
     theory = TLogMarkdownParser().parse(source)
 
     check(theory.predicate_definitions[0].predicate == "parent", repr(theory.predicate_definitions))
-    check(theory.sentences[0].predicate == "parent", repr(theory.sentences))
+    first_fact: Any = theory.sentences[0]
+    check(first_fact.predicate == "parent", repr(theory.sentences))
 
 
 def test_tlog_rules_export_to_existing_prolog_compiler() -> None:
@@ -405,11 +408,11 @@ def test_parse_quoted_lemma_and_test_case_groups() -> None:
     test_group = theory.sentence_groups[1]
     check(lemma_group.group_type == SentenceGroupType.LEMMA, repr(lemma_group))
     check(lemma_group.name == "grandparent_implies_ancestor", lemma_group.name)
-    check(isinstance(lemma_group.sentences[0], Forall), repr(lemma_group.sentences))
+    check(isinstance((lemma_group.sentences or [])[0], Forall), repr(lemma_group.sentences))
     check(test_group.group_type == SentenceGroupType.TEST, repr(test_group))
     check(test_group.name == "socrates_mortality", test_group.name)
 
-    test_case = test_group.sentences[0]
+    test_case: Any = (test_group.sentences or [])[0]
     check(test_case.predicate == "test_case", repr(test_case))
     given = test_case.values[1]
     expect = test_case.values[2]
@@ -554,3 +557,24 @@ def test_auto_validate_raises_on_arity_mismatch() -> None:
     check(TLogParser().parse(source) is not None, "permissive parse should still succeed")
     with pytest.raises(ValueError, match="arity 1"):
         TLogParser(auto_validate=True).parse(source)
+
+
+@pytest.mark.parametrize(
+    "literal,expected",
+    [
+        ('"café"', "café"),
+        ("'naïve ☃'", "naïve ☃"),
+        (r'"a\nb"', "a\nb"),
+        (r"'O\'Brien'", "O'Brien"),
+    ],
+)
+def test_string_literals_keep_non_ascii_text_and_escapes(literal: str, expected: str) -> None:
+    theory = TLogParser().parse(f"name({literal}).")
+    assert theory.sentences == [Term("name", expected)]
+
+
+@pytest.mark.parametrize("literal,expected", [("1e5", 100000.0), ("2.5", 2.5), ("-3", -3), ("7", 7)])
+def test_number_literals(literal: str, expected) -> None:
+    term: Any = TLogParser().parse(f"n({literal}).").sentences[0]
+    assert term.values == (expected,)
+    assert type(term.values[0]) is type(expected)
