@@ -3,7 +3,7 @@ import importlib
 import inspect
 import types
 import typing
-from dataclasses import fields, Field
+from dataclasses import fields, is_dataclass
 from types import ModuleType
 from typing import Any, Dict, List, NewType, Tuple, Type, Union, Optional, cast
 
@@ -13,7 +13,9 @@ from typedlogic.parsers.pyparser.python_ast_utils import SentenceGroup, parse_fu
 from typedlogic.transformations import ensure_terms_positional, sentences_from_predicate_hierarchy
 
 
-def translate_module_to_theory(module: ModuleType) -> Theory:
+def translate_module_to_theory(
+    module: ModuleType, source: Optional[str] = None, class_hierarchy: bool = True
+) -> Theory:
     """
     Translate a module to a Theory object.
 
@@ -22,10 +24,14 @@ def translate_module_to_theory(module: ModuleType) -> Theory:
         >>> theory.name
         'tests.theorems.mortals'
 
-    :param module:
-    :return:
+    :param module: the module to translate
+    :param source: the module's source text, for modules compiled from a string
+        (which have no file for `inspect` to read)
+    :param class_hierarchy: add a `Child -> Parent` implication for each predicate class
+        that inherits from another predicate class
+    :return: the theory
     """
-    sgs = get_module_sentence_groups(module)
+    sgs = get_module_sentence_groups(source if source is not None else module)
     sgs.extend(get_module_class_level_sentence_groups(module))
     pds = get_module_predicate_definitions(module)
     constants, tds = get_module_constants_and_types(module)
@@ -38,9 +44,9 @@ def translate_module_to_theory(module: ModuleType) -> Theory:
         sentence_groups=sgs,
     )
     ensure_terms_positional(theory)
-    new_sentences = sentences_from_predicate_hierarchy(theory)
-    for s in new_sentences:
-        theory.add(s)
+    if class_hierarchy:
+        for s in sentences_from_predicate_hierarchy(theory):
+            theory.add(s)
     return theory
 
 
@@ -93,9 +99,11 @@ def get_module_sentence_groups(module: Union[ModuleType, str]) -> List[SentenceG
     for node in module_ast.body:
         if isinstance(node, ast.FunctionDef):
             for decorator in node.decorator_list:
-                if isinstance(decorator, ast.Name) and decorator.id in decorator_types:
+                # accept both `@axiom` and qualified forms such as `@typedlogic.axiom`
+                decorator_name = decorator.attr if isinstance(decorator, ast.Attribute) else getattr(decorator, "id", None)
+                if decorator_name in decorator_types:
                     sg = parse_function_def_to_sentence_group(node)
-                    sg.group_type = decorator_types[decorator.id]
+                    sg.group_type = decorator_types[decorator_name]
                     # TODO:
                     # if sg.argument_types is not None:
                     #    sg.argument_types = {k: safe_eval_type(v, module_vars) for k, v in sg.argument_types.items()}
@@ -172,6 +180,9 @@ def get_module_predicate_classes(module: ModuleType) -> Dict[str, Type]:
     return classes
 
 
+#: Types of module-level values that are treated as named logical constants.
+CONSTANT_TYPES = (str, int, float, bool)
+
 JSON_SCHEMA_TYPE_MAP = {
     "string": "str",
     "number": "float",
@@ -244,16 +255,57 @@ def introspect_attributes(cls: Type) -> dict[str, Any]:
             return r
     except ImportError:
         pass  # Get all attributes of the class
-    if fields(cls):
+    if is_dataclass(cls):
+        return {field.name: _type_name(field.type, cls) for field in fields(cls)}
+    # a plain class: annotated attributes, else the arguments of its own __init__
+    annotations: Dict[str, Any] = {}
+    for base in reversed(cls.__mro__):
+        if base not in (object, Fact, FactMixin) and issubclass(base, FactMixin):
+            annotations.update(vars(base).get("__annotations__", {}))
+    if not annotations and "__init__" in vars(cls):
+        annotations = {k: v for k, v in cls.__init__.__annotations__.items() if k != "return"}
+    return {name: _type_name(t, cls) for name, t in annotations.items()}
 
-        def _field_type_name(f: Field) -> str:
-            if not hasattr(f.type, "__name__"):
-                raise ValueError(f"Cannot introspect field type for: {f.type} field: {f} in {cls}")
-            return f.type.__name__
 
-        r = {field.name: _field_type_name(field) for field in fields(cls)}
-        return r
-    return {}
+def _type_name(t: Any, cls: Type) -> str:
+    """
+    Name a field type for use in a predicate definition.
+
+        >>> _type_name(int, object)
+        'int'
+        >>> _type_name(Optional[str], object)
+        'str'
+        >>> _type_name(List[int], object)
+        'list'
+
+    String annotations (as left by ``from __future__ import annotations``) are read
+    syntactically, without being evaluated:
+
+        >>> _type_name("int", object)
+        'int'
+        >>> _type_name("Optional[PersonID]", object)
+        'PersonID'
+        >>> _type_name("int | None", object)
+        'int'
+
+    :param t: the type annotation
+    :param cls: the class being introspected, for error messages
+    :return: the type name
+    """
+    if isinstance(t, str):
+        return _annotation_node_name(ast.parse(t, mode="eval").body)
+    if is_union(t):
+        members = [a for a in typing.get_args(t) if a is not type(None)]
+        if len(members) == 1:
+            return _type_name(members[0], cls)
+        # TODO: general unions are not yet represented in predicate definitions
+        return JSON_SCHEMA_TYPE_MAP["string"]
+    origin = typing.get_origin(t)
+    if origin is not None:
+        return origin.__name__
+    if not hasattr(t, "__name__"):
+        raise ValueError(f"Cannot introspect field type: {t} in {cls}")
+    return t.__name__
 
     # attributes = inspect.getmembers(cls)
     #
@@ -268,6 +320,25 @@ def introspect_attributes(cls: Type) -> dict[str, Any]:
     # ]
     #
     # return {attr[0]: attr[1] for attr in non_classvar_attributes}
+
+
+def _annotation_node_name(node: ast.expr) -> str:
+    """Name the type written in an (unevaluated) annotation expression."""
+    if isinstance(node, ast.Subscript):
+        outer = _annotation_node_name(node.value)
+        if outer == "Optional":
+            return _annotation_node_name(node.slice)
+        return outer.lower() if outer in ("List", "Dict", "Set", "Tuple") else outer
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.BitOr):
+        members = [n for n in (node.left, node.right) if not (isinstance(n, ast.Constant) and n.value is None)]
+        if len(members) == 1:
+            return _annotation_node_name(members[0])
+        return JSON_SCHEMA_TYPE_MAP["string"]
+    if isinstance(node, ast.Attribute):
+        return node.attr
+    if isinstance(node, ast.Name):
+        return node.id
+    raise ValueError(f"Cannot introspect annotation: {ast.unparse(node)}")
 
 
 def get_module_constants(module: ModuleType) -> Dict[str, Any]:
@@ -286,14 +357,14 @@ def get_module_constants(module: ModuleType) -> Dict[str, Any]:
 
 
 def is_union(t):
-    if str(t).startswith("typing.Union"):
-        return True
-    # For Python 3.10+
-    if hasattr(types, "UnionType"):
-        return isinstance(t, types.UnionType)
+    """
+    Test whether a type is a union, in either `Union[X, Y]` or `X | Y` form.
 
-    # For earlier versions
-    return typing.get_origin(t) is Union
+        >>> is_union(Union[int, str]), is_union(int | str), is_union(int)
+        (True, True, False)
+
+    """
+    return typing.get_origin(t) is Union or isinstance(t, types.UnionType)
 
 
 def get_module_constants_and_types(module: ModuleType) -> Tuple[Dict[str, Any], Dict[str, Any]]:
@@ -307,16 +378,19 @@ def get_module_constants_and_types(module: ModuleType) -> Tuple[Dict[str, Any], 
                 if t != name:
                     types[name] = t
             elif is_union(obj):
-                t = obj.__name__
-                if t != name:
-                    types[name] = [x.__name__ for x in typing.get_args(obj)]
+                types[name] = [
+                    x.__forward_arg__ if isinstance(x, typing.ForwardRef) else getattr(x, "__name__", str(x))
+                    for x in typing.get_args(obj)
+                ]
             elif isinstance(obj, NewType):
                 st = obj.__supertype__
                 if isinstance(st, type):
                     types[name] = st.__name__
                 else:
                     types[name] = str(st)
-            else:
+            elif isinstance(obj, CONSTANT_TYPES):
+                # only plain values can stand in for a symbol in a rule; imported modules,
+                # loggers, TypeVars and the like are not logical constants
                 constants[name] = obj
     return constants, types
 

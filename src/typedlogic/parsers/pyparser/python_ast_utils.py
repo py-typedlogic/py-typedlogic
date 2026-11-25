@@ -434,8 +434,15 @@ def parse_function_def_to_sentence_group(func_def: ast.FunctionDef) -> SentenceG
             if isinstance(body_node, ast.If):
                 sentence = parse_sentence(body_node)
                 add_sentence(sentence)
-            else:
-                logger.info(f"Unsupported body type: {type(body_node)}")
+            elif isinstance(body_node, ast.Expr) and not isinstance(body_node.value, ast.Constant):
+                # a bare expression statement such as `P(x) >> Q(x)`
+                # (constants are docstrings or `...`, which assert nothing)
+                sentence = parse_sentence(body_node.value)
+                add_sentence(sentence)
+            elif not isinstance(body_node, (ast.Expr, ast.Pass)):
+                raise ValueError(
+                    f"Unsupported statement in {func_def.name} (line {body_node.lineno}): {ast.unparse(body_node)}"
+                )
 
     sentence_collection.sentences = sentences
     return sentence_collection

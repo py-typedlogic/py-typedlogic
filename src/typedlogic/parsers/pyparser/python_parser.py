@@ -9,11 +9,7 @@ from typing import Iterator, Optional, TextIO, Tuple, Union
 
 from typedlogic import Theory
 from typedlogic.parser import Parser, ValidationMessage
-from typedlogic.parsers.pyparser.introspection import (
-    get_module_predicate_definitions,
-    get_module_sentence_groups,
-    translate_module_to_theory, get_module_class_level_sentence_groups,
-)
+from typedlogic.parsers.pyparser.introspection import translate_module_to_theory
 
 logger = logging.getLogger(__name__)
 
@@ -49,8 +45,16 @@ def compile_python(python_txt: str, name: Optional[str] = None, package_path: Op
         module.__package__ = os.path.dirname(os.path.relpath(path_from_tests_parent, os.getcwd())).replace(
             os.path.sep, "."
         )
+    # The module must be importable by name while its body runs (dataclasses and pydantic
+    # resolve annotations via sys.modules), but a theory file called e.g. json.py must not
+    # permanently replace a real module of that name.
+    shadowed = sys.modules.get(module.__name__)
     sys.modules[module.__name__] = module
-    exec(spec, module.__dict__)
+    try:
+        exec(spec, module.__dict__)
+    finally:
+        if shadowed is not None:
+            sys.modules[module.__name__] = shadowed
     return module
 
 
@@ -69,21 +73,23 @@ class PythonParser(Parser):
         ['Person', 'Mortal', 'AncestorOf']
         >>> for s in sorted(theory.sentences):
         ...     print(s)
-        ((AncestorOf(p1, p2)) & (AncestorOf(p2, p3)) -> AncestorOf(p1, p3))
         ∀x: TreeNodeType, y: TreeNodeType : ~(AncestorOf(?x, ?y)) & (AncestorOf(?y, ?x))
         ∀x: TreeNodeType, y: TreeNodeType, z: TreeNodeType : ((AncestorOf(?x, ?z)) & (AncestorOf(?z, ?y)) -> AncestorOf(?x, ?y))
         ∀x: NameType : (Person(?x) -> Mortal(?x))
 
-    Inheritance:
+    Goals are kept apart from the asserted sentences:
+
+        >>> for s in theory.goals:
+        ...     print(s)
+        ((AncestorOf(p1, p2)) & (AncestorOf(p2, p3)) -> AncestorOf(p1, p3))
+
+    Inheritance (each subclass implies its parent classes):
 
         >>> theory = parser.parse(Path("tests/theorems/class_inheritance.py"))
         >>> theory.name
         'class_inheritance'
         >>> [(pd.predicate, pd.parents) for pd in theory.predicate_definitions]
         [('Thing', []), ('Place', ['Thing']), ('Person', ['Thing'])]
-        >>> from typedlogic.transformations import implies_from_parents
-        >>> # TODO - consider making this default
-        >>> theory = implies_from_parents(theory)
         >>> for s in sorted(theory.sentences):
         ...     print(s)
         ∀name: str, age: int : (Person(?name, ?age) -> Thing(?name))
@@ -101,38 +107,43 @@ class PythonParser(Parser):
         """
         return translate_module_to_theory(source)
 
-    def parse(self, source: Union[Path, str, TextIO, ModuleType], file_name: Optional[str] = None, **kwargs) -> Theory:
+    def parse(
+        self,
+        source: Union[Path, str, TextIO, ModuleType],
+        file_name: Optional[str] = None,
+        class_hierarchy: bool = True,
+        **kwargs,
+    ) -> Theory:
         """
         Parse a Python module or source code into a Theory.
 
+        A file, a source string and an imported module all yield the same theory.
+
         :param source:
         :param file_name:
+        :param class_hierarchy: add a `Child -> Parent` implication for each predicate class
+            that inherits from another predicate class
         :param kwargs:
         :return:
         """
         if isinstance(source, ModuleType):
-            return translate_module_to_theory(source)
+            return translate_module_to_theory(source, class_hierarchy=class_hierarchy)
         if self.auto_validate:
             errs = self.validate(source)
             if errs:
                 raise ValueError(f"Validation errors: {errs}")
         if isinstance(source, Path):
             with source.open() as f:
-                return self.parse(f, file_name=str(source), **kwargs)
+                return self.parse(f, file_name=str(source), class_hierarchy=class_hierarchy, **kwargs)
         if isinstance(source, str):
             module = compile_python(source, name=None, package_path=file_name)
-            sgs = get_module_sentence_groups(source)
-            sgs.extend(get_module_class_level_sentence_groups(module))
-            pds = get_module_predicate_definitions(module)
-            # get the python module name
-            return Theory(
-                name=module.__name__,
-                predicate_definitions=list(pds.values()),
-                sentence_groups=sgs,
-                source_module_name=module.__name__,
-            )
+            # same construction as for an imported module, so that files and modules
+            # yield the same theory (constants, types, argument order, class hierarchy)
+            theory = translate_module_to_theory(module, source=source, class_hierarchy=class_hierarchy)
+            theory.source_module_name = module.__name__
+            return theory
         if isinstance(source, (TextIOWrapper, TextIO)):
-            return self.parse(source.read(), file_name=file_name, **kwargs)
+            return self.parse(source.read(), file_name=file_name, class_hierarchy=class_hierarchy, **kwargs)
         raise ValueError(f"Unsupported source type: {type(source)}")
 
     def validate_iter(
